@@ -17,7 +17,7 @@ Recording of MIDI events, looping, editing etc. will be done in a MIDI sequencer
 7. On success (matching the functionality of the current faust_mqtt_tcp6_nb_v5 firmware) remove the basic sequencing functionality from the DSP firmware
 
 
-### REMARKS:
+#### REMARKS:
 
 Scan [ESP-ADF](https://github.com/espressif/esp-adf) for this kind of applications.   NOT AVAILABLE
 
