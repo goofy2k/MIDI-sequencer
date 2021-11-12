@@ -17,18 +17,56 @@ Recording of MIDI events, looping, editing etc. will be done in a MIDI sequencer
 7. On success (matching the functionality of the current faust_mqtt_tcp6_nb_v5 firmware) remove the basic sequencing functionality from the DSP firmware
 
 
-### REMARKS:
+#### REMARKS:
 
 Scan [ESP-ADF](https://github.com/espressif/esp-adf) for this kind of applications.   NOT AVAILABLE
 
 ESP-IDF and MIDI:
 
 - [MIDIBLE](https://github.com/0x0c/MIDIBLE)
+- [blemidi-idf](https://github.com/mathiasbredholt/blemidi-idf)
+- [blemidi](https://github.com/midibox/esp32-idf-blemidi)  might have the same functionality as the Arduino app below
 
 Arduino and MIDI:
 
 - [ESP32-BLE-MIDI](https://www.arduino.cc/reference/en/libraries/esp32-ble-midi/) and the [repository](https://github.com/max22-/ESP32-BLE-MIDI)
+- [BLE_MIDI.ino](https://github.com/neilbags/arduino-esp32-BLE-MIDI/blob/master/BLE_MIDI.ino) (referenced by Mathias Bredholt (blemidi-idf)
 
 Both examples (ESP-IDF and Arduino) are based on the [Arduino BLE-MIDI transport](https://github.com/lathoub/Arduino-BLE-MIDI) lib. Also ave a look at this [Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library). It may be wise to build the sequencer based on this in the Arduino environment. Allthough, then it is not possible to use thejdksmidi lib? Which can also be an advantage ;-)
 
 For sequencing functionality, jus use Google Arduino MIDI sequencer an dyou will find a lot, such as this [Old-School Arduino MIDI Sequencer](https://www.instructables.com/Old-School-Arduino-MIDI-Sequencer/) that may contain useful info on the wired connectivity.
+
+### Step 1:  Create Arduino BLE app for testing
+
+Running the 01-Basic-Midi-Device.ino  example on a TTGO Lora32 board.
+See incoming MIDI data with the nRF Connect app on a mobile phone
+
+### Step 2: Add BT/BLE client to the TTGO TAudio app
+
+Add MIDIBLE to the Faust DSP firmware: faust_mqtt_tcp6_nb_v6
+  - properly include the component (create components dir, add two CMakesList.txt files)
+  - properly inclued the cpp_utils dependency (see [here](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils)
+  - enable Bluetooth with idf.py menuconfig
+
+- Working BLE (NIMBLE) on TTGO TAudio:  esp_idf\bleprph\main   
+Example configuration ---->
+    I/O Capability (Just works)  --->
+[ ] Use Bonding
+[ ] MITM security
+[ ] Use Secure Connection feature
+
+Note: the .ino app is probably not based on Nimble. Is it compatible with devices running Nimble BLE?  
+
+More info on Nimble BLE:  [here](https://github.com/apache/mynewt-nimble)
+
+nRF Connect diagnostic tool on mobile can write and receive data from the app (on command of nRF Connect)
+
+- 01-Basic-Midi-Device.ino on TTGO Lora32
+
+nRF Connect diagnostic tool on mobile can write and receive data from the app (pushed by the .ino app)
+
+How to connect both apps to each other????
+
+
+
+
