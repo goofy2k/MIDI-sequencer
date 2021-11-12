@@ -35,4 +35,7 @@ For sequencing functionality, jus use Google Arduino MIDI sequencer an dyou will
 
 ### Step 1:  Create Arduino BLE app for testing
 
+Running the 01-Basic-Midi-Device.ino  example on a TTGO Lora32 board.
+See incoming MIDI data with the nRF Connect app on a mobile phone
 
+### Step 2: Add BT/BLE client to the TTGO TAudio app
