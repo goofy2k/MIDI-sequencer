@@ -55,6 +55,10 @@ Example configuration ---->
 [ ] MITM security
 [ ] Use Secure Connection feature
 
+Note: the .ino app is probably not based on Nimble. Is it compatible with devices running Nimble BLE?  
+
+More info on Nimble BLE:  [here](https://github.com/apache/mynewt-nimble)
+
 nRF Connect diagnostic tool on mobile can write and receive data from the app (on command of nRF Connect)
 
 - 01-Basic-Midi-Device.ino on TTGO Lora32
