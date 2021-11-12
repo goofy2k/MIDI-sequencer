@@ -15,3 +15,8 @@ Recording of MIDI events, looping, editing etc. will be done in a MIDI sequencer
 5. Demonstrate playing single notes entered via Nodered
 6. Add more sequencing functionality, using e.g. the jdksmidi library
 7. On success (matching the functionality of the current faust_mqtt_tcp6_nb_v5 firmware) remove the basic sequencing functionality from the DSP firmware
+
+
+### REMARKS:
+
+Scan [ESP-ADF](https://github.com/espressif/esp-adf) for this kind of applications.
