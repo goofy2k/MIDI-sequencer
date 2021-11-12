@@ -24,6 +24,7 @@ Scan [ESP-ADF](https://github.com/espressif/esp-adf) for this kind of applicatio
 ESP-IDF and MIDI:
 
 - [MIDIBLE](https://github.com/0x0c/MIDIBLE)
+- [blemidi-idf](https://github.com/mathiasbredholt/blemidi-idf)
 
 Arduino and MIDI:
 
