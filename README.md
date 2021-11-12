@@ -28,3 +28,5 @@ ESP-IDF and MIDI:
 Arduino and MIDI:
 
 - [ESP32-BLE-MIDI](https://www.arduino.cc/reference/en/libraries/esp32-ble-midi/) and the [repository](https://github.com/max22-/ESP32-BLE-MIDI)
+
+Both examples (ESP-IDF and Arduino) are based on the [Arduino-BLE-MIDI](https://github.com/lathoub/Arduino-BLE-MIDI) lib
