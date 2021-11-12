@@ -19,4 +19,12 @@ Recording of MIDI events, looping, editing etc. will be done in a MIDI sequencer
 
 ### REMARKS:
 
-Scan [ESP-ADF](https://github.com/espressif/esp-adf) for this kind of applications.
+Scan [ESP-ADF](https://github.com/espressif/esp-adf) for this kind of applications.   NOT AVAILABLE
+
+ESP-IDF and MIDI:
+
+- [MIDIBLE](https://github.com/0x0c/MIDIBLE)
+
+Arduino and MIDI:
+
+- [ESP32-BLE-MIDI](https://www.arduino.cc/reference/en/libraries/esp32-ble-midi/) and the [repository](https://github.com/max22-/ESP32-BLE-MIDI)
