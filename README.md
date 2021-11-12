@@ -42,4 +42,5 @@ See incoming MIDI data with the nRF Connect app on a mobile phone
 
 Add MIDIBLE to the Faust DSP firmware: faust_mqtt_tcp6_nb_v6
   - properly include the component (create components dir, add two CMakesList.txt files)
+  - properly inclued the cpp_utils dependency
   - enable Bluetooth with idf.py menuconfig
