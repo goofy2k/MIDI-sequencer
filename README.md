@@ -41,3 +41,5 @@ See incoming MIDI data with the nRF Connect app on a mobile phone
 ### Step 2: Add BT/BLE client to the TTGO TAudio app
 
 Add MIDIBLE to the Faust DSP firmware: faust_mqtt_tcp6_nb_v6
+  - properly include the component (create components dir, add two CMakesList.txt files)
+  - enable Bluetooth with idf.py menuconfig
