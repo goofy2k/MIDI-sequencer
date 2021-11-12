@@ -47,3 +47,22 @@ Add MIDIBLE to the Faust DSP firmware: faust_mqtt_tcp6_nb_v6
   - properly include the component (create components dir, add two CMakesList.txt files)
   - properly inclued the cpp_utils dependency (see [here](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils)
   - enable Bluetooth with idf.py menuconfig
+
+- Working BLE (NIMBLE) on TTGO TAudio:  esp_idf\bleprph\main   
+Example configuration ---->
+    I/O Capability (Just works)  --->
+[ ] Use Bonding
+[ ] MITM security
+[ ] Use Secure Connection feature
+
+nRF Connect diagnostic tool on mobile can write and receive data from the app (on command of nRF Connect)
+
+- 01-Basic-Midi-Device.ino on TTGO Lora32
+
+nRF Connect diagnostic tool on mobile can write and receive data from the app (pushed by the .ino app)
+
+How to connect both apps to each other????
+
+
+
+
