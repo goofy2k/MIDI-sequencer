@@ -1,10 +1,10 @@
 # MIDI-sequencer
 
-Adding sequencer functions to the Faust DSP application on a TTGO TAudio V1.6 board appears to become a too heavy task.
+MIDI sequencer/recorder functions are a too heavy load for the Faust DSP application on a TTGO TAudio V1.6 board. The DSP task is already pretty heavy in it's own, so it may be useful to dedicate the firmware of the audio board as much as possible to it's core task: **synthesising audio**. 
 
-A workaround for this is to add an interface to receive a stream of MIDI messages to the Faust DSP application. The received MIDI commands will be played "immediately", respecting the synchronized MIDI timing.
+A solution is to add additional functionality to a second board, that does not need to have an audio codec. This second board can send MIDI commands to the audio board over a suitable interface.The received timestamped MIDI commands are delivered in the right order and can be played "immediately", without further processing except for using a queue and timers for respecting the synchronized MIDI timing.
 
-Recording of MIDI events, looping, editing etc. will be done in a MIDI sequencer application on a second board that does not have to run heavy DSP tasks. The MIDI sequencer board can be connected with the synthesizer board over bluetooth. Additionally, the sequencer board may contain a wired (UART) connection with a MIDI instrument, such as a keyboard.
+The MIDI sequencer board can be connected with the synthesizer board over bluetooth. Additionally, the sequencer board may have a wired (UART) connection with a MIDI instrument, such as a keyboard.
 
 ## Implementation plan
 
