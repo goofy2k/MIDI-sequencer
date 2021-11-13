@@ -58,6 +58,7 @@ Example configuration ---->
 Note: the .ino app is probably not based on Nimble. Is it compatible with devices running Nimble BLE?  
 
 More info on Nimble BLE:  [here](https://github.com/apache/mynewt-nimble)
+Basic server and client examples and a lot of information, [here]()
 
 nRF Connect diagnostic tool on mobile can write and receive data from the app (on command of nRF Connect)
 
