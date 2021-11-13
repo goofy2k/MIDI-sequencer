@@ -70,8 +70,13 @@ How to connect both apps to each other????
 
 ### Create basic Nimble server and client examples
 
-A lot of information about Nimble BLE, including examples can be found [here](https://github.com/h2zero/esp-nimble-cpp)
+A lot of information about Nimble BLE, including examples can be found [here](https://github.com/h2zero/esp-nimble-cpp). The examples in the repo code (called esp-nimble-server and esp-nimble-client here) are different from those in the New User Guide (called esp-nimble-server2 and esp-nimble-client here2). Both examples run on the TTGO TAudio and the Heltec LORA32 boards. With the first ones data transfer has been shown.
 
+Further investigations needed:  
+
+1. which role can push data to the other one? We do not want to let the Audio board do polling!  
+2. how to show data transfer between server2 and client2?
+3. look for the option that is lightest for the audio board.
 
 
 
