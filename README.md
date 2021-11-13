@@ -68,6 +68,10 @@ nRF Connect diagnostic tool on mobile can write and receive data from the app (p
 
 How to connect both apps to each other????
 
+### Create basic Nimble server and client examples
+
+A lot of information about Nimble BLE, including examples can be found [here](https://github.com/h2zero/esp-nimble-cpp)
+
 
 
 
