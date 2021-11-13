@@ -74,7 +74,7 @@ A lot of information about Nimble BLE, including examples can be found [here](ht
 
 Further investigations needed:  
 
-1. which role can push data to the other one? We do not want to let the Audio board do polling!  
+1. which role can push data to the other one? We do not want to let the Audio board do polling!  Read [this](https://embedded.fm/blog/ble-roles)
 2. how to show data transfer between server2 and client2?
 3. look for the option that is lightest for the audio board.
 
