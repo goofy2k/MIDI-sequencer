@@ -45,7 +45,7 @@ See incoming MIDI data with the nRF Connect app on a mobile phone
 
 Add MIDIBLE to the Faust DSP firmware: faust_mqtt_tcp6_nb_v6
   - properly include the component (create components dir, add two CMakesList.txt files)
-  - properly inclued the cpp_utils dependency (see [here](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils)
+  - properly include the cpp_utils dependency (see [here](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils)
   - enable Bluetooth with idf.py menuconfig
 
 - Working BLE (NIMBLE) on TTGO TAudio:  esp_idf\bleprph\main   
@@ -57,8 +57,8 @@ Example configuration ---->
 
 Note: the .ino app is probably not based on Nimble. Is it compatible with devices running Nimble BLE?  
 
-More info on Nimble BLE:  [here](https://github.com/apache/mynewt-nimble)
-Basic server and client examples and a lot of information, [here](https://github.com/h2zero/esp-nimble-cpp)
+More info on Nimble BLE:  [here](https://github.com/apache/mynewt-nimble)  
+Basic server and client examples and a lot of information, [here](https://github.com/h2zero/esp-nimble-cpp)  
 
 nRF Connect diagnostic tool on mobile can write and receive data from the app (on command of nRF Connect)
 
