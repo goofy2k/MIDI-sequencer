@@ -45,7 +45,7 @@ See incoming MIDI data with the nRF Connect app on a mobile phone
 
 Add MIDIBLE to the Faust DSP firmware: faust_mqtt_tcp6_nb_v6
   - properly include the component (create components dir, add two CMakesList.txt files)
-  - properly inclued the cpp_utils dependency (see [here](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils)
+  - properly include the cpp_utils dependency (see [here](https://github.com/nkolban/esp32-snippets/tree/master/cpp_utils)
   - enable Bluetooth with idf.py menuconfig
 
 - Working BLE (NIMBLE) on TTGO TAudio:  esp_idf\bleprph\main   
@@ -57,8 +57,8 @@ Example configuration ---->
 
 Note: the .ino app is probably not based on Nimble. Is it compatible with devices running Nimble BLE?  
 
-More info on Nimble BLE:  [here](https://github.com/apache/mynewt-nimble)
-Basic server and client examples and a lot of information, [here](https://github.com/h2zero/esp-nimble-cpp)
+More info on Nimble BLE:  [here](https://github.com/apache/mynewt-nimble)  
+Basic server and client examples and a lot of information, [here](https://github.com/h2zero/esp-nimble-cpp)  
 
 nRF Connect diagnostic tool on mobile can write and receive data from the app (on command of nRF Connect)
 
@@ -74,9 +74,36 @@ A lot of information about Nimble BLE, including examples can be found [here](ht
 
 Further investigations needed:  
 
-1. which role can push data to the other one? We do not want to let the Audio board do polling!  Read [this](https://embedded.fm/blog/ble-roles) and [this](https://web.archive.org/web/20160930015609/http://projects.mbientlab.com:80/bluetooth-low-energy-basics/) and specifically bullets 3 and 7 under data transfer.
+1. which role can push data to the other one? We do not want to let the Audio board do polling!  Read [this 1](https://embedded.fm/blog/ble-roles) and specifically bullets 3 and 7 under data transfer.
 2. how to show data transfer between server2 and client2?
 3. look for the option that is lightest for the audio board.
+
+Based on the [role definitions](https://web.archive.org/web/20160930015609/http://projects.mbientlab.com:80/bluetooth-low-energy-basics/) during creation of the connection and during operation a first guess for implementation of the MIDI synthesizer / sequencer application  would be let the **sequencer have the master and server** roles and the let the **audio board be the slave and client**. Note: master and slave are roles during making of the connection and client/ server describe roles after the connection has been established. Peripheral and Central are equivalents of slave resp. master.
+
+Note: for compatibility,  make sure that these roles are compatible with existing applications, such as Android apps.
+You can have a look at the configuration of existing MIDI BLE sound modules, e.g. [here](https://tigoe.github.io/SoundExamples/midi-ble.html) or [here](
+https://blog.adafruit.com/2021/09/07/optimizing-ble-midi-with-regards-to-timing-bluetooth-midi-nordictweets/)  
+https://blog.adafruit.com/2021/09/07/optimizing-ble-midi-with-regards-to-timing-bluetooth-midi-nordictweets/  
+Have a look at something like a MIDI BLE specification.   
+Because we have a semi-realtime application where we don't want the audio board give the task for polling for new events, we want the sequencer to push data to the audio board. So data transfer is done via the **notify** mechanism.
+Now that role definitions are clear, the MIDI BLE specification is kind of clear, you have to know what should be the actual BLE role of a MIDI device of a type. try to collect pairs of MIDI ble apps to sniff the roles.
+
+#### Sequencer app (Nimble master/Central and server)
+
+- input: collect MIDI events from instruments
+- output: send timestamped MIDI commands to a sound generating device
+
+The output must be in the order that the events must be handled by a connected audio generating device.
+
+#### Audio/DSP app (Nimble slave/Peripheral and slave)
+
+- Receive timestamped MIDI commands over BLE (Nimble)
+- Execute MIDI commands in a synchronized way,
+
+
+
+
+
 
 
 
