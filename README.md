@@ -84,10 +84,19 @@ Because we have a semi-realtime application where we don't want the audio board 
 
 #### Sequencer app (Nimble master/Central and server)
 
+- input: collect MIDI events from instruments
+- output: send timestamped MIDI commands to a sound generating device
 
-
+The output must be in the order that the events must be handled by a connected audio generating device.
 
 #### Audio/DSP app (Nimble slave/Peripheral and slave)
+
+- Receive timestamped MIDI commands over BLE (Nimble)
+- Execute MIDI commands in a synchronized way,
+
+
+
+
 
 
 
