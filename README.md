@@ -78,7 +78,9 @@ Further investigations needed:
 2. how to show data transfer between server2 and client2?
 3. look for the option that is lightest for the audio board.
 
-Based on **this 2** a first guess for implementation of the MIDI synthesizer / sequencer application  would be to have the sequencer as the master  and server and the audio board as the slave/ client. Note: master and slave are roles during making of the connection and client/ server describe roles after the connection has been established. Peripheral and Central are equivalents of master resp. slave.
+Based on **this 2** a first guess for implementation of the MIDI synthesizer / sequencer application  would be to have the sequencer as the master  and server and the audio board as the slave/ client. Note: master and slave are roles during making of the connection and client/ server describe roles after the connection has been established. Peripheral and Central are equivalents of slave resp. master.
+
+Because we have a semi-realtime application where we don't want the audio board give the task for polling for new events, we want the sequencer to push data to the audio board. So data transfer is done via the indication / notify mechanism.
 
 
 
