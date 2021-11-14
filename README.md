@@ -82,5 +82,13 @@ Based on the [role definitions](https://web.archive.org/web/20160930015609/http:
 
 Because we have a semi-realtime application where we don't want the audio board give the task for polling for new events, we want the sequencer to push data to the audio board. So data transfer is done via the **notify** mechanism.
 
+#### Sequencer app (Nimble master/Central and server)
+
+
+
+
+#### Audio/DSP app (Nimble slave/Peripheral and slave)
+
+
 
 
