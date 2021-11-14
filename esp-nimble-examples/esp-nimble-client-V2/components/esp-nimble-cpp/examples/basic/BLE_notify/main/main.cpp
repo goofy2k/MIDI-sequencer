@@ -80,7 +80,7 @@ void connectedTask (void * parameter){
             pCharacteristic->setValue((uint8_t*)&value, 4);
             pCharacteristic->notify();
             value++;
-            vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
+            vTaskDelay(100/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
         }
         // disconnecting
         if (!deviceConnected && oldDeviceConnected) {
