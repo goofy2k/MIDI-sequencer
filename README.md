@@ -74,9 +74,10 @@ A lot of information about Nimble BLE, including examples can be found [here](ht
 
 Further investigations needed:  
 
-1. which role can push data to the other one? We do not want to let the Audio board do polling!  Read [this](https://embedded.fm/blog/ble-roles) and [this](https://web.archive.org/web/20160930015609/http://projects.mbientlab.com:80/bluetooth-low-energy-basics/) and specifically bullets 3 and 7 under data transfer.
+1. which role can push data to the other one? We do not want to let the Audio board do polling!  Read [this 1](https://embedded.fm/blog/ble-roles) and [this 2](https://web.archive.org/web/20160930015609/http://projects.mbientlab.com:80/bluetooth-low-energy-basics/) and specifically bullets 3 and 7 under data transfer.
 2. how to show data transfer between server2 and client2?
 3. look for the option that is lightest for the audio board.
 
+Based on **this 2** a first guess for implementation of the MIDI synthesizer / sequencer application  would be to have the sequencer as the master  and server and the audio board as the slave/ client. Note: master and slave are roles during making of the connection and client/ server describe roles after the connection has been established.
 
 
