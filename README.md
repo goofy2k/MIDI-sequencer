@@ -86,6 +86,7 @@ https://blog.adafruit.com/2021/09/07/optimizing-ble-midi-with-regards-to-timing-
 https://blog.adafruit.com/2021/09/07/optimizing-ble-midi-with-regards-to-timing-bluetooth-midi-nordictweets/  
 Have a look at something like a MIDI BLE specification.   
 Because we have a semi-realtime application where we don't want the audio board give the task for polling for new events, we want the sequencer to push data to the audio board. So data transfer is done via the **notify** mechanism.
+Now that role definitions are clear, the MIDI BLE specification is kind of clear, you have to know what should be the actual BLE role of a MIDI device of a type. try to collect pairs of MIDI ble apps to sniff the roles.
 
 #### Sequencer app (Nimble master/Central and server)
 
