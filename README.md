@@ -102,11 +102,13 @@ A working example is avaliable here as esp_nimble_client_V2
 
 1. Adapt the esp_nimble_notify_V2 example to send a a stream of single notes.
 2. Add the client part to the TTGO TAudio board demonstrate receipt of the data
-3. Add the BT client to the Faust DSP application and demonstrate playing of the single notes
-4. Add WIFI/MQTT functionality to the "sequencer" to communicate with Nodered in the same way as the Faust DSP app now does (version faust_mqtt_tcp6_nb_v5)
-5. Demonstrate playing single notes entered via Nodered
-6. Add more sequencing functionality, using e.g. the jdksmidi library
-7. On success (matching the functionality of the current faust_mqtt_tcp6_nb_v5 firmware) remove the basic sequencing functionality from the DSP firmware
+3. DONE (faust_ble_midi_v1) Add the BT client to the Faust DSP application: faust_ble_midi_v1   had to dismantle WIFI and MQTT to reduce firmware size
+4. DONE (faust_ble_midi_v1) Show incoming Nimble MIDI commands from the sequencer , while playing the metronome on the soundboard  
+5. Demonstrate playing of the single notes based on incoming commands
+6. Add WIFI/MQTT functionality to the "sequencer" to communicate with Nodered in the same way as the Faust DSP app now does (version faust_mqtt_tcp6_nb_v5)
+7. Demonstrate playing single notes entered via Nodered
+8. Add more sequencing functionality, using e.g. the jdksmidi library
+9. On success (matching the functionality of the current faust_mqtt_tcp6_nb_v5 firmware) remove the basic sequencing functionality from the DSP firmware
 
 
 
