@@ -31,7 +31,9 @@ static void notifyCallback(
   uint8_t* pData,
   size_t length,
   bool isNotify) {
-       printf("Notify callback for characteristic %s of data length %d data: 0x%x\n",
+            printf("Notify callback for characteristic %s of data length %d data: 0x%x 0x%x 0x%x 0x%x 0x%x\n",
+
+    //   printf("Notify callback for characteristic %s of data length %d data: 0x%x\n",
         //  printf("Notify callback for characteristic %s of data length %d data: %u\n", //FCKX
    // printf("Notify callback for characteristic %s of data length %d data: %s\n",
            pBLERemoteCharacteristic->getUUID().toString().c_str(),
@@ -39,7 +41,8 @@ static void notifyCallback(
            //(char*)pData);
          //pData.toString().c_str()); //FCKX
           // pData); //FCKX
-          pData[0]); 
+         // pData[0]); 
+         pData[0], pData[1],pData[2],pData[3],pData[4]); 
 }
 
 /**  None of these are required as they will be handled by the library with defaults. **
