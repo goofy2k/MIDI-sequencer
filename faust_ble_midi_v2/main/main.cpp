@@ -19,6 +19,166 @@ D (5928) MQTT_CLIENT: deliver_publish: msg_topic_len=16
 D (5938) MQTT_CLIENT: Get data len= 21, topic len=16, total_data: 21 offset: 0
 */
 
+
+/* MQTT (over TCP) Example
+
+   This example code is in the Public Domain (or CC0 licensed, at your option.)
+
+   Unless required by applicable law or agreed to in writing, this
+   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+   CONDITIONS OF ANY KIND, either express or implied.
+*/
+
+//#define FCKX_SEQUENCER_API
+#define MIDICTRL 1  //to enable compilation of midi functionality
+
+//#define SYSEX_START_N 0x7b  //added by FCKX
+//#define SYSEX_END 0x05
+
+
+#include <stdio.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include "esp_wifi.h"
+#include "esp_system.h"
+#include "nvs_flash.h"
+#include "esp_event.h"
+#include "esp_netif.h"
+//#include "protocol_examples_common.h"
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/semphr.h"
+#include "freertos/queue.h"
+#include "freertos/timers.h" //for using software timers, NOT required for the nbDelay (?)
+
+#include "freertos/event_groups.h"
+
+#include "esp_spi_flash.h"
+
+#include "lwip/err.h"
+#include "lwip/sys.h"
+#include "lwip/sockets.h"
+#include "lwip/dns.h"
+#include "lwip/netdb.h"
+
+#include "esp_log.h"
+#include "mqtt_client.h"
+
+#include "WM8978.h"
+#include "DspFaust.h"
+#include "secrets.h"
+
+#include "fckx_sequencer.h"
+#include "midi.h"         //FCKX
+#include "jdksmidi/msg.h" //FCKX
+#include "jdksmidi/track.h" //FCKX
+#include "queue.h"
+
+
+/* The examples use WiFi configuration that you can set via project configuration menu
+
+   If you'd rather not, just change the below entries to strings with
+   the config you want - ie #define EXAMPLE_WIFI_SSID "mywifissid"
+*/
+/*
+//Credentials from menuconfig
+#define EXAMPLE_ESP_WIFI_SSID      CONFIG_ESP_WIFI_SSID
+#define EXAMPLE_ESP_WIFI_PASS      CONFIG_ESP_WIFI_PASSWORD
+#define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
+*/
+//Credentials form secrets.h
+#define EXAMPLE_ESP_WIFI_SSID      SECRET_ESP_WIFI_SSID
+#define EXAMPLE_ESP_WIFI_PASS      SECRET_ESP_WIFI_PASSWORD
+#define EXAMPLE_ESP_MAXIMUM_RETRY  SECRET_ESP_MAXIMUM_RETRY
+
+#define MAX_RTTL_LENGTH 1024
+
+#define DSP_MACHINE "sawtooth_synth"
+
+
+
+
+extern "C" {           //FCKX
+    void app_main(void);
+}
+
+
+extern "C" {           //FCKX
+    static esp_mqtt_client * mqtt_app_start(void);
+}
+
+extern "C" {           //FCKX
+static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event);
+}
+
+/*
+
+extern "C" {
+    static void event_handler(void* arg, esp_event_base_t event_base,
+                                int32_t event_id, void* event_data);
+}
+
+extern "C" {
+    void wifi_init_sta(void);
+}
+
+*/
+
+
+/*
+//software timer parameters. See example in: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/freertos.html#timer-api
+#define NUM_TIMERS 1
+
+// An array to hold handles to the created timers.
+TimerHandle_t xTimers[ NUM_TIMERS ];
+
+// An array to hold a count of the number of times each timer expires.
+int32_t lExpireCounters[ NUM_TIMERS ] = { 0 };
+
+//timer callback to be defined just before main (OR should it be just before the sequencer procedure that uses it?
+
+*/
+
+
+//definition of some global variables
+//later, encapsulte these in classes
+
+#define TEMPO 120
+#define TIMESIG_NUM 4
+#define TIMESIG_DENOM 4
+
+DspFaust* DSP;
+bool expired;
+bool metronome_keyOn_expired;
+bool metronome_keyOff_expired;
+bool beat_expired;
+int beatCount;
+int measureCount;
+int loopCount;
+int loopLength;
+unsigned long loopStart;
+int myCounter;
+float tempo_scale;
+//bool metronomeOn = true;
+int timesig_num; 
+int timesig_denom;
+TimerHandle_t beatTimer;
+
+float tempo = TEMPO;
+
+int loopDuration;
+int beatDuration;
+int measureDuration;
+
+
+//buffer for .MsgToText()
+//char messageText[64];
+
+uintptr_t metronomeVoiceAddress;
+
+
 /**********************************************************
 //CODE imported from esp_nimble_client_V2
 ***********************************************************/
@@ -66,8 +226,12 @@ static void notifyCallback(
          //pData.toString().c_str()); //FCKX
           // pData); //FCKX
          // pData[0]); 
-         pData[0], pData[1],pData[2],pData[3],pData[4]); 
+         pData[0], pData[1],pData[2],pData[3],pData[4]);    
          //see MIDI BLE specification for actual data structures (rp52public.pdf)
+//play midi immediately for testing
+//aDSP->propagateMidi(count, time, type, channel, data1, data2);
+DSP->propagateMidi(3, 0, pData[2], 0, pData[3], pData[3]);
+
 }
 
 /**  None of these are required as they will be handled by the library with defaults. **
@@ -214,177 +378,25 @@ void connectTask (void * parameter){
 } // End of loop
 
 
-
-
-
-
-
-
-
-
 /**********************************************************
 //end of CODE imported from esp_nimble_client_V2
 ***********************************************************/
 
 
 
-/* MQTT (over TCP) Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
-
-//#define FCKX_SEQUENCER_API
-#define MIDICTRL 1  //to enable compilation of midi functionality
-
-//#define SYSEX_START_N 0x7b  //added by FCKX
-//#define SYSEX_END 0x05
-
-
-#include <stdio.h>
-#include <stdint.h>
-#include <stddef.h>
-#include <string.h>
-#include "esp_wifi.h"
-#include "esp_system.h"
-#include "nvs_flash.h"
-#include "esp_event.h"
-#include "esp_netif.h"
-//#include "protocol_examples_common.h"
-
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/semphr.h"
-#include "freertos/queue.h"
-#include "freertos/timers.h" //for using software timers, NOT required for the nbDelay (?)
-
-#include "freertos/event_groups.h"
-
-#include "esp_spi_flash.h"
-
-#include "lwip/err.h"
-#include "lwip/sys.h"
-#include "lwip/sockets.h"
-#include "lwip/dns.h"
-#include "lwip/netdb.h"
-
-#include "esp_log.h"
-#include "mqtt_client.h"
-
-#include "WM8978.h"
-#include "DspFaust.h"
-#include "secrets.h"
-
-#include "fckx_sequencer.h"
-#include "midi.h"         //FCKX
-#include "jdksmidi/msg.h" //FCKX
-#include "jdksmidi/track.h" //FCKX
-#include "queue.h"
-
-
-/* The examples use WiFi configuration that you can set via project configuration menu
-
-   If you'd rather not, just change the below entries to strings with
-   the config you want - ie #define EXAMPLE_WIFI_SSID "mywifissid"
-*/
-/*
-//Credentials from menuconfig
-#define EXAMPLE_ESP_WIFI_SSID      CONFIG_ESP_WIFI_SSID
-#define EXAMPLE_ESP_WIFI_PASS      CONFIG_ESP_WIFI_PASSWORD
-#define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
-*/
-//Credentials form secrets.h
-#define EXAMPLE_ESP_WIFI_SSID      SECRET_ESP_WIFI_SSID
-#define EXAMPLE_ESP_WIFI_PASS      SECRET_ESP_WIFI_PASSWORD
-#define EXAMPLE_ESP_MAXIMUM_RETRY  SECRET_ESP_MAXIMUM_RETRY
-
-#define MAX_RTTL_LENGTH 1024
-
-#define DSP_MACHINE "sawtooth_synth"
 
 
 
 
-extern "C" {           //FCKX
-    void app_main(void);
-}
 
 
-extern "C" {           //FCKX
-    static esp_mqtt_client * mqtt_app_start(void);
-}
-
-extern "C" {           //FCKX
-static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event);
-}
-
-/*
-
-extern "C" {
-    static void event_handler(void* arg, esp_event_base_t event_base,
-                                int32_t event_id, void* event_data);
-}
-
-extern "C" {
-    void wifi_init_sta(void);
-}
-
-*/
 
 
-/*
-//software timer parameters. See example in: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/freertos.html#timer-api
-#define NUM_TIMERS 1
-
-// An array to hold handles to the created timers.
-TimerHandle_t xTimers[ NUM_TIMERS ];
-
-// An array to hold a count of the number of times each timer expires.
-int32_t lExpireCounters[ NUM_TIMERS ] = { 0 };
-
-//timer callback to be defined just before main (OR should it be just before the sequencer procedure that uses it?
-
-*/
 
 
-//definition of some global variables
-//later, encapsulte these in classes
-
-#define TEMPO 120
-#define TIMESIG_NUM 4
-#define TIMESIG_DENOM 4
 
 
-bool expired;
-bool metronome_keyOn_expired;
-bool metronome_keyOff_expired;
-bool beat_expired;
-int beatCount;
-int measureCount;
-int loopCount;
-int loopLength;
-unsigned long loopStart;
-int myCounter;
-float tempo_scale;
-//bool metronomeOn = true;
-int timesig_num; 
-int timesig_denom;
-TimerHandle_t beatTimer;
 
-float tempo = TEMPO;
-
-int loopDuration;
-int beatDuration;
-int measureDuration;
-
-
-//buffer for .MsgToText()
-//char messageText[64];
-
-uintptr_t metronomeVoiceAddress;
 
 
 
@@ -524,7 +536,7 @@ bool bpen = false;        //bypass mic, line in , aux  CHECK
 //          - set the GUI widgets to these initial values
 //          - let the GUI status follow changes in these parameters (as an option.....)
 
-DspFaust* DSP;
+//DspFaust* DSP;
 bool incoming_updates = false;
 
 //initial values in app for DSP parameters (may not be compliant with DspFaust.cpp defaults)
