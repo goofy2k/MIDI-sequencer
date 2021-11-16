@@ -399,6 +399,7 @@ uint8_t midiPacket[] = {
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
       deviceConnected = true;
+      BLEDevice::startAdvertising(); //keep advertising to find more connections
     };
 
     void onDisconnect(BLEServer* pServer) {
