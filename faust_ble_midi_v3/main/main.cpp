@@ -35,7 +35,7 @@ D (5938) MQTT_CLIENT: Get data len= 21, topic len=16, total_data: 21 offset: 0
 //#define SYSEX_START_N 0x7b  //added by FCKX
 //#define SYSEX_END 0x05
 
-
+/*
 #include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -46,6 +46,8 @@ D (5938) MQTT_CLIENT: Get data len= 21, topic len=16, total_data: 21 offset: 0
 #include "esp_event.h"
 #include "esp_netif.h"
 //#include "protocol_examples_common.h"
+
+*/
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -70,7 +72,7 @@ D (5938) MQTT_CLIENT: Get data len= 21, topic len=16, total_data: 21 offset: 0
 #include "DspFaust.h"
 #include "secrets.h"
 
-#include "fckx_sequencer.h"
+//#include "fckx_sequencer.h" //is this required???????
 #include "midi.h"         //FCKX
 #include "jdksmidi/msg.h" //FCKX
 #include "jdksmidi/track.h" //FCKX
