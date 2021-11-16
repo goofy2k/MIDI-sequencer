@@ -105,10 +105,15 @@ A working example is avaliable here as esp_nimble_client_V2
 3. DONE (faust_ble_midi_v1) Add the BT client to the Faust DSP application: faust_ble_midi_v1   had to dismantle WIFI and MQTT to reduce firmware size
 4. DONE (faust_ble_midi_v1) Show incoming Nimble MIDI commands from the sequencer , while playing the metronome on the soundboard  
 5. DONE (faust_ble_midi_v2) Demonstrate playing of the single notes based on incoming commands
-6. Add WIFI/MQTT functionality to the "sequencer" to communicate with Nodered in the same way as the Faust DSP app now does (version faust_mqtt_tcp6_nb_v5)
-7. Demonstrate playing single notes entered via Nodered
-8. Add more sequencing functionality, using e.g. the jdksmidi library
-9. On success (matching the functionality of the current faust_mqtt_tcp6_nb_v5 firmware) remove the basic sequencing functionality from the DSP firmware
+6. DONE (faust_ble_midi_v2) Add ESP logging to the sequencer
+7. DONE (faust_ble_midi_v2) Add WIFI/MQTT functionality to the "sequencer" to communicate with Nodered in the same way as the Faust DSP app now does (version faust_mqtt_tcp6_nb_v5)
+8. Demonstrate playing single notes entered via Nodered
+9. Add more sequencing functionality, using e.g. the jdksmidi library. Be compliant with the MIDI specifications
+10. On success (matching the functionality of the current faust_mqtt_tcp6_nb_v5 firmware) remove the basic sequencing functionality from the DSP firmware
+11. Introduce visible or audible feedback to the user about BLE advertising and connection status
+12. Play MIDI from the web or a file
+13. Introduce interface with MIDI instrument, sucha the Yamaha PSR 500
+14. 
 
 
 
