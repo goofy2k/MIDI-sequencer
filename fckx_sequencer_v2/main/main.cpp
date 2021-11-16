@@ -449,13 +449,15 @@ void connectedTask (void * parameter){
  }
         // disconnecting
         if (!deviceConnected && oldDeviceConnected) {
+            ESP_LOGW(TAG,"BLE disconnected, start advertising"); 
             vTaskDelay(500/portTICK_PERIOD_MS); // give the bluetooth stack the chance to get things ready
-            pServer->startAdvertising(); // restart advertising
-            printf("start advertising\n");
+            pServer->startAdvertising();        // restart advertising
+            //printf("start advertising\n");
             oldDeviceConnected = deviceConnected;
         }
         // connecting
         if (deviceConnected && !oldDeviceConnected) {
+            ESP_LOGW(TAG,"BLE connected, do required stuff, depending on the needs for this connection");
             // do stuff here on connecting
             oldDeviceConnected = deviceConnected;
         }
@@ -575,5 +577,5 @@ void app_main(void) {
   
   BLEDevice::startAdvertising();
   ESP_LOGI(TAG, "Waiting for a client connection to notify...");
-  printf("Waiting a client connection to notify...\n");
+  //printf("Waiting a client connection to notify...\n");
 }
