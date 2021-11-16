@@ -107,7 +107,7 @@ A working example is avaliable here as esp_nimble_client_V2
 5. DONE (faust_ble_midi_v2) Demonstrate playing of the single notes based on incoming commands
 6. DONE (faust_ble_midi_v2) Add ESP logging to the sequencer
 7. DONE (faust_ble_midi_v2) Add WIFI/MQTT functionality to the "sequencer" to communicate with Nodered in the same way as the Faust DSP app now does (version faust_mqtt_tcp6_nb_v5)
-8. DONE (faust_ble_midi_v2) Demonstrate playing single notes entered via Nodered (use 5 byte buffer in Nodered), play immediately in API (/fckx_seq/midi/single)
+8. DONE (fckx_seq_v3) Demonstrate playing single notes entered via Nodered (use 5 byte buffer in Nodered), play immediately in API (/fckx_seq/midi/single)
 9. Re-use the browser-based Faust GUI for the sequencer. Just use appropriate MQTT topics  
 10. Add more sequencing functionality, using e.g. the jdksmidi library. Be compliant with the MIDI specifications
 11. On success (matching the functionality of the current faust_mqtt_tcp6_nb_v5 firmware) remove the basic sequencing functionality from the DSP firmware
