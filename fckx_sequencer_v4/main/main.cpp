@@ -38,6 +38,13 @@
 #define EXAMPLE_ESP_MAXIMUM_RETRY  SECRET_ESP_MAXIMUM_RETRY
 
 #include <NimBLEDevice.h>
+//#include "fckxMsg.h"
+//#include "queue.h"   //MUST BE ON
+
+//#include "jdksmidi/track.h" //FCKX
+//#include <jdksmidi/track.h> //FCKX
+//#include "track.h" //FCKX
+//#include <track.h> //FCKX
 
 extern "C" {void app_main(void);}
 
@@ -235,11 +242,6 @@ uint8_t midiPacket[] = {
 }
 
 
-
-
-
-
-
 void fckx_single_midi_command(unsigned long int mididata){  //uses propagateMidi
 static const char *TAG = "execute_single_midi_command";
       //unsigned long eventTimestamp = generate_Timestamp(xTaskGetTickCount());
@@ -287,9 +289,84 @@ static const char *TAG = "execute_single_midi_command";
  };
 
 
+bool handle_inputBuffer(){
+    //look in input buffer
+    bool result = false;
+    
+    
+    return result;
+};
+
+
+ //may extend to class
+
+
+  
+//jdksmidi::MIDIQueue inputQueue(2);  
+ 
+/*
+namespace jdksmidi {
+    
+ 
+
+bool insertMIDI_Sorted(MIDIQueue inputQueue, MIDIQueue sortedQueue){
+    bool result = false;
+    //insert the items that are in the (unsorted) inputBuffer into a position in the sortedBuffer
+    
+    
+   return result; 
+};
+
+}
+*/
+
+/*
+bool storeMIDI_Input(esp_mqtt_event_handle_t event, jdksmidi::MIDIQueue inputQueue){
+    // store incoming MQTT MIDI event in input buffer    
+    static const char *TAG = "storeMIDI_Input"; 
+    bool result = false;   
+     //display incoming data
+    ESP_LOGI(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
+    ESP_LOGI(TAG,"DATA:%.*s ", event->data_len, event->data);
+    ESP_LOGI(TAG,"DATA0 %d", event->data[0]);
+    ESP_LOGI(TAG,"DATA1 %d", event->data[1]); 
+    ESP_LOGI(TAG,"DATA2 %d", event->data[2]); 
+    ESP_LOGI(TAG,"DATA3 %d", event->data[3]); 
+    ESP_LOGI(TAG,"DATA4 %d", event->data[4]);
+    
+    
+    //SEQUENCER TASK 3.
+    //prepare for storing MIDI input
+    
+    fckxMIDITimedMessage inMsg;
+    inMsg.timestamp = xTaskGetTickCount();
+    inMsg.status = event->data[2];    
+    inMsg.data1 = event->data[3];  
+    inMsg.data2 = event->data[4];  
+   
+    ESP_LOGI(TAG,"inMsg.timestamp %lu", inMsg.timestamp);
+    ESP_LOGI(TAG,"inMsg.status %d", inMsg.status); 
+    ESP_LOGI(TAG,"inMsg.data1 %d", inMsg.data1); 
+    ESP_LOGI(TAG,"inMsg.data2 %d", inMsg.data2); 
+  
+  //  if (inputQueue.CanPut()) {
+  //      ESP_LOGI(TAG,"inputQueue.CanPut() is true");
+  //  } else {
+  //      ESP_LOGI(TAG,"inputQueue.CanPut() is false");
+  //  };
+   
+   
 
 
 
+    //Append inMsg to input buffer    
+    //<code here>    
+    
+    return result;
+};
+
+
+*/
 
 static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
 
@@ -299,6 +376,8 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     
     if (strncmp(event->topic, "/fckx_seq/midi/single",strlen("/fckx_seq/midi/single")) == 0) {
 
+
+    //display incoming data
     ESP_LOGI(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
     ESP_LOGI(TAG,"DATA:%.*s ", event->data_len, event->data);
     ESP_LOGI(TAG,"DATA0 %d", event->data[0]);
@@ -306,7 +385,8 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     ESP_LOGI(TAG,"DATA2 %d", event->data[2]); 
     ESP_LOGI(TAG,"DATA3 %d", event->data[3]); 
     ESP_LOGI(TAG,"DATA4 %d", event->data[4]);
-
+    
+    //prepare for immediate sending to sound board (MIDI THRU)
     //create midiPacket for BLE notify
     uint8_t midiPacket[] = {
     event->data[0], //header
@@ -314,24 +394,23 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     event->data[2], //status
     event->data[3], //== 60 == middle c
     event->data[4] //velocity
-};//
-
-    //play immediately on sound board
+        };//
+    //if MIDI THRU
+    //send midiPacket immediately to sound board
+    //add check on NimBLE connection
     pCharacteristic->setValue(midiPacket, 5);
-    pCharacteristic->notify();            
+    pCharacteristic->notify();
+    
+    //store in input buffer
+   // storeMIDI_Input(event, inputQueue );
+
+    
         } 
     else {
          ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
         ESP_LOGI(TAG,"unknown API command");}
 };
     
-
-
-
-
-
-
-
 
 /*
 * MQTT functionality
@@ -618,7 +697,7 @@ void connectedTask (void * parameter){
     for(;;) {
         // notify changed value
         if (deviceConnected) {
-/*
+            /*
             //pCharacteristic->setValue((uint8_t*)&value, 4);
             midiPacket[2] = 0x90; //keyOn, channel 0
             midiPacket[4] = 127; //velocity
@@ -633,7 +712,7 @@ void connectedTask (void * parameter){
             pCharacteristic->notify();
             //value++;
             vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
- */
+            */
 
 
 
@@ -662,24 +741,6 @@ void connectedTask (void * parameter){
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
 void app_main(void) {
     
@@ -699,6 +760,8 @@ void app_main(void) {
     * examples/protocols/README.md for more information about this function.
     */
     //ESP_ERROR_CHECK(example_connect());
+    
+
        
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
