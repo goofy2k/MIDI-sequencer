@@ -118,7 +118,48 @@ A working example is avaliable here as esp_nimble_client_V2
 
 
 
+## Input / output specifications
 
+### Starting points
+
+1. The primary application for the sequencer is to act as as source of input for synthesiser applications on the TTGO TAudio board
+2. Besides it's main task of generating digital synthesized audio, the TTGO TAudio board offers limited capabilities for processing of incoming commands
+3. Communication between the audio board and the sequencer should as much as possible comply with existing standards
+
+Based on the above, we start with defining the spec for the sound board and derive sequencer specs from that.
+
+#### Sound board I/O specifications
+
+- accepts MIDI commands in order of time that they should be played  
+- accepts timestamped (delta-t) MIDI, at first (and preferably), the time stamps will be neglected. MIDI ommands are executed immediately, without the need for further buffering, timing or processing  
+- accepts MIDI commands over Bluetooth. Because it is a light-weight protocol, BLE will be used. The soundboard will act as the xxxx (connect to the sequencer when it is advertising a connection)
+- for the same reason, NimBLE will be used for implementation of the Bluetooth connection
+- the received MIDI data must be encoded following the MIDI-BLE standard (5 bytes, with in the first two bytes a header, containing 13 bits for a timestamp  
+- at the start, the sound board only accepts keyOn (status 0x90) / and keyOff (status 0x80) commands, that will be played immediately. Timestamps are neglected   
+
+#### Sequencer I/O specifications
+
+**Output**
+- Offers a Bluetooth service (NimBLE implementation)
+- output MIDI data are encoded following the MIDI-BLE standard
+- MIDI data are sent in order of playing time
+
+
+**Input**
+- can receive "real time" input over MQTT 
+- later a connection to a musical instrument is envisioned
+
+#### Sequencer mode of operation
+
+- can accept real time input 
+- can forward the real time input immediately to its output
+- can store incoming data
+- can simultaneously send stored data to it's output, e.g. in a loop
+
+- data are stored in a cue with timestamped MIDI messages  
+- for efficient processing or output, the way of storage (data encoding and storage structure) must enable sorting in order of time  
+- timestamps in the cue must be suitable to span long times (minutes/hours). A 4 bytes timestamp that represents milliseconds or processor ticks (10 ms each) seems appropriate  
+- for storage and handling have a look on various applications on the web (jdksmidi MIDI-Nimble ??)  
 
 
 
