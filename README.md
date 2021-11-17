@@ -167,20 +167,22 @@ As the operation involves a number of different tasks that are also time-critica
 
 ### Sequencer tasks
 
-1. Temporary storage of incoming events in order of receipt. This involves adding a timestamp representing the **moment of receipt**
-2. Send MIDI commands to the output for immediate playing. This may involve an output buffer that is emptied as fast as possible over the NimBLE interface. Note: this can involve commands that have just been received (MIDI through) or commands that are output by e.g. a looping task.
+1. Maintain a MIDI clock / beat
+2. Output commands for an audible metronome
+3. Temporary storage of incoming events in order of receipt. This involves adding a timestamp representing the **moment of receipt**
+4. Send MIDI commands to the output for immediate playing. This may involve an output buffer that is emptied as fast as possible over the NimBLE interface. Note: this can involve commands that have just been received (MIDI through) or commands that are output by e.g. a looping task.
 
 OR  
-3. a. **Append** (incoming) commands to a sequence queue with a timestamp, possibly adapted e.g. to fit it in a playing loop 
-3. b. Sort the cue or create a sorted queue of commands in order of intended moment of execution (i.e. in order of the timestamps in this queue
+5. **Append** (incoming) commands to a sequence queue with a timestamp, possibly adapted e.g. to fit it in a playing loop 
+6. Sort the cue or create a sorted queue of commands in order of intended moment of execution (i.e. in order of the timestamps in this queue  
 
 OR  
-3. Insert (incoming) commands into a sequence queue with a timestamp,  at the position representing it's timestamp (possibly adapted e.g. to fit it in a playing loop)
+5. **Insert** (incoming) commands into a sequence queue with a timestamp,  at the position representing it's timestamp (possibly adapted e.g. to fit it in a playing loop)  
 
-4. Maintain a MIDI clock / beat
-5. Output commands for an audible metronome
 
-The option for having a queue that is always sorted (task 3.) is attractive, but may be time critical.
-It may become less time critical, when an input buffer is used (task 1.) for later insertion 
+
+
+The option for having a queue that is always sorted (task 3.) is attractive, but may be time critical.  
+It may become less time critical, when an input buffer is used (task 1.) for later insertion.   
 
 
