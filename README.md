@@ -120,7 +120,7 @@ A working example is avaliable here as esp_nimble_client_V2
 
 ## Input / output specifications
 
-### Starting points
+#### Starting points
 
 1. The primary application for the sequencer is to act as as source of input for synthesiser applications on the TTGO TAudio board
 2. Besides it's main task of generating digital synthesized audio, the TTGO TAudio board offers limited capabilities for processing of incoming commands
@@ -128,7 +128,7 @@ A working example is avaliable here as esp_nimble_client_V2
 
 Based on the above, we start with defining the spec for the sound board and derive sequencer specs from that.
 
-#### Sound board I/O specifications
+### Sound board I/O specifications
 
 - accepts MIDI commands in order of time that they should be played  
 - accepts timestamped (delta-t) MIDI, at first (and preferably), the time stamps will be neglected. MIDI ommands are executed immediately, without the need for further buffering, timing or processing  
@@ -137,7 +137,7 @@ Based on the above, we start with defining the spec for the sound board and deri
 - the received MIDI data must be encoded following the MIDI-BLE standard (5 bytes, with in the first two bytes a header, containing 13 bits for a timestamp  
 - at the start, the sound board only accepts keyOn (status 0x90) / and keyOff (status 0x80) commands, that will be played immediately. Timestamps are neglected   
 
-#### Sequencer I/O specifications
+### Sequencer I/O specifications
 
 **Output**
 - Offers a Bluetooth service (NimBLE implementation)
@@ -149,7 +149,7 @@ Based on the above, we start with defining the spec for the sound board and deri
 - can receive "real time" input over MQTT 
 - later a connection to a musical instrument is envisioned
 
-#### Sequencer mode of operation
+## Sequencer mode of operation
 
 - can accept real time input 
 - can forward the real time input immediately to its output
