@@ -149,18 +149,38 @@ Based on the above, we start with defining the spec for the sound board and deri
 - can receive "real time" input over MQTT 
 - later a connection to a musical instrument is envisioned
 
-## Sequencer mode of operation
+## Sequencer mode(s) of operation
 
 - can accept real time input 
-- can forward the real time input immediately to its output
+- can forward the real time input immediately to its output (can be switched off or on)
 - can store incoming data
 - can simultaneously send stored data to it's output, e.g. in a loop
 
 - data are stored in a cue with timestamped MIDI messages  
 - for efficient processing or output, the way of storage (data encoding and storage structure) must enable sorting in order of time  
 - timestamps in the cue must be suitable to span long times (minutes/hours). A 4 bytes timestamp that represents milliseconds or processor ticks (10 ms each) seems appropriate  
-- for storage and handling have a look on various applications on the web (jdksmidi MIDI-Nimble ??)  
+- for storage and handling have a look on various applications on the web (jdksmidi MIDI-Nimble ??) 
 
+## Sequencer implementation
 
+As the operation involves a number of different tasks that are also time-critical, the sequencer implementation is based on using freeRTOS elements. This includes tasks, timers but may also include freeRTOS queues for efficient handling and communication between the tasks (under investigation).
+
+### Sequencer tasks
+
+1. Temporary storage of incoming events in order of receipt. This involves adding a timestamp representing the **moment of receipt**
+2. Send MIDI commands to the output for immediate playing. This may involve an output buffer that is emptied as fast as possible over the NimBLE interface. Note: this can involve commands that have just been received (MIDI through) or commands that are output by e.g. a looping task.
+
+OR
+3a. **Append** (incoming) commands to a sequence queue with a timestamp, possibly adapted e.g. to fit it in a playing loop 
+3b. Sort the cue or create a sorted queue of commands in order of intended moment of execution (i.e. in order of the timestamps in this queue
+
+OR
+3. Insert (incoming) commands into a sequence queue with a timestamp,  at the position representing it's timestamp (possibly adapted e.g. to fit it in a playing loop)
+
+4. Maintain a MIDI clock / beat
+5. Output commands for an audible metronome
+
+The option for having a queue that is always sorted (task 3.) is attractive, but may be time critical.
+It may become less time critical, when an input buffer is used (task 1.) for later insertion 
 
 
