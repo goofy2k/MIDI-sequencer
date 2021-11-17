@@ -135,7 +135,9 @@ Based on the above, we start with defining the spec for the sound board and deri
 - accepts MIDI commands over Bluetooth. Because it is a light-weight protocol, BLE will be used. The soundboard will act as the xxxx (connect to the sequencer when it is advertising a connection)
 - for the same reason, NimBLE will be used for implementation of the Bluetooth connection
 - the received MIDI data must be encoded following the MIDI-BLE standard (5 bytes, with in the first two bytes a header, containing 13 bits for a timestamp  
-- at the start, the sound board only accepts keyOn (status 0x90) / and keyOff (status 0x80) commands, that will be played immediately. Timestamps are neglected   
+- at the start, the sound board only accepts keyOn (status 0x90) / and keyOff (status 0x80) commands, that will be played immediately. Timestamps are neglected
+- there is also a need to control settings such as ADSR and other DSP parameters for the synthesizer
+- there is also a need to control settings for the audio codec   
 
 ### Sequencer I/O specifications
 
@@ -143,6 +145,9 @@ Based on the above, we start with defining the spec for the sound board and deri
 - Offers a Bluetooth service (NimBLE implementation)
 - output MIDI data are encoded following the MIDI-BLE standard
 - MIDI data are sent in order of playing time
+
+- supply control settings such as ADSR and other DSP parameters for the synthesizer this can (preferably) be done as MIDI commands
+- supply control settings for the audio codec   
 
 
 **Input**
@@ -163,7 +168,7 @@ Based on the above, we start with defining the spec for the sound board and deri
 
 ## Sequencer implementation
 
-As the operation involves a number of different tasks that are also time-critical, the sequencer implementation is based on using freeRTOS elements. This includes tasks, timers but may also include freeRTOS queues for efficient handling and communication between the tasks (under investigation).
+As the operation involves a number of different tasks that are also time-critical, the sequencer implementation is based on using freeRTOS elements. This includes tasks, timers but may also include freeRTOS queues for efficient handling and communication between the tasks (under investigation). Important aspects: can a freeRTOS queue be sorted? Can you insert an element into a freeRTOS queue in a position of your choice? Can you hack cues to mimick that?
 
 ### Sequencer tasks
 
