@@ -107,7 +107,7 @@ A working example is avaliable here as esp_nimble_client_V2
 5. DONE (faust_ble_midi_v2) Demonstrate playing of the single notes based on incoming commands
 6. DONE (faust_ble_midi_v2) Add ESP logging to the sequencer
 7. DONE (faust_ble_midi_v2) Add WIFI/MQTT functionality to the "sequencer" to communicate with Nodered in the same way as the Faust DSP app now does (version faust_mqtt_tcp6_nb_v5)
-8. DONE (faust_ble_midi_v2) Demonstrate playing single notes entered via Nodered (use 5 byte buffer in Nodered), play immediately in API (/fckx_seq/midi/single)
+8. DONE (fckx_seq_v3) Demonstrate playing single notes entered via Nodered (use 5 byte buffer in Nodered), play immediately in API (/fckx_seq/midi/single)
 9. Re-use the browser-based Faust GUI for the sequencer. Just use appropriate MQTT topics  
 10. Add more sequencing functionality, using e.g. the jdksmidi library. Be compliant with the MIDI specifications
 11. On success (matching the functionality of the current faust_mqtt_tcp6_nb_v5 firmware) remove the basic sequencing functionality from the DSP firmware
@@ -118,8 +118,73 @@ A working example is avaliable here as esp_nimble_client_V2
 
 
 
+## Input / output specifications
+
+#### Starting points
+
+1. The primary application for the sequencer is to act as as source of input for synthesiser applications on the TTGO TAudio board
+2. Besides it's main task of generating digital synthesized audio, the TTGO TAudio board offers limited capabilities for processing of incoming commands
+3. Communication between the audio board and the sequencer should as much as possible comply with existing standards
+
+Based on the above, we start with defining the spec for the sound board and derive sequencer specs from that.
+
+### Sound board I/O specifications
+
+- accepts MIDI commands in order of time that they should be played  
+- accepts timestamped (delta-t) MIDI, at first (and preferably), the time stamps will be neglected. MIDI ommands are executed immediately, without the need for further buffering, timing or processing  
+- accepts MIDI commands over Bluetooth. Because it is a light-weight protocol, BLE will be used. The soundboard will act as the xxxx (connect to the sequencer when it is advertising a connection)
+- for the same reason, NimBLE will be used for implementation of the Bluetooth connection
+- the received MIDI data must be encoded following the MIDI-BLE standard (5 bytes, with in the first two bytes a header, containing 13 bits for a timestamp  
+- at the start, the sound board only accepts keyOn (status 0x90) / and keyOff (status 0x80) commands, that will be played immediately. Timestamps are neglected   
+
+### Sequencer I/O specifications
+
+**Output**
+- Offers a Bluetooth service (NimBLE implementation)
+- output MIDI data are encoded following the MIDI-BLE standard
+- MIDI data are sent in order of playing time
+
+
+**Input**
+- can receive "real time" input over MQTT 
+- later a connection to a musical instrument is envisioned
+
+## Sequencer mode(s) of operation
+
+- can accept real time input 
+- can forward the real time input immediately to its output (can be switched off or on)
+- can store incoming data
+- can simultaneously send stored data to it's output, e.g. in a loop
+
+- data are stored in a cue with timestamped MIDI messages  
+- for efficient processing or output, the way of storage (data encoding and storage structure) must enable sorting in order of time  
+- timestamps in the cue must be suitable to span long times (minutes/hours). A 4 bytes timestamp that represents milliseconds or processor ticks (10 ms each) seems appropriate  
+- for storage and handling have a look on various applications on the web (jdksmidi MIDI-Nimble ??) 
+
+## Sequencer implementation
+
+As the operation involves a number of different tasks that are also time-critical, the sequencer implementation is based on using freeRTOS elements. This includes tasks, timers but may also include freeRTOS queues for efficient handling and communication between the tasks (under investigation).
+
+### Sequencer tasks
+
+1. Maintain a MIDI clock / beat
+2. Output commands for an audible metronome
+3. Temporary storage of incoming events in order of receipt. This involves adding a timestamp representing the **moment of receipt**
+4. Send MIDI commands to the output for immediate playing. This may involve an output buffer that is emptied as fast as possible over the NimBLE interface. Note: this can involve commands that have just been received (MIDI through) or commands that are output by e.g. a looping task.
+
+   OR  
+
+5. **Append** (incoming) commands to a sequence queue with a timestamp, possibly adapted e.g. to fit it in a playing loop 
+6. Sort the cue or create a sorted queue of commands in order of intended moment of execution (i.e. in order of the timestamps in this queue  
+
+   OR  
+  
+5. **Insert** (incoming) commands into a sequence queue with a timestamp,  at the position representing it's timestamp (possibly adapted e.g. to fit it in a playing loop)  
 
 
 
+
+The option for having a queue that is always sorted (task 3.) is attractive, but may be time critical.  
+It may become less time critical, when an input buffer is used (task 1.) for later insertion.   
 
 
