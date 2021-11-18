@@ -190,6 +190,10 @@ As the operation involves a number of different tasks that are also time-critica
 
 
 The option for having a queue that is always sorted (task 3.) is attractive, but may be time critical.  
-It may become less time critical, when an input buffer is used (task 1.) for later insertion.   
+It may become less time critical, when an input buffer is used (task 1.) for later insertion.  
+
+#### Progress on tasks
+
+- **Task 5** introduced storage of incoming MIDI messages in inQ. Timestamps (in system ticks) are added immediately at receipt. Messages are in order of receipt so in order of system time (fckx_sequencer_v4)   
 
 
