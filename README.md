@@ -180,7 +180,7 @@ As the operation involves a number of different tasks that are also time-critica
    OR  
 
 5. **Append** (incoming) commands to a sequence queue with a timestamp, possibly adapted e.g. to fit it in a playing loop 
-6. Sort the cue or create a sorted queue of commands in order of intended moment of execution (i.e. in order of the timestamps in this queue  
+6. Insert messages from the input queue into a sequence. After completing this task the sequence is in order of intended moment of execution (i.e. in order of the timestamps in this queue). When e.g. recording in a loop, this involves conversion of the timestamp of receipt in a timestamp for execution. This conversion depends on implemetation of Task 1.    
 
    OR  
   
@@ -194,6 +194,7 @@ It may become less time critical, when an input buffer is used (task 1.) for lat
 
 #### Progress on tasks
 
-- **Task 5** introduced storage of incoming MIDI messages in inQ. Timestamps (in system ticks) are added immediately at receipt. Messages are in order of receipt so in order of system time (fckx_sequencer_v4)   
+- **Task 5** introduced storage of incoming MIDI messages in inQ. Timestamps (in system ticks) are added immediately at receipt. Messages are in order of receipt so in order of system time (fckx_sequencer_v4). This task is fired at incoming MIDI events over MQTT.  
+-    
 
 
