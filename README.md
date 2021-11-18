@@ -195,6 +195,8 @@ It may become less time critical, when an input buffer is used (task 1.) for lat
 #### Progress on tasks
 
 - **Task 3** introduced storage of incoming MIDI messages in inQ. Timestamps (in system ticks) are added immediately at receipt. Messages are in order of receipt so in order of system time (fckx_sequencer_v4). This task is fired at incoming MIDI events over MQTT.  
--    
+- **Task 1** considerations:
+  - bla
+  - bla    
 
 
