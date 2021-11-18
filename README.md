@@ -179,8 +179,8 @@ As the operation involves a number of different tasks that are also time-critica
 
    OR  
 
-5. **Append** (incoming) commands to a sequence queue with a timestamp, possibly adapted e.g. to fit it in a playing loop 
-6. Insert messages from the input queue into a sequence. After completing this task the sequence is in order of intended moment of execution (i.e. in order of the timestamps in this queue). When e.g. recording in a loop, this involves conversion of the timestamp of receipt in a timestamp for execution. This conversion depends on implemetation of Task 1.    
+5. **Append** (incoming) commands to an input queue with a timestamp of receipt, 
+6. Insert each message from the input queue into a track corresponding with it's channel number. After completing this task all tracks are in order of intended moment of execution (i.e. in order of the timestamps in this queue). When e.g. recording in a loop, this involves conversion of the timestamp of receipt in a timestamp for execution. This conversion depends on implementation of Task 1.    
 
    OR  
   
