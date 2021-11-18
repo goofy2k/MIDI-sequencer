@@ -196,7 +196,13 @@ It may become less time critical, when an input buffer is used (task 1.) for lat
 
 - **Task 3** introduced storage of incoming MIDI messages in inQ. Timestamps (in system ticks) are added immediately at receipt. Messages are in order of receipt so in order of system time (fckx_sequencer_v4). This task is fired at incoming MIDI events over MQTT.  
 - **Task 1** considerations:
-  - bla
-  - bla    
+  - basic unit is the system time tick (currently 10 ms, but may need to be reduced in case of audible hick ups, see MIDI and BLE-MIDI specifications
+  - MIDITime is nr of system ticks since reboot or since connection to Nimble client (a kind of session time) (t.b.d.)
+  - As system time, MIDITime is continuously increasing
+  - The "beat" is governed by the tempo (e.g. 120 bpm) and the time signature (e.g. 4/4, 3/4, 5/4 or more exotic signatures)
+  - The "beat" is defined as the number of quarter notes per minute
+  - A time signature is represented as time_sig_denom/time_sig_num (e.g. 3/4). Where time_sig_denom defines the number of notes in a measure and 1/time_sig_num the length of a note.
+  - Loops for recording / playing always start at the start of a measure and contain a number of full measures
+  - Multiple simultaneous loops can be playing, each driven by it's own task.      
 
 
