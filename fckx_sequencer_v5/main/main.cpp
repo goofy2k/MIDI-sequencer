@@ -52,41 +52,6 @@
 //#include "track.h" //FCKX
 //#include <track.h> //FCKX
 
-#define TEMPO 120
-#define TIMESIG_NUM 4
-#define TIMESIG_DENOM 4
-
-//DspFaust* DSP;
-bool expired;
-bool metronome_keyOn_expired;
-bool metronome_keyOff_expired;
-bool beat_expired;
-int beatCount;
-int measureCount;
-int loopCount;
-int loopLength;
-unsigned long loopStart;
-int myCounter;
-float tempo_scale;
-//bool metronomeOn = true;
-int timesig_num; 
-int timesig_denom;
-TimerHandle_t beatTimer;
-
-float tempo = TEMPO;
-
-int loopDuration;
-int beatDuration;
-int measureDuration;
-
-
-
-
-
-
-
-
-
 extern "C" {void app_main(void);}
 
 BLEServer* pServer = NULL;
@@ -95,32 +60,6 @@ BLECharacteristic* pCharacteristic = NULL;
 
 
 static const char *TAG = "FCKX_SEQ";
-
-
-
-
-class MIDIClock {     // The class
-  public:           // Access specifier
-    MIDIClock() {     // Constructor
-      birthTime = xTaskGetTickCount(); //get timer ticks
-    }
-     unsigned long int getTime(){
-        return xTaskGetTickCount()-birthTime;
-    }
-    void reset() {
-        birthTime = xTaskGetTickCount();
-    }
-
-    
-  private:
-     unsigned long int birthTime; 
-};
-
-
-
-
-
-
 
 
 /* WIFI functionality, taken from ESP-IDF example: xxxxxxxxxxxx
@@ -235,7 +174,7 @@ void execute_single_midi_command(DspFaust * aDSP, int mididata){  //uses propaga
 static const char *TAG = "execute_single_midi_command";
       //unsigned long eventTimestamp = generate_Timestamp(xTaskGetTickCount());
     unsigned long event_Timestamp =  generate_Timestamp( xTaskGetTickCount() ) ;
-    jdksmidi::fckxMIDITimedMessage inMessage = generate_fckxMIDITimedMessage( mididata, event_Timestamp);
+    jdksmidi::MIDITimedBigMessage inMessage = generate_MIDITimedBigMessage( mididata, event_Timestamp);
     
     if (!(seq_mode & play_incoming_mode) == 0) {    
         //and play
@@ -286,7 +225,7 @@ uint8_t midiPacket[] = {
     0x00  //velocity
 };//
 
-    ESP_LOGW(TAG,"CREATE and notify midiPacket");    //wrap this into a routine using a fckxMIDITimedMessage as input (not necessary for incoming
+    ESP_LOGW(TAG,"CREATE and notify midiPacket");    //wrap this into a routine using a MIDITimedBigMessage as input (not necessary for incoming
     midiPacket[4] =  mididata & 0x00000000ff;
     midiPacket[3] = (mididata & 0x000000ff00)>>8;
     midiPacket[2] = (mididata & 0x0000ff0000)>>16;
@@ -313,7 +252,7 @@ void fckx_single_midi_command(unsigned long int mididata){  //uses propagateMidi
 static const char *TAG = "execute_single_midi_command";
       //unsigned long eventTimestamp = generate_Timestamp(xTaskGetTickCount());
     //unsigned long event_Timestamp =  generate_Timestamp( xTaskGetTickCount() ) ;
-    //jdksmidi::fckxMIDITimedMessage inMessage = generate_fckxMIDITimedMessage( mididata, event_Timestamp);
+    //jdksmidi::MIDITimedBigMessage inMessage = generate_MIDITimedBigMessage( mididata, event_Timestamp);
   notify_midi(pCharacteristic, mididata);
   
   /*  
@@ -406,14 +345,13 @@ bool storeMIDI_Input(esp_mqtt_event_handle_t event){
     //SEQUENCER TASK 3.
     //prepare for storing MIDI input
     
-    jdksmidi::fckxMIDITimedMessage inMsg;
-    //inMsg.timestamp = xTaskGetTickCount();  //
-    inMsg.setTime(xTaskGetTickCount());
+    fckxMIDITimedMessage inMsg;
+    inMsg.timestamp = xTaskGetTickCount();
     inMsg.status = event->data[2];    
     inMsg.data1 = event->data[3];  
     inMsg.data2 = event->data[4];  
    
-    ESP_LOGI(TAG,"inMsg.timestamp %lu", inMsg.GetTime());
+    ESP_LOGI(TAG,"inMsg.timestamp %lu", inMsg.timestamp);
     ESP_LOGI(TAG,"inMsg.status %d", inMsg.status); 
     ESP_LOGI(TAG,"inMsg.data1 %d", inMsg.data1); 
     ESP_LOGI(TAG,"inMsg.data2 %d", inMsg.data2); 
@@ -815,16 +753,6 @@ void connectedTask (void * parameter){
         if (deviceConnected && !oldDeviceConnected) {
             ESP_LOGW(TAG,"BLE connected, do required stuff, depending on the needs for this connection");
             // do stuff here on connecting
-            MIDIClock midiClock;
-            //unsigned long int myTime = midiClock.getmTime();
-            // ESP_LOGW(TAG,"MidiTime: %lu ticks", myTime); 
-            ESP_LOGW(TAG,"MidiTime: %lu ticks", midiClock.getTime()); 
-            vTaskDelay(500/portTICK_PERIOD_MS);
-            ESP_LOGW(TAG,"MidiTime: %lu ticks", midiClock.getTime());
-            ESP_LOGW(TAG,"MidiTime RESET");
-            midiClock.reset();
-            ESP_LOGW(TAG,"MidiTime: %lu ticks", midiClock.getTime());
-            //midiClock.birth = xGetxTaskGetTickCount();
             oldDeviceConnected = deviceConnected;
         }
         
