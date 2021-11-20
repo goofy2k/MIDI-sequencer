@@ -41,7 +41,7 @@
 //#include "fckxMsg.h"
 #include "queue.h"   //MUST BE ON
 
-
+#include "../components/NiCMidi/include/msg.h" //NiCMidi
 
 //define queue sizes
 //max total queue size is at least 2048 (fckx_sequencer_v4)
@@ -738,17 +738,8 @@ void connectedTask (void * parameter){
             //value++;
             vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
             */
-/*
- //https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html        
-             ESP_LOGE(TAG,"Testing NicMidi functionality"); 
- MIDIMessage msg1, msg2, msg3;     // creates three empty MIDIMessage objects
-   msg1.SetNoteOn(0, 60, 100);       // msg1 becomes a Note On, channel 1, note 60, velocity 100
-   msg2.SetVolumeChange(0, 127);     // msg2 becomes a Volume Change (CC 7), channel 1, volume 127
-   msg3.SetTimeSig(4, 4);            // msg 3 becomes a system Time Signature, 4/4
-   msg1.SetChannel(msg1.GetChannel() + 1);
-                                     // increments the msg1 channel by one
-   msg2.SetControllerValue(msg2.GetControllerValue() - 10);
-*/
+
+
 
  }
         // disconnecting
@@ -813,6 +804,23 @@ void app_main(void) {
   ESP_LOGW(TAG, "Initialize MQTT connection here");
   esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
   //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
+  
+  
+   //https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html        
+             ESP_LOGE(TAG,"Testing NicMidi functionality"); 
+ MIDIMessage msg1;
+MIDIMessage msg2;
+MIDIMessage msg3;     // creates three empty MIDIMessage objects
+   msg1.SetNoteOn(0, 60, 100);       // msg1 becomes a Note On, channel 1, note 60, velocity 100
+   msg2.SetVolumeChange(0, 127);     // msg2 becomes a Volume Change (CC 7), channel 1, volume 127
+   msg3.SetTimeSig(4, 4);            // msg 3 becomes a system Time Signature, 4/4
+   msg1.SetChannel(msg1.GetChannel() + 1);
+                                     // increments the msg1 channel by one
+   msg2.SetControllerValue(msg2.GetControllerValue() - 10);
+
+  
+  
+  
   
   
   // Create the BLE Device
