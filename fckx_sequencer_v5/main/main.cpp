@@ -41,6 +41,8 @@
 //#include "fckxMsg.h"
 #include "queue.h"   //MUST BE ON
 
+
+
 //define queue sizes
 //max total queue size is at least 2048 (fckx_sequencer_v4)
 #define INQ_SIZE    128
@@ -716,9 +718,10 @@ class MyServerCallbacks: public BLEServerCallbacks {
 };
 
 void connectedTask (void * parameter){
-    for(;;) {
-        // notify changed value
+    for(;;) {  //loop forever
+        // only act if connection status changes or if there is a stable connection
         if (deviceConnected) {
+            //ESP_LOGW(TAG,"STABLE CONNECTION "); 
             /*
             //pCharacteristic->setValue((uint8_t*)&value, 4);
             midiPacket[2] = 0x90; //keyOn, channel 0
@@ -735,21 +738,31 @@ void connectedTask (void * parameter){
             //value++;
             vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
             */
-
-
+/*
+ //https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html        
+             ESP_LOGE(TAG,"Testing NicMidi functionality"); 
+ MIDIMessage msg1, msg2, msg3;     // creates three empty MIDIMessage objects
+   msg1.SetNoteOn(0, 60, 100);       // msg1 becomes a Note On, channel 1, note 60, velocity 100
+   msg2.SetVolumeChange(0, 127);     // msg2 becomes a Volume Change (CC 7), channel 1, volume 127
+   msg3.SetTimeSig(4, 4);            // msg 3 becomes a system Time Signature, 4/4
+   msg1.SetChannel(msg1.GetChannel() + 1);
+                                     // increments the msg1 channel by one
+   msg2.SetControllerValue(msg2.GetControllerValue() - 10);
+*/
 
  }
         // disconnecting
         if (!deviceConnected && oldDeviceConnected) {
-            ESP_LOGW(TAG,"BLE disconnected, start advertising"); 
-             ESP_LOGW(TAG,"Do required stuff, depending on the needs for this lost connection");
+            ESP_LOGW(TAG,"BLE disconnected"); 
+            ESP_LOGW(TAG,"Do required stuff, depending on the needs for this lost connection");
 
             vTaskDelay(500/portTICK_PERIOD_MS); // give the bluetooth stack the chance to get things ready
+            ESP_LOGW(TAG,"Start advertising again");   
             pServer->startAdvertising();        // restart advertising
             //printf("start advertising\n");
             oldDeviceConnected = deviceConnected;
         }
-        // connecting
+        // connection established
         if (deviceConnected && !oldDeviceConnected) {
             ESP_LOGW(TAG,"BLE connected, do required stuff, depending on the needs for this connection");
             // do stuff here on connecting
@@ -768,6 +781,7 @@ void app_main(void) {
     
     static const char *TAG = "APP_MAIN";   
     esp_log_level_set("*", ESP_LOG_INFO);
+    esp_log_level_set("NimBLE", ESP_LOG_VERBOSE);
     esp_log_level_set("storeMIDI_Input", ESP_LOG_INFO);
     ESP_LOGI(TAG, "[APP] Startup..");
     ESP_LOGI(TAG, "[APP] Free memory: %d bytes", esp_get_free_heap_size());
@@ -848,7 +862,8 @@ void app_main(void) {
   /** This method had been removed **
   pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
   **/
-  
+  //define a task with a continous loop
+  //it is called connectedTask, but in fact it also starts when there is no connection
   xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
   
   BLEDevice::startAdvertising();

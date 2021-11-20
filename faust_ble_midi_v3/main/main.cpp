@@ -2453,7 +2453,6 @@ while(!expired) {
     
 }; //start_metronome_keyOff
 
-
 void start_metronome_keyOff(int metronomeMS){
 static const char *TAG = "START_METRONOME_KEYOFF";   
 //non_blocking delay based on freertos timer
@@ -2487,10 +2486,6 @@ while(!expired) {
 */      
     
 }; //start_metronome_keyOff
-
-
-
-
 
 void play_metronome(bool measureTick) {
     float mF;
@@ -2727,6 +2722,7 @@ void app_main(void){
 
     esp_log_level_set("*", ESP_LOG_ERROR);
     esp_log_level_set("APP_MAIN", ESP_LOG_ERROR);
+    esp_log_level_set("NimBLE", ESP_LOG_ERROR);
     esp_log_level_set("HANDLE_QUEUE", ESP_LOG_VERBOSE);
     esp_log_level_set("DSPFAUST", ESP_LOG_ERROR);
     //esp_log_level_set("DSPFAUST", ESP_LOG_VERBOSE);

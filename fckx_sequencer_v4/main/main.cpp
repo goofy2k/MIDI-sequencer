@@ -52,6 +52,8 @@
 //#include "track.h" //FCKX
 //#include <track.h> //FCKX
 
+#include "NiCMidi/include/msg.h"
+
 extern "C" {void app_main(void);}
 
 BLEServer* pServer = NULL;
@@ -735,8 +737,7 @@ void connectedTask (void * parameter){
             //value++;
             vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
             */
-
-
+   
 
  }
         // disconnecting
