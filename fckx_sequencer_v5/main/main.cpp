@@ -843,7 +843,9 @@ void app_main(void) {
     printf("msg1.MsgToText(): %s\n", msg1.MsgToText()); //does not print
     printf("msg2.MsgToText(): %s\n", msg2.MsgToText()); 
     printf("msg3.MsgToText(): %s\n", msg3.MsgToText()); 
-    */    
+    */ 
+
+  
   
     /**********************************************************************************
     *END OF TEST  NiCMidi functionality
