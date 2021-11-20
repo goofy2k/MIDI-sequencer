@@ -850,9 +850,13 @@ MIDIMessage objects can be sent to an hardware MIDI port by the MIDIOutDriver::O
 (this will be treated in detail in the How NiCMidi plays MIDI section).
 */
 /*
-//<code here>
+//<code here> HOW TO USE THIS WITH MY NIMBLE DRIVER???
+//THis example REQUIRES RtMidi.  It is essential !!!!!
+//example throws an error: namespace definition not allowed here.... (dive into this later)
+
 #include "msg.h"
 */
+
 #include "../include/manager.h"                // includes "timer.h" and "driver.h"
  
 //int main() {
@@ -869,6 +873,35 @@ MIDIMessage objects can be sent to an hardware MIDI port by the MIDIOutDriver::O
    port->ClosePort();               // closes the port
 //   return 0;
 //}
+
+
+
+/* ### WITH THIS EXAMPLE YOU CAN PROBABLY HAVE SOME OUTPUT UNTIL YOU HAVE FOUND
+HOW TO IMPLEMENT THE BLE INTERFACE TO THE SOUND BOARD
+//example throws an error: namespace definition not allowed here.... (dive into this later)
+Many classes (see MIDIInDriver, MIDIOutDriver, MIDIThru, MIDISequencer) have a SetProcessor() method that allows the user to "plug in" a processor in their flow of incoming-outcoming messages. This is an example which could be useful for debugging purposes: plugging a MIDIProcessorPrinter to a MIDIInDriver will print all incoming messages.
+*/
+/*
+#include "../include/manager.h"     // includes driver.h and timer.h
+#include "../include/processor.h"
+ 
+//int main() {
+   MIDIInDriver* driver = MIDIManager::GetInDriver(0);
+                // this is the MIDI IN port 0 in your system
+   MIDIProcessorPrinter printer;        // creates a printer processor
+   driver->SetProcessor(&printer);      // plugs the printer into the driver
+   driver->OpenPort();                  // starts receiving messages
+   MIDITimer::Wait(20000);
+                // waits 20 secs: you can play with a MIDI device connected to the port
+                // and the incoming messages will be printed on stdout
+   driver->ClosePort();                 // closes the port
+//   return 0;
+//}
+*/
+
+
+
+
 
 
 /*
