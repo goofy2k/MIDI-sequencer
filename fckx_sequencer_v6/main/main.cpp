@@ -812,19 +812,9 @@ void app_main(void) {
   esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
   //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
   
-    /**********************************************************************************
-    *TEST  NiCMidi functionality
-    *
-    * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
-    *    
-    ***********************************************************************************/    
+    //TEST  NiCMidi functionality
+    //https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html        
     ESP_LOGE(TAG,"Testing NiCMidi functionality"); 
-    /*
-    The MIDIMessage class allows you to create, edit or inspect MIDI messages without worrying about hexadecimal 
-    values: it consists of a status byte, three data bytes for MIDI data, and a pointer to a MIDISystemExclusive 
-    object (a buffer that can store any amount of bytes), with lots of methods for setting and inspecting data. 
-    The constructor creates an empty (NoOp) message; you must then set its status and data with the class methods.    
-    */
     MIDIMessage msg1, msg2, msg3;
     //MIDIMessage msg2;
     //MIDIMessage msg3;     // creates three empty MIDIMessage objects
@@ -844,14 +834,6 @@ void app_main(void) {
     printf("msg2.MsgToText(): %s\n", msg2.MsgToText()); 
     printf("msg3.MsgToText(): %s\n", msg3.MsgToText()); 
     */    
-  
-    /**********************************************************************************
-    *END OF TEST  NiCMidi functionality
-    *
-    * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
-    *    
-    ***********************************************************************************/
-  
   
   // Create the BLE Device
   ESP_LOGI(TAG, "Initialize BLEDevice fckx_seq");
