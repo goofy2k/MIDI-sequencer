@@ -194,8 +194,8 @@ Task in *italics* still to be implemented
 5. *Insert (incoming) commands directly into a **track** with a timestamp,  at the position representing it's timestamp (possibly adapted e.g. to fit it in a playing loop)*  
 
 
-The option for having a queue that is always sorted (task 3.) is attractive, but may be time critical.  
-It may become less time critical, when an input buffer is used (task 1.) for later insertion.  
+The option (2) for having a queue that is always sorted is attractive, but may be time critical.  
+It may become less time critical, when an input buffer is used for later insertion (option 2).  
 
 #### Progress on tasks
 
