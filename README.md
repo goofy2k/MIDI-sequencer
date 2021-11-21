@@ -195,7 +195,7 @@ Task in *italics* still to be implemented
 
 
 The option (2) for having a queue that is always sorted is attractive, but may be time critical.  
-It may become less time critical, when an input buffer is used for later insertion (option 2).  
+It may become less time critical, when an input buffer is used for later insertion (option 1).  
 
 #### Progress on tasks
 
