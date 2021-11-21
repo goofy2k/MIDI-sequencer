@@ -172,6 +172,7 @@ As the operation involves a number of different tasks that are also time-critica
 
 - Have a look at jdksmidi for MIDI sequencer related classes. The project structure is complex. The code is out-dated and does not have a living community.  
 - A modern alternative ~~based on~~ inpired by it is [NicMidi](https://github.com/ncassetta/NiCMidi). Also see the [docs](https://ncassetta.github.io/NiCMidi/docs/html/) for it. The code is not directly transferrable to ESP-IDF (uses <thread> and in timer.h and uses RtMidi for message I/O)
+- In the end, successfully added examples of NiCMidi's MIDIMessage and MIDITrack. All elements relating to MIDITimer switched off
 
 ### Sequencer tasks
 
