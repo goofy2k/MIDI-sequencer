@@ -186,7 +186,7 @@ Task in *italics* still to be implemented
 4b. *Cast incoming MIDI into the MIDIMsg type*  
     
 *OPTION 1:*  
-5. **Append** (incoming) commands to an input queue with a timestamp for the moment of receipt  
+5. ***Append** (incoming) commands to an input queue with a timestamp for the moment of receipt  *
 6. *Insert each message from the input queue into a **track** corresponding with it's channel number. After completing this task all tracks are in order of intended moment of execution (i.e. in order of the timestamps in this queue). When e.g. recording in a loop, this involves conversion of the timestamp of receipt in a timestamp for execution. This conversion depends on implementation of Task 1*    
 
    
