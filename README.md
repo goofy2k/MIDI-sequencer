@@ -174,18 +174,20 @@ As the operation involves a number of different tasks that are also time-critica
 - A modern alternative ~~based on~~ inpired by it is [NicMidi](https://github.com/ncassetta/NiCMidi). Also see the [docs](https://ncassetta.github.io/NiCMidi/docs/html/) for it. The code is not directly transferrable to ESP-IDF (uses <thread> and in timer.h and uses RtMidi for message I/O)
 - In the end, successfully added examples of NiCMidi's MIDIMessage and MIDITrack (v6.b -> 7). All elements relating to MIDITimer switched off.
 
-### Sequencer tasks
+### Sequencer tasks  
 
-1. Maintain a MIDI clock / beat
-2. Output commands for an audible metronome
+Task in *italics* still to be implemented
+  
+1. *Maintain a MIDI clock / beat*  
+2. *Output commands for an audible metronome*  
 3. Temporary storage of incoming events in order of receipt. This involves adding a timestamp representing the **moment of receipt**
 4. Send MIDI commands to the output for immediate playing. This may involve an output buffer that is emptied as fast as possible over the NimBLE interface. Note: this can involve commands that have just been received (MIDI through) or commands that are output by e.g. a looping task.
 
-4b. Cast incoming MIDI into the MIDIMsg type  
+4b. *Cast incoming MIDI into the MIDIMsg type*  
     
 *OPTION 1:*  
 5. **Append** (incoming) commands to an input queue with a timestamp for the moment of receipt  
-6. Insert each message from the input queue into a **track** corresponding with it's channel number. After completing this task all tracks are in order of intended moment of execution (i.e. in order of the timestamps in this queue). When e.g. recording in a loop, this involves conversion of the timestamp of receipt in a timestamp for execution. This conversion depends on implementation of Task 1.    
+6. *Insert each message from the input queue into a **track** corresponding with it's channel number. After completing this task all tracks are in order of intended moment of execution (i.e. in order of the timestamps in this queue). When e.g. recording in a loop, this involves conversion of the timestamp of receipt in a timestamp for execution. This conversion depends on implementation of Task 1*    
 
    
 *OPTION 2:*    
