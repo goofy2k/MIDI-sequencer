@@ -41,11 +41,11 @@
 //#include "fckxMsg.h"
 #include "queue.h"   //MUST BE ON
 
+
 //NiCMidi includes
 #include "../include/msg.h" 
 #include "../include/sysex.h"
 #include "../include/midi.h"
-#include "../include/track_dirty.h"
 #include <iostream>
 
 
@@ -818,7 +818,7 @@ void app_main(void) {
     * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
     *    
     ***********************************************************************************/    
-    ESP_LOGE(TAG,"Testing NiCMidi functionality: MidiMessage");    
+    ESP_LOGE(TAG,"Testing NiCMidi functionality"); 
     /*
     The MIDIMessage class allows you to create, edit or inspect MIDI messages without worrying about hexadecimal 
     values: it consists of a status byte, three data bytes for MIDI data, and a pointer to a MIDISystemExclusive 
@@ -845,17 +845,90 @@ void app_main(void) {
     printf("msg3.MsgToText(): %s\n", msg3.MsgToText()); 
     */ 
 
-//Can I use the NicMidi Track class?
 /*
+MIDIMessage objects can be sent to an hardware MIDI port by the MIDIOutDriver::OutputMessage() method 
+(this will be treated in detail in the How NiCMidi plays MIDI section).
+*/
+/*
+//<code here> HOW TO USE THIS WITH MY NIMBLE DRIVER???
+//THis example REQUIRES RtMidi.  It is essential !!!!!
+//example throws an error: namespace definition not allowed here.... (dive into this later)
+
+#include "msg.h"
+*/
+
+#include "../include/manager.h"                // includes "timer.h" and "driver.h"
+ 
+//int main() {
+   MIDIOutDriver* port = MIDIManager::GetOutPort(0);
+                                    // gets a pointer to the driver of the 1st hardware out
+                                    // port in the system
+   port->OpenPort();                // you must open the port before sending MIDI messages
+   MIDIMessage msg;
+   msg.SetNoteOn(0, 60, 100);       // makes msg1 a Note On message
+   port->OutputMessage(&msg1);      // outputs the message (the note should sound)
+   MIDITimer::Wait(2000);           // waits two seconds
+   msg.SetNoteOff(0, 60);           // makes msg the corresponding Note Off
+   port->OutputMessage(&msg);       // outputs the message (the note should stop)
+   port->ClosePort();               // closes the port
+//   return 0;
+//}
+
+
+
+/* ### WITH THIS EXAMPLE YOU CAN PROBABLY HAVE SOME OUTPUT UNTIL YOU HAVE FOUND
+HOW TO IMPLEMENT THE BLE INTERFACE TO THE SOUND BOARD
+//example throws an error: namespace definition not allowed here.... (dive into this later)
+Many classes (see MIDIInDriver, MIDIOutDriver, MIDIThru, MIDISequencer) have a SetProcessor() method that allows the user to "plug in" a processor in their flow of incoming-outcoming messages. This is an example which could be useful for debugging purposes: plugging a MIDIProcessorPrinter to a MIDIInDriver will print all incoming messages.
+*/
+/*
+#include "../include/manager.h"     // includes driver.h and timer.h
+#include "../include/processor.h"
+ 
+//int main() {
+   MIDIInDriver* driver = MIDIManager::GetInDriver(0);
+                // this is the MIDI IN port 0 in your system
+   MIDIProcessorPrinter printer;        // creates a printer processor
+   driver->SetProcessor(&printer);      // plugs the printer into the driver
+   driver->OpenPort();                  // starts receiving messages
+   MIDITimer::Wait(20000);
+                // waits 20 secs: you can play with a MIDI device connected to the port
+                // and the incoming messages will be printed on stdout
+   driver->ClosePort();                 // closes the port
+//   return 0;
+//}
+*/
+
+
+
+
+
+
+/*
+The MIDITimedMessage class inherits from MIDIMessage and adds the ability to associate a MIDI time to the message, so MIDITimedMessage objects can be ordered by time and queued into a MIDI track. Time is counted in MIDI ticks (the library defines the MIDIClockTime type as a typedef for unsigned long) and the class has methods to set, inspect, increment and decrement it. A newly created MIDITimedMessage has its time set to 0.
+
+#include "msg.h"
+ 
+int main() {
+   MIDITimedMessage msg;
+   msg.SetNoteOn(0, 60, 100);       // makes msg1 a Note On message
+   msg.SetTime(480);                // sets its time (in MIDI ticks)
+   msg.AddTime(960);                // adds 960 ticks
+   msg.SubTime(240);                // subtracts 240 ticks
+   std::cout << msg.MsgToText();    // prints a description of msg
+   return 0;
+}
+The MIDITrack class
+The MIDITrack is basically a stl::vector of MIDITimedMessage objects, ordered by time. It has methods for editing the track adding, deleting and examining messages. Due to the SMF format a MIDITrack always contains almost a message, the system End of Data (or End of Track, EOT), as last message. This is automatically handled by the library, and the user cannot insert or delete it; every time you insert a MIDITimedMessage into the track the MIDIClockTime of the EOT is examined and eventually updated.
+
 The constructor creates an empty track, with only the EOT; you can then edit it: the MIDITrack::InsertEvent(), MIDITrack::InsertNote(), MIDITrack::DeleteEvent() and MIDITrack::DeleteNote() methods insert and delete MIDITimedMessage objects, while other methods can insert or delete entire time intervals.
 
 Here is an example:
-*/
-//#include "track.h"
-//#include "dump_tracks.h"             // contains helper functions to print track content
-#include "../include/dump_tracks_dirty.h"   //FCKX          // contains helper functions to print track content
-   ESP_LOGE(TAG,"Testing NiCMidi functionality: MidiTrack/DumpMidiTrack");
-//int main() {
+
+#include "track.h"
+#include "dump_tracks.h"             // contains helper functions to print track content
+ 
+int main() {
    MIDITrack track;
    MIDITimedMessage msg;             // a new MIDITimedMessage has time set to 0
    msg.SetProgramChange(0, 49);      // msg becomes a Program Change, channel 1, program 49, time 0
@@ -863,16 +936,12 @@ Here is an example:
    msg.SetVolumeChange(0, 127);      // msg becomes a Volume Change (CC 7), channel 1, volume 127, time 0
    track.InsertEvent(msg);
    msg.SetNoteOn(0, 60, 100);        // msg becomes a Note On, channel 1, note 60, velocity 100
-//   msg3.SetTime(480);                // sets the time of msg to 480 MIDI ticks
+   msg3.SetTime(480);                // sets the time of msg to 480 MIDI ticks
    track.InsertNote(msg, 240);       // inserts the Note On and the corresponding Note Off after 240 ticks
    DumpMIDITrack(&track);            // prints the contents of the track
-//   return 0;
-//}
-
-
-
-
-  
+   return 0;
+}
+*/    
   
     /**********************************************************************************
     *END OF TEST  NiCMidi functionality
@@ -881,11 +950,6 @@ Here is an example:
     *    
     ***********************************************************************************/
   
-  
-  
-  
-  
-
   
   // Create the BLE Device
   ESP_LOGI(TAG, "Initialize BLEDevice fckx_seq");
