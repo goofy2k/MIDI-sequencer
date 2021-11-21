@@ -170,6 +170,9 @@ Based on the above, we start with defining the spec for the sound board and deri
 
 As the operation involves a number of different tasks that are also time-critical, the sequencer implementation is based on using freeRTOS elements. This includes tasks, timers but may also include freeRTOS queues for efficient handling and communication between the tasks (under investigation). Important aspects: can a freeRTOS queue be sorted? Can you insert an element into a freeRTOS queue in a position of your choice? Can you hack cues to mimick that?
 
+- Have a look at jdksmidi for MIDI sequencer related classes. The project structure is complex. The code is out-dated and does not have a living community.  
+- A modern alternative ~~based on~~ inpired by it is [NicMidi](https://github.com/ncassetta/NiCMidi). Also see the [docs](https://ncassetta.github.io/NiCMidi/docs/html/) for it. The code is not directly transferrable to ESP-IDF (uses <thread> and in timer.h and uses RtMidi for message I/O)
+
 ### Sequencer tasks
 
 1. Maintain a MIDI clock / beat
