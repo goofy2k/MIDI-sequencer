@@ -48,6 +48,7 @@
 #include "../include/track_dirty.h"
 #include <iostream>
 
+//#include "timer.h"
 
 
 //define queue sizes
@@ -870,9 +871,6 @@ Here is an example:
 //}
 
 
-
-
-  
   
     /**********************************************************************************
     *END OF TEST  NiCMidi functionality
@@ -881,11 +879,6 @@ Here is an example:
     *    
     ***********************************************************************************/
   
-  
-  
-  
-  
-
   
   // Create the BLE Device
   ESP_LOGI(TAG, "Initialize BLEDevice fckx_seq");
