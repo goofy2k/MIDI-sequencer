@@ -211,6 +211,24 @@ It may become less time critical, when an input buffer is used for later inserti
   - The "beat" is defined as the number of quarter notes per minute
   - A time signature is represented as time_sig_denom/time_sig_num (e.g. 3/4). Where time_sig_denom defines the number of notes in a measure and 1/time_sig_num the length of a note.
   - Loops for recording / playing always start at the start of a measure and contain a number of full measures
-  - Multiple simultaneous loops can be playing, each driven by it's own task.      
+  - Multiple simultaneous loops can be playing, each driven by it's own task. 
+  
+ ### Implementation / testing of NiCMidi library
+  
+ fckx_sequencer_v7 contains 3 examples. The first 2 are from the docs. The third is from an example file in the repo
+  
+  1. MIDIMessage
+  2. MIDITrack, DumpMIDITrack
+  3. MIDIManager, MIDITimer, MIDITick  has runtime error on stopping MIDITick component
+  
+  The files had to be adapted, partly because I had problems with creating a proper project structure / includes.
+  More important: references to MIDIOut and MIDIIn and RtMidi have been commented out of the code.  Adapted file names have an appended '_dirty' 
+  
+  Next steps:
+  
+  - Debug the MIDITick component  
+  - Wrap MQTT port in MIDIIn,  wrap BLE port in MIDIOut,  phase out RtMidi (?)
+  
 
+  
 
