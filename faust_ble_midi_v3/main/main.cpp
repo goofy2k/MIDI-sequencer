@@ -198,11 +198,12 @@ static BLERemoteCharacteristic* pRemoteCharacteristic;
 static BLEAdvertisedDevice* myDevice;
 
 static void notifyCallback(
-  BLERemoteCharacteristic* pBLERemoteCharacteristic,
-  uint8_t* pData,
-  size_t length,
-  bool isNotify) {
-            printf("Notify callback for characteristic %s of data length %d data: 0x%x 0x%x 0x%x 0x%x 0x%x\n",
+                              BLERemoteCharacteristic* pBLERemoteCharacteristic,
+                              uint8_t* pData,
+                              size_t length,
+                              bool isNotify) {
+    static const char *TAG = "ble_notify_midi";
+ /*   printf("Notify callback for characteristic %s of data length %d data: 0x%x 0x%x 0x%x 0x%x 0x%x\n",
 
     //   printf("Notify callback for characteristic %s of data length %d data: 0x%x\n",
         //  printf("Notify callback for characteristic %s of data length %d data: %u\n", //FCKX
@@ -213,11 +214,24 @@ static void notifyCallback(
          //pData.toString().c_str()); //FCKX
           // pData); //FCKX
          // pData[0]); 
-         pData[0], pData[1],pData[2],pData[3],pData[4]);    
+         pData[0], pData[1],pData[2],pData[3],pData[4]); 
+
+*/         
          //see MIDI BLE specification for actual data structures (rp52public.pdf)
 //play midi immediately for testing
 //aDSP->propagateMidi(count, time, type, channel, data1, data2);
 DSP->propagateMidi(3, 0, pData[2], 0, pData[3], pData[3]);
+
+    //ESP_LOGI(TAG,"NUMERICAL VALUE:%lu ", mididata);
+    ESP_LOGE(TAG,"HEADER: %u (0x%X)", pData[0], pData[0]);
+    ESP_LOGE(TAG,"TIMESTAMP: %u (0x%X)", pData[1], pData[1]);
+    ESP_LOGE(TAG,"STATUS: %u (0x%X)", pData[2], pData[2]);
+    ESP_LOGE(TAG,"DATA1: %u (0x%X)", pData[3], pData[3]);
+    ESP_LOGE(TAG,"DATA2: %u (0x%X)", pData[4], pData[4]) ; //integers are 32 bits!!!!             
+
+
+
+
 
 }
 
