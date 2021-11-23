@@ -225,13 +225,7 @@ It may become less time critical, when an input buffer is used for later inserti
   **REMARKS**
   - Have a look at a comment in test_component.cpp:
     
-   *If you want to implement your own MIDITickComponent derived class you must at least redefine  
-   the StaticTickProc() and TickProc() methods (and probably Start() and Stop() also).
-   Before using the class you must add it to the MIDIManager queue with the
-   MIDIManager::AddMIDITick().
-   This is a very simple example which play a fixed note every second; see the comments
-   to every method for details.
-   *
+   *If you want to implement your own MIDITickComponent derived class you must at least redefine the StaticTickProc() and TickProc() methods (and probably Start() and Stop() also). Before using the class you must add it to the MIDIManager queue with the MIDIManager::AddMIDITick().*
   
   In manager.cpp removed references to RtMidiIn and RtMidi out. The file is renamed to maager_dirty.cpp
   
