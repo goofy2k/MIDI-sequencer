@@ -221,18 +221,24 @@ static const char *TAG = "execute_single_midi_command";
  };
 */
 
-void notify_midi(BLECharacteristic* pCharacteristic, unsigned long int mididata){
- 
+void ble_notify_midi(BLECharacteristic* pCharacteristic, unsigned long int mididata){
+    static const char *TAG = "ble_notify_midi";
+    //MIDI data packet, taken from Brian Duhan arduino-esp32-BLE-MIDI / BLE_MIDI.ino
 
-//MIDI data packet, taken from Brian Duhan arduino-esp32-BLE-MIDI / BLE_MIDI.ino
-uint8_t midiPacket[] = {
+    //you address 5 bytes in mididata, but unsigned long int has 4???
+    //NO!  mididata is 4 bytes,   midiPacket is 5 bytes
+    //have a good look!
+    //do you want to send timestamp?
+    //you probably want to send a midiPacket according to the BLE MIDI standard ! See docs 
 
-    0x80, //header
-    0x80, //timestamp, not implemented
-    0x00, //status
-    0x3c, //== 60 == middle c
-    0x00  //velocity
-};//
+    uint8_t midiPacket[] = {
+
+        0x80, //header
+        0x80, //timestamp, not implemented
+        0x00, //status
+        0x3c, //== 60 == middle c
+        0x00  //velocity
+    };//
 
     ESP_LOGW(TAG,"CREATE and notify midiPacket");    //wrap this into a routine using a MIDITimedBigMessage as input (not necessary for incoming
     midiPacket[4] =  mididata & 0x00000000ff;
@@ -242,9 +248,9 @@ uint8_t midiPacket[] = {
     midiPacket[0] = (mididata & 0xff00000000)>>32;
     //midipacket[1] = ;
     //midipacket[0] = ;
-   ESP_LOGI(TAG,"NUMERICAL VALUE:%lu ", mididata);
-   ESP_LOGI(TAG,"HEADER: %u (0x%X)", midiPacket[0], midiPacket[0]);
-   ESP_LOGI(TAG,"TIMESTAMP: %u (0x%X)", midiPacket[1], midiPacket[1]);
+    ESP_LOGI(TAG,"NUMERICAL VALUE:%lu ", mididata);
+    ESP_LOGI(TAG,"HEADER: %u (0x%X)", midiPacket[0], midiPacket[0]);
+    ESP_LOGI(TAG,"TIMESTAMP: %u (0x%X)", midiPacket[1], midiPacket[1]);
     ESP_LOGI(TAG,"STATUS: %u (0x%X)", midiPacket[2], midiPacket[2]);
     ESP_LOGI(TAG,"DATA1: %u (0x%X)", midiPacket[3], midiPacket[3]);
     ESP_LOGI(TAG,"DATA2: %u (0x%X)", midiPacket[4], midiPacket[4]) ; //integers are 32 bits!!!!             
@@ -256,13 +262,92 @@ uint8_t midiPacket[] = {
             pCharacteristic->notify();   
 }
 
+void printMsgBytes(MIDIMessage msg1){   //add an identifier text
+    static const char *TAG = "printMsgBytes";  
+    char length =  msg1.GetLength();
+    //long unsigned int timestamp = msg1.GetTime();  //MIDIMessage has no GetTime() member,  MIDITimedMessage does
+    unsigned char status = msg1.GetStatus();
+    unsigned char channel = msg1.GetChannel();
+    unsigned char type = msg1.GetType();
+    unsigned char metatype = msg1.GetMetaType(); 
+    unsigned char byte1 = msg1.GetByte1();
+    unsigned char byte2 = msg1.GetByte2();
+    unsigned char byte3 = msg1.GetByte3();
+    ESP_LOGI(TAG,"msg1 length %d", length);
+    //ESP_LOGI(TAG,"msg1 length %lu", timestamp);
+    ESP_LOGI(TAG,"msg1 status %u (0x%x)", status,status);
+    ESP_LOGI(TAG,"msg1 channel %u (0x%x)", channel, channel);
+    ESP_LOGI(TAG,"msg1 type %u (0x%x)", type, type);
+    ESP_LOGI(TAG,"msg1 metatype %u (0x%x)", metatype, metatype);    
+    ESP_LOGI(TAG,"msg1 byte1 %u (0x%x)", byte1, byte1);
+    ESP_LOGI(TAG,"msg1 byte2 %u (0x%x)", byte2, byte2);
+    ESP_LOGI(TAG,"msg1 byte3 %u (0x%x)", byte3, byte3);     
+};
+
+void sendToMIDIOut (MIDIMessage msg1) {  
+    //prepare for sending to output
+    //convert MIDIMessage to midiPacket
+    static const char *TAG = "sendToMIDIOut";  
+    //unsigned long int mididata;
+    uint8_t midiPacket[8];
+    unsigned char header;
+    unsigned char timestamp_low;
+    unsigned char timestamp_high;
+    unsigned char midi_status;
+    unsigned char byte1;
+    unsigned char byte2;
+    unsigned char byte3;
+    
+    ESP_LOGI(TAG,"Prepare for sending data to output");    
+    //check raw byte values, befor implementing playing to BLE notify (output)
+    //write a notify procedure that accepts MIDIMessage as input
+    
+    printMsgBytes(msg1); //for debugging/devel
+    //convert to mididata = Process (?)  you also may want to filter some messages
+    /***************************************************************************************************************************** 
+    * Midi data over BLE are sent exchanged according to the Specification for MIDI over Bluetooth Low Energy (BLE-MIDI, see docs)
+    * Currently only 5 byte packets with single messages are supported
+    *
+    * Currently NOT supported are:
+    *   - running status messages
+    *   - multi-message packets
+    *
+    * Also, only Note on and Note Off messages are supported by the receiving sound board
+    * MIDI_BLE supports a 13-bit timestamp, but these are not (yet) interpreted by the receiver. This application intends to send messages that should be played
+    * immediately ("real-time") by the sound board
+    * see: https://h2zero.github.io/esp-nimble-cpp/index.html
+    * see: https://h2zero.github.io/esp-nimble-cpp/md_docs__usage_tips.html
+    *
+    ******************************************************************************************************************************/
+    timestamp_high = 0;
+    timestamp_low = 0;
+    midi_status = msg1.GetStatus();
+    byte1 = msg1.GetByte1();
+    byte2 = msg1.GetByte2();
+    byte3 = msg1.GetByte3();
+    
+    header = 0b11000000 + timestamp_high;
+    midiPacket[0] = header;
+    midiPacket[1] = 0b1000000 + timestamp_low;
+    midiPacket[2] = midi_status; //byte1? 
+    midiPacket[3] = byte2;  //byte2?
+    midiPacket[4] = byte3;  //byte3?
+    
+    //<code> here
+    //send to "hardware" interface
+    //<code here>
+    pCharacteristic->setValue(midiPacket, 5);
+    pCharacteristic->notify(); 
+    //ble_notify_midi(pCharacteristic, mididata); this was suitable for midi thru
+    
+};
 
 void fckx_single_midi_command(unsigned long int mididata){  //uses propagateMidi
 static const char *TAG = "execute_single_midi_command";
       //unsigned long eventTimestamp = generate_Timestamp(xTaskGetTickCount());
     //unsigned long event_Timestamp =  generate_Timestamp( xTaskGetTickCount() ) ;
     //jdksmidi::MIDITimedBigMessage inMessage = generate_MIDITimedBigMessage( mididata, event_Timestamp);
-  notify_midi(pCharacteristic, mididata);
+  ble_notify_midi(pCharacteristic, mididata);
   
   /*  
     if (!(seq_mode & play_incoming_mode) == 0) {    
@@ -724,55 +809,6 @@ class MyServerCallbacks: public BLEServerCallbacks {
 /*******************************************************************/
 };
 
-void connectedTask (void * parameter){
-    for(;;) {  //loop forever
-        // only act if connection status changes or if there is a stable connection
-        if (deviceConnected) {
-            //ESP_LOGW(TAG,"STABLE CONNECTION "); 
-            /*
-            //pCharacteristic->setValue((uint8_t*)&value, 4);
-            midiPacket[2] = 0x90; //keyOn, channel 0
-            midiPacket[4] = 127; //velocity
-            pCharacteristic->setValue(midiPacket, 5);
-            pCharacteristic->notify();
-            //value++;
-            vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
-            //pCharacteristic->setValue((uint8_t*)&value, 4);
-            midiPacket[2] = 0x80; //keyOff, channel 0
-            midiPacket[4] = 0; //velocity  
-            pCharacteristic->setValue(midiPacket, 5);            
-            pCharacteristic->notify();
-            //value++;
-            vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
-            */
-
-
-
- }
-        // disconnecting
-        if (!deviceConnected && oldDeviceConnected) {
-            ESP_LOGW(TAG,"BLE disconnected"); 
-            ESP_LOGW(TAG,"Do required stuff, depending on the needs for this lost connection");
-
-            vTaskDelay(500/portTICK_PERIOD_MS); // give the bluetooth stack the chance to get things ready
-            ESP_LOGW(TAG,"Start advertising again");   
-            pServer->startAdvertising();        // restart advertising
-            //printf("start advertising\n");
-            oldDeviceConnected = deviceConnected;
-        }
-        // connection established
-        if (deviceConnected && !oldDeviceConnected) {
-            ESP_LOGW(TAG,"BLE connected, do required stuff, depending on the needs for this connection");
-            // do stuff here on connecting
-            oldDeviceConnected = deviceConnected;
-        }
-        
-        vTaskDelay(10/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
-    }
-    
-    vTaskDelete(NULL);
-}
-
     /**********************************************************************************
     *TEST  NiCMidi functionality   test_component.cpp
     *
@@ -888,22 +924,35 @@ void TestComp::StaticTickProc(tMsecs sys_time, void* pt) {
 void TestComp::TickProc(tMsecs sys_time) {
     MIDITimedMessage msg;
     tMsecs deltat = sys_time - sys_time_offset; // the relative time (now time - start time)
-
+/*
     if (deltat >= next_note_off) {              // we must turn off the note
-        msg.SetNoteOff(0, 60, 0);
+        msg.SetNoteOff(0, 36, 0);
         //MIDIManager::GetOutDriver(0)->OutputMessage(msg);
                                                 // sends a note off message to the MIDI 0 port
+        sendToMIDIOut(msg);                         // sends a note off message to the BLE interface               
         cout << "and off" << endl;
         next_note_off += NOTE_INTERVAL;         // updates the next note off time
     }
-
+*/
     if (deltat >= next_note_on) {               // we must turn on the note
-        msg.SetNoteOn(0, 60, 127);
+        msg.SetNoteOn(0, 36, 127);
         //MIDIManager::GetOutDriver(0)->OutputMessage(msg);
                                                 // sends a note on message to the MIDI 0 port
+        sendToMIDIOut(msg);                         // sends a note off message to the BLE interface                                         
         cout << "Note on . . . ";
         next_note_on += NOTE_INTERVAL;          // updates the next note on time
     }
+    //third event added by FCKX
+    if (deltat >= next_note_off) {              // we must turn off the note
+        msg.SetNoteOff(0, 36, 0);
+        //MIDIManager::GetOutDriver(0)->OutputMessage(msg);
+                                                // sends a note off message to the MIDI 0 port
+        sendToMIDIOut(msg);                         // sends a note off message to the BLE interface               
+        cout << "and off" << endl;
+        next_note_off += NOTE_INTERVAL;         // updates the next note off time
+    }
+    
+    
 }
 
 // The main() creates a class instance, adds it to the MIDIManager queue and then calls
@@ -930,6 +979,59 @@ int main() {
     *    
     ***********************************************************************************/    
  
+
+void connectedTask (void * parameter){
+    for(;;) {  //loop forever
+        // only act if connection status changes or if there is a stable connection
+        if (deviceConnected) {
+              ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
+  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp");    
+  main(); //code above
+            
+            //ESP_LOGW(TAG,"STABLE CONNECTION "); 
+            /*
+            //pCharacteristic->setValue((uint8_t*)&value, 4);
+            midiPacket[2] = 0x90; //keyOn, channel 0
+            midiPacket[4] = 127; //velocity
+            pCharacteristic->setValue(midiPacket, 5);
+            pCharacteristic->notify();
+            //value++;
+            vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
+            //pCharacteristic->setValue((uint8_t*)&value, 4);
+            midiPacket[2] = 0x80; //keyOff, channel 0
+            midiPacket[4] = 0; //velocity  
+            pCharacteristic->setValue(midiPacket, 5);            
+            pCharacteristic->notify();
+            //value++;
+            vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
+            */
+
+
+
+ }
+        // disconnecting
+        if (!deviceConnected && oldDeviceConnected) {
+            ESP_LOGW(TAG,"BLE disconnected"); 
+            ESP_LOGW(TAG,"Do required stuff, depending on the needs for this lost connection");
+
+            vTaskDelay(500/portTICK_PERIOD_MS); // give the bluetooth stack the chance to get things ready
+            ESP_LOGW(TAG,"Start advertising again");   
+            pServer->startAdvertising();        // restart advertising
+            //printf("start advertising\n");
+            oldDeviceConnected = deviceConnected;
+        }
+        // connection established
+        if (deviceConnected && !oldDeviceConnected) {
+            ESP_LOGW(TAG,"BLE connected, do required stuff, depending on the needs for this connection");
+            // do stuff here on connecting
+            oldDeviceConnected = deviceConnected;
+        }
+        
+        vTaskDelay(10/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
+    }
+    
+    vTaskDelete(NULL);
+}
 
 
 
@@ -998,6 +1100,13 @@ void app_main(void) {
     printf("\n");
     std::cout << msg3.MsgToText();    // prints a description of msg3
     printf("\n");
+
+
+   printMsgBytes(msg1); //add an identifier
+   printMsgBytes(msg2);
+   printMsgBytes(msg3);
+
+    
     /*
     printf("msg1.MsgToText(): %s\n", msg1.MsgToText()); //does not print
     printf("msg2.MsgToText(): %s\n", msg2.MsgToText()); 
@@ -1028,10 +1137,11 @@ Here is an example:
 //   return 0;
 //}
 
+/*
   ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
   ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp");    
   main(); //code above
-  
+*/  
   
     /**********************************************************************************
     *END OF TEST  NiCMidi functionality
