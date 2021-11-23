@@ -290,7 +290,7 @@ Executing MIDIManager::Init() PARTLY BYPASSED !!! contains calls to RtMidi
 Executing MIDIManager::Init()
 Exiting MIDIManager::Init() Found 0 midi out and 0 midi in
 
-**Try to "silently" play the notes. Only show the screen logs. These are missing now. 
+**Try to "silently" play the notes. Only show the screen logs. These are missing now. It looks like the TickProc is not called.
   
   **Next steps:**
   
