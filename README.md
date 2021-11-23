@@ -292,6 +292,10 @@ Exiting MIDIManager::Init() Found 0 midi out and 0 midi in
 
 **Try to "silently" play the notes. Only show the screen logs. These are missing now. It looks like the TickProc is not called.
   This is most likely due to the fact that MIDIManager::AddMIDITick(&comp); is commented.
+
+**Status in version 9: no runtime error**  
+Plays audible note to soundboard, without runtime errors!
+Need to check the MIDI codes that arrive at the board. Add logging of received MIDI messages to it's firmware.  
   
   **Next steps:**
   
