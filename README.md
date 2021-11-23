@@ -240,13 +240,13 @@ It may become less time critical, when an input buffer is used for later inserti
   
 Partly executing the example, untill a runtime error is thrown....  
   
-E (2939) APP_MAIN: Testing NiCMidi functionality: MidiMessage
+E (2939) APP_MAIN: Testing NiCMidi functionality: MidiMessage                                    //erroneous message, repaired in v8
 Starting the component ...
 Waiting 10 secs ...
 Stopping the component ...
 Waiting 5 secs without playing ...
 Exiting
-Executing MIDIManager::Init() BYPASSED !!! contains calls to RtMidi
+Executing MIDIManager::Init() BYPASSED !!! contains calls to RtMidi                              //is Init called at Exit???
 Guru Meditation Error: Core  0 panic'ed (LoadProhibited). Exception was unhandled.
 
 Core  0 register dump:
@@ -261,9 +261,9 @@ A14     : 0x00000000  A15     : 0x00000001  SAR     : 0x00000016  EXCCAUSE: 0x00
 EXCVADDR: 0x00000000  LBEG    : 0x400014fd  LEND    : 0x4000150d  LCOUNT  : 0xffffffee
 
 Backtrace:0x400d5d63:0x3ffbb450 0x400d70d0:0x3ffbb470 0x400d4e30:0x3ffbb490 0x400d5680:0x3ffbb4b0 0x400d5b1b:0x3ffbb520 0x400d39ab:0x3ffbb640
-0x400d5d63: MIDIManager::RemoveMIDITick(MIDITickComponent*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/manager_dirty.cpp:229 (discriminator 1)
+0x400d5d63: MIDIManager::RemoveMIDITick(MIDITickComponent*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/**../main/manager_dirty.cpp:229** (discriminator 1)
 
-0x400d70d0: MIDITickComponent::~MIDITickComponent() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/tick.cpp:32
+0x400d70d0: MIDITickComponent::~MIDITickComponent() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/**../main/tick.cpp:32**
 
 0x400d4e30: TestComp::~TestComp() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/main.cpp:825
 
