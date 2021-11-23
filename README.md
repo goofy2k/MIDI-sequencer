@@ -225,8 +225,7 @@ It may become less time critical, when an input buffer is used for later inserti
   **REMARKS**
   - Have a look at a comment in test_component.cpp:
     
-   *If you want to implement your own MIDITickComponent derived class you must at least redefine*
-   *
+   *If you want to implement your own MIDITickComponent derived class you must at least redefine  
    the StaticTickProc() and TickProc() methods (and probably Start() and Stop() also).
    Before using the class you must add it to the MIDIManager queue with the
    MIDIManager::AddMIDITick().
