@@ -238,15 +238,18 @@ It may become less time critical, when an input buffer is used for later inserti
   
   **Status in version 7:** 
   
-Partly executing the example, untill a runtime error is thrown....  
+Partly executing the example, untill a runtime error is thrown at removal of the tick component  
+(**resolved in v8** by only PARTLY BYPASSING Init of the tick component (only calls to RtMidi)  i.s.o. COMPLETELY)
   
-E (2939) APP_MAIN: Testing NiCMidi functionality: MidiMessage
+  
+E (2939) APP_MAIN: Testing NiCMidi functionality: MidiMessage                                    //erroneous message, repaired in v8
 Starting the component ...
 Waiting 10 secs ...
 Stopping the component ...
 Waiting 5 secs without playing ...
 Exiting
-Executing MIDIManager::Init() BYPASSED !!! contains calls to RtMidi
+Executing MIDIManager::Init() BYPASSED !!! contains calls to RtMidi                              //is Init called at Exit???
+                                                                                                 //YES, at bool MIDIManager::RemoveMIDITick(MIDITickComponent* tick)
 Guru Meditation Error: Core  0 panic'ed (LoadProhibited). Exception was unhandled.
 
 Core  0 register dump:
@@ -261,9 +264,9 @@ A14     : 0x00000000  A15     : 0x00000001  SAR     : 0x00000016  EXCCAUSE: 0x00
 EXCVADDR: 0x00000000  LBEG    : 0x400014fd  LEND    : 0x4000150d  LCOUNT  : 0xffffffee
 
 Backtrace:0x400d5d63:0x3ffbb450 0x400d70d0:0x3ffbb470 0x400d4e30:0x3ffbb490 0x400d5680:0x3ffbb4b0 0x400d5b1b:0x3ffbb520 0x400d39ab:0x3ffbb640
-0x400d5d63: MIDIManager::RemoveMIDITick(MIDITickComponent*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/manager_dirty.cpp:229 (discriminator 1)
+0x400d5d63: MIDIManager::RemoveMIDITick(MIDITickComponent*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/**../main/manager_dirty.cpp:229** (discriminator 1)
 
-0x400d70d0: MIDITickComponent::~MIDITickComponent() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/tick.cpp:32
+0x400d70d0: MIDITickComponent::~MIDITickComponent() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/**../main/tick.cpp:32**
 
 0x400d4e30: TestComp::~TestComp() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/main.cpp:825
 
@@ -272,9 +275,25 @@ Backtrace:0x400d5d63:0x3ffbb450 0x400d70d0:0x3ffbb470 0x400d4e30:0x3ffbb490 0x40
 0x400d5b1b: app_main at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/main.cpp:1033
 
 0x400d39ab: main_task at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:600
-
   
-  Next steps:
+  **Status in version 8: no runtime error** 
+  (removed INFO logs of the MQTT client and handlers)
+  
+E (2819) APP_MAIN: Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager
+E (2899) APP_MAIN: Testing NiCMidi functionality: test_component.cpp
+Starting the component ...
+Waiting 10 secs ...
+Stopping the component ...
+Waiting 5 secs without playing ...
+Exiting
+Executing MIDIManager::Init() PARTLY BYPASSED !!! contains calls to RtMidi
+Executing MIDIManager::Init()
+Exiting MIDIManager::Init() Found 0 midi out and 0 midi in
+
+**Try to "silently" play the notes. Only show the screen logs. These are missing now. It looks like the TickProc is not called.
+  This is most likely due to the fact that MIDIManager::AddMIDITick(&comp); is commented.
+  
+  **Next steps:**
   
   - Debug the MIDITick component  
   - Wrap MQTT port in MIDIIn,  wrap BLE port in MIDIOut,  phase out RtMidi (?)
