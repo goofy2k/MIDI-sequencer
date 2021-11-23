@@ -238,7 +238,9 @@ It may become less time critical, when an input buffer is used for later inserti
   
   **Status in version 7:** 
   
-Partly executing the example, untill a runtime error is thrown....  
+Partly executing the example, untill a runtime error is thrown at removal of the tick component  
+(**resolved in v8** by only PARTLY BYPASSING Init of the tick component (only calls to RtMidi)  i.s.o. COMPLETELY)
+  
   
 E (2939) APP_MAIN: Testing NiCMidi functionality: MidiMessage                                    //erroneous message, repaired in v8
 Starting the component ...
@@ -273,7 +275,22 @@ Backtrace:0x400d5d63:0x3ffbb450 0x400d70d0:0x3ffbb470 0x400d4e30:0x3ffbb490 0x40
 0x400d5b1b: app_main at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/main.cpp:1033
 
 0x400d39ab: main_task at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:600
+  
+  **Status in version 8: no runtime error** 
+  (removed INFO logs of the MQTT client and handlers)
+  
+E (2819) APP_MAIN: Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager
+E (2899) APP_MAIN: Testing NiCMidi functionality: test_component.cpp
+Starting the component ...
+Waiting 10 secs ...
+Stopping the component ...
+Waiting 5 secs without playing ...
+Exiting
+Executing MIDIManager::Init() PARTLY BYPASSED !!! contains calls to RtMidi
+Executing MIDIManager::Init()
+Exiting MIDIManager::Init() Found 0 midi out and 0 midi in
 
+**Try to "silently" play the notes. Only show the screen logs. These are missing now. 
   
   **Next steps:**
   
