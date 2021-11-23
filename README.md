@@ -236,6 +236,44 @@ It may become less time critical, when an input buffer is used for later inserti
   The files had to be adapted, partly because I had problems with creating a proper project structure / includes.
   More important: references to MIDIOut and MIDIIn and RtMidi have been commented out of the code.  Adapted file names have an appended '_dirty' 
   
+  **Status in version 7:** 
+  
+Partly executing the example, untill a runtime error is thrown....  
+  
+E (2939) APP_MAIN: Testing NiCMidi functionality: MidiMessage
+Starting the component ...
+Waiting 10 secs ...
+Stopping the component ...
+Waiting 5 secs without playing ...
+Exiting
+Executing MIDIManager::Init() BYPASSED !!! contains calls to RtMidi
+Guru Meditation Error: Core  0 panic'ed (LoadProhibited). Exception was unhandled.
+
+Core  0 register dump:
+PC      : 0x400d5d66  PS      : 0x00060e30  A0      : 0x800d70d3  A1      : 0x3ffbb450
+0x400d5d66: MIDIManager::RemoveMIDITick(MIDITickComponent*) at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0\bits/stl_vector.h:806 (discriminator 1)
+ (inlined by) MIDIManager::RemoveMIDITick(MIDITickComponent*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/manager_dirty.cpp:229 (discriminator 1)
+
+A2      : 0x3ffbb4b0  A3      : 0x00000000  A4      : 0x3ffc3b98  A5      : 0x00000000
+A6      : 0x00000000  A7      : 0xff000000  A8      : 0x800d5d5d  A9      : 0x00000000
+A10     : 0x00000000  A11     : 0x0000000a  A12     : 0x00000007  A13     : 0x00000000
+A14     : 0x00000000  A15     : 0x00000001  SAR     : 0x00000016  EXCCAUSE: 0x0000001c
+EXCVADDR: 0x00000000  LBEG    : 0x400014fd  LEND    : 0x4000150d  LCOUNT  : 0xffffffee
+
+Backtrace:0x400d5d63:0x3ffbb450 0x400d70d0:0x3ffbb470 0x400d4e30:0x3ffbb490 0x400d5680:0x3ffbb4b0 0x400d5b1b:0x3ffbb520 0x400d39ab:0x3ffbb640
+0x400d5d63: MIDIManager::RemoveMIDITick(MIDITickComponent*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/manager_dirty.cpp:229 (discriminator 1)
+
+0x400d70d0: MIDITickComponent::~MIDITickComponent() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/tick.cpp:32
+
+0x400d4e30: TestComp::~TestComp() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/main.cpp:825
+
+0x400d5680: main at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/main.cpp:912
+
+0x400d5b1b: app_main at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v7\build/../main/main.cpp:1033
+
+0x400d39ab: main_task at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:600
+
+  
   Next steps:
   
   - Debug the MIDITick component  
