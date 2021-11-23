@@ -26,8 +26,10 @@
 
 
 #include <cstring>      // for strlen()
-#include "../include/msg.h"
+#include "../include/msg.h"  //the original
+//#include "msg.h"
 
+//#include "include/msg.h"
 
 ////////////////////////////////////////////////////////////////////////////
 //                              class MIDIMessage                         //
