@@ -214,13 +214,26 @@ It may become less time critical, when an input buffer is used for later inserti
   - Multiple simultaneous loops can be playing, each driven by it's own task. 
   
  ### Implementation / testing of NiCMidi library
-  **OOPS** deleted the wrong folder, without intermediate commits....  I have to redo updates in v7 to achieve the results below !**
+  **OOPS deleted the wrong folder, without intermediate commits....  I have to redo updates in v7 to achieve the results below !**
   
  fckx_sequencer_v7 contains 3 examples. The first 2 are from the docs. The third is from an example file in the repo
   
   1. MIDIMessage
   2. MIDITrack, DumpMIDITrack
   3. MIDIManager, MIDITimer, MIDITick  has runtime error on stopping MIDITick component
+  
+  **REMARKS**
+  - Have a look at a comment in test_component.cpp:
+    ~~
+   If you want to implement your own MIDITickComponent derived class you must at least redefine
+   the StaticTickProc() and TickProc() methods (and probably Start() and Stop() also).
+   Before using the class you must add it to the MIDIManager queue with the
+   MIDIManager::AddMIDITick().
+   This is a very simple example which play a fixed note every second; see the comments
+   to every method for details.
+   ~~
+  
+  In manager.cpp removed references to RtMidiIn and RtMidi out. The file is renamed to maager_dirty.cpp
   
   The files had to be adapted, partly because I had problems with creating a proper project structure / includes.
   More important: references to MIDIOut and MIDIIn and RtMidi have been commented out of the code.  Adapted file names have an appended '_dirty' 
