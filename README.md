@@ -274,7 +274,7 @@ Backtrace:0x400d5d63:0x3ffbb450 0x400d70d0:0x3ffbb470 0x400d4e30:0x3ffbb490 0x40
 0x400d39ab: main_task at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:600
 
   
-  Next steps:
+  **Next steps:**
   
   - Debug the MIDITick component  
   - Wrap MQTT port in MIDIIn,  wrap BLE port in MIDIOut,  phase out RtMidi (?)
