@@ -291,6 +291,7 @@ Executing MIDIManager::Init()
 Exiting MIDIManager::Init() Found 0 midi out and 0 midi in
 
 **Try to "silently" play the notes. Only show the screen logs. These are missing now. It looks like the TickProc is not called.
+  This is most likely due to the fact that MIDIManager::AddMIDITick(&comp); is commented.
   
   **Next steps:**
   
