@@ -214,6 +214,7 @@ It may become less time critical, when an input buffer is used for later inserti
   - Multiple simultaneous loops can be playing, each driven by it's own task. 
   
  ### Implementation / testing of NiCMidi library
+  **OOPS** deleted the wrong folder, without intermediate commits....  I have to redo updates in v7 to achieve the results below !**
   
  fckx_sequencer_v7 contains 3 examples. The first 2 are from the docs. The third is from an example file in the repo
   
