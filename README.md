@@ -227,8 +227,7 @@ It may become less time critical, when an input buffer is used for later inserti
     
    *If you want to implement your own MIDITickComponent derived class you must at least redefine the StaticTickProc() and TickProc() methods (and probably Start() and Stop() also). Before using the class you must add it to the MIDIManager queue with the MIDIManager::AddMIDITick().*
   
-  In manager.cpp removed references to RtMidiIn and RtMidi out. The file is renamed to maager_dirty.cpp.
-  Yhe changes in _dirty files are mostly (if not always) indicated by a //FCKX tag
+  In manager.cpp removed references to RtMidiIn and RtMidi out. The file is renamed to maager_dirty.cpp. The changes in _dirty files are mostly (if not always) indicated by a //FCKX tag
   
   The files had to be adapted, partly because I had problems with creating a proper project structure / includes.
   More important: references to MIDIOut and MIDIIn and RtMidi have been commented out of the code.  Adapted file names have an appended '_dirty' 
