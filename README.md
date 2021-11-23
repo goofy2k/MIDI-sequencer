@@ -229,6 +229,10 @@ It may become less time critical, when an input buffer is used for later inserti
   
   In manager.cpp removed references to RtMidiIn and RtMidi out. The file is renamed to maager_dirty.cpp. The changes in _dirty files are mostly (if not always) indicated by a //FCKX tag
   
+  IN the example, removed these calls:
+  MIDIManager::GetOutDriver(0)->OpenPort();
+  MIDIManager::GetOutDriver(0)->ClosePort();
+  
   The files had to be adapted, partly because I had problems with creating a proper project structure / includes.
   More important: references to MIDIOut and MIDIIn and RtMidi have been commented out of the code.  Adapted file names have an appended '_dirty' 
   
