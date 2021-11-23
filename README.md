@@ -295,12 +295,16 @@ Exiting MIDIManager::Init() Found 0 midi out and 0 midi in
 
 **Status in version 9: no runtime error**  
 Plays audible note to soundboard, without runtime errors!
-Need to check the MIDI codes that arrive at the board. Add logging of received MIDI messages to it's firmware.  
+Need to check the MIDI codes that arrive at the board. Added logging of received MIDI messages to it's firmware.  
   
   **Next steps:**
   
-  - Debug the MIDITick component  
-  - Wrap MQTT port in MIDIIn,  wrap BLE port in MIDIOut,  phase out RtMidi (?)
+  - DONE v9 Debug the MIDITick component  
+  - DONE v9 Wrap MQTT port in MIDIIn,  wrap BLE port in MIDIOut,  phase out RtMidi (?)
+  - clean up the code
+  - implement more MIDITick users (sequencer, recorder)
+  
+  
   
 
   
