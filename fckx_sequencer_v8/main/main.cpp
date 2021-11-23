@@ -891,7 +891,7 @@ void TestComp::TickProc(tMsecs sys_time) {
 
     if (deltat >= next_note_off) {              // we must turn off the note
         msg.SetNoteOff(0, 60, 0);
-        MIDIManager::GetOutDriver(0)->OutputMessage(msg);
+        //MIDIManager::GetOutDriver(0)->OutputMessage(msg);
                                                 // sends a note off message to the MIDI 0 port
         cout << "and off" << endl;
         next_note_off += NOTE_INTERVAL;         // updates the next note off time
@@ -899,7 +899,7 @@ void TestComp::TickProc(tMsecs sys_time) {
 
     if (deltat >= next_note_on) {               // we must turn on the note
         msg.SetNoteOn(0, 60, 127);
-        MIDIManager::GetOutDriver(0)->OutputMessage(msg);
+        //MIDIManager::GetOutDriver(0)->OutputMessage(msg);
                                                 // sends a note on message to the MIDI 0 port
         cout << "Note on . . . ";
         next_note_on += NOTE_INTERVAL;          // updates the next note on time
@@ -910,7 +910,7 @@ void TestComp::TickProc(tMsecs sys_time) {
 // Start() and Stop() for enabling and disabling the callback
 int main() {
     TestComp comp;                              // creates the component
-    //MIDIManager::AddMIDITick(&comp);            // adds it to the MIDIManager queue
+    MIDIManager::AddMIDITick(&comp);          // adds it to the MIDIManager queue
     comp.Start();                               // starts the callback
     cout << "Waiting 10 secs ... " << endl;
     MIDITimer::Wait(10000);                     // waits 10 secs
@@ -1029,7 +1029,7 @@ Here is an example:
 //}
 
   ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: MidiMessage");    
+  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp");    
   main(); //code above
   
   

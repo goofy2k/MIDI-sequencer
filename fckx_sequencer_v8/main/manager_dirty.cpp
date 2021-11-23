@@ -263,8 +263,9 @@ void MIDIManager::TickProc(tMsecs sys_time, void* p) {
 
 
 void MIDIManager::Init() {
-  std::cout << "Executing MIDIManager::Init() BYPASSED !!! contains calls to RtMidi" << std::endl;  //FCKX 
-/*   
+//  std::cout << "Executing MIDIManager::Init() BYPASSED !!! contains calls to RtMidi" << std::endl;  //FCKX 
+    std::cout << "Executing MIDIManager::Init() PARTLY BYPASSED !!! contains calls to RtMidi" << std::endl;  //FCKX 
+     
 #ifdef WIN32    //TODO: this is temporary, needed by WINDOWS10
      CoInitializeEx(NULL, COINIT_MULTITHREADED);
 #endif // WIN32
@@ -275,7 +276,7 @@ void MIDIManager::Init() {
     MIDI_in_names = new std::vector<std::string>;
     MIDITicks = new std::vector<MIDITickComponent*>;
     proc_lock = new std::mutex;
-    
+    /*
     try {
         RtMidiOut temp_MIDI_out;
         for (unsigned int i = 0; i < temp_MIDI_out.getPortCount(); i++) {
@@ -292,6 +293,7 @@ void MIDIManager::Init() {
         error.printMessage();
         exit(EXIT_FAILURE);
     }
+    */
     
     MIDITimer::SetMIDITick(TickProc);
     atexit(Exit);
@@ -310,5 +312,5 @@ void MIDIManager::Exit() {
 #ifdef WIN32
     CoUninitialize();
 #endif // WIN32
-*/
+
 }
