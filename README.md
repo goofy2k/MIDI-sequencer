@@ -247,6 +247,7 @@ Stopping the component ...
 Waiting 5 secs without playing ...
 Exiting
 Executing MIDIManager::Init() BYPASSED !!! contains calls to RtMidi                              //is Init called at Exit???
+                                                                                                 //YES, at bool MIDIManager::RemoveMIDITick(MIDITickComponent* tick)
 Guru Meditation Error: Core  0 panic'ed (LoadProhibited). Exception was unhandled.
 
 Core  0 register dump:
