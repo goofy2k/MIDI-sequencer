@@ -301,10 +301,26 @@ Need to check the MIDI codes that arrive at the board. Added logging of received
   
   - DONE v9 Debug the MIDITick component  
   - DONE v9 Wrap MQTT port in MIDIIn,  wrap BLE port in MIDIOut,  phase out RtMidi (?)
-  - clean up the code
+  - wrap the bluetooth (NimBLE) MIDI output port in driver.h/.cpp
   - implement more MIDITick users (sequencer, recorder)
+  - clean up the code
   
+  - soundboard:  extend controls
+    MIDI:
+    - AllNotesOff
+    - Channel selection
+    - 
+    DSP:
+    - other sound engine controls (e.g. A, D, S, R, ...)
+    
+  - soundboard:  control audio codec over BLE interface
+  -
   
+### Wrap the bluetooth (NimBLE) MIDI output port in driver.h/.cpp
+  
+In the TickProc for the test_component example the out of MIDI messages over the NinBLE bluetooth interface is done by sendToMIDIOut(msg) instead of  MIDIManager::GetOutDriver(0)->OutputMessage(msg). If we modify the code behind GetOutDriver to use the NimBLE interface we prevent that we have to adapt the call in the entire library.
+  
+manager.cpp / class MIDIManager uses a call static MIDIOutDriver*       GetOutDriver(unsigned int n)  to get a pointer to the output driver
   
 
   
