@@ -303,6 +303,7 @@ Need to check the MIDI codes that arrive at the board. Added logging of received
   - DONE v9 Wrap MQTT port in MIDIIn,  wrap BLE port in MIDIOut,  phase out RtMidi (?)
   - wrap the bluetooth (NimBLE) MIDI output port in driver.h/.cpp
   - implement more MIDITick users (sequencer, recorder)
+    - implement commands for e.g. MIDIManager (start, stop, etc. .... ) over MQTT
   - clean up the code
   
   - soundboard:  extend controls
