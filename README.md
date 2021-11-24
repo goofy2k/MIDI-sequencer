@@ -315,7 +315,7 @@ Need to check the MIDI codes that arrive at the board. Added logging of received
     - other sound engine controls (e.g. A, D, S, R, ...)
     
   - soundboard:  control audio codec over BLE interface
-  -
+  - implement a GUI facilitated by the GUI classes in the lib. Handle these on the Nodered side as with Faust JSONUI
   
 ### Wrap the bluetooth (NimBLE) MIDI output port in driver.h/.cpp
   
