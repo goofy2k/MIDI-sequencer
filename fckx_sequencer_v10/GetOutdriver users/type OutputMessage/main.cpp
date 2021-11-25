@@ -482,13 +482,14 @@ bool storeMIDI_Input(esp_mqtt_event_handle_t event){
 
 static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
 
-   
+    //receive a 5 byte array 
  
     static const char *TAG = "FCKX_SEQ_API";
-    //MIDI COMMANDS
+    
     if (strncmp(event->topic, "/fckx_seq/midi/single",strlen("/fckx_seq/midi/single")) == 0) {
-    //receive a 5 byte MIDI message 
-    //display incoming MIDI data
+
+
+    //display incoming data
     ESP_LOGI(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
     ESP_LOGI(TAG,"DATA:%.*s ", event->data_len, event->data);
     ESP_LOGI(TAG,"DATA0 %d", event->data[0]);
@@ -507,27 +508,22 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     event->data[4] //velocity
         };//
         
-    //store in input buffer
-    //storeMIDI_Input(event, inQ );
-    printf("going to store input\n");
-    storeMIDI_Input(event);    
+       //store in input buffer
+   //storeMIDI_Input(event, inQ );
+   printf("going to store input\n");
+storeMIDI_Input(event);    
         
     //if MIDI THRU
     //send midiPacket immediately to sound board
     //add check on NimBLE connection
     pCharacteristic->setValue(midiPacket, 5);
-    pCharacteristic->notify();    
-        } 
-        
-    else
-    //NONE MIDI COMMANDS (e.g. for NiCMidi MIDIManager        
-    if (strncmp(event->topic, "/fckx_seq/command",strlen("/fckx_seq/command")) == 0) {
-        ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
-        ESP_LOGI(TAG,"...command to be implemented...");}
+    pCharacteristic->notify();
+    
  
     
+        } 
     else {
-        ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
+         ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
         ESP_LOGI(TAG,"unknown API command");}
 };
     
@@ -549,6 +545,8 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){
         case MQTT_EVENT_CONNECTED:
             ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
             
+
+            
             msg_id = esp_mqtt_client_publish(client, "/fckx_seq/test/qos1", "test qos1", 0, 1, 0);
             ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
 
@@ -567,16 +565,19 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){
             msg_id = esp_mqtt_client_subscribe(client, "/wm8978/#",0);
             ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);             
             
-            msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq/command/#", 0);
+            msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq", 0);
             //ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
-            //msg_id = esp_mqtt_client_publish(client, "/fckx_seq", "MQTT OK", 0, 1, 0);
+            msg_id = esp_mqtt_client_publish(client, "/fckx_seq", "MQTT OK", 0, 1, 0);
             //ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
             msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq/midi/single",0);
-            ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);            
+            ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
+            
+            
             break;
         case MQTT_EVENT_DISCONNECTED:
             ESP_LOGE(TAG, "MQTT_EVENT_DISCONNECTED");
             break;
+
         case MQTT_EVENT_SUBSCRIBED:
             ESP_LOGI(TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
             msg_id = esp_mqtt_client_publish(client, "/fckx_seq/test/qos0", "MQTT EVENT SUBSCRIBED", 0, 0, 0);
@@ -593,7 +594,7 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){
             //ESP_LOGI(TAG, "TOPIC=%.*s\r", event->topic_len, event->topic);
             //ESP_LOGI(TAG,"DATA=%.*s\r", event->data_len, event->data);
             //if topic starts with /fckx_seq/api or /fckx_seq/api2, call a command dispatcher/handler
-/*
+   /*
             if (strncmp(event->topic, "/fckx_seq/api2",strlen("/fckx_seq/api2")) == 0) {
                 call_faust_api2(event);    
                 }
@@ -606,7 +607,7 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){
             else
 */
 
-                if (strncmp(event->topic, "/fckx_seq/",strlen("/fckx_seq/")) == 0) { //this means: string starts with ....
+                if (strncmp(event->topic, "/fckx_seq/",strlen("/fckx_seq/")) == 0) { //this measn: string starts with ....
                                call_fckx_seq_api(event);   }; 
                  
 
@@ -846,207 +847,8 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 #include "../include/tick.h"
 #include "../include/manager.h"
-#include "../include/metronome.h"
-#include "../include/functions_dirty.h"                  // helper functions for input parsing and output
 
 using namespace std;
-
-
-int main_test_midiports() {
-    if (MIDIManager::GetNumMIDIIns()) {
-        cout << "MIDI IN PORTS:" << endl;
-        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++)
-            cout <<'\t' << i << ": " << MIDIManager::GetMIDIInName(i) << endl;
-    }
-    else
-        cout << "NO MIDI IN PORTS" << endl;
-    if (MIDIManager::GetNumMIDIOuts()) {
-        cout << "MIDI OUT PORTS:" << endl;
-        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIOuts(); i++)
-            cout << '\t' << i << ": " << MIDIManager::GetMIDIOutName(i) << endl;
-    }
-    else
-        cout << "NO MIDI OUT PORTS" << endl;
-    cout << endl << endl << "Press ENTER" << endl;
-    cin.get();
-    return EXIT_SUCCESS;
-}
-
-/*
-Metronome metro;                                // a Metronome (without GUI notifier)
-
-//extern string command, par1, par2;              // used by GetCommand() for parsing the user input
-//for commands: send a jsonStr that can be converted into an object with string command, and array of string par
-//see Nodered
-//to prevent the use of json decoding: call the api with:  /fckx_seq/command/<command_name>/<par1_value>,<par2_value
-//or implement: JSON::Parse(json_string)
-//build a GUI similar to the one for the audio decoder in the sound board firmware.
-//where is the data, the status of the sequencer....?
-//for the data: see the test_win32_player.cpp example and refactor it to JSONUI for a browser based GUI
-//be very very hesitant to use the Windows API
-
-const char helpstring[] =                       // shown by the help command
-"\nAvailable commands:\n\
-   ports               : Enumerates MIDI In and OUT ports\n\
-   start               : Starts the metronome\n\
-   stop                : Stops the metronome\n\
-   tempo bpm           : Sets the metronome tempo (bpm is a float)\n\
-   tscale scale        : Sets global tempo scale. scale is in percent\n\
-                         (ex. 200 = twice faster, 50 = twice slower)\n\
-   subd n              : Sets the number of subdivisions (n can be\n\
-                         0, 2, 3, 4, 5, 6, 0 disables subdivisions)\n\
-   meas n              : Sets the number of beats of a measure (0 disables\n\
-                         measure clicks)\n\
-   measnote nn         : Sets the MIDI note for first beat of the measure\n\
-   beatnote nn         : Sets the MIDI note for ordinary beats\n\
-   subdnote nn         : Sets the MIDI note for subdivisions\n\
-   outport port        : Sets the MIDI out port\n\
-   outchan ch          : Sets the MIDI out channel\n\
-   status              : Prints the status of the metronome\n\
-   help                : Prints this help screen\n\
-   quit                : Exits\n\
-MIDI channels are numbered 0 .. 15\n\
-All commands can be given during playback\n";
-
-
-//////////////////////////////////////////////////////////////////
-//                              M A I N                         //
-//////////////////////////////////////////////////////////////////
-
-int main_test_metronome( string command) {
-//int main_test_metronome( int argc, char **argv ) {
-    // tests if a MIDI out port is present in the system
-    if (MIDIManager::GetNumMIDIOuts() == 0) {
-        cout << "This program has no functionality without MIDI out ports!\n" <<
-                "Press a key to quit\n";
-        cin.get();
-        return EXIT_SUCCESS;
-    }
-    // adds the metronome to the MIDIManager queue
-    MIDIManager::AddMIDITick(&metro);
-
-    cout << "TYPE help TO GET A LIST OF AVAILABLE COMMANDS\n\n";
-   std::string str(command); 
-  // while ( strcmp(command, "quit") != 0 )  // main loop
-  while (command != "quit") {                     // main loop
-        //GetCommand();                               // gets user input and splits it into command, par1, par2
-        //replace this by parsing a json object, from a jsonStr sent by Nodered
-        
-        if(command == "")                           // empty command
-            continue;
-        if (command == "ports") {                   // enumerates the midi ports
-            if (MIDIManager::GetNumMIDIIns()) {
-                cout << "MIDI IN PORTS:" << endl;
-                for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++)
-                    cout << i << ": " << MIDIManager::GetMIDIInName( i ) << endl;
-            }
-            else
-                cout << "NO MIDI IN PORTS" << endl;
-            cout << "MIDI OUT PORTS:" << endl;
-            for (unsigned int i = 0; i < MIDIManager::GetNumMIDIOuts(); i++)
-                cout << i << ": " << MIDIManager::GetMIDIOutName( i ) << endl;
-        }
-        else if (command == "start") {               // starts the metronome
-            metro.Start();
-            cout << "Metronome started" << endl;
-        }
-        else if (command == "stop") {               // stops the metronome
-            metro.Stop();
-            cout << "Metronome stopped at " << metro.GetCurrentMeasure() << ":"
-                 << metro.GetCurrentBeat() << endl;
-        }
-        else if (command == "tempo") {              // changes the metronome tempo
-            float tempo = atof(par1.c_str());
-            if (metro.SetTempo(tempo)) {
-                cout << "Tempo set to " << tempo <<
-                        "  Effective tempo: " << metro.GetTempoWithScale() << " bpm" << endl;
-            }
-            else
-                cout << "Invalid tempo" << endl;
-        }
-        else if (command == "tscale") {             // scales the metronome tempo
-            int scale = atoi(par1.c_str());
-            if (metro.SetTempoScale(scale)) {
-                cout << "Tempo scale : " << scale <<
-                        "%  Effective tempo: " << metro.GetTempoWithScale() << " bpm" << endl;
-            }
-            else
-                cout << "Invalid tempo scale" << endl;
-        }
-        else if (command == "subd") {               // sets the number of subdivision of each beat
-            unsigned int type = atoi(par1.c_str());          // 0 disables subdivision clicks
-            if (metro.SetSubdType(type)) {
-                if (type == 0)
-                    cout << "Subdivision click disabled" << endl;
-                else
-                     cout << "Number of subdivisions set to " << type << endl;
-            }
-            else
-                cout << "Invalid number of subdivisions" << endl;
-        }
-        else if (command == "meas") {               // sets the number of beats of a measure
-            unsigned int beats = atoi(par1.c_str());         // 0 disables measure clicks
-            metro.SetTimeSigNumerator(beats);
-            if (beats == 0)
-                cout << "First beat disabled" << endl;
-            else
-                cout << "Beats set to " << beats << endl;
-        }
-
-        else if (command == "measnote") {           // sets the note for 1st beat of a measure
-            unsigned int note = atoi(par1.c_str()) & 0x7f;
-            metro.SetMeasNote(note);
-            cout << "First beat note set to " << note << endl;
-        }
-        else if (command == "beatnote") {           // sets the note for ordinary beats
-            unsigned int note = atoi(par1.c_str()) & 0x7f;
-            metro.SetBeatNote(note);
-            cout << "Beat note set to " << note << endl;
-        }
-        else if (command == "subdnote") {           // sets the note for subdivisions
-            unsigned int note = atoi(par1.c_str()) & 0x7f;
-            metro.SetSubdNote(note);
-            cout << "Subdivision note set to " << note << endl;
-        }
-        else if (command == "outport") {            // changes the midi out port
-            int port = atoi(par1.c_str());
-            if (metro.SetOutPort(port))
-                cout << "Assigned out port n. " << port << endl;
-            else
-                cout << "Invalid port number" << endl;
-        }
-        else if (command == "outchan") {            // changes the midi out chan
-            int chan = atoi(par1.c_str());
-            if (metro.SetOutChannel(chan))
-                cout << "Assigned out channel n. " << (int)chan << endl;
-            else
-                cout << "Invalid channel number" << endl;
-        }
-        else if (command == "status") {
-            cout << "\nMETRONOME STATUS:\n";
-            cout << "MIDI out port:             " << MIDIManager::GetMIDIOutName(metro.GetOutPort()) << endl;
-            cout << "MIDI out channel:          " << int(metro.GetOutChannel()) << endl;
-            cout << "Tempo:                     " << metro.GetTempoWithoutScale() << " bpm" << endl;
-            cout << "Tempo scale:               " << metro.GetTempoScale() << "% (effective tempo: " <<
-                    metro.GetTempoWithScale() << " bpm)" << endl;
-            cout << "Measure beats:             " << int(metro.GetTimeSigNumerator());
-            cout << (metro.GetTimeSigNumerator() == 0 ? " (disabled)" : "") << endl;
-            cout << "Subdivision:               " << int(metro.GetSubdType());
-            cout << (metro.GetSubdType() == 0 ? " (disabled)" : "") << endl;
-            cout << "Measure beat note:         " << int(metro.GetMeasNote()) << endl;
-            cout << "Ordinary beat note:        " << int(metro.GetBeatNote()) << endl;
-            cout << "Subdivision note:          " << int(metro.GetSubdNote()) << endl;
-        }
-        else if (command == "help")                 // prints help screen
-            cout << helpstring;
-        else if (command != "quit" )                // unrecognized command
-            cout << "Unrecognized command" << endl;
-    }
-    return EXIT_SUCCESS;
-}
-
-*/
-
 
 
 // If you want to implement your own MIDITickComponent derived class you must at least redefine
@@ -1155,7 +957,7 @@ void TestComp::TickProc(tMsecs sys_time) {
 
 // The main() creates a class instance, adds it to the MIDIManager queue and then calls
 // Start() and Stop() for enabling and disabling the callback
-int main_test_component() {
+int main() {
     TestComp comp;                              // creates the component
     MIDIManager::AddMIDITick(&comp);          // adds it to the MIDIManager queue
     comp.Start();                               // starts the callback
@@ -1183,12 +985,8 @@ void connectedTask (void * parameter){
         // only act if connection status changes or if there is a stable connection
         if (deviceConnected) {
               //ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_midi_ports.cpp");    
-  main_test_midiports(); //code above
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_metronome.cpp");
-//  main_test_metronome(command); //code above
-//  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp");    
-  main_test_component(); //code above
+  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp");    
+  main(); //code above
             
             //ESP_LOGW(TAG,"STABLE CONNECTION "); 
             /*
