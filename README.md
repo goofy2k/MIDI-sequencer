@@ -295,12 +295,33 @@ Exiting MIDIManager::Init() Found 0 midi out and 0 midi in
 
 **Status in version 9: no runtime error**  
 Plays audible note to soundboard, without runtime errors!
-Need to check the MIDI codes that arrive at the board. Add logging of received MIDI messages to it's firmware.  
+Need to check the MIDI codes that arrive at the board. Added logging of received MIDI messages to it's firmware.  
   
   **Next steps:**
   
-  - Debug the MIDITick component  
-  - Wrap MQTT port in MIDIIn,  wrap BLE port in MIDIOut,  phase out RtMidi (?)
+  - DONE v9 Debug the MIDITick component  
+  - DONE v9 Wrap MQTT port in MIDIIn,  wrap BLE port in MIDIOut,  phase out RtMidi (?)
+  - wrap the bluetooth (NimBLE) MIDI output port in driver.h/.cpp
+  - implement more MIDITick users (sequencer, recorder)
+    - implement commands for e.g. MIDIManager (start, stop, etc. .... ) over MQTT
+  - clean up the code
+  
+  - soundboard:  extend controls
+    MIDI:
+    - AllNotesOff
+    - Channel selection
+    - 
+    DSP:
+    - other sound engine controls (e.g. A, D, S, R, ...)
+    
+  - soundboard:  control audio codec over BLE interface
+  - implement a GUI facilitated by the GUI classes in the lib. Handle these on the Nodered side as with Faust JSONUI
+  
+### Wrap the bluetooth (NimBLE) MIDI output port in driver.h/.cpp
+  
+In the TickProc for the test_component example the out of MIDI messages over the NinBLE bluetooth interface is done by sendToMIDIOut(msg) instead of  MIDIManager::GetOutDriver(0)->OutputMessage(msg). If we modify the code behind GetOutDriver to use the NimBLE interface we prevent that we have to adapt the call in the entire library.
+  
+manager.cpp / class MIDIManager uses a call static MIDIOutDriver*       GetOutDriver(unsigned int n)  to get a pointer to the output driver
   
 
   
