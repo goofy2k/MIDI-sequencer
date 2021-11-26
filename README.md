@@ -332,4 +332,4 @@ manager.cpp / class MIDIManager uses a call static MIDIOutDriver*       GetOutDr
   - only add a patch inside files
   - do not move or rename files to prevent a cascade of changes
   - just place a //FCKX patch near the change, so you can find them back with Search Everthing 
-  - REDO the work starting form v6b or 7
+  - REDO the work starting form v6b or 7 until you reach the status of v9
