@@ -324,5 +324,12 @@ In the TickProc for the test_component example the out of MIDI messages over the
 manager.cpp / class MIDIManager uses a call static MIDIOutDriver*       GetOutDriver(unsigned int n)  to get a pointer to the output driver
   
 
+## Change of patching strategy
   
-
+  The patched NiCMidi has become a pretty mess in v10. Files have been moved, renamed etc.
+  **New strategy**: 
+  - place the intact NicMidi lib in the structure as a component
+  - only add a patch inside files
+  - do not move or rename files to prevent a cascade of changes
+  - just place a //FCKX patch near the change, so you can find them back with Search Everthing 
+  - REDO the work starting form v6b or 7 until you reach the status of v9
