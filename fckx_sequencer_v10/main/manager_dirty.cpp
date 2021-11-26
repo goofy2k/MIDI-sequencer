@@ -23,7 +23,7 @@
  */
 
 
-#include "../include/manager.h"
+#include "../include/manager_dirty.h"
 
 
 std::vector<MIDIOutDriver*>* MIDIManager::MIDI_outs;

@@ -26,7 +26,7 @@
 
 
 #include "../include/track_dirty.h" //FCKX
-// #include "../include/matrix.h"   //FCKX
+#include "../include/matrix_dirty.h"   //FCKX
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -174,8 +174,8 @@ bool MIDITrack::SetOutPort(unsigned int port) {
     out_port = port;
     return true;
 }
-
 */
+
 
 void MIDITrack::ShrinkEndTime() {
     if (events.size() == 1)         // empty track

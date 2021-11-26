@@ -267,7 +267,7 @@ void MIDIMultiTrack::EditCopy(MIDIClockTime start, MIDIClockTime end,
     //DumpMIDIMultiTrack(edit);
 }
 
-
+/* FCKX
 void MIDIMultiTrack::EditCut(MIDIClockTime start, MIDIClockTime end, MIDIEditMultiTrack* edit) {
     DumpMIDIMultiTrack(this);
 
@@ -290,7 +290,7 @@ void MIDIMultiTrack::EditClear(MIDIClockTime start, MIDIClockTime end, int tr_st
     //DumpMIDIMultiTrack(this);
 }
 
-
+*/
 void MIDIMultiTrack::EditInsert(MIDIClockTime start, int tr_start, int times, MIDIEditMultiTrack* edit) {
 
     MIDIClockTime length = edit->GetEndTime();
@@ -412,7 +412,7 @@ MIDIMultiTrackIterator::MIDIMultiTrackIterator(MIDIMultiTrack *mlt) :
     Reset();
 }
 
-
+/*  FCKX
 void MIDIMultiTrackIterator::Reset() {
     state.SetNumTracks(multitrack->GetNumTracks());     // calls state.Reset()
 
@@ -430,7 +430,7 @@ void MIDIMultiTrackIterator::Reset() {
     // sets cur_event_track
     state.FindTrackOfFirstEvent();
 }
-
+*/
 
 void MIDIMultiTrackIterator::SetEnable(unsigned int trk_num, bool f) {
     state.enabled[trk_num] = f;
@@ -457,7 +457,7 @@ bool MIDIMultiTrackIterator::GoToTime(MIDIClockTime time) {
     return true;
 }
 
-
+/* FCKX
 bool MIDIMultiTrackIterator::GetNextEvent(int *track, MIDITimedMessage **msg) {
     int trk = state.cur_event_track;
 
@@ -485,7 +485,7 @@ bool MIDIMultiTrackIterator::GetNextEvent(int *track, MIDITimedMessage **msg) {
     }
     return false;
 }
-
+*/
 
 bool MIDIMultiTrackIterator::GetNextEventOnTrack(int track, MIDITimedMessage **msg) {
     // Get the current event number for this track

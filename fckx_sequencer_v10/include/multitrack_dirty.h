@@ -76,7 +76,7 @@ class MIDIMultiTrack {
         unsigned int                GetClksPerBeat() const          { return clks_per_beat; }
         /// Returns the pointer to the track
         /// \param trk_num The track number
-        MIDITrack*                  GetTrack(int trk_num)           { return tracks[trk_num]; }
+ // FCKX       MIDITrack*                  GetTrack(int trk_num)           { return tracks[trk_num]; }
         /// Returns the pointer to the track
         /// \param trk_num The track number
         const MIDITrack*            GetTrack(int trk_num) const     { return tracks[trk_num]; }

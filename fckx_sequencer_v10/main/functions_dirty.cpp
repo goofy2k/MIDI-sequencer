@@ -126,7 +126,7 @@ void DumpMIDITrackWithPauses (MIDITrack *trk, int trk_num) {
 void DumpAllTracksAttr(MIDIMultiTrack* mlt, bool v) {
     int num_lines = 0;
     for (unsigned int i = 0; i < mlt->GetNumTracks(); i++) {
-        num_lines += (v ? DumpMIDITrackAttrVerbose(mlt->GetTrack(i), i) : DumpMIDITrackAttr(mlt->GetTrack(i), i));
+        //FCKX num_lines += (v ? DumpMIDITrackAttrVerbose(mlt->GetTrack(i), i) : DumpMIDITrackAttr(mlt->GetTrack(i), i));
         if (num_lines == PAUSE_LINES) {
             printf ("Press <ENTER> to continue or q + <ENTER> to exit ...\n");
             char ch = std::cin.get();

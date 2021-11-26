@@ -845,11 +845,75 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 
 #include "../include/tick.h"
-#include "../include/manager.h"
+#include "../include/manager_dirty.h"
 #include "../include/metronome.h"
 #include "../include/functions_dirty.h"                  // helper functions for input parsing and output
 
+//for test_recorder
+#include "../include/advancedsequencer_dirty.h"
+#include "../include/recorder_dirty.h"
+#include "../include/filewritemultitrack_dirty.h"
+
+
 using namespace std;
+
+//////////////////////////////////////////////////////////////////
+//                 TEST_RECORDER G L O B A L S                  //
+//////////////////////////////////////////////////////////////////
+
+MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer notifier
+AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+MIDIRecorder recorder(&sequencer);          // a MIDIRecorder
+
+//extern string command, par1, par2;          // used by GetCommand() for parsing the user input
+//char filename[200];                         // used for saving files
+/*
+const char helpstring[] =                   // shown by the help command
+"\nAvailable commands:\n\
+   load filename          : Loads the file into the sequencer; you must specify\n\
+                          : the file name with .mid extension\n\
+   save filename          : Save the current multitrack into a file; If the\n\
+                          : file name is not specified you must type it with\n\
+                          : .mid extension)\n\
+   ports                  : Enumerates MIDI In and OUT ports\n\
+   play                   : Starts playback from current time\n\
+   stop                   : Stops playback\n\
+   rec on/off             : Enable/disable recording\n\
+   addtrack [n]           : Insert a new track (if n is not given appends\n\
+                            it)\n\
+   deltrack [n]           : Deletes a track (if n is not given deletes the\n\
+                            last track)\n\
+   enable trk [chan]      : Enable track trk for recording (if you don't specify\n\
+                            the channel this will be the track channel if the\n\
+                            track is a channel track or all channels\n\
+   disable [trk]          : Disable track trk for recording (if you omit trk disables\n\
+                          : all tracks)\n\
+   recstart [meas] [beat] : Sets the recording start time from meas and beat\n\
+                          : (numbered from 0) If you don't specify anything from 0.\n\
+   recend[meas] [beat]    : Sets the recording end time to meas and beat. If you\n\
+                            don't specify anything to infinite.\n\
+   undo                   : Restore the sequence content before the recording.\n\
+                            You have multiple undo levels.\n\
+   rew                    : Goes to the beginning (stops the playback)\n\
+   goto meas [beat]       : Moves current time to given meas and beat\n\
+                            (numbered from 0)\n\
+   dumps [trk]            : Prints a dump of all midi events in the sequencer\n\
+                            (or in its track trk)\n\
+   dumpr [trk]            : Prints a dump of all midi events in the recorder\n\
+                            (or in its track trk)\n\
+   inport track port      : Sets the MIDI in port for the given track\n\
+   outport track port     : Sets the MIDI out port for the given track\n\
+   program track p        : Sets the MIDI program (patch) for the given track\n\
+   volume track v         : Sets the MIDI volume for the given track\n\
+   trackinfo [v]          : Shows info about all tracks of the file. If you\n\
+                            add the v the info are more complete.\n\
+   b                      : (backward) Moves current time to the previous measure\n\
+   f                      : (forward) Moves current time to the next measure\n\
+   help                   : Prints this help screen\n\
+   quit                   : Exits\n\
+The recording related commands can be given only when the sequencer is stopped,\n\
+other commands even during playback\n";
+*/
 
 
 int main_test_midiports() {
@@ -1183,7 +1247,12 @@ void connectedTask (void * parameter){
         // only act if connection status changes or if there is a stable connection
         if (deviceConnected) {
               //ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_midi_ports.cpp");    
+  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_midi_ports.cpp"); 
+
+//NOTE:  this is a CYCLIC TASK executed after the first connect to the BLE interface
+//PUT THE INSTANTIATION PARTS IN THE MAIN_TEST_ ROUTINES OUTSIDE THIS LOOP
+//OR FLAG THEM AS DONE TO PREVENT EXECUTING THEM AGAIN AND AGAIN
+//THIS IS SOLVED FOR THE main_recorder EXAMPLE  
   main_test_midiports(); //code above
   ESP_LOGE(TAG,"Testing NiCMidi functionality: test_metronome.cpp");
 //  main_test_metronome(command); //code above
@@ -1352,9 +1421,10 @@ Here is an example:
     *    
     ***********************************************************************************/
   
+  //code for NicMidi test_recorder example
   
-  
-  
+  //MIDIManager::AddMIDITick(&recorder);
+  //text_n.SetSequencer(&sequencer);
   
 
   
