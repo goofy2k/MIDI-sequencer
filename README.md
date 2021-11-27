@@ -351,3 +351,4 @@ The dirty option:  call Nimble if such a throw is on hand
 Better,  replace calls to RtMidi by call to your own RtBLEMidi class !  
   
 BE AWARE of the limited firmware space!
+  There is probably room for 4 MB!  Have a look at partition settings!
