@@ -17,19 +17,22 @@
 
 #See example component requirements and example component CMakeLists for more complete #component CMakeLists.txt examples.
 #-----------------------------------------------------------------------------
-idf_component_register( SRCS 
+idf_component_register( SRCS    
+                                "./src/driver.cpp" 
 				"./src/dump_tracks.cpp" 
 				"./src/manager.cpp"
 				"./src/msg.cpp" 
 				"./src/midi.cpp" 
 
 				"./src/sysex.cpp"
+				"./src/tick.cpp"
+                                "./src/timer.cpp"
 				"./src/track.cpp"
 #SYSTEM COMPLAINS THAT IT CANNOT C:/Users/Fred/esp_projects/MIDI-sequencer/fckx_sequencer_v06b_NEW_OK_NiCMidi_msg_track/components/NiCMidi/msg.cpp , but it is in src!
                        INCLUDE_DIRS 
 				"./src" 
 				"include" 
 				#"./rtmidi-4.0.0"
-                       #REQUIRES rtmidi-4.0.0
+                      #REQUIRES rtmidi-4.0.0
 #YOU MAY HAVE TO ADD REQUIRES RtMidi etc or an equivalent
 )

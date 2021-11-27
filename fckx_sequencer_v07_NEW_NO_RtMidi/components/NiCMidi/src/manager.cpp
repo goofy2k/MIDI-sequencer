@@ -272,6 +272,7 @@ void MIDIManager::Init() {
     MIDI_in_names = new std::vector<std::string>;
     MIDITicks = new std::vector<MIDITickComponent*>;
     proc_lock = new std::mutex;
+    /*    //FCKX_RtMidi
     try {
         RtMidiOut temp_MIDI_out;
         for (unsigned int i = 0; i < temp_MIDI_out.getPortCount(); i++) {
@@ -288,6 +289,7 @@ void MIDIManager::Init() {
         error.printMessage();
         exit(EXIT_FAILURE);
     }
+    */
     MIDITimer::SetMIDITick(TickProc);
     atexit(Exit);
     init = true;
