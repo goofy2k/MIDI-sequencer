@@ -4,10 +4,10 @@ cmake_minimum_required(VERSION 3.5)
 
 
 
-#set(EXTRA_COMPONENT_DIRS $ENVC:/Users/Fred/esp_projects/MIDI-#sequencer/fckx_sequencer_v07_NEW/components/NiCMidi/rtmidi-4.0.0)
+set(EXTRA_COMPONENT_DIRS $ENVC:/Users/Fred/esp_projects/MIDI-sequencer/fckx_sequencer_v07_NEW/components/NiCMidi/rtmidi-4.0.0)
 
 
-set(EXTRA_COMPONENT_DIRS $ENVC:/Users/Fred/esp_projects/MIDI-sequencer/fckx_sequencer_v07_NEW/components/NiCMidi)
+#set(EXTRA_COMPONENT_DIRS $ENVC:/Users/Fred/esp_projects/MIDI-sequencer/fckx_sequencer_v07_NEW/components/NiCMidi)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 set(SUPPORTED_TARGETS esp32)

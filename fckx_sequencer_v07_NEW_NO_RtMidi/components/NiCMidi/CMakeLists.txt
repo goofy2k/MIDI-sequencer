@@ -29,7 +29,7 @@ idf_component_register( SRCS
                        INCLUDE_DIRS 
 				"./src" 
 				"include" 
-				"./rtmidi-4.0.0"
-                       REQUIRES rtmidi-4.0.0
+				#"./rtmidi-4.0.0"
+                       #REQUIRES rtmidi-4.0.0
 #YOU MAY HAVE TO ADD REQUIRES RtMidi etc or an equivalent
 )
