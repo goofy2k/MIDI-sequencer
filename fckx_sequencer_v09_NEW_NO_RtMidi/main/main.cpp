@@ -504,10 +504,11 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
  
     static const char *TAG = "FCKX_SEQ_API";
     
+    //MIDI COMMANDS               
     if (strncmp(event->topic, "/fckx_seq/midi/single",strlen("/fckx_seq/midi/single")) == 0) {
+    //receive a 5 byte MIDI message 
 
-
-    //display incoming data
+    //display incoming MIDI data
     ESP_LOGI(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
     ESP_LOGI(TAG,"DATA:%.*s ", event->data_len, event->data);
     ESP_LOGI(TAG,"DATA0 %d", event->data[0]);
@@ -536,9 +537,13 @@ storeMIDI_Input(event);
     //add check on NimBLE connection
     pCharacteristic->setValue(midiPacket, 5);
     pCharacteristic->notify();
-    
- 
-    
+          } 
+        
+    else
+    //NONE MIDI COMMANDS (e.g. for NiCMidi MIDIManager        
+    if (strncmp(event->topic, "/fckx_seq/command",strlen("/fckx_seq/command")) == 0) {
+        ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
+        ESP_LOGI(TAG,"...command to be implemented...");      
         } 
     else {
          ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
@@ -583,9 +588,9 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){
             msg_id = esp_mqtt_client_subscribe(client, "/wm8978/#",0);
             ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);             
             
-            msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq", 0);
+            msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq/command/#", 0);
             //ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
-            msg_id = esp_mqtt_client_publish(client, "/fckx_seq", "MQTT OK", 0, 1, 0);
+            //msg_id = esp_mqtt_client_publish(client, "/fckx_seq", "MQTT OK", 0, 1, 0);
             //ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
             msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq/midi/single",0);
             ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
@@ -625,7 +630,7 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){
             else
 */
 
-                if (strncmp(event->topic, "/fckx_seq/",strlen("/fckx_seq/")) == 0) { //this measn: string starts with ....
+                if (strncmp(event->topic, "/fckx_seq/",strlen("/fckx_seq/")) == 0) { //this means: string starts with ....
                                call_fckx_seq_api(event);   }; 
                  
 
