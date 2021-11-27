@@ -18,13 +18,22 @@
 #See example component requirements and example component CMakeLists for more complete #component CMakeLists.txt examples.
 #-----------------------------------------------------------------------------
 idf_component_register( SRCS    
+                                "./src/advancedsequencer.cpp" 
                                 "./src/driver.cpp" 
-				"./src/dump_tracks.cpp" 
+				"./src/dump_tracks.cpp"
+				"./src/fileread.cpp" 
+				"./src/filereadmultitrack.cpp"
 				"./src/manager.cpp"
+				"./src/matrix.cpp"
+				"./src/multitrack.cpp"
 				"./src/msg.cpp" 
-				"./src/midi.cpp" 
-
+				"./src/midi.cpp"
+				"./src/notifier.cpp"
+ 				"./src/processor.cpp"
+ 				"./src/recorder.cpp"
+				"./src/sequencer.cpp"
 				"./src/sysex.cpp"
+				"./src/thru.cpp"
 				"./src/tick.cpp"
                                 "./src/timer.cpp"
 				"./src/track.cpp"

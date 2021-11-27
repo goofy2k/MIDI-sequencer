@@ -29,7 +29,8 @@
 #define RECORDER_H_INCLUDED
 
 #include "sequencer.h"
-#include "process.h"
+//#include "process.h"  //FCKX
+#include "processor.h"  //FCKX
 
 #include <atomic>
 #include <vector>

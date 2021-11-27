@@ -55,7 +55,7 @@
 #include "track.h"
 #include "dump_tracks.h"
 #include "sysex.h"
-#include "../include/tick.h"
+#include "../include/tick.h"       //check if you can harmonize these paths FCKX
 #include "../include/manager.h"
 
 
@@ -872,10 +872,270 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 //#include "../include/tick.h"
 //#include "../include/manager.h"
+#include "../include/metronome.h"
+//#include "../include/functions.h"                  // helper functions for input parsing and output
+
+//for test_recorder
+#include "../include/advancedsequencer.h"
+#include "../include/recorder.h"
+#include "../include/filewritemultitrack.h"
+
 
 using namespace std;
 
+//////////////////////////////////////////////////////////////////
+//                 TEST_RECORDER G L O B A L S                  //
+//////////////////////////////////////////////////////////////////
 
+MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer notifier
+AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+MIDIRecorder recorder(&sequencer);          // a MIDIRecorder
+
+//extern string command, par1, par2;          // used by GetCommand() for parsing the user input
+//char filename[200];                         // used for saving files
+/*
+const char helpstring[] =                   // shown by the help command
+"\nAvailable commands:\n\
+   load filename          : Loads the file into the sequencer; you must specify\n\
+                          : the file name with .mid extension\n\
+   save filename          : Save the current multitrack into a file; If the\n\
+                          : file name is not specified you must type it with\n\
+                          : .mid extension)\n\
+   ports                  : Enumerates MIDI In and OUT ports\n\
+   play                   : Starts playback from current time\n\
+   stop                   : Stops playback\n\
+   rec on/off             : Enable/disable recording\n\
+   addtrack [n]           : Insert a new track (if n is not given appends\n\
+                            it)\n\
+   deltrack [n]           : Deletes a track (if n is not given deletes the\n\
+                            last track)\n\
+   enable trk [chan]      : Enable track trk for recording (if you don't specify\n\
+                            the channel this will be the track channel if the\n\
+                            track is a channel track or all channels\n\
+   disable [trk]          : Disable track trk for recording (if you omit trk disables\n\
+                          : all tracks)\n\
+   recstart [meas] [beat] : Sets the recording start time from meas and beat\n\
+                          : (numbered from 0) If you don't specify anything from 0.\n\
+   recend[meas] [beat]    : Sets the recording end time to meas and beat. If you\n\
+                            don't specify anything to infinite.\n\
+   undo                   : Restore the sequence content before the recording.\n\
+                            You have multiple undo levels.\n\
+   rew                    : Goes to the beginning (stops the playback)\n\
+   goto meas [beat]       : Moves current time to given meas and beat\n\
+                            (numbered from 0)\n\
+   dumps [trk]            : Prints a dump of all midi events in the sequencer\n\
+                            (or in its track trk)\n\
+   dumpr [trk]            : Prints a dump of all midi events in the recorder\n\
+                            (or in its track trk)\n\
+   inport track port      : Sets the MIDI in port for the given track\n\
+   outport track port     : Sets the MIDI out port for the given track\n\
+   program track p        : Sets the MIDI program (patch) for the given track\n\
+   volume track v         : Sets the MIDI volume for the given track\n\
+   trackinfo [v]          : Shows info about all tracks of the file. If you\n\
+                            add the v the info are more complete.\n\
+   b                      : (backward) Moves current time to the previous measure\n\
+   f                      : (forward) Moves current time to the next measure\n\
+   help                   : Prints this help screen\n\
+   quit                   : Exits\n\
+The recording related commands can be given only when the sequencer is stopped,\n\
+other commands even during playback\n";
+*/
+
+
+int main_test_midiports() {
+    if (MIDIManager::GetNumMIDIIns()) {
+        cout << "MIDI IN PORTS:" << endl;
+        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++)
+            cout <<'\t' << i << ": " << MIDIManager::GetMIDIInName(i) << endl;
+    }
+    else
+        cout << "NO MIDI IN PORTS" << endl;
+    if (MIDIManager::GetNumMIDIOuts()) {
+        cout << "MIDI OUT PORTS:" << endl;
+        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIOuts(); i++)
+            cout << '\t' << i << ": " << MIDIManager::GetMIDIOutName(i) << endl;
+    }
+    else
+        cout << "NO MIDI OUT PORTS" << endl;
+    cout << endl << endl << "Press ENTER" << endl;
+    cin.get();
+    return EXIT_SUCCESS;
+}
+
+/*
+Metronome metro;                                // a Metronome (without GUI notifier)
+
+//extern string command, par1, par2;              // used by GetCommand() for parsing the user input
+//for commands: send a jsonStr that can be converted into an object with string command, and array of string par
+//see Nodered
+//to prevent the use of json decoding: call the api with:  /fckx_seq/command/<command_name>/<par1_value>,<par2_value
+//or implement: JSON::Parse(json_string)
+//build a GUI similar to the one for the audio decoder in the sound board firmware.
+//where is the data, the status of the sequencer....?
+//for the data: see the test_win32_player.cpp example and refactor it to JSONUI for a browser based GUI
+//be very very hesitant to use the Windows API
+
+const char helpstring[] =                       // shown by the help command
+"\nAvailable commands:\n\
+   ports               : Enumerates MIDI In and OUT ports\n\
+   start               : Starts the metronome\n\
+   stop                : Stops the metronome\n\
+   tempo bpm           : Sets the metronome tempo (bpm is a float)\n\
+   tscale scale        : Sets global tempo scale. scale is in percent\n\
+                         (ex. 200 = twice faster, 50 = twice slower)\n\
+   subd n              : Sets the number of subdivisions (n can be\n\
+                         0, 2, 3, 4, 5, 6, 0 disables subdivisions)\n\
+   meas n              : Sets the number of beats of a measure (0 disables\n\
+                         measure clicks)\n\
+   measnote nn         : Sets the MIDI note for first beat of the measure\n\
+   beatnote nn         : Sets the MIDI note for ordinary beats\n\
+   subdnote nn         : Sets the MIDI note for subdivisions\n\
+   outport port        : Sets the MIDI out port\n\
+   outchan ch          : Sets the MIDI out channel\n\
+   status              : Prints the status of the metronome\n\
+   help                : Prints this help screen\n\
+   quit                : Exits\n\
+MIDI channels are numbered 0 .. 15\n\
+All commands can be given during playback\n";
+
+
+//////////////////////////////////////////////////////////////////
+//                              M A I N                         //
+//////////////////////////////////////////////////////////////////
+
+int main_test_metronome( string command) {
+//int main_test_metronome( int argc, char **argv ) {
+    // tests if a MIDI out port is present in the system
+    if (MIDIManager::GetNumMIDIOuts() == 0) {
+        cout << "This program has no functionality without MIDI out ports!\n" <<
+                "Press a key to quit\n";
+        cin.get();
+        return EXIT_SUCCESS;
+    }
+    // adds the metronome to the MIDIManager queue
+    MIDIManager::AddMIDITick(&metro);
+
+    cout << "TYPE help TO GET A LIST OF AVAILABLE COMMANDS\n\n";
+   std::string str(command); 
+  // while ( strcmp(command, "quit") != 0 )  // main loop
+  while (command != "quit") {                     // main loop
+        //GetCommand();                               // gets user input and splits it into command, par1, par2
+        //replace this by parsing a json object, from a jsonStr sent by Nodered
+        
+        if(command == "")                           // empty command
+            continue;
+        if (command == "ports") {                   // enumerates the midi ports
+            if (MIDIManager::GetNumMIDIIns()) {
+                cout << "MIDI IN PORTS:" << endl;
+                for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++)
+                    cout << i << ": " << MIDIManager::GetMIDIInName( i ) << endl;
+            }
+            else
+                cout << "NO MIDI IN PORTS" << endl;
+            cout << "MIDI OUT PORTS:" << endl;
+            for (unsigned int i = 0; i < MIDIManager::GetNumMIDIOuts(); i++)
+                cout << i << ": " << MIDIManager::GetMIDIOutName( i ) << endl;
+        }
+        else if (command == "start") {               // starts the metronome
+            metro.Start();
+            cout << "Metronome started" << endl;
+        }
+        else if (command == "stop") {               // stops the metronome
+            metro.Stop();
+            cout << "Metronome stopped at " << metro.GetCurrentMeasure() << ":"
+                 << metro.GetCurrentBeat() << endl;
+        }
+        else if (command == "tempo") {              // changes the metronome tempo
+            float tempo = atof(par1.c_str());
+            if (metro.SetTempo(tempo)) {
+                cout << "Tempo set to " << tempo <<
+                        "  Effective tempo: " << metro.GetTempoWithScale() << " bpm" << endl;
+            }
+            else
+                cout << "Invalid tempo" << endl;
+        }
+        else if (command == "tscale") {             // scales the metronome tempo
+            int scale = atoi(par1.c_str());
+            if (metro.SetTempoScale(scale)) {
+                cout << "Tempo scale : " << scale <<
+                        "%  Effective tempo: " << metro.GetTempoWithScale() << " bpm" << endl;
+            }
+            else
+                cout << "Invalid tempo scale" << endl;
+        }
+        else if (command == "subd") {               // sets the number of subdivision of each beat
+            unsigned int type = atoi(par1.c_str());          // 0 disables subdivision clicks
+            if (metro.SetSubdType(type)) {
+                if (type == 0)
+                    cout << "Subdivision click disabled" << endl;
+                else
+                     cout << "Number of subdivisions set to " << type << endl;
+            }
+            else
+                cout << "Invalid number of subdivisions" << endl;
+        }
+        else if (command == "meas") {               // sets the number of beats of a measure
+            unsigned int beats = atoi(par1.c_str());         // 0 disables measure clicks
+            metro.SetTimeSigNumerator(beats);
+            if (beats == 0)
+                cout << "First beat disabled" << endl;
+            else
+                cout << "Beats set to " << beats << endl;
+        }
+
+        else if (command == "measnote") {           // sets the note for 1st beat of a measure
+            unsigned int note = atoi(par1.c_str()) & 0x7f;
+            metro.SetMeasNote(note);
+            cout << "First beat note set to " << note << endl;
+        }
+        else if (command == "beatnote") {           // sets the note for ordinary beats
+            unsigned int note = atoi(par1.c_str()) & 0x7f;
+            metro.SetBeatNote(note);
+            cout << "Beat note set to " << note << endl;
+        }
+        else if (command == "subdnote") {           // sets the note for subdivisions
+            unsigned int note = atoi(par1.c_str()) & 0x7f;
+            metro.SetSubdNote(note);
+            cout << "Subdivision note set to " << note << endl;
+        }
+        else if (command == "outport") {            // changes the midi out port
+            int port = atoi(par1.c_str());
+            if (metro.SetOutPort(port))
+                cout << "Assigned out port n. " << port << endl;
+            else
+                cout << "Invalid port number" << endl;
+        }
+        else if (command == "outchan") {            // changes the midi out chan
+            int chan = atoi(par1.c_str());
+            if (metro.SetOutChannel(chan))
+                cout << "Assigned out channel n. " << (int)chan << endl;
+            else
+                cout << "Invalid channel number" << endl;
+        }
+        else if (command == "status") {
+            cout << "\nMETRONOME STATUS:\n";
+            cout << "MIDI out port:             " << MIDIManager::GetMIDIOutName(metro.GetOutPort()) << endl;
+            cout << "MIDI out channel:          " << int(metro.GetOutChannel()) << endl;
+            cout << "Tempo:                     " << metro.GetTempoWithoutScale() << " bpm" << endl;
+            cout << "Tempo scale:               " << metro.GetTempoScale() << "% (effective tempo: " <<
+                    metro.GetTempoWithScale() << " bpm)" << endl;
+            cout << "Measure beats:             " << int(metro.GetTimeSigNumerator());
+            cout << (metro.GetTimeSigNumerator() == 0 ? " (disabled)" : "") << endl;
+            cout << "Subdivision:               " << int(metro.GetSubdType());
+            cout << (metro.GetSubdType() == 0 ? " (disabled)" : "") << endl;
+            cout << "Measure beat note:         " << int(metro.GetMeasNote()) << endl;
+            cout << "Ordinary beat note:        " << int(metro.GetBeatNote()) << endl;
+            cout << "Subdivision note:          " << int(metro.GetSubdNote()) << endl;
+        }
+        else if (command == "help")                 // prints help screen
+            cout << helpstring;
+        else if (command != "quit" )                // unrecognized command
+            cout << "Unrecognized command" << endl;
+    }
+    return EXIT_SUCCESS;
+}
+
+*/
 // If you want to implement your own MIDITickComponent derived class you must at least redefine
 // the StaticTickProc() and TickProc() methods (and probably Start() and Stop() also).
 // Before using the class you must add it to the MIDIManager queue with the
@@ -981,7 +1241,7 @@ void TestComp::TickProc(tMsecs sys_time) {
 
 // The main() creates a class instance, adds it to the MIDIManager queue and then calls
 // Start() and Stop() for enabling and disabling the callback
-int main() {
+int main_test_component() {
     TestComp comp;                              // creates the component
     MIDIManager::AddMIDITick(&comp);            // adds it to the MIDIManager queue
     comp.Start();                               // starts the callback
@@ -1009,8 +1269,17 @@ int main() {
         // only act if connection status changes or if there is a stable connection
         if (deviceConnected) {
                //ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp");    
-  main(); //code above
+  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_midi_ports.cpp");    
+
+//NOTE:  this is a CYCLIC TASK executed after the first connect to the BLE interface
+//PUT THE INSTANTIATION PARTS IN THE MAIN_TEST_ ROUTINES OUTSIDE THIS LOOP
+//OR FLAG THEM AS DONE TO PREVENT EXECUTING THEM AGAIN AND AGAIN
+//THIS IS SOLVED FOR THE main_recorder EXAMPLE  
+  main_test_midiports(); //code above
+  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_metronome.cpp");
+//  main_test_metronome(command); //code above
+//  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp");                                                                               
+  main_test_component(); //code above
                                                                                                           
             //ESP_LOGW(TAG,"STABLE CONNECTION "); 
             /*
@@ -1181,7 +1450,11 @@ Here is an example:
   
   
   
+   //code for NicMidi test_recorder example
   
+  //MIDIManager::AddMIDITick(&recorder);
+  //text_n.SetSequencer(&sequencer);
+   
   
 
   
