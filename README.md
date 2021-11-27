@@ -334,3 +334,5 @@ manager.cpp / class MIDIManager uses a call static MIDIOutDriver*       GetOutDr
   - just place a //FCKX patch near the change, so you can find them back with Search Everthing 
   - **REDONE** the work starting form v6b or 7 until you reach the status of v9
   - implement test_recorder.cpp, test_midi_ports, test_metronome in v10 NEW (take over useful snippets from v10)
+  - compiles OK, but firmware size too large
+  - v11 reduce logging level INFO > WARNING
