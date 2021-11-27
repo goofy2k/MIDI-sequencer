@@ -333,4 +333,4 @@ manager.cpp / class MIDIManager uses a call static MIDIOutDriver*       GetOutDr
   - do not move or rename files to prevent a cascade of changes
   - just place a //FCKX patch near the change, so you can find them back with Search Everthing 
   - **REDONE** the work starting form v6b or 7 until you reach the status of v9
-  - implement test_recorder.cpp in v10 NEW (take over useful snippets from v10)
+  - implement test_recorder.cpp  and test_midi_ports in v10 NEW (take over useful snippets from v10)
