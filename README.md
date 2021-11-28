@@ -333,4 +333,35 @@ manager.cpp / class MIDIManager uses a call static MIDIOutDriver*       GetOutDr
   - do not move or rename files to prevent a cascade of changes
   - just place a //FCKX patch near the change, so you can find them back with Search Everthing 
   - **REDONE** the work starting form v6b or 7 until you reach the status of v9
-  - implement test_recorder.cpp, test_midi_ports, test_metronome in v10 NEW (take over useful snippets from v10)
+  - implement test_recorder.cpp, test_midi_ports, test_metronome in v10 NEW (take over useful snippets from v10)  recorder only the global and recorder instantiation, not the calls ( main() ) 
+  - compiles OK, but firmware size too large
+  - v11 reduce logging level INFO > WARNING no success
+  - v11 reduce logging level INFO > ERROR SUCCESS! BUT, run time error thrown by sequnecer.cpp:
+  
+  
+Executing MIDIManager::Init()
+MidiOutDummy: This class provides no functionality.
+MidiInDummy: This class provides no functionality.
+Exiting MIDIManager::Init() Found 0 midi out and 0 midi in
+
+abort() was called at PC 0x4014ba8f on core 0
+    
+0x400dbd2f: MIDISequencer::MIDISequencer(MIDIMultiTrack*, MIDISequencerGUINotifier*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v11_new_no_rtmidi\build/../components/NiCMidi/src/sequencer.cpp:361
+
+0x400d5d35: AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v11_new_no_rtmidi\build/../components/NiCMidi/src/advancedsequencer.cpp:114
+  
+sequencer.cpp:361  :  
+    if (!MIDIManager::IsValidOutPortNumber(0))  
+        throw RtMidiError("MIDISequencer needs almost a MIDI out port in the system\n", RtMidiError::INVALID_DEVICE); 
+  
+It is time to bypass RTMidiError and use the NimBLE interface... 
+  
+  
+  
+The dirty option:  call Nimble if such a throw is on hand
+Better,  replace calls to RtMidi by call to your own RtBLEMidi class !  
+  
+BE AWARE of the limited firmware space!
+  There is probably room for 4 MB!  Have a look at partition settings! DONE!
+  
+Have a look at void MIDIManager::Init()  and provide your own RtBLEMidi
