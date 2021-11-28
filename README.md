@@ -338,13 +338,22 @@ manager.cpp / class MIDIManager uses a call static MIDIOutDriver*       GetOutDr
   - v11 reduce logging level INFO > WARNING no success
   - v11 reduce logging level INFO > ERROR SUCCESS! BUT, run time error thrown by sequnecer.cpp:
   
-  0x400dbd2f: MIDISequencer::MIDISequencer(MIDIMultiTrack*, MIDISequencerGUINotifier*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v11_new_no_rtmidi\build/../components/NiCMidi/src/sequencer.cpp:361
+  
+Executing MIDIManager::Init()
+MidiOutDummy: This class provides no functionality.
+MidiInDummy: This class provides no functionality.
+Exiting MIDIManager::Init() Found 0 midi out and 0 midi in
+
+abort() was called at PC 0x4014ba8f on core 0
+    
+0x400dbd2f: MIDISequencer::MIDISequencer(MIDIMultiTrack*, MIDISequencerGUINotifier*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v11_new_no_rtmidi\build/../components/NiCMidi/src/sequencer.cpp:361
 
 0x400d5d35: AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v11_new_no_rtmidi\build/../components/NiCMidi/src/advancedsequencer.cpp:114
   
 sequencer.cpp:361  :  
     if (!MIDIManager::IsValidOutPortNumber(0))  
-        throw RtMidiError("MIDISequencer needs almost a MIDI out port in the system\n", RtMidiError::INVALID_DEVICE);  
+        throw RtMidiError("MIDISequencer needs almost a MIDI out port in the system\n", RtMidiError::INVALID_DEVICE); 
+  
 It is time to bypass RTMidiError and use the NimBLE interface... 
   
   
