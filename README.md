@@ -366,5 +366,6 @@ BE AWARE of the limited firmware space!
   
 Have a look at void MIDIManager::Init()  and provide your own RtBLEMidi
 
+### Next step in implementation  
   
 V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked version). NimBLE out has been phased out of the main app and should be taken over by NiCMidi/RtMidi.  Implement the API functions an make sure you maintain the same interface.     
