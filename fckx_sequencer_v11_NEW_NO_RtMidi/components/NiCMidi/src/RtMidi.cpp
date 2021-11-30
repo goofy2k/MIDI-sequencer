@@ -36,7 +36,8 @@
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 /**********************************************************************/
-
+#include "esp_log.h"
+static const char *TAG = "RtMidi.cpp";
 #include "RtMidi.h"
 #include <sstream>
 
@@ -434,6 +435,7 @@ void RtMidi :: setPortName( const std::string &portName )
   rtapi_->setPortName( portName );
 }
 
+#ifdef MIDI_IN_USED
 
 //*********************************************************************//
 //  RtMidiIn Definitions
@@ -505,6 +507,7 @@ RTMIDI_DLL_PUBLIC RtMidiIn :: RtMidiIn( RtMidi::Api api, const std::string &clie
 RtMidiIn :: ~RtMidiIn() throw()
 {
 }
+#endif
 
 
 //*********************************************************************//
@@ -623,6 +626,9 @@ void MidiApi :: error( RtMidiError::Type type, std::string errorString )
     throw RtMidiError( errorString, type );
   }
 }
+
+
+#ifdef MIDI_IN_USED
 
 //*********************************************************************//
 //  Common MidiInApi Definitions
@@ -756,6 +762,8 @@ bool MidiInApi::MidiQueue::pop( std::vector<unsigned char> *msg, double* timeSta
   front = (front+1)%ringSize;
   return true;
 }
+
+#endif
 
 //*********************************************************************//
 //  Common MidiOutApi Definitions
@@ -3526,8 +3534,11 @@ void MidiOutJack :: sendMessage( const unsigned char *message, size_t size )
 #if defined(__NIMBLE_FCKX__)
 
 // NIMBLE header files
-/*
+
 //you may need NimBLEDevice.h here,  use that after phasing it out of main.cpp
+
+#include <NimBLEDevice.h>
+/*
 #include <nimBLE/nimBLE.h>      //these are just the equivalents of the JACK code
 #include <nimBLE/midiport.h>    //these are just the equivalents of the JACK code
 #include <nimBLE/ringbuffer.h>  //these are just the equivalents of the JACK code
@@ -3538,7 +3549,7 @@ void MidiOutJack :: sendMessage( const unsigned char *message, size_t size )
 #endif
 
 #define NIMBLE_RINGBUFFER_SIZE 16384 // Default size for ringbuffer
-
+/* temp switch off
 struct NimBLEMidiData {
   nimBLE_client_t *client;
   nimBLE_port_t *port;
@@ -3551,12 +3562,13 @@ struct NimBLEMidiData {
 #endif
   MidiInApi :: RtMidiInData *rtMidiIn;
   };
-
+*/
+#ifdef MIDI_IN_USED
 //*********************************************************************//
 //  API: NIMBLE_FCKX
 //  Class Definitions: MidiInNimBLE
 //*********************************************************************//
-
+/*
 static int nimBLEProcessIn( nimBLE_nframes_t nframes, void *arg )
 {
   NimBLEMidiData *jData = (NimBLEMidiData *) arg;
@@ -3645,8 +3657,12 @@ MidiInNimBLE :: MidiInNimBLE( const std::string &clientName, unsigned int queueS
   MidiInNimBLE::initialize( clientName );
 }
 
+*/
+
 void MidiInNimBLE :: initialize( const std::string& clientName )
 {
+  //NimBLEDevice::init("");
+  /*  
   NimBLEMidiData *data = new NimBLEMidiData;
   apiData_ = (void *) data;
 
@@ -3656,8 +3672,9 @@ void MidiInNimBLE :: initialize( const std::string& clientName )
   this->clientName = clientName;
 
   connect();
+  */
 }
-
+/*
 void MidiInNimBLE :: connect()
 {
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
@@ -3804,12 +3821,14 @@ void MidiInNimBLE :: setPortName( const std::string &portName )
   nimBLE_port_set_name( data->port, portName.c_str() );
 #endif
 }
+*/
+#endif
 
 //*********************************************************************//
 //  API: NIMBLE_FCKX
 //  Class Definitions: MidiOutNimBLE
 //*********************************************************************//
-
+/*
 // NimBLE process callback
 static int nimBLEProcessOut( nimBLE_nframes_t nframes, void *arg )
 {
@@ -3838,6 +3857,15 @@ static int nimBLEProcessOut( nimBLE_nframes_t nframes, void *arg )
   return 0;
 }
 
+*/
+
+#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+
+//FCKX
+BLEServer* pServer = NULL;
+BLECharacteristic* pCharacteristic = NULL;
+
 MidiOutNimBLE :: MidiOutNimBLE( const std::string &clientName ) : MidiOutApi()
 {
   MidiOutNimBLE::initialize( clientName );
@@ -3845,6 +3873,63 @@ MidiOutNimBLE :: MidiOutNimBLE( const std::string &clientName ) : MidiOutApi()
 
 void MidiOutNimBLE :: initialize( const std::string& clientName )
 {
+  static const char *TAG = "MidiOutNimBLE :: initialize";  
+  // Create the BLE Device  RENAME TO NimBLEDevice throughout the code
+  BLEDevice::init("fckx_seq");  //FCKX
+    // Create the BLE Server
+  pServer = BLEDevice::createServer();
+  //pServer->setCallbacks(new MyServerCallbacks());  //FCKX
+  //what is the equivalent of the MyServerCallbacks() in RtMidi
+  //see the code in main...
+  
+  // Create the BLE Service
+  BLEService *pService = pServer->createService(SERVICE_UUID);
+
+  // Create a BLE Characteristic
+  pCharacteristic = pService->createCharacteristic(
+                      CHARACTERISTIC_UUID,
+                /******* Enum Type NIMBLE_PROPERTY now *******     
+                      BLECharacteristic::PROPERTY_READ   |
+                      BLECharacteristic::PROPERTY_WRITE  |
+                      BLECharacteristic::PROPERTY_NOTIFY |
+                      BLECharacteristic::PROPERTY_INDICATE
+                    );
+                **********************************************/    
+                      NIMBLE_PROPERTY::READ   |
+                      NIMBLE_PROPERTY::WRITE  |
+                      NIMBLE_PROPERTY::NOTIFY |
+                      NIMBLE_PROPERTY::INDICATE
+                    );
+
+  // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
+  // Create a BLE Descriptor
+  /***************************************************   
+   NOTE: DO NOT create a 2902 descriptor. 
+   it will be created automatically if notifications 
+   or indications are enabled on a characteristic.
+   
+   pCharacteristic->addDescriptor(new BLE2902());
+  ****************************************************/
+  // Start the service
+  pService->start();
+
+  // Start advertising
+  ESP_LOGI(TAG, "Start advertising");
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(false);
+  /** This method had been removed **
+  pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
+  **/
+  //define a task with a continous loop
+  //it is called connectedTask, but in fact it also starts when there is no connection
+  
+  //xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
+  
+  BLEDevice::startAdvertising();
+  
+  
+  /*  
   NimBLEMidiData *data = new NimBLEMidiData;
   apiData_ = (void *) data;
 
@@ -3857,8 +3942,9 @@ void MidiOutNimBLE :: initialize( const std::string& clientName )
   this->clientName = clientName;
 
   connect();
+ */ 
 }
-
+/*
 void MidiOutNimBLE :: connect()
 {
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
@@ -3879,9 +3965,10 @@ void MidiOutNimBLE :: connect()
   nimBLE_set_process_callback( data->client, nimBLEProcessOut, data );
   nimBLE_activate( data->client );
 }
-
+*/
 MidiOutNimBLE :: ~MidiOutNimBLE()
 {
+  /*  
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
   MidiOutNimBLE::closePort();
 
@@ -3898,10 +3985,13 @@ MidiOutNimBLE :: ~MidiOutNimBLE()
 #endif
 
   delete data;
+  
+  */
 }
 
 void MidiOutNimBLE :: openPort( unsigned int portNumber, const std::string &portName )
 {
+  /*  
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
 
   connect();
@@ -3922,10 +4012,14 @@ void MidiOutNimBLE :: openPort( unsigned int portNumber, const std::string &port
   nimBLE_connect( data->client, nimBLE_port_name( data->port ), name.c_str() );
 
   connected_ = true;
+*/
 }
+
 
 void MidiOutNimBLE :: openVirtualPort( const std::string &portName )
 {
+    
+  /*  
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
 
   connect();
@@ -3937,11 +4031,13 @@ void MidiOutNimBLE :: openVirtualPort( const std::string &portName )
     errorString_ = "MidiOutNimBLE::openVirtualPort: NIMBLE error creating virtual port";
     error( RtMidiError::DRIVER_ERROR, errorString_ );
   }
+  */
 }
 
 unsigned int MidiOutNimBLE :: getPortCount()
 {
   int count = 0;
+  /*
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
   connect();
   if ( !data->client )
@@ -3956,15 +4052,18 @@ unsigned int MidiOutNimBLE :: getPortCount()
     count++;
 
   free( ports );
-
+  */
+  
   return count;
 }
 
+
 std::string MidiOutNimBLE :: getPortName( unsigned int portNumber )
 {
-  NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
-  std::string retStr("");
-
+    
+  //NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
+  std::string retStr("test_dummy");
+  /*
   connect();
 
   // List of available ports
@@ -3987,11 +4086,16 @@ std::string MidiOutNimBLE :: getPortName( unsigned int portNumber )
   else retStr.assign( ports[portNumber] );
 
   free( ports );
+  */
   return retStr;
 }
 
+
+
 void MidiOutNimBLE :: closePort()
 {
+    
+  /*  
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
 
   if ( data->port == NULL ) return;
@@ -4009,7 +4113,9 @@ void MidiOutNimBLE :: closePort()
   data->port = NULL;
 
   connected_ = false;
+  */
 }
+
 
 void MidiOutNimBLE:: setClientName( const std::string& )
 {
@@ -4021,22 +4127,30 @@ void MidiOutNimBLE:: setClientName( const std::string& )
 
 void MidiOutNimBLE :: setPortName( const std::string &portName )
 {
+  /*  
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
 #ifdef NIMBLE_HAS_PORT_RENAME
   nimBLE_port_rename( data->client, data->port, portName.c_str() );
 #else
   nimBLE_port_set_name( data->port, portName.c_str() );
 #endif
+*/
+
 }
 
+
 void MidiOutNimBLE :: sendMessage( const unsigned char *message, size_t size )
-{
+{  
+  static const char *TAG = "MidiOutNimBLE :: sendMessage"; 
+  ESP_LOGI(TAG, "sendMessage");    
+  /*  
   int nBytes = static_cast<int>(size);
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
 
   // Write full message to buffer
   nimBLE_ringbuffer_write( data->buffMessage, ( const char * ) message, nBytes );
   nimBLE_ringbuffer_write( data->buffSize, ( char * ) &nBytes, sizeof( nBytes ) );
+  */
 }
 
 #endif  // __NIMBLE_FCKX__

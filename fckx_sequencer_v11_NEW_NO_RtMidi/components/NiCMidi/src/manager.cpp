@@ -251,10 +251,11 @@ void MIDIManager::TickProc(tMsecs sys_time, void* p) {
         if (tp->IsPlaying())
             tp->GetFunc()(sys_time, tp);
     }
-
+/*   //FCKX
     for (unsigned int i = 0; i < MIDI_ins->size(); i++)
         if ((*MIDI_ins)[i]->IsPortOpen())
             (*MIDI_ins)[i]->FlushQueue();
+ */       
     proc_lock->unlock();
 
     //std::cout << "MIDIManager::TickProc" << std::endl;
@@ -279,11 +280,13 @@ void MIDIManager::Init() {
             MIDI_outs->push_back(new MIDIOutDriver(i));
             MIDI_out_names->push_back(temp_MIDI_out.getPortName(i));
         }
+     /*   
         RtMidiIn temp_MIDI_in;
         for (unsigned int i = 0; i < temp_MIDI_in.getPortCount(); i++) {
             MIDI_ins->push_back(new MIDIInDriver(i));
             MIDI_in_names->push_back(temp_MIDI_in.getPortName(i));
         }
+        */
     }
     catch (RtMidiError &error) {
         error.printMessage();

@@ -17,6 +17,11 @@
 
 #See example component requirements and example component CMakeLists for more complete #component CMakeLists.txt examples.
 #-----------------------------------------------------------------------------
+
+
+#set(EXTRA_COMPONENT_DIRS "../esp-nimble-ccp")  #FCKX
+
+
 idf_component_register( SRCS    
                                 "./src/advancedsequencer.cpp" 
                                 "./src/driver.cpp" 
@@ -39,11 +44,14 @@ idf_component_register( SRCS
 				"./src/tick.cpp"
                                 "./src/timer.cpp"
 				"./src/track.cpp"
+                                
 #SYSTEM COMPLAINS THAT IT CANNOT C:/Users/Fred/esp_projects/MIDI-sequencer/fckx_sequencer_v06b_NEW_OK_NiCMidi_msg_track/components/NiCMidi/msg.cpp , but it is in src!
                        INCLUDE_DIRS 
 				"./src" 
 				"include" 
+				"../esp-nimble-cpp/src"  #cross-link!
 				#"./rtmidi-4.0.0"
-                      #REQUIRES rtmidi-4.0.0
+                      #REQUIRES rtmidi-4.0.0 #is not a requirement because RtMidi.cpp/.h are in the src folder
+                      REQUIRES esp-nimble-cpp
 #YOU MAY HAVE TO ADD REQUIRES RtMidi etc or an equivalent
 )

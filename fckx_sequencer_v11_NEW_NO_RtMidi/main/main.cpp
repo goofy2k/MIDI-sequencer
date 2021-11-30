@@ -1,4 +1,4 @@
-
+//CONSIDER TO RENAME BLEDevice etc to NimBLEDevice etc. But test carefully when you have running code!
 
 #include <stdio.h>
 #include <stdint.h>
@@ -72,8 +72,8 @@
 
 extern "C" {void app_main(void);}
 
-BLEServer* pServer = NULL;
-BLECharacteristic* pCharacteristic = NULL;
+//BLEServer* pServer = NULL; //FCKX phase out
+//BLECharacteristic* pCharacteristic = NULL;  //FCKX phase out
 
 
 
@@ -300,6 +300,8 @@ void printMsgBytes(MIDIMessage msg1){   //add an identifier text
     ESP_LOGI(TAG,"msg1 byte3 %u (0x%x)", byte3, byte3);     
 };
 
+#ifdef NIMBLE_IN_MAIN  //phase out
+
 void sendToMIDIOut (MIDIMessage msg1) {  
     //prepare for sending to output
     //convert MIDIMessage to midiPacket
@@ -358,6 +360,9 @@ void sendToMIDIOut (MIDIMessage msg1) {
     
 };
 
+
+
+
 void fckx_single_midi_command(unsigned long int mididata){  //uses propagateMidi
 static const char *TAG = "execute_single_midi_command";
       //unsigned long eventTimestamp = generate_Timestamp(xTaskGetTickCount());
@@ -406,6 +411,7 @@ static const char *TAG = "execute_single_midi_command";
   
  };
 
+#endif
 
 bool handle_inQ(){
     //look in input buffer
@@ -496,7 +502,7 @@ bool storeMIDI_Input(esp_mqtt_event_handle_t event){
 };
 
 
-
+//#ifdef NIMBLE_IN_MAIN   this is only because of midi thru!!!!!  so switch off thru
 
 static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
 
@@ -535,8 +541,11 @@ storeMIDI_Input(event);
     //if MIDI THRU
     //send midiPacket immediately to sound board
     //add check on NimBLE connection
-    pCharacteristic->setValue(midiPacket, 5);
-    pCharacteristic->notify();
+    
+    
+    //switch of thru
+    //pCharacteristic->setValue(midiPacket, 5);
+   // pCharacteristic->notify();
           } 
         
     else
@@ -549,7 +558,8 @@ storeMIDI_Input(event);
          ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
         ESP_LOGI(TAG,"unknown API command");}
 };
-    
+// #endif
+ 
 
 /*
 * MQTT functionality
@@ -1221,18 +1231,18 @@ void TestComp::TickProc(tMsecs sys_time) {
 */
     if (deltat >= next_note_on) {               // we must turn on the note
         msg.SetNoteOn(0, 36, 127);
-        //MIDIManager::GetOutDriver(0)->OutputMessage(msg);
+        MIDIManager::GetOutDriver(0)->OutputMessage(msg);  //phase in
                                                 // sends a note on message to the MIDI 0 port
-        sendToMIDIOut(msg);                         // sends a note off message to the BLE interface                                                                                                                                                                                      
+    //    sendToMIDIOut(msg);            //phase out             // sends a note off message to the BLE interface                                                                                                                                                                                      
         cout << "Note on . . . ";
         next_note_on += NOTE_INTERVAL;          // updates the next note on time
     }
      //third event added by FCKX
     if (deltat >= next_note_off) {              // we must turn off the note
         msg.SetNoteOff(0, 36, 0);
-        //MIDIManager::GetOutDriver(0)->OutputMessage(msg);
+        MIDIManager::GetOutDriver(0)->OutputMessage(msg);
                                                 // sends a note off message to the MIDI 0 port
-        sendToMIDIOut(msg);                         // sends a note off message to the BLE interface               
+        //sendToMIDIOut(msg);                         // sends a note off message to the BLE interface               
         cout << "and off" << endl;
         next_note_off += NOTE_INTERVAL;         // updates the next note off time
     }
@@ -1262,7 +1272,7 @@ int main_test_component() {
     * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
     *    
     ***********************************************************************************/    
- 
+#ifdef NIMBLE_IN_MAIN
 
  void connectedTask (void * parameter){
     for(;;) {  //loop forever
@@ -1326,7 +1336,7 @@ int main_test_component() {
     vTaskDelete(NULL);
 }
                                      
-
+#endif
 
 
     
@@ -1457,8 +1467,10 @@ Here is an example:
    
   
 
-  
+  //NimBLE Bluetooth
   // Create the BLE Device
+  
+  #ifdef NIMBLE_IN MAIN    //phasing out
   ESP_LOGI(TAG, "Initialize BLEDevice fckx_seq");
   BLEDevice::init("fckx_seq");
 
@@ -1512,4 +1524,7 @@ Here is an example:
   BLEDevice::startAdvertising();
   ESP_LOGI(TAG, "Waiting for a client connection to notify...");
   //printf("Waiting a client connection to notify...\n");
+ #endif 
 }
+
+//must create a LOOP!!!!!

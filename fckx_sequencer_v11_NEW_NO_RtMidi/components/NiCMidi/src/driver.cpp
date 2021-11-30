@@ -232,7 +232,7 @@ void MIDIOutDriver::HardwareMsgOut(const MIDIMessage &msg) {
         MIDITimer::Wait(DRIVER_WAIT_AFTER_SYSEX);
 }
 
-
+#ifdef MIDI_IN_USED  //FCKX
 /////////////////////////////////////////////////
 //           class MIDIInDriver                //
 /////////////////////////////////////////////////
@@ -376,3 +376,4 @@ void MIDIInDriver::HardwareMsgIn(double time,
         std::cout << "No message, queue size: " << drv->in_queue.GetLength() << std::endl;
     drv->in_mutex.unlock();
 }
+#endif  //FCKX
