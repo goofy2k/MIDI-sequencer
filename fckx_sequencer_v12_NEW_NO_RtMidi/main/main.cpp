@@ -37,7 +37,9 @@
 #define EXAMPLE_ESP_WIFI_PASS      SECRET_ESP_WIFI_PASSWORD
 #define EXAMPLE_ESP_MAXIMUM_RETRY  SECRET_ESP_MAXIMUM_RETRY
 
-#include <NimBLEDevice.h>
+#ifdef NIMBLE_IN_MAIN  //phase out
+    #include <NimBLEDevice.h>
+#endif
 //#include "fckxMsg.h"
 #include "queue.h"   //MUST BE ON
 
@@ -230,6 +232,8 @@ static const char *TAG = "execute_single_midi_command";
  };
 */
 
+#ifdef NIMBLE_IN_MAIN  //phase out
+
  void ble_notify_midi(BLECharacteristic* pCharacteristic, unsigned long int mididata){
     static const char *TAG = "ble_notify_midi";
     //MIDI data packet, taken from Brian Duhan arduino-esp32-BLE-MIDI / BLE_MIDI.ino
@@ -277,6 +281,8 @@ static const char *TAG = "execute_single_midi_command";
             pCharacteristic->setValue(midiPacket, 5);
             pCharacteristic->notify();   
 }
+
+#endif
 
 void printMsgBytes(MIDIMessage msg1){   //add an identifier text
     static const char *TAG = "printMsgBytes";  
@@ -810,6 +816,8 @@ uint8_t midiPacket[] = {
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
+
+#ifdef NIMBLE_IN_MAIN  //phase out
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
@@ -842,7 +850,7 @@ class MyServerCallbacks: public BLEServerCallbacks {
 /*******************************************************************/
 };
 
-
+#endif
 
     /**********************************************************************************
     *TEST  NiCMidi functionality   test_component.cpp
@@ -899,6 +907,7 @@ using namespace std;
 
 MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer notifier
 AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+//AdvancedSequencer sequencer;       // an AdvancedSequencer (without GUI notifier)
 MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
 
 //extern string command, par1, par2;          // used by GetCommand() for parsing the user input
@@ -951,7 +960,7 @@ The recording related commands can be given only when the sequencer is stopped,\
 other commands even during playback\n";
 */
 
-
+/*
 int main_test_midiports() {
     if (MIDIManager::GetNumMIDIIns()) {
         cout << "MIDI IN PORTS:" << endl;
@@ -971,6 +980,7 @@ int main_test_midiports() {
     cin.get();
     return EXIT_SUCCESS;
 }
+*/
 
 /*
 Metronome metro;                                // a Metronome (without GUI notifier)
@@ -1153,6 +1163,8 @@ int main_test_metronome( string command) {
 // This is a very simple example which play a fixed note every second; see the comments
 // to every method for details.
 //
+#ifdef NIMBLE_IN MAIN  
+
 class TestComp : public MIDITickComponent {
     public:
                                 TestComp();
@@ -1177,12 +1189,14 @@ class TestComp : public MIDITickComponent {
 // pointer as parameters.
 // In our case, as we have only one object in the MIDIManager queue, the priority is irrelevant.
 //
+
 TestComp::TestComp() : MIDITickComponent(PR_PRE_SEQ, StaticTickProc) {}
 
 
 // The Start() method should initialize the class and then call the base class Start(),
 // which loads the sys_time_offset variable with the start time and enables the callback.
 //
+
 void TestComp::Start() {
     cout << "Starting the component ... " << endl;
     // opens MIDI out 0 port before playing the notes
@@ -1264,7 +1278,7 @@ int main_test_component() {
     return EXIT_SUCCESS;
 }
 
- 
+#endif 
  
     /**********************************************************************************
     *END OF TEST  NiCMidi functionality   test_component.cpp
@@ -1471,6 +1485,8 @@ Here is an example:
   // Create the BLE Device
   
   #ifdef NIMBLE_IN MAIN    //phasing out
+  
+  
   ESP_LOGI(TAG, "Initialize BLEDevice fckx_seq");
   BLEDevice::init("fckx_seq");
 
@@ -1525,6 +1541,12 @@ Here is an example:
   ESP_LOGI(TAG, "Waiting for a client connection to notify...");
   //printf("Waiting a client connection to notify...\n");
  #endif 
-}
 
+while (1) {
+    ESP_LOGI(TAG, "MAIN LOOP");
+  vTaskDelay(1 / portTICK_PERIOD_MS);  
+}
 //must create a LOOP!!!!!
+
+};
+

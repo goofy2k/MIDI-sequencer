@@ -775,12 +775,15 @@ NimBLEAddress NimBLEDevice::getWhiteListAddress(size_t index) {
 
         ESP_ERROR_CHECK(errRc);
         */  
+        
+        ESP_LOGI(TAG, "Controller status 1: %d", (int)esp_bt_controller_get_status() );
         esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT);
-
+        ESP_LOGI(TAG, "Controller status 2: %d", (int)esp_bt_controller_get_status() );
         esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+        ESP_LOGI(TAG, "Controller status 3: %d", (int)esp_bt_controller_get_status() );
 #ifdef CONFIG_IDF_TARGET_ESP32C3
         bt_cfg.bluetooth_mode = ESP_BT_MODE_BLE;
-         ESP_LOGI(TAG, "NimBLEDevice::init A");
+        ESP_LOGI(TAG, "NimBLEDevice::init A");
 #else
         ESP_LOGI(TAG, "NimBLEDevice::init B");
         bt_cfg.mode = ESP_BT_MODE_BLE;
@@ -789,6 +792,10 @@ NimBLEAddress NimBLEDevice::getWhiteListAddress(size_t index) {
 #endif
         bt_cfg.normal_adv_size = m_scanDuplicateSize;
         bt_cfg.scan_duplicate_type = m_scanFilterMode;
+
+        ESP_LOGI(TAG, "Controller status 4: %d", (int)esp_bt_controller_get_status() );
+      
+        
         ESP_LOGI(TAG, "NimBLEDevice::init D");
         ESP_ERROR_CHECK(esp_bt_controller_init(&bt_cfg));
         ESP_LOGI(TAG, "NimBLEDevice::init E");
