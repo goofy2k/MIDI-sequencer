@@ -520,7 +520,9 @@ void RtMidiOut :: openMidiApi( RtMidi::Api api, const std::string &clientName )
   rtapi_ = 0;
 #if defined(__NIMBLE_FCKX__)
   if ( api == NIMBLE_FCKX )
+    ESP_LOGI(TAG, "RtMidiOut :: openMidiApi entered");
     rtapi_ = new MidiOutNimBLE( clientName );
+    ESP_LOGI(TAG, "RtMidiOut :: openMidiApi new MidiOutNimBLE exited");
 #endif
 #if defined(__UNIX_JACK__)
   if ( api == UNIX_JACK )
@@ -546,9 +548,12 @@ void RtMidiOut :: openMidiApi( RtMidi::Api api, const std::string &clientName )
 
 RTMIDI_DLL_PUBLIC RtMidiOut :: RtMidiOut( RtMidi::Api api, const std::string &clientName)
 {
+  ESP_LOGI(TAG, "RtMidiOut :: RtMidiOut entered");  
   if ( api != UNSPECIFIED ) {
     // Attempt to open the specified API.
+    ESP_LOGI(TAG, "RtMidiOut :: RtMidiOut Attempt to open specified API"); 
     openMidiApi( api, clientName );
+    ESP_LOGI(TAG, "RtMidiOut :: RtMidiOut openMidiApi exited"); 
     if ( rtapi_ ) return;
 
     // No compiled support for specified API value.  Issue a warning
@@ -560,6 +565,7 @@ RTMIDI_DLL_PUBLIC RtMidiOut :: RtMidiOut( RtMidi::Api api, const std::string &cl
   // one with at least one port or we reach the end of the list.
   std::vector< RtMidi::Api > apis;
   getCompiledApi( apis );
+  ESP_LOGI(TAG, "RtMidiOut :: RtMidiOut apis.size: %d",(int)apis.size());
   for ( unsigned int i=0; i<apis.size(); i++ ) {
     openMidiApi( apis[i], clientName );
     if ( rtapi_ && rtapi_->getPortCount() ) break;
@@ -3873,17 +3879,22 @@ MidiOutNimBLE :: MidiOutNimBLE( const std::string &clientName ) : MidiOutApi()
 
 void MidiOutNimBLE :: initialize( const std::string& clientName )
 {
-  static const char *TAG = "MidiOutNimBLE :: initialize";  
+  //static const char *TAG = "MidiOutNimBLE :: initialize";  
   // Create the BLE Device  RENAME TO NimBLEDevice throughout the code
-  BLEDevice::init("fckx_seq");  //FCKX
+  ESP_LOGI(TAG, "MidiOutNimBLE :: initialize Entered");
+  NimBLEDevice::init("fckx_seq");  //FCKX
+  ESP_LOGI(TAG, "NimBLEDevice::init exited");
     // Create the BLE Server
-  pServer = BLEDevice::createServer();
+    
+  pServer = NimBLEDevice::createServer();
+  ESP_LOGI(TAG, "createServer exited");
   //pServer->setCallbacks(new MyServerCallbacks());  //FCKX
+  ESP_LOGI(TAG, "setCallBacks exited (commented)");
   //what is the equivalent of the MyServerCallbacks() in RtMidi
   //see the code in main...
   
   // Create the BLE Service
-  BLEService *pService = pServer->createService(SERVICE_UUID);
+  NimBLEService *pService = pServer->createService(SERVICE_UUID);
 
   // Create a BLE Characteristic
   pCharacteristic = pService->createCharacteristic(
@@ -3915,7 +3926,7 @@ void MidiOutNimBLE :: initialize( const std::string& clientName )
 
   // Start advertising
   ESP_LOGI(TAG, "Start advertising");
-  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(false);
   /** This method had been removed **
@@ -3926,7 +3937,7 @@ void MidiOutNimBLE :: initialize( const std::string& clientName )
   
   //xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
   
-  BLEDevice::startAdvertising();
+  NimBLEDevice::startAdvertising();
   
   
   /*  

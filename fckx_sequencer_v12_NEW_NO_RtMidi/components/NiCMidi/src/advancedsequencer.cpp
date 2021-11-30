@@ -115,12 +115,14 @@ AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier *n) :
 {
     MIDIManager::AddMIDITick(this);
     // sets the embedded MIDIThru only if the system has almost an in port
+    /* //FCKX
     if (MIDIManager::IsValidInPortNumber(0)) {
         thru = new MIDIThru();
         thru_transposer = new MIDIProcessorTransposer();
         thru->SetProcessor(thru_transposer);
         MIDIManager::AddMIDITick(thru);
     }
+    */
     for (unsigned  int i = 0; i < GetNumTracks(); ++i)
         track_processors[i] = new MIDISequencerTrackProcessor;
 }

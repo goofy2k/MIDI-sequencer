@@ -12,6 +12,10 @@
  *      Author: kolban
  */
 
+#include "esp_log.h"
+static const char *TAG = "NimBLEDevice.cpp";
+
+
 #include "nimconfig.h"
 #if defined(CONFIG_BT_ENABLED)
 
@@ -748,6 +752,8 @@ NimBLEAddress NimBLEDevice::getWhiteListAddress(size_t index) {
  * @param [in] deviceName The device name of the device.
  */
 /* STATIC */ void NimBLEDevice::init(const std::string &deviceName) {
+    ESP_LOGI(TAG, "NimBLEDevice::init entered");
+
     if(!initialized){
         int rc=0;
         esp_err_t errRc = ESP_OK;
@@ -756,37 +762,46 @@ NimBLEAddress NimBLEDevice::getWhiteListAddress(size_t index) {
         // make sure the linker includes esp32-hal-bt.c so ardruino init doesn't release BLE memory.
         btStarted();
 #endif
-
+        ESP_LOGI(TAG, "NimBLEDevice::init !initialized");
+        
+        /*  //FCKX flash was already initialized in main() HOW TO CHECK THIS HERE?
         errRc = nvs_flash_init();
-
+        ESP_LOGI(TAG, "NimBLEDevice::init nvs_flash_init exited");
+        
         if (errRc == ESP_ERR_NVS_NO_FREE_PAGES || errRc == ESP_ERR_NVS_NEW_VERSION_FOUND) {
             ESP_ERROR_CHECK(nvs_flash_erase());
             errRc = nvs_flash_init();
         }
 
         ESP_ERROR_CHECK(errRc);
-
+        */  
         esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT);
 
         esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
 #ifdef CONFIG_IDF_TARGET_ESP32C3
         bt_cfg.bluetooth_mode = ESP_BT_MODE_BLE;
+         ESP_LOGI(TAG, "NimBLEDevice::init A");
 #else
+        ESP_LOGI(TAG, "NimBLEDevice::init B");
         bt_cfg.mode = ESP_BT_MODE_BLE;
         bt_cfg.ble_max_conn = CONFIG_BT_NIMBLE_MAX_CONNECTIONS;
+        ESP_LOGI(TAG, "NimBLEDevice::init C");
 #endif
         bt_cfg.normal_adv_size = m_scanDuplicateSize;
         bt_cfg.scan_duplicate_type = m_scanFilterMode;
-
+        ESP_LOGI(TAG, "NimBLEDevice::init D");
         ESP_ERROR_CHECK(esp_bt_controller_init(&bt_cfg));
+        ESP_LOGI(TAG, "NimBLEDevice::init E");
         ESP_ERROR_CHECK(esp_bt_controller_enable(ESP_BT_MODE_BLE));
+        ESP_LOGI(TAG, "NimBLEDevice::init F");        
         ESP_ERROR_CHECK(esp_nimble_hci_init());
+        ESP_LOGI(TAG, "NimBLEDevice::init G");          
         nimble_port_init();
-
+        ESP_LOGI(TAG, "NimBLEDevice::init H");  
         // Setup callbacks for host events
         ble_hs_cfg.reset_cb = NimBLEDevice::onReset;
         ble_hs_cfg.sync_cb = NimBLEDevice::onSync;
-
+        ESP_LOGI(TAG, "NimBLEDevice::init I");
         // Set initial security capabilities
         ble_hs_cfg.sm_io_cap = BLE_HS_IO_NO_INPUT_OUTPUT;
         ble_hs_cfg.sm_bonding = 0;
@@ -796,7 +811,7 @@ NimBLEAddress NimBLEDevice::getWhiteListAddress(size_t index) {
         ble_hs_cfg.sm_their_key_dist = 3;
 
         ble_hs_cfg.store_status_cb = ble_store_util_status_rr; /*TODO: Implement handler for this*/
-
+        ESP_LOGI(TAG, "NimBLEDevice::init J");
         // Set the device name.
         rc = ble_svc_gap_device_name_set(deviceName.c_str());
         assert(rc == 0);
@@ -806,11 +821,14 @@ NimBLEAddress NimBLEDevice::getWhiteListAddress(size_t index) {
         nimble_port_freertos_init(NimBLEDevice::host_task);
     }
     // Wait for host and controller to sync before returning and accepting new tasks
+    ESP_LOGI(TAG, "NimBLEDevice::init Wait for host and controller to sync");
     while(!m_synced){
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 
     initialized = true; // Set the initialization flag to ensure we are only initialized once.
+    ESP_LOGI(TAG, "NimBLEDevice::init going to exit");
+
 } // init
 
 
