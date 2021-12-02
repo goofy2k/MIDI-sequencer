@@ -56,8 +56,8 @@ MIDIManager::~MIDIManager() {
     CoUninitialize();
 #endif // WIN32
 }
-*/
 
+*/
 
 
 void MIDIManager::Reset() {

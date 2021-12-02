@@ -29,7 +29,7 @@
 
 #include "esp_log.h"
 #include "mqtt_client.h"
-
+#include "RtMidi.h"
 #include "secrets.h"
 
 //Credentials form secrets.h
@@ -905,11 +905,63 @@ using namespace std;
 //                 TEST_RECORDER G L O B A L S                  //
 //////////////////////////////////////////////////////////////////
 
-MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer notifier
-AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
-//AdvancedSequencer sequencer;       // an AdvancedSequencer (without GUI notifier)
-MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+/*
+        RtMidiOut temp_MIDI_out;
+        for (unsigned int i = 0; i < temp_MIDI_out.getPortCount(); i++) {
+            MIDI_outs->push_back(new MIDIOutDriver(i));
+            MIDI_out_names->push_back(temp_MIDI_out.getPortName(i));
+*/            
+            
 
+//AdvancedSequencer sequencer;       // an AdvancedSequencer (without GUI notifier)
+//RtMidi temp_rtMIDI;
+
+//for (unsigned int i = 0; i < temp_MIDI_out.getPortCount(); i++) { printf("SUCCESS!\n")}
+//RtMidi temp_RtMidi;
+//RtMidi::temp_RtMidi.add_Nimble(); //HAVE TO DELETE TEMP MIDI OUT AFTER TRANSFERRING POINTER
+//temp_RtMidi.add_Nimble(); //HAVE TO DELETE TEMP MIDI OUT AFTER TRANSFERRING POINTER
+
+//RtMidi::add_NimBLE();  //helper to pass pointer at nimBLE server to RtMidi
+
+//class that holds nimBLE setup data after server has been set up
+//the MidOutNimBLE::intitialize must have access to a function that is a friend  of nimBLEDATA
+// e.g. friend void printnimBLEGluerPoperty(NimBLEGluer nimBLEDATA) 
+class NimBLEGluer {
+    
+    int testPointer;
+    public:
+    friend void printTestPointer(NimBLEGluer x);
+    void setPointer( int inp);
+};    
+
+ NimBLEGluer NimBLEDAta;
+
+void NimBLEGluer::setPointer(int inp) {
+    testPointer = inp;
+}
+
+//Note: printTestPointer is not a member of any class, it is a friend of NimBLEGluer
+//so can access all members of it
+void printTestPointer(NimBLEGluer x){
+    printf("testPointer taken from NiBLEGluer instance: %d\n", x.testPointer);
+}
+
+//After setting the data with setPointer, it can be printed in main by calling  printTestPointer
+//NEXT step.
+//Set the value BEFORE intantiating AdvancedSequencer and call printTestPointer in MidiOutNimBLE :: initialize
+
+#ifdef UNBLOCK1
+//LOCATION 1
+
+MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+
+/*******************************************************************************************
+* AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, RtMidi)
+********************************************************************************************/
+AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+                        
+MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+#endif
 //extern string command, par1, par2;          // used by GetCommand() for parsing the user input
 //char filename[200];                         // used for saving files
 /*
@@ -1353,8 +1405,34 @@ int main_test_component() {
 #endif
 
 
+
+//  NimBLEGluer NimBLEDAta;
     
 void app_main(void) {
+//    temp_MIDI_out.add_nimBLE(); //HAVE TO DELETE TEMP MIDI OUT AFTER TRANSFERRING POINTER
+    //intantiate glue 
+ //   NimBLEGluer NimBLEDAta;
+    //set a value
+    NimBLEDAta.setPointer(7);
+    //handle it by friend function
+    printTestPointer(NimBLEDAta);
+  
+
+//LOCATION 2
+
+MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+
+/*******************************************************************************************
+* AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, RtMidi)
+********************************************************************************************/
+AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+                        
+MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+
+
+
+  
+    
     
     static const char *TAG = "APP_MAIN";   
     esp_log_level_set("*", ESP_LOG_INFO);
@@ -1373,8 +1451,7 @@ void app_main(void) {
     * Read "Establishing Wi-Fi or Ethernet Connection" section in
     * examples/protocols/README.md for more information about this function.
     */
-    //ESP_ERROR_CHECK(example_connect());
-    
+    //ESP_ERROR_CHECK(example_connect());   
        
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
@@ -1387,8 +1464,8 @@ void app_main(void) {
     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
     wifi_init_sta();
    
-  ESP_LOGW(TAG, "Initialize MQTT connection here");
-  esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
+    ESP_LOGW(TAG, "Initialize MQTT connection here");
+   esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
   //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
   
     /**********************************************************************************
@@ -1455,16 +1532,12 @@ Here is an example:
 //   return 0;
 //}
 
-
 /*  //FCKX
   ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
   ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp");    
   main(); //code above
 */  
-
-
-  
-  
+ 
     /**********************************************************************************
     *END OF TEST  NiCMidi functionality
     *
@@ -1472,17 +1545,12 @@ Here is an example:
     *    
     ***********************************************************************************/
   
-  
-  
-   //code for NicMidi test_recorder example
-  
+  //code for NicMidi test_recorder example
   //MIDIManager::AddMIDITick(&recorder);
   //text_n.SetSequencer(&sequencer);
    
-  
-
   //NimBLE Bluetooth
-  // Create the BLE Device
+  //Create the BLE Device
   
   #ifdef NIMBLE_IN MAIN    //phasing out
   

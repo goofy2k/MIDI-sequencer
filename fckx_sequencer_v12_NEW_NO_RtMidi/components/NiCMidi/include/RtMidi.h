@@ -41,8 +41,12 @@
   \file RtMidi.h
  */
 
+
+
 #ifndef RTMIDI_H
 #define RTMIDI_H
+
+//#define __RTMIDI_DEBUG__ 1 //see: https://www.music.mcgill.ca/~gary/rtmidi/ 
 
 #if defined _WIN32 || defined __CYGWIN__
   #if defined(RTMIDI_EXPORT)
@@ -195,6 +199,8 @@ class RTMIDI_DLL_PUBLIC RtMidi
 
   void setClientName( const std::string &clientName );
   void setPortName( const std::string &portName );
+  //! Add pointer at nimBLE controller (Dev //FCKX).
+  void add_nimBLE( void );  //FCKX function to pass pointer to nimBLE hardware driver to RtMidi
 
   //! Returns true if a port is open and false if not.
   /*!
@@ -211,7 +217,7 @@ class RTMIDI_DLL_PUBLIC RtMidi
   virtual void setErrorCallback( RtMidiErrorCallback errorCallback = NULL, void *userData = 0 ) = 0;
 
  protected:
-  RtMidi();
+   RtMidi(); 
   virtual ~RtMidi();
   MidiApi *rtapi_;
 };
@@ -409,6 +415,8 @@ class RTMIDI_DLL_PUBLIC RtMidiOut : public RtMidi
 
   //! Returns the MIDI API specifier for the current instance of RtMidiOut.
   RtMidi::Api getCurrentApi( void ) throw();
+
+
 
   //! Open a MIDI output connection.
   /*!

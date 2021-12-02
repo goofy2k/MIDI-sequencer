@@ -107,12 +107,12 @@ class MidiOutNimBLE: public MidiOutApi
   unsigned int getPortCount( void );
   std::string getPortName( unsigned int portNumber );
   void sendMessage( const unsigned char *message, size_t size );
-
+  void initialize2( const std::string& clientName ); //for the rest of the init
  protected:
   std::string clientName;
 
   void connect( void );
-  void initialize( const std::string& clientName );
+  void initialize( const std::string& clientName ); //pure instantiation
 };
 
 #endif
@@ -346,6 +346,8 @@ std::string RtMidi :: getVersion( void ) throw()
   return std::string( RTMIDI_VERSION );
 }
 
+
+
 // Define API names and display names.
 // Must be in same order as API enum.  //FCKX !!! WHAT/WHERE IS THE API ENUM? 
 extern "C" {
@@ -435,6 +437,11 @@ void RtMidi :: setPortName( const std::string &portName )
   rtapi_->setPortName( portName );
 }
 
+void RtMidi :: add_nimBLE( void ){
+    
+  ESP_LOGI(TAG, "RtMidi add_nimBLE");    
+}
+
 #ifdef MIDI_IN_USED
 
 //*********************************************************************//
@@ -521,6 +528,8 @@ void RtMidiOut :: openMidiApi( RtMidi::Api api, const std::string &clientName )
 #if defined(__NIMBLE_FCKX__)
   if ( api == NIMBLE_FCKX )
     ESP_LOGI(TAG, "RtMidiOut :: openMidiApi entered");
+    //callBack here to collect pointer at nimBLE controller
+    //or... do it in MidiOutNimBLE
     rtapi_ = new MidiOutNimBLE( clientName );
     ESP_LOGI(TAG, "RtMidiOut :: openMidiApi new MidiOutNimBLE exited");
 #endif
@@ -584,6 +593,9 @@ RTMIDI_DLL_PUBLIC RtMidiOut :: RtMidiOut( RtMidi::Api api, const std::string &cl
 RtMidiOut :: ~RtMidiOut() throw()
 {
 }
+
+
+
 
 //*********************************************************************//
 //  Common MidiApi Definitions
@@ -3351,8 +3363,8 @@ void MidiOutJack :: connect()
     return;
 
   // Initialize output ringbuffers
-  data->buffSize = jack_ringbuffer_create( NIMBLE_RINGBUFFER_SIZE );
-  data->buffMessage = jack_ringbuffer_create( NIMBLE_RINGBUFFER_SIZE );
+  data->buffSize = jack_ringbuffer_create( JACK_RINGBUFFER_SIZE );
+  data->buffMessage = jack_ringbuffer_create( JACK_RINGBUFFER_SIZE );
 
   // Initialize JACK client
   if ( ( data->client = jack_client_open( clientName.c_str(), JackNoStartServer, NULL ) ) == 0 ) {
@@ -3569,6 +3581,7 @@ struct NimBLEMidiData {
   MidiInApi :: RtMidiInData *rtMidiIn;
   };
 */
+
 #ifdef MIDI_IN_USED
 //*********************************************************************//
 //  API: NIMBLE_FCKX
@@ -3675,12 +3688,16 @@ void MidiInNimBLE :: initialize( const std::string& clientName )
   data->rtMidiIn = &inputData_;
   data->port = NULL;
   data->client = NULL;
+                     
+                                       
+                                        
+      
   this->clientName = clientName;
 
   connect();
   */
 }
-/*
+ /*
 void MidiInNimBLE :: connect()
 {
   NimBLEMidiData *data = static_cast<NimBLEMidiData *> (apiData_);
@@ -3865,6 +3882,8 @@ static int nimBLEProcessOut( nimBLE_nframes_t nframes, void *arg )
 
 */
 
+#endif  //ifdef MIDI_IN_USED
+
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
@@ -3877,11 +3896,104 @@ MidiOutNimBLE :: MidiOutNimBLE( const std::string &clientName ) : MidiOutApi()
   MidiOutNimBLE::initialize( clientName );
 }
 
+
+
 void MidiOutNimBLE :: initialize( const std::string& clientName )
 {
   //static const char *TAG = "MidiOutNimBLE :: initialize";  
   // Create the BLE Device  RENAME TO NimBLEDevice throughout the code
-  ESP_LOGI(TAG, "MidiOutNimBLE :: initialize Entered");
+  
+
+      printTestPointer(NimBLEDAta);
+ 
+      
+  ESP_LOGI(TAG, "MidiOutNimBLE :: initialize BASE Entered");
+    ESP_LOGI(TAG, "MidiOutNimBLE :: initialize BASE Exited");
+    
+    
+  #ifdef NIMBLE_INIT_IN_RTMIDI
+  NimBLEDevice::init("fckx_seq");  //FCKX
+  ESP_LOGI(TAG, "NimBLEDevice::init exited");
+    // Create the BLE Server
+    
+  pServer = NimBLEDevice::createServer();
+  ESP_LOGI(TAG, "createServer exited");
+  //pServer->setCallbacks(new MyServerCallbacks());  //FCKX
+  ESP_LOGI(TAG, "setCallBacks exited (commented)");
+  //what is the equivalent of the MyServerCallbacks() in RtMidi
+  //see the code in main...
+  
+  // Create the BLE Service
+  NimBLEService *pService = pServer->createService(SERVICE_UUID);
+
+  // Create a BLE Characteristic
+  pCharacteristic = pService->createCharacteristic(
+                      CHARACTERISTIC_UUID,
+                /******* Enum Type NIMBLE_PROPERTY now *******     
+                      BLECharacteristic::PROPERTY_READ   |
+                      BLECharacteristic::PROPERTY_WRITE  |
+                      BLECharacteristic::PROPERTY_NOTIFY |
+                      BLECharacteristic::PROPERTY_INDICATE
+                    );
+                **********************************************/    
+                      NIMBLE_PROPERTY::READ   |
+                      NIMBLE_PROPERTY::WRITE  |
+                      NIMBLE_PROPERTY::NOTIFY |
+                      NIMBLE_PROPERTY::INDICATE
+                    );
+
+  // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
+  // Create a BLE Descriptor
+  /***************************************************   
+   NOTE: DO NOT create a 2902 descriptor. 
+   it will be created automatically if notifications 
+   or indications are enabled on a characteristic.
+   
+   pCharacteristic->addDescriptor(new BLE2902());
+  ****************************************************/
+  // Start the service
+  pService->start();
+
+  // Start advertising
+  ESP_LOGI(TAG, "Start advertising");
+  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(false);
+  /** This method had been removed **
+  pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
+  **/
+  //define a task with a continous loop
+  //it is called connectedTask, but in fact it also starts when there is no connection
+  
+  //xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
+  
+  NimBLEDevice::startAdvertising();
+  
+  
+  /*  
+  NimBLEMidiData *data = new NimBLEMidiData;
+  apiData_ = (void *) data;
+
+  data->port = NULL;
+  data->client = NULL;
+#ifdef HAVE_SEMAPHORE
+  sem_init( &data->sem_cleanup, 0, 0 );
+  sem_init( &data->sem_needpost, 0, 0 );
+#endif
+  this->clientName = clientName;
+
+  connect();
+ */ 
+ #endif //ifdef NIMBLE_EARLY_ON
+}
+
+
+
+void MidiOutNimBLE :: initialize2( const std::string& clientName )
+{
+  //static const char *TAG = "MidiOutNimBLE :: initialize";  
+  // Create the BLE Device  RENAME TO NimBLEDevice throughout the code
+  ESP_LOGI(TAG, "MidiOutNimBLE :: initialize 2 Entered");
   NimBLEDevice::init("fckx_seq");  //FCKX
   ESP_LOGI(TAG, "NimBLEDevice::init exited");
     // Create the BLE Server
@@ -3955,6 +4067,8 @@ void MidiOutNimBLE :: initialize( const std::string& clientName )
   connect();
  */ 
 }
+
+
 /*
 void MidiOutNimBLE :: connect()
 {
@@ -4164,4 +4278,4 @@ void MidiOutNimBLE :: sendMessage( const unsigned char *message, size_t size )
   */
 }
 
-#endif  // __NIMBLE_FCKX__
+//#endif  // __NIMBLE_FCKX__
