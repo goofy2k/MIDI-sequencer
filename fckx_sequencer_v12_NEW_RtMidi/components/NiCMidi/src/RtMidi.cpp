@@ -560,10 +560,10 @@ RTMIDI_DLL_PUBLIC RtMidiOut :: RtMidiOut( RtMidi::Api api, const std::string &cl
 {
   ESP_LOGI(TAG, "RtMidiOut :: RtMidiOut entered");
   //in driverUser.cpp, which has a #include "nimBLEdriver.h"  
-  NimBLEGluer NimBLEData; //needs to be here, but resets the value of testPointer
+ // NimBLEGluer NimBLEData; //needs to be here, but resets the value of testPointer
   printf("RtMidiOut testPointer: %d\n", NimBLEData.testPointer);  //result: 123
   
-    //extern NimBLEGluer NimBLEData; 
+
   
   //try to access globally available driver info
     //printTestPointer(NimBLEDAta);    //error: 'NimBLEDAta' was not declared in this scope

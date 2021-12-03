@@ -31,8 +31,8 @@
 #include "mqtt_client.h"
 
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
-    //intantiate glue 
-   //NimBLEGluer NimBLEDAta;
+//intantiate glue 
+NimBLEGluer NimBLEData;
 #include "RtMidi.h"
 #include "secrets.h"
 
@@ -939,7 +939,7 @@ class NimBLEGluer {
     
 };    
 */
-//NimBLEGluer NimBLEDAta;
+//NimBLEGluer NimBLEData;
 /*
 void NimBLEGluer::setPointer(int inp) {
     testPointer2 = inp;
@@ -1412,7 +1412,7 @@ int main_test_component() {
 
 
 
-//  NimBLEGluer NimBLEDAta;
+//  NimBLEGluer NimBLEData;
     
 void app_main(void) {
 //    temp_MIDI_out.add_nimBLE(); //HAVE TO DELETE TEMP MIDI OUT AFTER TRANSFERRING POINTER
@@ -1421,7 +1421,7 @@ void app_main(void) {
     //intantiate glue 
     
     //in main.cpp, which has a #include "nimBLEdriver.h"
-    NimBLEGluer NimBLEData;
+    //NimBLEGluer NimBLEData;
     printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 123
     NimBLEData.testPointer = 7;
     printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 7

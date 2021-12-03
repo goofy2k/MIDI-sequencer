@@ -31,7 +31,7 @@ class NimBLEGluer {
 
 //NimBLEGluer::~NimBLEGluer() {}
 
-extern NimBLEGluer NimBLEDAta;  //to make it globally accessible without intantiating it again ?? 
+extern NimBLEGluer NimBLEData;  //to make it globally accessible without intantiating it again ?? 
 /***************************************************
 // in main() :
 
