@@ -370,5 +370,9 @@ Have a look at void MIDIManager::Init()  and provide your own RtBLEMidi
   
 V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked version). NimBLE out has been phased out of the main app and should be taken over by NiCMidi/RtMidi.  Implement the API functions an make sure you maintain the same interface.  
   
-## I Give In:  no success...
-  Most versions before V13 are with RtMidi.  V13 is without, buth this is too complicated..... 
+## ~~I Give In~~:  no success...YET
+  Most versions before V13 are with RtMidi.  V13 is without, buth this is too complicated..... see remarks by NicMidi (211203)  
+  V13 route: rewrite NiCMidi driver to **access already** running nimBLE driver  
+  
+  V12 route:  use RTMidi, but give it access to **already running** nimBLE driver via a GLOBAL class  
+  Strange error in V12:  /main/main.cpp:563: undefined reference to `NimBLEGluer::NimBLEGluer()'     There is no code ther AT ALL referencing NimBLEGluer ! ????
