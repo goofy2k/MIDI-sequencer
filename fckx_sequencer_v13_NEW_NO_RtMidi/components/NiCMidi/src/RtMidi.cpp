@@ -39,6 +39,7 @@
 #include "esp_log.h"
 static const char *TAG = "RtMidi.cpp";
 #include "RtMidi.h"
+#include "nimBLEDriver.h"
 #include <sstream>
 
 #define __NIMBLE_FCKX__ //FCKX test define location

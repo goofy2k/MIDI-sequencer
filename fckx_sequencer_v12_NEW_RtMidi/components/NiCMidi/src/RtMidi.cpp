@@ -39,6 +39,7 @@
 #include "esp_log.h"
 static const char *TAG = "RtMidi.cpp";
 #include "RtMidi.h"
+#include "nimBLEdriver.h"
 #include <sstream>
 
 #define __NIMBLE_FCKX__ //FCKX test define location
@@ -557,8 +558,33 @@ void RtMidiOut :: openMidiApi( RtMidi::Api api, const std::string &clientName )
 
 RTMIDI_DLL_PUBLIC RtMidiOut :: RtMidiOut( RtMidi::Api api, const std::string &clientName)
 {
-  ESP_LOGI(TAG, "RtMidiOut :: RtMidiOut entered");  
-  if ( api != UNSPECIFIED ) {
+  ESP_LOGI(TAG, "RtMidiOut :: RtMidiOut entered");
+  //try to access globally available driver info
+    //printTestPointer(NimBLEDAta);    //error: 'NimBLEDAta' was not declared in this scope
+    //printTestPointer(NimBLEGluer::NimBLEDAta); //error: 'NimBLEDAta' is not a member of 'NimBLEGluer'
+    //printTestPointer(NimBLEGluer); //error: expected primary-expression before ')' token
+    //printTestPointer(NimBLEGluer);  //error: expected primary-expression before ')' token 
+    //printTestPointer(NimBLEGluer::NimBLEGluer); //error: cannot resolve overloaded function '__ct ' based on conversion to type 'NimBLEGluer'      
+    //printf("testPointer2: %d\n", testPointer2); // error: 'testPointer2' was not declared in this scope
+    //printf("testPointer2: %d\n", NimBLEGluer.testPointer2); //error: expected primary-expression before '.' token
+    //printf("testPointer2: %d\n", NimBLEGluer::NimBLEGluer.testPointer2); //error: insufficient contextual information to determine type
+    //printf("testPointer2: %d\n", (int) NimBLEGluer::NimBLEGluer.testPointer2); //error: insufficient contextual information to determine type
+
+    //printf("testPointer2: %d\n", NimBLEGluer.getPointer()); //error: expected primary-expression before '.' token
+   //printf("testPointer2: %d\n", NimBLEGluer::NimBLEGluer.getPointer()); //error: insufficient contextual information to determine type
+//printf("testPointer2: %d\n", NimBLEData.getPointer()); //error: 'NimBLEData' was not declared in this scope
+//printf("testPointer2: %d\n", NimBLEGluer::NimBLEData.getPointer()); //error: 'NimBLEData' is not a member of 'NimBLEGluer'
+
+//printf("testPointer2: %d\n", NimBLEGluer::getPointer()); //error: cannot call member function 'int NimBLEGluer::getPointer()' without object
+
+//AFTER instantiation of NimBLEData in the header file... 
+
+ //printf("testPointer2: %d\n", NimBLEGluer::NimBLEData.getPointer()); //error: 'NimBLEData' is not a member of 'NimBLEGluer'
+
+
+
+
+ if ( api != UNSPECIFIED ) {
     // Attempt to open the specified API.
     ESP_LOGI(TAG, "RtMidiOut :: RtMidiOut Attempt to open specified API"); 
     openMidiApi( api, clientName );
@@ -3902,9 +3928,12 @@ void MidiOutNimBLE :: initialize( const std::string& clientName )
 {
   //static const char *TAG = "MidiOutNimBLE :: initialize";  
   // Create the BLE Device  RENAME TO NimBLEDevice throughout the code
+  //int NimBLEGluer::testPointer;
   
-
-      printTestPointer(NimBLEDAta);
+   //int testPointer;
+  
+//printf("testPointer %d", NimBLEGluer::testPointer); 
+  //    printTestPointer(NimBLEGluer);
  
       
   ESP_LOGI(TAG, "MidiOutNimBLE :: initialize BASE Entered");

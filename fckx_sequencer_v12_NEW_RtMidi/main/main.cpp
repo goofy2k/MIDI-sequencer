@@ -29,6 +29,10 @@
 
 #include "esp_log.h"
 #include "mqtt_client.h"
+
+#include "nimBLEdriver.h" //make driver globally accessible by including this header file
+    //intantiate glue 
+   //NimBLEGluer NimBLEDAta;
 #include "RtMidi.h"
 #include "secrets.h"
 
@@ -59,7 +63,6 @@
 #include "sysex.h"
 #include "../include/tick.h"       //check if you can harmonize these paths FCKX
 #include "../include/manager.h"
-
 
 //define queue sizes
 //max total queue size is at least 2048 (fckx_sequencer_v4)
@@ -926,24 +929,26 @@ using namespace std;
 //class that holds nimBLE setup data after server has been set up
 //the MidOutNimBLE::intitialize must have access to a function that is a friend  of nimBLEDATA
 // e.g. friend void printnimBLEGluerPoperty(NimBLEGluer nimBLEDATA) 
+/*
 class NimBLEGluer {
     
     int testPointer;
     public:
     friend void printTestPointer(NimBLEGluer x);
     void setPointer( int inp);
+    
 };    
-
- NimBLEGluer NimBLEDAta;
+*/
+//NimBLEGluer NimBLEDAta;
 
 void NimBLEGluer::setPointer(int inp) {
-    testPointer = inp;
+    testPointer2 = inp;
 }
 
 //Note: printTestPointer is not a member of any class, it is a friend of NimBLEGluer
 //so can access all members of it
 void printTestPointer(NimBLEGluer x){
-    printf("testPointer taken from NiBLEGluer instance: %d\n", x.testPointer);
+    printf("testPointer taken from NimBLEGluer instance: %d\n", x.testPointer2);
 }
 
 //After setting the data with setPointer, it can be printed in main by calling  printTestPointer
@@ -1411,11 +1416,15 @@ int main_test_component() {
 void app_main(void) {
 //    temp_MIDI_out.add_nimBLE(); //HAVE TO DELETE TEMP MIDI OUT AFTER TRANSFERRING POINTER
     //intantiate glue 
- //   NimBLEGluer NimBLEDAta;
-    //set a value
-    NimBLEDAta.setPointer(7);
+    NimBLEGluer NimBLEDAta;
+    //printf("MAIN testPointer2: %d\n", NimBLEGluer::getPointer());
+    
+    //set a value  (replace the default value)
+    
+  //  NimBLEDAta.setPointer(7); //set testPointer2 
+    
     //handle it by friend function
-    printTestPointer(NimBLEDAta);
+  //  printTestPointer(NimBLEDAta);
   
 
 //LOCATION 2
