@@ -940,15 +940,16 @@ class NimBLEGluer {
 };    
 */
 //NimBLEGluer NimBLEDAta;
-
+/*
 void NimBLEGluer::setPointer(int inp) {
     testPointer2 = inp;
 }
+*/
 
 //Note: printTestPointer is not a member of any class, it is a friend of NimBLEGluer
 //so can access all members of it
 void printTestPointer(NimBLEGluer x){
-    printf("testPointer taken from NimBLEGluer instance: %d\n", x.testPointer2);
+    printf("testPointer taken from NimBLEGluer instance: %d\n", x.testPointer);
 }
 
 //After setting the data with setPointer, it can be printed in main by calling  printTestPointer
@@ -1415,16 +1416,20 @@ int main_test_component() {
     
 void app_main(void) {
 //    temp_MIDI_out.add_nimBLE(); //HAVE TO DELETE TEMP MIDI OUT AFTER TRANSFERRING POINTER
+
+
     //intantiate glue 
-    NimBLEGluer NimBLEDAta;
-    //printf("MAIN testPointer2: %d\n", NimBLEGluer::getPointer());
     
-    //set a value  (replace the default value)
+    //in main.cpp, which has a #include "nimBLEdriver.h"
+    NimBLEGluer NimBLEData;
+    printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 123
+    NimBLEData.testPointer = 7;
+    printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 7
     
-  //  NimBLEDAta.setPointer(7); //set testPointer2 
-    
-    //handle it by friend function
-  //  printTestPointer(NimBLEDAta);
+ //   printf("MAIN testPointer: %d\n", NimBLEData.getPointer());  //result: 
+ //   NimBLEData.setPointer(7); //set a value  (replace the default value)
+ //   printf("MAIN testPointer: %d\n", NimBLEData.getPointer());  //result: 
+
   
 
 //LOCATION 2

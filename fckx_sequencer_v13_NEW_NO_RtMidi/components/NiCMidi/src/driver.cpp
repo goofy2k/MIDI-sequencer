@@ -89,7 +89,7 @@ MIDIOutDriver::MIDIOutDriver(int id) :
     processor(0), port_id(id), num_open(0) {
     try {
         //port = new MidiOutNimBLE(); //orig
-        port = new MidiOutNimBLE :: MidiOutNimBLE(const std::string &clientName );
+        port = new MidiOutNimBLE(const std::string &clientName );
     }
     catch (MidiNimBLEError& error) {
         error.printMessage();
