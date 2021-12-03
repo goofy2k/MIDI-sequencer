@@ -376,3 +376,6 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   V12 route:  use RTMidi, but give it access to **already running** nimBLE driver via a GLOBAL class  
   Strange error in V12:  /main/main.cpp:563: undefined reference to `NimBLEGluer::NimBLEGluer()'     There is no code ther AT ALL referencing NimBLEGluer ! ????
+  - https://docs.particle.io/cards/firmware/global-object-constructors/global-object-constructors/ !!!   
+  
+  
