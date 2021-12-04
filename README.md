@@ -383,4 +383,8 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - https://docs.particle.io/cards/firmware/global-object-constructors/global-object-constructors/ !!! 
   - https://stackoverflow.com/questions/297822/global-instance-of-a-class-in-c  
   
+  v12 now contains a first VERY BASIC version of nimBLEOutdriver. The object is globally accessible and SHOULD NOT be instatiated again. It was intanstiated in the header file using extern  xxxxxxx nimBLEOutdriver
+  
+  The actual definition of the nimBLE server / peripheral (advertising device)  and creation of a connection must still be implemented. Ongoing in v14....
+  
   
