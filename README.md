@@ -18,7 +18,8 @@ ESP-IDF and MIDI:
 - [MIDIBLE](https://github.com/0x0c/MIDIBLE)
 - [blemidi-idf](https://github.com/mathiasbredholt/blemidi-idf)
 - [blemidi](https://github.com/midibox/esp32-idf-blemidi)  might have the same functionality as the Arduino app below
-- [this](https://devzone.nordicsemi.com/nordic/nordic-blog/b/blog/posts/optimizing-ble-midi-with-regards-to-timing-1293631358) is about applying BLE for MIDI
+
+[this](https://devzone.nordicsemi.com/nordic/nordic-blog/b/blog/posts/optimizing-ble-midi-with-regards-to-timing-1293631358) is about applying BLE for MIDI
 
 Arduino and MIDI:
 
