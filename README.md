@@ -386,5 +386,6 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   v12 now contains a first VERY BASIC version of nimBLEOutdriver. The object is globally accessible and SHOULD NOT be instatiated again. It was intanstiated in the header file using extern  xxxxxxx nimBLEOutdriver
   
   The actual definition of the nimBLE server / peripheral (advertising device)  and creation of a connection must still be implemented. Ongoing in v14....
+  Until autonomous creation of a connection is demonstrated, call to NicMidi examples (recorder/sequences) that use the connection will not be started. Other NicMidi examples are executed before the program jumps into its eternal waiting loop.    
   
   
