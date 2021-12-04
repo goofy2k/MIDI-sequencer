@@ -42,7 +42,7 @@ static const char *TAG = "RtMidi.cpp";
 #include "nimBLEdriver.h"
 #include <sstream>
 
-#define __NIMBLE_FCKX__ //FCKX test define location
+//#define __NIMBLE_FCKX__  //FCKX test define location
 //#define __UNIX_JACK__ //FCKX test define location
 
 
@@ -3917,6 +3917,9 @@ static int nimBLEProcessOut( nimBLE_nframes_t nframes, void *arg )
 
 #endif  //ifdef MIDI_IN_USED
 
+
+#ifdef __NIMBLE_FCKX__
+
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
@@ -4314,4 +4317,4 @@ void MidiOutNimBLE :: sendMessage( const unsigned char *message, size_t size )
   */
 }
 
-//#endif  // __NIMBLE_FCKX__
+#endif  // __NIMBLE_FCKX__

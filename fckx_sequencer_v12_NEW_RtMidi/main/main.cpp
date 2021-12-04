@@ -33,6 +33,7 @@
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
 //intantiate glue 
 NimBLEGluer NimBLEData;
+MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
 #include "RtMidi.h"
 #include "secrets.h"
 
@@ -802,7 +803,7 @@ static esp_mqtt_client * mqtt_app_start(void){
 #include <BLEUtils.h>
 #include <BLE2902.h>
 ***********************/
-
+#ifdef NIMBLE_IN_MAIN  //phase out
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
 uint32_t value = 0;
@@ -820,7 +821,7 @@ uint8_t midiPacket[] = {
 // https://www.uuidgenerator.net/
 
 
-#ifdef NIMBLE_IN_MAIN  //phase out
+
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
@@ -1415,24 +1416,28 @@ int main_test_component() {
 //  NimBLEGluer NimBLEData;
     
 void app_main(void) {
-//    temp_MIDI_out.add_nimBLE(); //HAVE TO DELETE TEMP MIDI OUT AFTER TRANSFERRING POINTER
+/*************************************************************************************************
+*NOTE: NimBLEData is a test object to demonstrate a globally accessible object 
+*      It is instantiated in the header file with extern NimBLEGluer NimBLEData; 
+*      More instantiations are UNWANTED. The opbject can be used immediately with e.g:
+*      printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 123
+*      NimBLEData.testPointer = 7;
+*      printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 7
+* 
+*      The same method is used for nimBLEOutdriver that is an instantiation of class MidiOutNimBLE
+*
+*      The intention is that the object can be used in any translation unit (roughly speaking a .cpp)
+*      WITHOUT another instatiation
+*      Here we start with showing the first sign of life of this object:
+****************************************************************************************************/
+
+ESP_LOGW(TAG,"nimBLEOutdriver getPortCount(): %d", (int)nimBLEOutdriver.getPortCount());
 
 
-    //intantiate glue 
-    
-    //in main.cpp, which has a #include "nimBLEdriver.h"
-    //NimBLEGluer NimBLEData;
-    printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 123
-    NimBLEData.testPointer = 7;
-    printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 7
-    
- //   printf("MAIN testPointer: %d\n", NimBLEData.getPointer());  //result: 
- //   NimBLEData.setPointer(7); //set a value  (replace the default value)
- //   printf("MAIN testPointer: %d\n", NimBLEData.getPointer());  //result: 
+//The next test is to see the server appear in a network sniffer (nRF Connect) 
+//Until we implemented operation of the nimBLEOutdriver, the calls to NicMidi are commented  
 
-  
-
-//LOCATION 2
+#ifdef NIMBLE_OK
 
 MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
 
@@ -1443,8 +1448,7 @@ AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI no
                         
 MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
 
-
-
+#endif
   
     
     
@@ -1625,8 +1629,8 @@ Here is an example:
  #endif 
 
 while (1) {
-    ESP_LOGI(TAG, "MAIN LOOP");
-  vTaskDelay(1 / portTICK_PERIOD_MS);  
+  //ESP_LOGI(TAG, "MAIN LOOP");
+  vTaskDelay(10 / portTICK_PERIOD_MS);  
 }
 //must create a LOOP!!!!!
 
