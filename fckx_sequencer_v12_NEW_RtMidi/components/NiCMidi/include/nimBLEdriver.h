@@ -4,11 +4,17 @@
 *answer by Wolf, but learn more!
 */
 
+
+#ifndef __NIMBLEDRIVER__
+#define __NIMBLEDRIVER__
 //extern int globaltestPointer = 456; //extern to make it globally accessible????
 
 /*******************
 *nimBLEdriver.h
 ********************/
+
+//Class to test passing data between two translation units (.cpp's)
+
 class NimBLEGluer {
     
     public:
@@ -39,5 +45,48 @@ extern NimBLEGluer NimBLEData;  //to make it globally accessible without intanti
 
 ****************************************************/
 
-    //static int testPointer; //static to make it globally accessible ????
-    //friend void printTestPointer(NimBLEGluer x);
+/* 
+NicMidi 211203:
+
+I saw your driver.h file in the version 13 and I think that is the right way. You should implement a class with the same methods as the RtMidi ports and assign it the port attribute in the MIDIOutDriver class. NiCMidi uses only some methods of the RtMidi ports.
+The implementation should be like this:
+
+
+class MidiOutNimBLE {
+    public:
+                                    MidiOutNimBLE();
+                                    ~MidiOutNimBLE();
+                                
+        void                         openPort(unsigned int portNumber=0);
+        void                         closePort();
+        virtual bool                 isPortOpen();
+        unsigned int                 getPortCount()      { return 1; }
+        std::string                  getPortName(unsigned int portNumber=0);
+        void                         sendMessage(const std::vector<unsigned char> *message);
+}
+(see also the documentation of RtMidi)
+Moreover you should modify the method MIDIManager::Init() (in the manager.h file) which attempts to open RtMidi ports, making it open your ports.
+For the MIDIInDriver things are more complex as it relies on a callback called by RtMid
+
+FCKX: make sure that the members of this class correpond to the state and state changes
+that are expected by the equivalent class(es) in RtMidi and NicMidi
+
+*/
+
+class MidiOutNimBLE {
+    public:
+                                    MidiOutNimBLE();
+                                    ~MidiOutNimBLE();
+                                
+        void                         openPort(unsigned int portNumber=0);
+        void                         closePort();
+        virtual bool                 isPortOpen();
+        unsigned int                 getPortCount() { return 1; }
+        std::string                  getPortName(unsigned int portNumber=0);
+        void                         sendMessage(const std::vector<unsigned char> *message);
+}
+
+extern MidiOutNimBLE nimBLEOutdriver; //to make it globally accessible as demonstrated with NimBLEGluer (see above)
+                                      //is this really necessary?
+
+#endif

@@ -33,6 +33,8 @@ idf_component_register( SRCS
 				"./src/multitrack.cpp"
 				"./src/msg.cpp" 
 				"./src/midi.cpp"
+#hardware driver for BLE (nimBLE)
+				"./src/nimBLEdriver.cpp"
 				"./src/notifier.cpp"
  				"./src/processor.cpp"
  				"./src/recorder.cpp"
