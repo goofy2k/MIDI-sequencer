@@ -388,4 +388,6 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   The actual definition of the nimBLE server / peripheral (advertising device)  and creation of a connection must still be implemented. Ongoing in v14....
   Until autonomous creation of a connection is demonstrated, call to NicMidi examples (recorder/sequences) that use the connection will not be started. Other NicMidi examples are executed before the program jumps into its eternal waiting loop.    
   
+  The essential reason to let the sequencer have the role of BLE peripheral is that only with this role it can push messages to other devices, without the need for confirmation/ACK
+  
   
