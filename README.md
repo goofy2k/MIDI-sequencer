@@ -404,7 +404,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
      - recognize connection to nRF Connect tool and do not assign MIDI functionality to that  
      - implement sendMessage 
   
-  Does NicMidi need a callback for the while connected case , or is availability of send message sufficient
+  Does NicMidi need a callback for the while connected case , or is availability of send message sufficient? Just implement the component example further!
 
        
   
