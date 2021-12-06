@@ -402,7 +402,9 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
    - to be done:   
      - add meaning full content to each of the parts of the connectedTask. You probably have to add callbacks. See how NicMidi wants to use the connection  
      - recognize connection to nRF Connect tool and do not assign MIDI functionality to that  
-     - implement sendMessage  
+     - implement sendMessage 
+  
+  Does NicMidi need a callback for the while connected case , or is availability of send message sufficient
 
        
   
