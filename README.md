@@ -396,7 +396,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
                   testing this implementation is done with the NiCMidi component_example (tick component) as it is relatively simple. There is focus on output in that example.  
     - done:   
       - proper initialisation of output port  
-      - connectedTask(wrong name! but this is a heritage of the nimBLEDevice  "notify" example) was  moved to MidiOutNimBLE class in nimBLEdriver.cpp.  
+      - connectedTask (wrong name! but this is a heritage of the nimBLEDevice  "notify" example) was  moved to MidiOutNimBLE class in nimBLEdriver.cpp.  
       - the loop in connectedTask does not yet contain actions for the case that there is a connection  
      - it properly reports connection / disconnection events  
    - to be done:   
