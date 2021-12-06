@@ -39,6 +39,7 @@ NimBLEGluer NimBLEData;
 //#define NIMBLE_IN_MAIN 1              //when is it considered as defined? what value is needed?
 #define NIMBLE_IN_NIMBLEDRIVER 1
 
+#define TEST_COMPONENT
 
 /*
 https://www.esp32.com/viewtopic.php?t=18054
@@ -817,9 +818,11 @@ static esp_mqtt_client * mqtt_app_start(void){
 #include <BLEUtils.h>
 #include <BLE2902.h>
 ***********************/
-#ifdef NIMBLE_IN_MAIN  //phase out
-bool deviceConnected = false;
-bool oldDeviceConnected = false;
+#ifdef TEST_COMPONENT_MOVED_TO_MidiOutNimBLE_class 
+
+
+bool deviceConnected = false;            //move this into the MidiOutNimBLE classs
+bool oldDeviceConnected = false;         //end define a getter
 uint32_t value = 0;
 
 //MIDI data packet, taken from Brian Duhan arduino-esp32-BLE-MIDI / BLE_MIDI.ino
@@ -839,6 +842,10 @@ uint8_t midiPacket[] = {
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
+#endif
+
+
+#ifdef EXTERNAL_CALLBACKS
 /**  None of these are required as they will be handled by the library with defaults. **
  **                       Remove as you see fit for your needs                        */  
 class MyServerCallbacks: public BLEServerCallbacks {
@@ -867,8 +874,9 @@ class MyServerCallbacks: public BLEServerCallbacks {
   }
 /*******************************************************************/
 };
-
 #endif
+
+
 
     /**********************************************************************************
     *TEST  NiCMidi functionality   test_component.cpp
@@ -1236,7 +1244,7 @@ int main_test_metronome( string command) {
 // This is a very simple example which play a fixed note every second; see the comments
 // to every method for details.
 //
-#ifdef NIMBLE_IN_MAIN  
+#ifdef TEST_COMPONENT  
 
 class TestComp : public MIDITickComponent {
     public:
@@ -1359,7 +1367,7 @@ int main_test_component() {
     * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
     *    
     ***********************************************************************************/    
-#ifdef NIMBLE_IN_MAIN
+#ifdef TEST_COMPONENT_MOVED_TO_MidiOutNimBLE_class 
 
  void connectedTask (void * parameter){
     for(;;) {  //loop forever
@@ -1405,8 +1413,9 @@ int main_test_component() {
             ESP_LOGW(TAG,"Do required stuff, depending on the needs for this lost connection");
 
             vTaskDelay(500/portTICK_PERIOD_MS); // give the bluetooth stack the chance to get things ready
-            ESP_LOGW(TAG,"Start advertising again");   
-            pServer->startAdvertising();        // restart advertising
+            ESP_LOGW(TAG,"Start advertising again"); 
+//DO THIS EXERCISE INSIDE THE MidiOutNimBLE CLASS            
+      //      pServer->startAdvertising();        // restart advertising
             //printf("start advertising\n");
             oldDeviceConnected = deviceConnected;
         }
@@ -1451,18 +1460,6 @@ void app_main(void) {
 //The next test is to see the server appear in a network sniffer (nRF Connect) 
 //Until we implemented operation of the nimBLEOutdriver, the calls to NicMidi are commented  
 
-#ifdef NIMBLE_OK
-
-MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
-
-/*******************************************************************************************
-* AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, RtMidi)
-********************************************************************************************/
-AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
-                        
-MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
-
-#endif
   
     
     
@@ -1499,7 +1496,7 @@ MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
     ESP_LOGW(TAG, "Initialize MQTT connection here");
    esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
   //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
-  MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
+   //MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
 
     /**********************************************************************************
     *TEST  NiCMidi functionality
@@ -1584,21 +1581,42 @@ Here is an example:
    
   //NimBLE Bluetooth
   //Create the BLE Device
+
+#ifdef NIMBLE_OK
+ESP_LOGE(TAG,"Entering MIDISequencerGUINotifierText");
+MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+
+/*******************************************************************************************
+* AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, RtMidi)
+********************************************************************************************/
+ESP_LOGE(TAG,"Entering AdvancedSequencer");
+AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+ESP_LOGE(TAG,"Entering MIDIRecorder");                        
+MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+
+#endif
   
-  #ifdef NIMBLE_IN_MAIN    //phasing out
   
+  
+  #ifdef TEST_COMPONENT    //phasing out
+     ESP_LOGE(TAG,"Test Component");
   
   ESP_LOGI(TAG, "Initialize BLEDevice fckx_seq");
+  
+  MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
+  
+  
+  #ifdef UNBLOCK2
   BLEDevice::init("fckx_seq");
   ESP_LOGW(TAG, "BLEDevice created"); 
   // Create the BLE Server
   pServer = BLEDevice::createServer();
-   ESP_LOGW(TAG, "BLE server created"); 
+  ESP_LOGW(TAG, "BLE server created"); 
   pServer->setCallbacks(new MyServerCallbacks());
-ESP_LOGW(TAG, "BLE server callbacks created");
+  ESP_LOGW(TAG, "BLE server callbacks created");
   // Create the BLE Service
   BLEService *pService = pServer->createService(SERVICE_UUID);
-ESP_LOGW(TAG, "BLE server service created");
+  ESP_LOGW(TAG, "BLE server service created");
 
   // Create a BLE Characteristic
   pCharacteristic = pService->createCharacteristic(
@@ -1627,7 +1645,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   ****************************************************/
   // Start the service
   pService->start();
-ESP_LOGW(TAG, "BLE service started");
+  ESP_LOGW(TAG, "BLE service started");
   // Start advertising
   ESP_LOGI(TAG, "Start advertising");
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
@@ -1636,18 +1654,31 @@ ESP_LOGW(TAG, "BLE service started");
   /** This method had been removed **
   pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
   **/
+  
+  #endif //UNBLOCK2
+  
   //define a task with a continous loop
   //it is called connectedTask, but in fact it also starts when there is no connection
-  xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
   
+  //the code before this is the instantia MOVE THIS INSIDE THE MidiOutNimBLE class
+  //to be more specific: call it in the end of initialize or BETTER at the start of openport
+  
+  //xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
+  ESP_LOGE(TAG, "GOING TO OPEN PORT");
+  nimBLEOutdriver.openPort();
+  ESP_LOGE(TAG, "EXITED OPEN PORT");
+  /*
   BLEDevice::startAdvertising();
   ESP_LOGI(TAG, "Waiting for a client connection to notify...");
   //printf("Waiting a client connection to notify...\n");
+  */
+  
  #endif 
-
-while (1) {
-  //ESP_LOGI(TAG, "MAIN LOOP");
-  vTaskDelay(10 / portTICK_PERIOD_MS);  
+ 
+  ESP_LOGW(TAG, "ENTERING MAIN LOOP");
+  while (1) {
+    //ESP_LOGI(TAG, "MAIN LOOP");
+    vTaskDelay(10 / portTICK_PERIOD_MS);  
 }
 //must create a LOOP!!!!!
 

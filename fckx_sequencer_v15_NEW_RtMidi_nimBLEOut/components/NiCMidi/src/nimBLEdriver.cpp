@@ -44,6 +44,74 @@ bool deviceConnected = false;
 bool oldDeviceConnected = false;
 uint32_t value = 0;
 
+ void connectedTask (void * parameter){
+    for(;;) {  //loop forever
+        // only act if connection status changes or if there is a stable connection
+        if (deviceConnected) {
+               //ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
+  //ESP_LOGE(TAG,"Testing NiCMidi functionality: test_midi_ports.cpp");    
+
+//NOTE:  this is a CYCLIC TASK executed after the first connect to the BLE interface
+//PUT THE INSTANTIATION PARTS IN THE MAIN_TEST_ ROUTINES OUTSIDE THIS LOOP
+//OR FLAG THEM AS DONE TO PREVENT EXECUTING THEM AGAIN AND AGAIN
+//THIS IS SOLVED FOR THE main_recorder EXAMPLE  
+//  main_test_midiports(); //code above
+  //ESP_LOGE(TAG,"Testing NiCMidi functionality: test_metronome.cpp SWITCHED OFF");
+//  main_test_metronome(command); //code above
+  //ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp SWITCHED OFF");                                                                               
+//  main_test_component(); //code above  DOESN'T EXIST 
+               //A CALLBACK HERE                                                                                           
+            //ESP_LOGW(TAG,"STABLE CONNECTION "); 
+            /*
+            //pCharacteristic->setValue((uint8_t*)&value, 4);
+            midiPacket[2] = 0x90; //keyOn, channel 0
+            midiPacket[4] = 127; //velocity
+            pCharacteristic->setValue(midiPacket, 5);
+            pCharacteristic->notify();
+            //value++;
+            vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
+            //pCharacteristic->setValue((uint8_t*)&value, 4);
+            midiPacket[2] = 0x80; //keyOff, channel 0
+            midiPacket[4] = 0; //velocity  
+            pCharacteristic->setValue(midiPacket, 5);            
+            pCharacteristic->notify();
+            //value++;
+            vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
+            */
+
+
+
+ }
+        // disconnecting
+        if (!deviceConnected && oldDeviceConnected) {
+            ESP_LOGW(TAG,"BLE disconnected"); 
+            ESP_LOGW(TAG,"Do required stuff, depending on the needs for this lost connection");
+
+            vTaskDelay(500/portTICK_PERIOD_MS); // give the bluetooth stack the chance to get things ready
+            ESP_LOGW(TAG,"Start advertising again"); 
+//DO THIS EXERCISE INSIDE THE MidiOutNimBLE CLASS            
+      //      pServer->startAdvertising();        // restart advertising
+            //printf("start advertising\n");
+            oldDeviceConnected = deviceConnected;
+        }
+        // connection established
+        if (deviceConnected && !oldDeviceConnected) {
+            ESP_LOGW(TAG,"BLE connected, do required stuff, depending on the needs for this connection");
+            // do stuff here on connecting
+            oldDeviceConnected = deviceConnected;
+        }
+        
+        vTaskDelay(10/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
+    }
+    
+    vTaskDelete(NULL);
+}
+    
+
+
+
+
+
 //MIDI data packet, taken from Brian Duhan arduino-esp32-BLE-MIDI / BLE_MIDI.ino
 uint8_t midiPacket[] = {
     0x80, //header
@@ -52,8 +120,6 @@ uint8_t midiPacket[] = {
     0x3c, //== 60 == middle c
     0x00  //velocity
 };
-
-
 
 
 // See the following for generating UUIDs:
@@ -66,26 +132,36 @@ uint8_t midiPacket[] = {
  **                       Remove as you see fit for your needs                        */  
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
+      static const char *TAG = "NIMBLE_ONCONNECT";
+      ESP_LOGW(TAG, "-----");  
       deviceConnected = true;
       BLEDevice::startAdvertising(); //keep advertising to find more connections
     };
 
     void onDisconnect(BLEServer* pServer) {
+      static const char *TAG = "NIMBLE_ONDISCONNECT";
+      ESP_LOGW(TAG, "-----");   
       deviceConnected = false;
     }
 /***************** New - Security handled here ********************
 ****** Note: these are the same return values as defaults ********/
   uint32_t onPassKeyRequest(){
+    static const char *TAG = "NIMBLE_ONPASSKEYREQUEST";
+    ESP_LOGW(TAG, "-----");   
     printf("Server PassKeyRequest\n");
     return 123456; 
   }
 
   bool onConfirmPIN(uint32_t pass_key){
+    static const char *TAG = "NIMBLE_ONCONFIRMPIN";
+    ESP_LOGW(TAG, "-----");  
     printf("The passkey YES/NO number: %d\n", pass_key);
     return true; 
   }
 
   void onAuthenticationComplete(ble_gap_conn_desc desc){
+    static const char *TAG = "NIMBLE_ONAUTHENTICATIONCOMPLETE";
+    ESP_LOGW(TAG, "-----");  
     printf("Starting BLE work!\n");
   }
 /*******************************************************************/
@@ -93,7 +169,7 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 
 struct nimBLEMidiData {
-  BLEServer* client;   //this "client" is actually a nimBLE server
+  NimBLEServer* client;//this "client" is actually a nimBLE server
                        //note that devices can have both roles concurrently
                        //after making a connection
                        //more important: the difference between Central and Peripheral
@@ -133,24 +209,24 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
 {
   // Set up our client and give a sign of life
   ESP_LOGW(TAG, "Initialize nimBLEOutdriver"); 
-  BLEServer* pServer = NULL;  //must be made accessible for the outside world later
-BLECharacteristic* pCharacteristic = NULL; 
+  NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
+  NimBLECharacteristic* pCharacteristic = NULL; 
   //Create the BLE Device 
   //This is also for Midi input, so should ideally be in a super class
-  BLEDevice::init("fckx_seq"); //later use NimBLEDevice, and use cleintName to pass the name
-  //NimBLEDevice::init("fckx_seq"); //later use NimBLEDevice, and use cleintName to pass the name
-  //with or without the Nim:  this doesn't make a difference for the silent crash
+  NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
+                                  //and include the unique device ID in it
+                                  //take care of max length of this string!
   
-  ESP_LOGW(TAG, "BLEDevice created"); 
+  ESP_LOGW(TAG, "NimBLEDevice created"); 
 #define TEMP_BLOCK1 1  
  #ifdef TEMP_BLOCK1 
-  pServer = BLEDevice::createServer();
+  pServer = NimBLEDevice::createServer();
      ESP_LOGW(TAG, "BLE server created"); 
-  pServer->setCallbacks(new MyServerCallbacks());
+  pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
    ESP_LOGW(TAG, "BLE server callbacks created"); 
    
   // Create the BLE Service
-  BLEService *pService = pServer->createService(SERVICE_UUID);
+  NimBLEService *pService = pServer->createService(SERVICE_UUID);
 ESP_LOGW(TAG, "BLE server service created");
   // Create a BLE Characteristic
   pCharacteristic = pService->createCharacteristic(
@@ -182,17 +258,17 @@ ESP_LOGW(TAG, "BLE server characteristic created");
 ESP_LOGW(TAG, "BLE service started");
   // Start advertising
   ESP_LOGI(TAG, "Start advertising");
-  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
-  pAdvertising->setScanResponse(false);                             
-  BLEDevice::startAdvertising();
+  pAdvertising->setScanResponse(false); 
+/*
+  //MOVE THIS CODE TO openPort
+  NimBLEDevice::startAdvertising();
   ESP_LOGI(TAG, "Waiting for a client connection to notify...");
+*/
   #endif
   
-  
-  
-  
- 
+   
   // Save our connection information
   //define nimBLEMidiData somewhere
   nimBLEMidiData *data = (nimBLEMidiData *) new nimBLEMidiData;
@@ -220,13 +296,22 @@ std::string MidiOutNimBLE :: getPortName(unsigned int portNumber)
   return "fckx_seq";
 }
 
+
+//void MidiOutNimBLE :: openPort( )
 void MidiOutNimBLE :: openPort( unsigned int portNumber)
 {
-  //catch a number of error states
-  
-  //check if a connection already exists
-  //if ( apiData->connected_ ) {
- // if ( data->connected_ ) {
+    //catch a number of error states    
+    printf("OPENPORT ENTERED");
+    ESP_LOGW(TAG, "MidiOutNimBLE :: openPort entered "); 
+
+    xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
+
+    NimBLEDevice::startAdvertising();
+    ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
+
+    //check if a connection already exists
+    //if ( apiData->connected_ ) {
+    // if ( data->connected_ ) {
      if (connected_) {
     //errorString_ = "MidiOutNimBLE::openPort: a valid connection already exists!";
     ESP_LOGE(TAG, "MidiOutNimBLE::openPort: a valid connection already exists!"); 
@@ -355,6 +440,8 @@ void MidiOutNimBLE :: openVirtualPort( const std::string &portName )
 void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
 //void MidiOutNimBLE :: sendMessage( const unsigned char *message, size_t size )
 {
+    
+    ESP_LOGW(TAG, "sendMessage  TO BE IMPLEMENTED");   
   // We use the MIDISendSysex() function to asynchronously send sysex
   // messages.  Otherwise, we use a single nimBLEMidi MIDIPacket.
   /*

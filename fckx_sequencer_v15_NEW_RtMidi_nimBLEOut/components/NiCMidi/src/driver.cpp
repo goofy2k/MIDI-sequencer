@@ -25,7 +25,11 @@
 
 #include "../include/driver.h"
 #include "../include/timer.h"
+#include "esp_log.h"
+#include "nimBLEdriver.h" //make driver globally accessible by including this header file
 
+
+static const char *TAG = "NICMIDI DRIVER";
 
 /////////////////////////////////////////////////
 //         class MIDIRawMessageQueue           //
@@ -76,9 +80,12 @@ MIDIRawMessage& MIDIRawMessageQueue::ReadMessage(unsigned int n) {
 MIDIOutDriver::MIDIOutDriver(int id) :
     processor(0), port_id(id), num_open(0) {
     try {
+        ESP_LOGE(TAG,"start creation of RtMidiOut port"); 
         port = new RtMidiOut();
+        ESP_LOGE(TAG,"executed creation of RtMidiOut port"); 
     }
     catch (RtMidiError& error) {
+        ESP_LOGE(TAG,"catch ERROR on creation of RtMidiOut port");
         error.printMessage();
         port = new RtMidiOut(RtMidi::RTMIDI_DUMMY);// A non functional MIDI out, which won't throw further exceptions
     }

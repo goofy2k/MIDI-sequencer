@@ -1451,18 +1451,7 @@ void app_main(void) {
 //The next test is to see the server appear in a network sniffer (nRF Connect) 
 //Until we implemented operation of the nimBLEOutdriver, the calls to NicMidi are commented  
 
-#ifdef NIMBLE_OK
 
-MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
-
-/*******************************************************************************************
-* AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, RtMidi)
-********************************************************************************************/
-AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
-                        
-MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
-
-#endif
   
     
     
@@ -1478,7 +1467,7 @@ MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
-//jdksmidi::MIDIQueue inQ(5);  
+    //jdksmidi::MIDIQueue inQ(5);  
     /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
     * Read "Establishing Wi-Fi or Ethernet Connection" section in
     * examples/protocols/README.md for more information about this function.
@@ -1497,9 +1486,35 @@ MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
     wifi_init_sta();
    
     ESP_LOGW(TAG, "Initialize MQTT connection here");
-   esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
-  //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
-  MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
+    esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
+    //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
+  
+
+    MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
+    ESP_LOGE(TAG,"MidiOutNimBLE intantiation executed");
+    //xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
+    
+#define NIMBLE_OK 1
+#ifdef NIMBLE_OK
+ESP_LOGE(TAG,"NIMBLE_OK");
+MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+ESP_LOGE(TAG,"NiCMidi MIDISequencerGUINotifierText initiated");
+
+/*******************************************************************************************
+* AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, RtMidi)
+********************************************************************************************/
+AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+ESP_LOGE(TAG,"NiCMidi AdvancedSequencer initiated");
+                        
+MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+ESP_LOGE(TAG,"NiCMidi MIDIRecorder initiated");
+
+//#endif
+
+
+
+
+
 
     /**********************************************************************************
     *TEST  NiCMidi functionality
@@ -1519,6 +1534,10 @@ MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
     //MIDIMessage msg2;
     //MIDIMessage msg3;     // creates three empty MIDIMessage objects
     msg1.SetNoteOn(0, 60, 100);       // msg1 becomes a Note On, channel 1, note 60, velocity 100
+  
+    ESP_LOGE(TAG,"msg1 DEFINED");  
+    nimBLEOutdriver.sendMessage(msg1);
+    ESP_LOGE(TAG,"msg1 SENT"); 
     msg2.SetVolumeChange(0, 127);     // msg2 becomes a Volume Change (CC 7), channel 1, volume 127
     msg3.SetTimeSig(4, 4);            // msg 3 becomes a system Time Signature, 4/4
     msg1.SetChannel(msg1.GetChannel() + 1);  // increments the msg1 channel by one
@@ -1646,7 +1665,7 @@ ESP_LOGW(TAG, "BLE service started");
  #endif 
 
 while (1) {
-  //ESP_LOGI(TAG, "MAIN LOOP");
+  ESP_LOGI(TAG, "MAIN LOOP");
   vTaskDelay(10 / portTICK_PERIOD_MS);  
 }
 //must create a LOOP!!!!!
