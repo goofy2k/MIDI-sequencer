@@ -390,7 +390,20 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   The essential reason to let the sequencer have the role of BLE peripheral is that only with this role it can push messages to other devices, without the need for confirmation/ACK
   
-  v14: correct instantiation of nimBLEdriver via the .... class .  Server starts advertising and accepts connection with peer
-  v15: to be done: cast this functionality properly in the NicMidi interface
+  v14: correct instantiation of nimBLEdriver via the .... class .  Server starts advertising and accepts connection with peer  
+  v15:  
+    - to be done: cast this functionality properly in the NicMidi interface  
+                  testing this implementation is done with the NiCMidi component_example (tick component) as it is relatively simple. There is focus on output in that example.  
+    - done:   
+      - proper initialisation of output port  
+      - connectedTask (wrong name! but this is a heritage of the nimBLEDevice  "notify" example) was  moved to MidiOutNimBLE class in nimBLEdriver.cpp.  
+      - the loop in connectedTask does not yet contain actions for the case that there is a connection  
+     - it properly reports connection / disconnection events  
+   - to be done:   
+     - add meaning full content to each of the parts of the connectedTask. You probably have to add callbacks. See how NicMidi wants to use the connection  
+     - recognize connection to nRF Connect tool and do not assign MIDI functionality to that  
+     - implement sendMessage  
+
+       
   
   
