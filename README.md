@@ -390,4 +390,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   The essential reason to let the sequencer have the role of BLE peripheral is that only with this role it can push messages to other devices, without the need for confirmation/ACK
   
+  v14: correct instantiation of nimBLEdriver via the .... class .  Server starts advertising and accepts connection with peer
+  v15: to be done: cast this functionality properly in the NicMidi interface
+  
   
