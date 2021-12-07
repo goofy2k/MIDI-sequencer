@@ -426,7 +426,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   10. 
     a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  
     b. Implement nimBLE Midi IN for seqencer app.  Testing is possible with a second board running e.g. the test_component example  
-  11. 
+  11. More items in the list a few paragraphs back
   
 
        
