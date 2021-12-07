@@ -419,14 +419,10 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   3. nRF Connect sniffer reports "Indication received from ... " whereas the intention is to send a notification (root cause yet unknown)
   4. test more NiCMidi functionality (recorder, sequencer, midi-thru).
   5. study suitability of BLE-MIDI standard (5 byte timestamped) vs NiCMidi 3 byte messages (does NiCMidi offer 5 byte messages)
-  6. implement more message types (other than "note on", "note off"  on the synth side
+  6. implement more message types (other than "note on", "note off"  on the synth side. AllNotesOff would be fine :-)
+  7. implement recognition of MIDI channel in the synth firmware. This enables usage of multiple synths.
+  8. Does NicMidi need the abilty to define callbacks for the "while connected" case , or is availability of send message sufficient?
   
-  
-  
-  
-  
-  
-  Does NicMidi need a callback for the while connected case , or is availability of send message sufficient? Just implement the component example further!
 
        
   
