@@ -108,10 +108,6 @@ uint32_t value = 0;
 }
     
 
-
-
-
-
 //MIDI data packet, taken from Brian Duhan arduino-esp32-BLE-MIDI / BLE_MIDI.ino
 uint8_t midiPacket[] = {
     0x80, //header
@@ -166,9 +162,9 @@ class MyServerCallbacks: public BLEServerCallbacks {
   }
 /*******************************************************************/
 };
-
-
-struct nimBLEMidiData {
+/*
+ //MOVE STRUCT definition to header file
+struct NimBLEMidiOutData {
   NimBLEServer* client;//this "client" is actually a nimBLE server
                        //note that devices can have both roles concurrently
                        //after making a connection
@@ -187,7 +183,10 @@ struct nimBLEMidiData {
 #endif
   //MidiInApi :: RtMidiInData *rtMidiIn; //???
   };
+*/
 
+ 
+ 
  MidiOutNimBLE :: MidiOutNimBLE ()
 //MidiOutNimBLE :: MidiOutNimBLE (const std::string &clientName)
 {   
@@ -253,25 +252,32 @@ ESP_LOGW(TAG, "BLE server characteristic created");
    
    pCharacteristic->addDescriptor(new BLE2902());
   ****************************************************/
-  // Start the service
+  
+    // Start the service
   pService->start();
-ESP_LOGW(TAG, "BLE service started");
+  ESP_LOGW(TAG, "BLE service started");
+  /*
+  //MOVE THIS TO openPort
+
   // Start advertising
   ESP_LOGI(TAG, "Start advertising");
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(false); 
-/*
-  //MOVE THIS CODE TO openPort
-  NimBLEDevice::startAdvertising();
-  ESP_LOGI(TAG, "Waiting for a client connection to notify...");
 */
   #endif
   
-   
+  
+    // Save our connection information
+    
+    connectionData.pServer = pServer;
+      connectionData.pService = pService;
+        connectionData.pCharacteristic = pCharacteristic;
+  
+ /*  
   // Save our connection information
-  //define nimBLEMidiData somewhere
-  nimBLEMidiData *data = (nimBLEMidiData *) new nimBLEMidiData;
+  //define NimBLEMidiOutData somewhere
+  NimBLEMidiOutData *data = (NimBLEMidiOutData *) new NimBLEMidiOutData;
   //data->connected_ = false; //in RtMidi, this is in the parent class
   connected_ = false; 
   
@@ -279,6 +285,7 @@ ESP_LOGW(TAG, "BLE service started");
   //data->endpoint = 0;
   apiData_ = (void *) data;  //??
   //CFRelease( name );         //??
+  */
 }
 
 
@@ -304,7 +311,27 @@ void MidiOutNimBLE :: openPort( unsigned int portNumber)
     printf("OPENPORT ENTERED");
     ESP_LOGW(TAG, "MidiOutNimBLE :: openPort entered "); 
 
+
+
+
+    //start background task HERE????
+    // depends on kind of task
     xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
+    
+      
+  //MOVE THIS TO openPort
+  
+
+  // Start advertising
+  ESP_LOGI(TAG, "Prepare advertising");
+  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(false); 
+  
+  connectionData.pAdvertising = pAdvertising;
+    
+      // Start advertising
+  ESP_LOGI(TAG, "Start advertising");
 
     NimBLEDevice::startAdvertising();
     ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
@@ -312,6 +339,8 @@ void MidiOutNimBLE :: openPort( unsigned int portNumber)
     //check if a connection already exists
     //if ( apiData->connected_ ) {
     // if ( data->connected_ ) {
+        
+     //DO THIS BEFORE PREP OF ADVERTISING?   
      if (connected_) {
     //errorString_ = "MidiOutNimBLE::openPort: a valid connection already exists!";
     ESP_LOGE(TAG, "MidiOutNimBLE::openPort: a valid connection already exists!"); 
@@ -344,7 +373,7 @@ void MidiOutNimBLE :: openPort( unsigned int portNumber)
 */
   
  MIDIPortRef port;
-  nimBLEMidiData *data = static_cast<nimBLEMidiData *> (apiData_);
+  NimBLEMidiOutData *data = static_cast<NimBLEMidiOutData *> (apiData_);
   CFStringRef portNameRef = CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingASCII );
   OSStatus result = MIDIOutputPortCreate( data->client, portNameRef, &port );
   CFRelease( portNameRef );
@@ -377,7 +406,7 @@ void MidiOutNimBLE :: openPort( unsigned int portNumber)
 
 void MidiOutNimBLE :: closePort( void )
 {
-  nimBLEMidiData *data = static_cast<nimBLEMidiData *> (apiData_);
+  NimBLEMidiOutData *data = static_cast<NimBLEMidiOutData *> (apiData_);
 /*
   if ( data->endpoint ) {
     MIDIEndpointDispose( data->endpoint );
@@ -413,7 +442,7 @@ void MidiOutNimBLE :: setPortName ( const std::string& )
 /*
 void MidiOutNimBLE :: openVirtualPort( const std::string &portName )
 {
-  nimBLEMidiData *data = static_cast<nimBLEMidiData *> (apiData_);
+  NimBLEMidiOutData *data = static_cast<NimBLEMidiOutData *> (apiData_);
 
   if ( data->endpoint ) {
     errorString_ = "MidiOutNimBLE::openVirtualPort: a virtual output port already exists!";
@@ -440,8 +469,101 @@ void MidiOutNimBLE :: openVirtualPort( const std::string &portName )
 void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
 //void MidiOutNimBLE :: sendMessage( const unsigned char *message, size_t size )
 {
+    ESP_LOGW(TAG, "sendMessage  TO BE IMPLEMENTED"); 
+    /*
+    ESP_LOGW(TAG, "message.size %d", message->size());
+    for (unsigned i=0; i<message->size(); i++)
+    ESP_LOGW(TAG, "message.size %d", message->at(i));
+*/
+    //raw version copied from main::sendToMIDIOut
+        //prepare for sending to output
+    //convert MIDIMessage to midiPacket
+    static const char *TAG = "sendToMIDIOut";  
+    //unsigned long int mididata;
+    uint8_t midiPacket[8];
+    unsigned char header;
+    unsigned char timestamp_low;
+    unsigned char timestamp_high;
+    unsigned char midi_status;
+    unsigned char byte1;
+    unsigned char byte2;
+    unsigned char byte3;
     
-    ESP_LOGW(TAG, "sendMessage  TO BE IMPLEMENTED");   
+    ESP_LOGI(TAG,"Prepare for sending data to output");
+
+    
+    //check raw byte values, befor implementing playing to BLE notify (output)
+    //write a notify procedure that accepts MIDIMessage as input
+
+       //check raw byte values, befor implementing playing to BLE notify (output)
+    //write a notify procedure that accepts MIDIMessage as input
+    
+ //   printMsgBytes(msg1); //for debugging/devel
+    //convert to mididata = Process (?)  you also may want to filter some messages
+    /***************************************************************************************************************************** 
+    * Midi data over BLE are sent exchanged according to the Specification for MIDI over Bluetooth Low Energy (BLE-MIDI, see docs)
+    * Currently only 5 byte packets with single messages are supported
+    *
+    * Currently NOT supported are:
+    *   - running status messages
+    *   - multi-message packets
+    *
+    * Also, only Note on and Note Off messages are supported by the receiving sound board
+    * MIDI_BLE supports a 13-bit timestamp, but these are not (yet) interpreted by the receiver. This application intends to send messages that should be played
+    * immediately ("real-time") by the sound board
+    * see: https://h2zero.github.io/esp-nimble-cpp/index.html
+    * see: https://h2zero.github.io/esp-nimble-cpp/md_docs__usage_tips.html
+    *
+    ******************************************************************************************************************************/
+
+
+   for (unsigned i=0; i<message->size(); i++) {
+    ESP_LOGW(TAG, "message.size %d", message->at(i));
+    midiPacket[i] = message->at(i);
+   };
+
+     /*
+    timestamp_high = 0;
+    timestamp_low = 0;
+    
+
+    midi_status = msg1.GetStatus();
+    byte1 = msg1.GetByte1();
+    byte2 = msg1.GetByte2();
+    byte3 = msg1.GetByte3();
+    */
+    /*
+    header = 0b11000000 + timestamp_high;
+    midiPacket[0] = header;
+    midiPacket[1] = 0b1000000 + timestamp_low;
+    midiPacket[2] = midi_status; //byte1? 
+    midiPacket[3] = byte1;  //byte2?
+    midiPacket[4] = byte2;  //byte3?
+  */
+  /*
+    //test data
+    midiPacket[0] = 0x00;
+    midiPacket[1] = 0x01;
+    midiPacket[2] = 0x02;
+    midiPacket[3] = 0x03;
+    midiPacket[4] = 0x04;  
+  */
+    //<code> here
+    //send to "hardware" interface
+    //<code here>
+    
+    connectionData.pCharacteristic->setValue(midiPacket, message->size());
+// connectionData.pCharacteristic->setValue(midiPacket, 5); //works but needs conversion
+    // connectionData.pCharacteristic->setValue(const std::vector<unsigned char> *message);
+    //connectionData.pCharacteristic->setValue(const T & message);
+
+  //connectionData.pCharacteristic->setValue(std::vector<unsigned char> *message);
+    connectionData.pCharacteristic->notify(); 
+    //ble_notify_midi(pCharacteristic, mididata); this was suitable for midi thru
+
+
+//METHOD2....
+     
   // We use the MIDISendSysex() function to asynchronously send sysex
   // messages.  Otherwise, we use a single nimBLEMidi MIDIPacket.
   /*
@@ -453,7 +575,7 @@ void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
   }
   
   MIDITimeStamp timeStamp = AudioGetCurrentHostTime();
-  nimBLEMidiData *data = static_cast<nimBLEMidiData *> (apiData_);
+  NimBLEMidiOutData *data = static_cast<NimBLEMidiOutData *> (apiData_);
   OSStatus result;
 
   if ( message[0] != 0xF0 && nBytes > 3 ) {

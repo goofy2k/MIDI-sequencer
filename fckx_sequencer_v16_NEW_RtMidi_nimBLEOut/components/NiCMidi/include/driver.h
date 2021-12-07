@@ -38,7 +38,7 @@
 
 // #include "../rtmidi-4.0.0/RtMidi.h" //FCKX
 #include "RtMidi.h" //FCKX
-
+#include "nimBLEdriver.h" //FCKX
 #include <vector>
 #include <string>
 #include <mutex>
@@ -192,7 +192,9 @@ class MIDIOutDriver {
 
        /// \cond EXCLUDED
         MIDIProcessor*          processor;  // The out processor
-        RtMidiOut*              port;       // The hardware port
+        //RtMidiOut*              port;       // The hardware port
+        //FCKX
+        MidiOutNimBLE*          port;       // The hardware port
         const int               port_id;    // The id of the port
         int                     num_open;   // Counts the number of OpenPort() calls
         std::recursive_mutex    out_mutex;  // Used internally for thread safe operating

@@ -220,19 +220,23 @@ static void notifyCallback(
          //see MIDI BLE specification for actual data structures (rp52public.pdf)
 //play midi immediately for testing
 //aDSP->propagateMidi(count, time, type, channel, data1, data2);
-DSP->propagateMidi(3, 0, pData[2], 0, pData[3], pData[3]);
 
+/*  //for 5 bytes messages
+    DSP->propagateMidi(3, 0, pData[2], 0, pData[3], pData[3]); 
     //ESP_LOGI(TAG,"NUMERICAL VALUE:%lu ", mididata);
     ESP_LOGE(TAG,"HEADER: %u (0x%X)", pData[0], pData[0]);
     ESP_LOGE(TAG,"TIMESTAMP: %u (0x%X)", pData[1], pData[1]);
     ESP_LOGE(TAG,"STATUS: %u (0x%X)", pData[2], pData[2]);
     ESP_LOGE(TAG,"DATA1: %u (0x%X)", pData[3], pData[3]);
     ESP_LOGE(TAG,"DATA2: %u (0x%X)", pData[4], pData[4]) ; //integers are 32 bits!!!!             
-
-
-
-
-
+*/
+    //for 3 bytes messages
+     DSP->propagateMidi(3, 0, pData[0], 0, pData[1], pData[1]);  
+    //ESP_LOGE(TAG,"HEADER: %u (0x%X)", pData[0], pData[0]);
+    //ESP_LOGE(TAG,"TIMESTAMP: %u (0x%X)", pData[1], pData[1]);    
+    ESP_LOGE(TAG,"STATUS: %u (0x%X)", pData[0], pData[0]);
+    ESP_LOGE(TAG,"DATA1: %u (0x%X)", pData[1], pData[1]);
+    ESP_LOGE(TAG,"DATA2: %u (0x%X)", pData[2], pData[2]) ; //integers are 32 bits!!!! 
 }
 
 /**  None of these are required as they will be handled by the library with defaults. **

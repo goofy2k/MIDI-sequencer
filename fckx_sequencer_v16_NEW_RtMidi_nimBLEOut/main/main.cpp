@@ -31,8 +31,7 @@
 #include "mqtt_client.h"
 
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
-//intantiate glue test 
-NimBLEGluer NimBLEData;
+
 
 //CHOOSE BETWEEN TWO IMPLEMENTATIONS OF SERVER START
 
@@ -951,33 +950,9 @@ using namespace std;
 
 //class that holds nimBLE setup data after server has been set up
 //the MidOutNimBLE::intitialize must have access to a function that is a friend  of nimBLEDATA
-// e.g. friend void printnimBLEGluerPoperty(NimBLEGluer nimBLEDATA) 
-/*
-class NimBLEGluer {
-    
-    int testPointer;
-    public:
-    friend void printTestPointer(NimBLEGluer x);
-    void setPointer( int inp);
-    
-};    
-*/
-//NimBLEGluer NimBLEData;
-/*
-void NimBLEGluer::setPointer(int inp) {
-    testPointer2 = inp;
-}
-*/
 
-//Note: printTestPointer is not a member of any class, it is a friend of NimBLEGluer
-//so can access all members of it
-void printTestPointer(NimBLEGluer x){
-    printf("testPointer taken from NimBLEGluer instance: %d\n", x.testPointer);
-}
 
-//After setting the data with setPointer, it can be printed in main by calling  printTestPointer
-//NEXT step.
-//Set the value BEFORE intantiating AdvancedSequencer and call printTestPointer in MidiOutNimBLE :: initialize
+
 
 #ifdef UNBLOCK1
 //LOCATION 1
@@ -1281,7 +1256,7 @@ TestComp::TestComp() : MIDITickComponent(PR_PRE_SEQ, StaticTickProc) {}
 void TestComp::Start() {
     cout << "Starting the component ... " << endl;
     // opens MIDI out 0 port before playing the notes
-    //MIDIManager::GetOutDriver(0)->OpenPort();
+    MIDIManager::GetOutDriver(0)->OpenPort();
     next_note_on = 0;                   // relative time of the 1st note on
     next_note_off = NOTE_LENGTH;        // relative time of the 1st note off
     MIDITickComponent::Start();
@@ -1329,7 +1304,7 @@ void TestComp::TickProc(tMsecs sys_time) {
         MIDIManager::GetOutDriver(0)->OutputMessage(msg);  //phase in
                                                 // sends a note on message to the MIDI 0 port
     //    sendToMIDIOut(msg);            //phase out             // sends a note off message to the BLE interface                                                                                                                                                                                      
-        cout << "Note on . . . ";
+        cout << "Note on ... ";
         next_note_on += NOTE_INTERVAL;          // updates the next note on time
     }
      //third event added by FCKX
@@ -1337,8 +1312,8 @@ void TestComp::TickProc(tMsecs sys_time) {
         msg.SetNoteOff(0, 36, 0);
         MIDIManager::GetOutDriver(0)->OutputMessage(msg);
                                                 // sends a note off message to the MIDI 0 port
-        //sendToMIDIOut(msg);                         // sends a note off message to the BLE interface               
-        cout << "and off" << endl;
+        //sendToMIDIOut(msg);                   // sends a note off message to the BLE interface               
+        cout << "...  and off" << endl;
         next_note_off += NOTE_INTERVAL;         // updates the next note off time
     }
     
@@ -1599,11 +1574,11 @@ MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
   
   
   #ifdef TEST_COMPONENT    //phasing out
-     ESP_LOGE(TAG,"Test Component");
+  ESP_LOGE(TAG,"Test Component");
   
-  ESP_LOGI(TAG, "Initialize BLEDevice fckx_seq");
-  
-  MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
+  //switch OFF! as MIDIManager will do this job
+  //ESP_LOGI(TAG, "Initialize BLEDevice fckx_seq");  
+  //MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
   
   
   #ifdef UNBLOCK2
@@ -1664,9 +1639,14 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   //to be more specific: call it in the end of initialize or BETTER at the start of openport
   
   //xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
+
+  //switch OFF! as MIDIManager will do this job
+  /*
   ESP_LOGE(TAG, "GOING TO OPEN PORT");
   nimBLEOutdriver.openPort();
   ESP_LOGE(TAG, "EXITED OPEN PORT");
+  */
+  
   /*
   BLEDevice::startAdvertising();
   ESP_LOGI(TAG, "Waiting for a client connection to notify...");
@@ -1676,7 +1656,9 @@ ESP_LOGW(TAG, "BLE server characteristic created");
  #endif 
  
   ESP_LOGW(TAG, "ENTERING MAIN LOOP");
+  ESP_LOGW(TAG, "MAIN LOOP: executes main_test_component()");
   while (1) {
+    main_test_component();  
     //ESP_LOGI(TAG, "MAIN LOOP");
     vTaskDelay(10 / portTICK_PERIOD_MS);  
 }

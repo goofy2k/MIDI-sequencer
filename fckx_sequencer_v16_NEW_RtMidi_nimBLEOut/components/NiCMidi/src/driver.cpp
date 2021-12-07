@@ -26,6 +26,7 @@
 #include "../include/driver.h"
 #include "../include/timer.h"
 #include "esp_log.h"
+//FCKX
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
 
 
@@ -79,15 +80,19 @@ MIDIRawMessage& MIDIRawMessageQueue::ReadMessage(unsigned int n) {
 
 MIDIOutDriver::MIDIOutDriver(int id) :
     processor(0), port_id(id), num_open(0) {
-    try {
-        ESP_LOGE(TAG,"start creation of RtMidiOut port"); 
-        port = new RtMidiOut();
-        ESP_LOGE(TAG,"executed creation of RtMidiOut port"); 
-    }
+    try {//FCKX
+        //ESP_LOGE(TAG,"start creation of RtMidiOut port"); 
+        //port = new RtMidiOut();
+        //ESP_LOGE(TAG,"executed creation of RtMidiOut port");
+        ESP_LOGE(TAG,"start creation of MidiOutNimBLE port");         
+        port = new MidiOutNimBLE();
+        ESP_LOGE(TAG,"executed creation of MidiOutNimBLE port");
+        }
     catch (RtMidiError& error) {
         ESP_LOGE(TAG,"catch ERROR on creation of RtMidiOut port");
         error.printMessage();
-        port = new RtMidiOut(RtMidi::RTMIDI_DUMMY);// A non functional MIDI out, which won't throw further exceptions
+        //FCKX
+        //port = new RtMidiOut(RtMidi::RTMIDI_DUMMY);// A non functional MIDI out, which won't throw further exceptions
     }
 }
 
@@ -108,6 +113,7 @@ void MIDIOutDriver::Reset() {
 void MIDIOutDriver::OpenPort() {
     if (num_open == 0) {
         try {
+            ESP_LOGE(TAG,"MIDIOutDriver::OpenPort()");
             port->openPort(port_id);
 #if DRIVER_USES_MIDIMATRIX
             out_matrix.Clear();
@@ -176,7 +182,10 @@ void MIDIOutDriver::AllNotesOff(int chan) {
 }
 
 
-void MIDIOutDriver::OutputMessage(const MIDITimedMessage& msg) {    // MIDITimedMessage is good also for MIDIMessage
+void MIDIOutDriver::OutputMessage(const MIDITimedMessage& msg) {
+    ESP_LOGE(TAG,"MIDIOutDriver::OutputMessage");    
+
+    // MIDITimedMessage is good also for MIDIMessage
     MIDITimedMessage msg_copy(msg);
 
     if (processor)

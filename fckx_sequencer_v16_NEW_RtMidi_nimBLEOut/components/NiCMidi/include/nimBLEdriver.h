@@ -1,5 +1,5 @@
 /***********************************************
-*definitions to make NimBLE driver varaiables globally accessible
+*definitions to make NimBLE driver variables globally accessible
 *see: https://stackoverflow.com/questions/19929681/c-global-variable-declaration/19929727
 *answer by Wolf, but learn more!
 */
@@ -10,8 +10,7 @@
 
 #include <string>   //maybe try to prevent using this
 #include <vector>
-
-//extern int globaltestPointer = 456; //extern to make it globally accessible????
+#include <NimBLEDevice.h>
 
 /*******************
 *nimBLEdriver.h
@@ -45,6 +44,33 @@ that are expected by the equivalent class(es) in RtMidi and NicMidi
 
 */
 
+
+struct NimBLEMidiOutData {
+    NimBLEServer* pServer;
+    NimBLEService* pService; 
+    NimBLECharacteristic* pCharacteristic;
+    NimBLEAdvertising* pAdvertising;
+ //NimBLEServer* client;//this "client" is actually a nimBLE server
+                       //note that devices can have both roles concurrently
+                       //after making a connection
+                       //more important: the difference between Central and Peripheral
+                       //this device is .....(?)   It takes the lead in making connections
+                       //it starts "advertising"
+  //clienName ......                     
+  //nimBLE_port_t *port;
+ // bool connected_; //in RtMidi, this is in the parent class
+  //nimBLE_ringbuffer_t *buffSize;     //required for MidiIn
+  //nimBLE_ringbuffer_t *buffMessage;  //required for MidiIn
+  //nimBLE_time_t lastTime;            //???
+#ifdef HAVE_SEMAPHORE                  //depends on the OS
+  sem_t sem_cleanup;
+  sem_t sem_needpost;
+#endif
+  //MidiInApi :: RtMidiInData *rtMidiIn; //???
+  };
+
+
+
 class MidiOutNimBLE   //:public MidiOutApi //(what does this parent class add?) 
 {
     public:                          MidiOutNimBLE();
@@ -54,55 +80,22 @@ class MidiOutNimBLE   //:public MidiOutApi //(what does this parent class add?)
         void                         openPort(unsigned int portNumber=0);
         void                         closePort();
         //virtual bool                 isPortOpen();
+        inline bool isPortOpen() const { return connected_; }
         unsigned int                 getPortCount();// { return 1; }
         std::string                  getPortName(unsigned int portNumber=0);
         void                         sendMessage(const std::vector<unsigned char> *message);
-
+        //setcallback1               see rtMidi for examples
+        //setcallback2
+        
     protected:
+        NimBLEMidiOutData connectionData;
         void initialize( const std::string& clientName  ); 
         void *apiData_;   //in the RtMidi case this is in class .... MidiApi
         bool connected_;  //in the RtMidi case this is in class .... MidiApi      
+        //callback1  ee rtMidi for examples
+        //callback2
+
 };
-
-//extern MidiOutNimBLE nimBLEOutdriver; //to make it globally accessible as demonstrated with NimBLEGluer (see above)
-                                      //is this really necessary?
-
-
-
-//Class to test passing data between two translation units (.cpp's)
-
-class NimBLEGluer {
-    
-    public:
-    //constructor
-    //NimBLEGluer(); //causes a: ../main/main.cpp:564: undefined reference to `NimBLEGluer::setPointer(int)'
-                   //in that line there is NO reference to this class at all!
-    //destructor
-    //virtual ~NimBLEGluer();  
-
-    int testPointer = 123;  //initial value for testing
-    /*
-    void setPointer( int inp);
-    int getPointer( void ){
-        return testPointer;
-        };
-    */        
-    }; 
-
-//NimBLEGluer::NimBLEGluer() {}  //causes a: error: definition of implicitly-declared 'constexpr NimBLEGluer::NimBLEGluer()'
-
-//NimBLEGluer::~NimBLEGluer() {}
-
-extern NimBLEGluer NimBLEData;  //to make it globally accessible without intantiating it again ?? 
-/***************************************************
-// in main() :
-
-// in driver.cpp :
-
-****************************************************/
-
-
-
 
 
 #endif
