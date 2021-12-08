@@ -429,7 +429,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   8. Does NicMidi need the abilty to define callbacks for the "while connected" case , or is availability of send message sufficient?
   9. Harmonisation / adaptation of NiCMidi to accept NimBLE output driver
   10. 
-    a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  (see 4.)  
+    a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  (see 4.) REMARKS also inside driver.cpp 
     b. Implement nimBLE Midi IN for seqencer app.  Testing is possible with a second board running e.g. the test_component example  
   11. More items in the list a few paragraphs back
   
