@@ -417,7 +417,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   ## TODO
   
-  1. clean up fckx_sequencer code
+  1. clean up fckx_sequencer code **STARTED v17**: needs continuous attention.  
   2. NimBLE output driver causes duplicate PRIMARY BLE service  **SOLVED** by moving all code from initialisation to openPort  
      This means that the first instantiation is only used for determining the number of ports (which is always 1). The real initialisation is postponed to the opnPort routine which is explicitely called by MIDIManager. If openPort has become too heavy by this, see if some of the code can be moved back to initialisation. 
   3. nRF Connect sniffer reports "Indication received from ... " whereas the intention is to send a notification.  **SOLVED** removed the indication flag form the port setup
@@ -429,7 +429,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   8. Does NicMidi need the abilty to define callbacks for the "while connected" case , or is availability of send message sufficient?
   9. Harmonisation / adaptation of NiCMidi to accept NimBLE output driver
   10. 
-    a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  
+    a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  (see 4.)  
     b. Implement nimBLE Midi IN for seqencer app.  Testing is possible with a second board running e.g. the test_component example  
   11. More items in the list a few paragraphs back
   
