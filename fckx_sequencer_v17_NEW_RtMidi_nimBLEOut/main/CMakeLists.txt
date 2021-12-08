@@ -4,8 +4,9 @@ set(COMPONENT_SRCS
 #		"functions_dirty.cpp" "midi.cpp" "msg.cpp" "multitrack_dirty.cpp"
 #		"RtMidi.cpp" "track_dirty.cpp" "sysex.cpp"
 #other files
-        "main.cpp"  
-        "queue.cpp"  )
+        "main.cpp"    #not required?
+        "queue.cpp"   #not required?  
+)
         
 set(COMPONENT_ADD_INCLUDEDIRS "." )
 

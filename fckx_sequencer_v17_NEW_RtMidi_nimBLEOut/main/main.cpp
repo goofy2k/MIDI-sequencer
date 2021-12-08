@@ -36,16 +36,19 @@
 
 //#define NIMBLE_IN_MAIN            //when is it considered as defined? what value is needed?
 
-//switches for NiCMidi examples
+//switches for NiCMidi examples in order of priority for implementation
 //https://ncassetta.github.io/NiCMidi/docs/html/examples.html
 #define MIDIMESSAGE                //not an example but inspired by web page <ref> OK in main
-#define MIDITRACK_DUMPMIDITRACK    //                OK in main
+#define MIDITRACK_DUMPMIDITRACK    //OK in main
+//metronome //output only
+//thru //input and output
 
 //the following (adapted) examples depend on nimBLEdriver bluetooth output by FCKX
 //use only one at a time as instantiation of output ports may interfere (solve this in the future for flxibility)
 
-//#define TEST_COMPONENT             //test_component example OK (in main eternal loop)                                   /
-#define TEST_ADVANCEDSEQUENCER     //test_advancedsequencer
+//#define TEST_COMPONENT           //test_component example OK (in main eternal loop) 
+#define TEST_RECORDER            //test_recorder
+//#define TEST_ADVANCEDSEQUENCER     //test_advancedsequencer
 
 
 
@@ -786,7 +789,7 @@ static esp_mqtt_client * mqtt_app_start(void){
 //#include "../include/tick.h"
 //#include "../include/manager.h"
 #include "../include/metronome.h"
-//#include "../include/functions.h"                  // helper functions for input parsing and output
+#include "../examples/functions.h"                  // helper functions for input parsing and output
 
 //for test_recorder
 #include "../include/advancedsequencer.h"
@@ -1397,7 +1400,8 @@ Here is an example:
   //NimBLE Bluetooth
   //Create the BLE Device
 
-#ifdef TEST_ADVANCEDSEQUENCER
+#ifdef TEST_RECORDER
+    ESP_LOGE(TAG,"instantiations for TEST_RECORDER EXAMPLE");
     ESP_LOGE(TAG,"Entering MIDISequencerGUINotifierText");
     MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
     /*******************************************************************************************
@@ -1407,7 +1411,7 @@ Here is an example:
     AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
     ESP_LOGE(TAG,"Entering MIDIRecorder");                        
     MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
-#endif //ifdef TEST_ADVANCEDSEQUENCER 
+#endif //ifdef TEST_RECORDER 
   
 
   
@@ -1417,13 +1421,28 @@ Here is an example:
     main_test_component();  
     vTaskDelay(10 / portTICK_PERIOD_MS);  
   }
-#else //#ifdef TEST_COMPONENT 
+ 
+#else //TEST_RECORDER
+   ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING test_recorder()");
+  while (1) {      
+    //code here 
+    bool verbose = true;
+    DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
+    vTaskDelay(10 / portTICK_PERIOD_MS);  
+  } 
+  
+
+/*
+#else 
     //must create a LOOP!!!!!
     ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING N O T H I N G");
     while (1) {      
         //<your code here> 
         vTaskDelay(10 / portTICK_PERIOD_MS);  
     }
+*/    
 #endif //#else
+    
+
 }; //app_main
 
