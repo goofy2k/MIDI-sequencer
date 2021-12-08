@@ -412,13 +412,17 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - v16 code is now quite messy. Cleanup postponed until after exploring more NiCMidi functionality.
   - See TODO for a non-prioritized list of actions
   
+  **v17:**  
+  - added copies of nimBLEdriver.cpp/.h to serve as templates for MQTTdriver.cpp/.h .  This will contain the MIDI input based on MQTT. 
+  
   ## TODO
   
   1. clean up fckx_sequencer code
   2. NimBLE output driver causes duplicate PRIMARY BLE service  **SOLVED** by moving all code from initialisation to openPort  
      This means that the first instantiation is only used for determining the number of ports (which is always 1). The real initialisation is postponed to the opnPort routine which is explicitely called by MIDIManager. If openPort has become too heavy by this, see if some of the code can be moved back to initialisation. 
-  3. nRF Connect sniffer reports "Indication received from ... " whereas the intention is to send a notification (root cause yet unknown)
-  4. test more NiCMidi functionality (recorder, sequencer, midi-thru).
+  3. nRF Connect sniffer reports "Indication received from ... " whereas the intention is to send a notification.  **SOLVED** removed the indication flag form the port setup
+     Note that indication is a protocol that requires acknowledgement by the receiver. It is also slower than notification, which is effectively pushing.  
+  4. test more NiCMidi functionality (recorder, sequencer, midi-thru).  **STARTED v17** with implementation of MIDI in via MQTT  (MQTTdriver.cpp/.h)  
   5. study suitability of BLE-MIDI standard (5 byte timestamped) vs NiCMidi 3 byte messages (does NiCMidi offer 5 byte messages)
   6. implement more message types (other than "note on", "note off"  on the synth side. AllNotesOff would be fine :-)
   7. implement recognition of MIDI channel in the synth firmware. This enables usage of multiple synths.
