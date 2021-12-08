@@ -279,14 +279,14 @@ void MIDIManager::Init() {
         //RtMidiOut temp_MIDI_out;
         //create temp object to detect the number of avail ports, which is always 1 in the nimBLE case
         //for this goal the object doesn't have to setup the ports during it's initialization , as is done now. 
-        //
+        //OR BETTER: IT IS NOT DESIRABLE TO SETUP THE PORTS
         //(see how you can create multiple outputs, e.g. for multiplle MIDI channels)
       std::cout << "Going to create temp MidiOutNimBLE for detecting nr of ports" << std::endl;
       MidiOutNimBLE temp_MIDI_out;
          std::cout << "Created temp MidiOutNimBLE for detecting nr of ports" << std::endl;
 
         for (unsigned int i = 0; i < temp_MIDI_out.getPortCount(); i++) {
-            MIDI_outs->push_back(new MIDIOutDriver(i));
+            MIDI_outs->push_back(new MIDIOutDriver(i)); //this again involves an instatiation of the nimBLE driver
             MIDI_out_names->push_back(temp_MIDI_out.getPortName(i));
         }
      /*   

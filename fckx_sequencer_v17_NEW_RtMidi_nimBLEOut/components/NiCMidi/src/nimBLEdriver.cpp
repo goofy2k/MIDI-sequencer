@@ -206,7 +206,30 @@ MidiOutNimBLE :: ~MidiOutNimBLE ()
 
 void MidiOutNimBLE :: initialize ( const std::string& clientName)
 {
-  // Set up our client and give a sign of life
+  
+}
+
+
+unsigned int MidiOutNimBLE :: getPortCount()
+{
+  //CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
+  //return MIDIGetNumberOfDestinations();
+  return 1;
+}
+
+
+std::string MidiOutNimBLE :: getPortName(unsigned int portNumber)
+{
+  //must return clientName from niBLEMidiData ?
+  return "fckx_seq";
+}
+
+
+//void MidiOutNimBLE :: openPort( )
+void MidiOutNimBLE :: openPort( unsigned int portNumber)
+{
+    
+   // Set up our client and give a sign of life
   ESP_LOGW(TAG, "Initialize nimBLEOutdriver"); 
   NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
   NimBLECharacteristic* pCharacteristic = NULL; 
@@ -285,28 +308,18 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   //data->endpoint = 0;
   apiData_ = (void *) data;  //??
   //CFRelease( name );         //??
-  */
-}
-
-
-unsigned int MidiOutNimBLE :: getPortCount()
-{
-  //CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
-  //return MIDIGetNumberOfDestinations();
-  return 1;
-}
-
-
-std::string MidiOutNimBLE :: getPortName(unsigned int portNumber)
-{
-  //must return clientName from niBLEMidiData ?
-  return "fckx_seq";
-}
-
-
-//void MidiOutNimBLE :: openPort( )
-void MidiOutNimBLE :: openPort( unsigned int portNumber)
-{
+  */ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //catch a number of error states    
     printf("OPENPORT ENTERED");
     ESP_LOGW(TAG, "MidiOutNimBLE :: openPort entered "); 

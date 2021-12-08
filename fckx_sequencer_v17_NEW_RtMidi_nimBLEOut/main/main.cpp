@@ -1,5 +1,5 @@
 //CONSIDER TO RENAME BLEDevice etc to NimBLEDevice etc. But test carefully when you have running code!
-
+//tmove references to the old jdks lib
 #include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -9,7 +9,7 @@
 #include "nvs_flash.h"
 #include "esp_event.h"
 #include "esp_netif.h"
-//#include "protocol_examples_common.h"
+
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -33,12 +33,21 @@
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
 
 
-//CHOOSE BETWEEN TWO IMPLEMENTATIONS OF SERVER START
 
-//#define NIMBLE_IN_MAIN 1              //when is it considered as defined? what value is needed?
-#define NIMBLE_IN_NIMBLEDRIVER 1
+//#define NIMBLE_IN_MAIN            //when is it considered as defined? what value is needed?
 
-#define TEST_COMPONENT
+//switches for NiCMidi examples
+//https://ncassetta.github.io/NiCMidi/docs/html/examples.html
+#define MIDIMESSAGE                //not an example but inspired by web page <ref> OK in main
+#define MIDITRACK_DUMPMIDITRACK    //                OK in main
+
+//the following (adapted) examples depend on nimBLEdriver bluetooth output by FCKX
+//use only one at a time as instantiation of output ports may interfere (solve this in the future for flxibility)
+
+//#define TEST_COMPONENT             //test_component example OK (in main eternal loop)                                   /
+#define TEST_ADVANCEDSEQUENCER     //test_advancedsequencer
+
+
 
 /*
 https://www.esp32.com/viewtopic.php?t=18054
@@ -47,13 +56,6 @@ I suspect the error might be coming from `ble_buf_alloc` as well. Can you please
 */
 
 
-/*
-//call this if not  NIMBLE_IN_MAIN
-#ifdef NIMBLE_IN_NIMBLEDRIVER
-MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
-#endif
-*/
-//#include "RtMidi.h"
 #include "secrets.h"
 
 //Credentials form secrets.h
@@ -98,13 +100,13 @@ MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
 extern "C" {void app_main(void);}
 
 #ifdef NIMBLE_IN_MAIN
-BLEServer* pServer = NULL; //FCKX phase out
+//test using "NIM" before "BLE"
+BLEServer* pServer = NULL; //FCKX phase out //compile conditionally
 BLECharacteristic* pCharacteristic = NULL;  //FCKX phase out
 #endif
 
 
 static const char *TAG = "FCKX_SEQ";
-
 
 /* WIFI functionality, taken from ESP-IDF example: xxxxxxxxxxxx
 *
@@ -437,13 +439,8 @@ static const char *TAG = "execute_single_midi_command";
 
 #endif
 
-bool handle_inQ(){
-    //look in input buffer
-    bool result = false;
-    
-    
-    return result;
-};
+
+
 
 
  //may extend to class
@@ -786,133 +783,6 @@ static esp_mqtt_client * mqtt_app_start(void){
 
 
 
-/*
-    Video: https://www.youtube.com/watch?v=oCMOYS71NIU
-    Based on Neil Kolban example for IDF: https://github.com/nkolban/esp32-snippets/blob/master/cpp_utils/tests/BLE%20Tests/SampleNotify.cpp
-    Ported to Arduino ESP32 by Evandro Copercini
-    updated by chegewara
-    Refactored back to IDF by H2zero
-
-   Create a BLE server that, once we receive a connection, will send periodic notifications.
-   The service advertises itself as: 4fafc201-1fb5-459e-8fcc-c5c9c331914b
-   And has a characteristic of: beb5483e-36e1-4688-b7f5-ea07361b26a8
-
-   The design of creating the BLE server is:
-   1. Create a BLE Server
-   2. Create a BLE Service
-   3. Create a BLE Characteristic on the Service
-   4. Create a BLE Descriptor on the characteristic
-   5. Start the service.
-   6. Start advertising.
-
-   A connect hander associated with the server starts a background task that performs notification
-   every couple of seconds.
-*/
-
-/** NimBLE differences highlighted in comment blocks **/
-
-/*******original********
-#include <BLEDevice.h>
-#include <BLEServer.h>
-#include <BLEUtils.h>
-#include <BLE2902.h>
-***********************/
-#ifdef TEST_COMPONENT_MOVED_TO_MidiOutNimBLE_class 
-
-
-bool deviceConnected = false;            //move this into the MidiOutNimBLE classs
-bool oldDeviceConnected = false;         //end define a getter
-uint32_t value = 0;
-
-//MIDI data packet, taken from Brian Duhan arduino-esp32-BLE-MIDI / BLE_MIDI.ino
-uint8_t midiPacket[] = {
-    0x80, //header
-    0x80, //timestamp, not implemented
-    0x00, //status
-    0x3c, //== 60 == middle c
-    0x00  //velocity
-};
-
-// See the following for generating UUIDs:
-// https://www.uuidgenerator.net/
-
-
-
-#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
-
-#endif
-
-
-#ifdef EXTERNAL_CALLBACKS
-/**  None of these are required as they will be handled by the library with defaults. **
- **                       Remove as you see fit for your needs                        */  
-class MyServerCallbacks: public BLEServerCallbacks {
-    void onConnect(BLEServer* pServer) {
-      deviceConnected = true;
-      BLEDevice::startAdvertising(); //keep advertising to find more connections
-    };
-
-    void onDisconnect(BLEServer* pServer) {
-      deviceConnected = false;
-    }
-/***************** New - Security handled here ********************
-****** Note: these are the same return values as defaults ********/
-  uint32_t onPassKeyRequest(){
-    printf("Server PassKeyRequest\n");
-    return 123456; 
-  }
-
-  bool onConfirmPIN(uint32_t pass_key){
-    printf("The passkey YES/NO number: %d\n", pass_key);
-    return true; 
-  }
-
-  void onAuthenticationComplete(ble_gap_conn_desc desc){
-    printf("Starting BLE work!\n");
-  }
-/*******************************************************************/
-};
-#endif
-
-
-
-    /**********************************************************************************
-    *TEST  NiCMidi functionality   test_component.cpp
-    *
-    * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
-    *    
-    ***********************************************************************************/    
- /*
- *   Example file for NiCMidi - A C++ Class Library for MIDI
- *
- *   Copyright (C) 2021  Nicola Cassetta
- *   https://github.com/ncassetta/NiCMidi
- *
- *   This file is part of NiCMidi.
- *
- *   NiCMidi is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   NiCMidi is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with NiCMidi.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
-  Example of a basic custom MIDITickComponent which only plays a note
-  every second. The file shows how to redefine the base class methods
-  and how to add the component to the MIDIManager queue, making it
-  effective.
-*/
-
-
 //#include "../include/tick.h"
 //#include "../include/manager.h"
 #include "../include/metronome.h"
@@ -954,8 +824,8 @@ using namespace std;
 
 
 
-#ifdef UNBLOCK1
-//LOCATION 1
+#ifdef TEST_ADVANCEDSEQUENCER
+
 
 MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
 
@@ -1219,7 +1089,50 @@ int main_test_metronome( string command) {
 // This is a very simple example which play a fixed note every second; see the comments
 // to every method for details.
 //
+
+
+
+    /**********************************************************************************
+    *TEST  NiCMidi functionality   test_component.cpp
+    *
+    * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
+    *    
+    ***********************************************************************************/ 
+
 #ifdef TEST_COMPONENT  
+
+//NOTE: required includes are not in this block
+
+ /*
+ *   Example file for NiCMidi - A C++ Class Library for MIDI
+ *
+ *   Copyright (C) 2021  Nicola Cassetta
+ *   https://github.com/ncassetta/NiCMidi
+ *
+ *   This file is part of NiCMidi.
+ *
+ *   NiCMidi is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   NiCMidi is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with NiCMidi.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+  Example of a basic custom MIDITickComponent which only plays a note
+  every second. The file shows how to redefine the base class methods
+  and how to add the component to the MIDIManager queue, making it
+  effective.
+*/
+
+
 
 class TestComp : public MIDITickComponent {
     public:
@@ -1334,85 +1247,14 @@ int main_test_component() {
     return EXIT_SUCCESS;
 }
 
-#endif 
- 
     /**********************************************************************************
-    *END OF TEST  NiCMidi functionality   test_component.cpp
+    * END OF TEST  NiCMidi functionality   test_component.cpp
     *
     * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
     *    
     ***********************************************************************************/    
-#ifdef TEST_COMPONENT_MOVED_TO_MidiOutNimBLE_class 
+#endif 
 
- void connectedTask (void * parameter){
-    for(;;) {  //loop forever
-        // only act if connection status changes or if there is a stable connection
-        if (deviceConnected) {
-               //ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_midi_ports.cpp");    
-
-//NOTE:  this is a CYCLIC TASK executed after the first connect to the BLE interface
-//PUT THE INSTANTIATION PARTS IN THE MAIN_TEST_ ROUTINES OUTSIDE THIS LOOP
-//OR FLAG THEM AS DONE TO PREVENT EXECUTING THEM AGAIN AND AGAIN
-//THIS IS SOLVED FOR THE main_recorder EXAMPLE  
-//  main_test_midiports(); //code above
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_metronome.cpp SWITCHED OFF");
-//  main_test_metronome(command); //code above
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp SWITCHED OFF");                                                                               
-//  main_test_component(); //code above
-                                                                                                          
-            //ESP_LOGW(TAG,"STABLE CONNECTION "); 
-            /*
-            //pCharacteristic->setValue((uint8_t*)&value, 4);
-            midiPacket[2] = 0x90; //keyOn, channel 0
-            midiPacket[4] = 127; //velocity
-            pCharacteristic->setValue(midiPacket, 5);
-            pCharacteristic->notify();
-            //value++;
-            vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
-            //pCharacteristic->setValue((uint8_t*)&value, 4);
-            midiPacket[2] = 0x80; //keyOff, channel 0
-            midiPacket[4] = 0; //velocity  
-            pCharacteristic->setValue(midiPacket, 5);            
-            pCharacteristic->notify();
-            //value++;
-            vTaskDelay(1000/portTICK_PERIOD_MS);  // bluetooth stack will go into congestion, if too many packets are sent
-            */
-
-
-
- }
-        // disconnecting
-        if (!deviceConnected && oldDeviceConnected) {
-            ESP_LOGW(TAG,"BLE disconnected"); 
-            ESP_LOGW(TAG,"Do required stuff, depending on the needs for this lost connection");
-
-            vTaskDelay(500/portTICK_PERIOD_MS); // give the bluetooth stack the chance to get things ready
-            ESP_LOGW(TAG,"Start advertising again"); 
-//DO THIS EXERCISE INSIDE THE MidiOutNimBLE CLASS            
-      //      pServer->startAdvertising();        // restart advertising
-            //printf("start advertising\n");
-            oldDeviceConnected = deviceConnected;
-        }
-        // connection established
-        if (deviceConnected && !oldDeviceConnected) {
-            ESP_LOGW(TAG,"BLE connected, do required stuff, depending on the needs for this connection");
-            // do stuff here on connecting
-            oldDeviceConnected = deviceConnected;
-        }
-        
-        vTaskDelay(10/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
-    }
-    
-    vTaskDelete(NULL);
-}
-                                     
-#endif
-
-
-
-//  NimBLEGluer NimBLEData;
-    
 void app_main(void) {
 /*************************************************************************************************
 *NOTE: NimBLEData is a test object to demonstrate a globally accessible object 
@@ -1435,8 +1277,6 @@ void app_main(void) {
 //The next test is to see the server appear in a network sniffer (nRF Connect) 
 //Until we implemented operation of the nimBLEOutdriver, the calls to NicMidi are commented  
 
-  
-    
     
     static const char *TAG = "APP_MAIN";   
     esp_log_level_set("*", ESP_LOG_INFO);
@@ -1557,112 +1397,33 @@ Here is an example:
   //NimBLE Bluetooth
   //Create the BLE Device
 
-#ifdef NIMBLE_OK
-ESP_LOGE(TAG,"Entering MIDISequencerGUINotifierText");
-MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+#ifdef TEST_ADVANCEDSEQUENCER
+    ESP_LOGE(TAG,"Entering MIDISequencerGUINotifierText");
+    MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+    /*******************************************************************************************
+    * AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, RtMidi)
+    ********************************************************************************************/
+    ESP_LOGE(TAG,"Entering AdvancedSequencer");
+    AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+    ESP_LOGE(TAG,"Entering MIDIRecorder");                        
+    MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+#endif //ifdef TEST_ADVANCEDSEQUENCER 
+  
 
-/*******************************************************************************************
-* AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, RtMidi)
-********************************************************************************************/
-ESP_LOGE(TAG,"Entering AdvancedSequencer");
-AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
-ESP_LOGE(TAG,"Entering MIDIRecorder");                        
-MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
-
-#endif
   
-  
-  
-  #ifdef TEST_COMPONENT    //phasing out
-  ESP_LOGE(TAG,"Test Component");
-  
-  //switch OFF! as MIDIManager will do this job
-  //ESP_LOGI(TAG, "Initialize BLEDevice fckx_seq");  
-  //MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
-  
-  
-  #ifdef UNBLOCK2
-  BLEDevice::init("fckx_seq");
-  ESP_LOGW(TAG, "BLEDevice created"); 
-  // Create the BLE Server
-  pServer = BLEDevice::createServer();
-  ESP_LOGW(TAG, "BLE server created"); 
-  pServer->setCallbacks(new MyServerCallbacks());
-  ESP_LOGW(TAG, "BLE server callbacks created");
-  // Create the BLE Service
-  BLEService *pService = pServer->createService(SERVICE_UUID);
-  ESP_LOGW(TAG, "BLE server service created");
-
-  // Create a BLE Characteristic
-  pCharacteristic = pService->createCharacteristic(
-                      CHARACTERISTIC_UUID,
-                /******* Enum Type NIMBLE_PROPERTY now *******     
-                      BLECharacteristic::PROPERTY_READ   |
-                      BLECharacteristic::PROPERTY_WRITE  |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_INDICATE
-                    );
-                **********************************************/    
-                      NIMBLE_PROPERTY::READ   |
-                      NIMBLE_PROPERTY::WRITE  |
-                      NIMBLE_PROPERTY::NOTIFY |
-                      NIMBLE_PROPERTY::INDICATE
-                    );
-ESP_LOGW(TAG, "BLE server characteristic created");
-  // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
-  // Create a BLE Descriptor
-  /***************************************************   
-   NOTE: DO NOT create a 2902 descriptor. 
-   it will be created automatically if notifications 
-   or indications are enabled on a characteristic.
-   
-   pCharacteristic->addDescriptor(new BLE2902());
-  ****************************************************/
-  // Start the service
-  pService->start();
-  ESP_LOGW(TAG, "BLE service started");
-  // Start advertising
-  ESP_LOGI(TAG, "Start advertising");
-  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
-  pAdvertising->setScanResponse(false);
-  /** This method had been removed **
-  pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
-  **/
-  
-  #endif //UNBLOCK2
-  
-  //define a task with a continous loop
-  //it is called connectedTask, but in fact it also starts when there is no connection
-  
-  //the code before this is the instantia MOVE THIS INSIDE THE MidiOutNimBLE class
-  //to be more specific: call it in the end of initialize or BETTER at the start of openport
-  
-  //xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
-
-  //switch OFF! as MIDIManager will do this job
-  /*
-  ESP_LOGE(TAG, "GOING TO OPEN PORT");
-  nimBLEOutdriver.openPort();
-  ESP_LOGE(TAG, "EXITED OPEN PORT");
-  */
-  
-  /*
-  BLEDevice::startAdvertising();
-  ESP_LOGI(TAG, "Waiting for a client connection to notify...");
-  //printf("Waiting a client connection to notify...\n");
-  */
-  
- #endif 
- 
-  ESP_LOGW(TAG, "ENTERING MAIN LOOP");
-  ESP_LOGW(TAG, "MAIN LOOP: executes main_test_component()");
-  while (1) {
+#ifdef TEST_COMPONENT 
+  ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING main_test_component()");
+  while (1) {      
     main_test_component();  
-    //ESP_LOGI(TAG, "MAIN LOOP");
     vTaskDelay(10 / portTICK_PERIOD_MS);  
-}
-//must create a LOOP!!!!!
-
-};
+  }
+#else //#ifdef TEST_COMPONENT 
+    //must create a LOOP!!!!!
+    ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING N O T H I N G");
+    while (1) {      
+        //<your code here> 
+        vTaskDelay(10 / portTICK_PERIOD_MS);  
+    }
+#endif //#else
+}; //app_main
 

@@ -208,7 +208,7 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
 {
   // Set up our client and give a sign of life
   ESP_LOGW(TAG, "Initialize nimBLEOutdriver"); 
-  NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
+  NimBLEServer* pServer = NULL;  
   NimBLECharacteristic* pCharacteristic = NULL; 
   //Create the BLE Device 
   //This is also for Midi input, so should ideally be in a super class
