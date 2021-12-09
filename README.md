@@ -419,7 +419,11 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - fresh version for implementation of MQTT Midi in.
   - define an MQTT topic and handler for Midi messages
   - let openPort/closePort do the subscription/unsubsription
-  - in some way bind the MQTT handler to the (protected) HardwareMsgIn of the MIDIInDriver class. As it is protected: don't touch it. Access it via the instance of the class. Share common data (the message) with the MQTT handler.  
+  - in some way bind the MQTT handler to the (protected) HardwareMsgIn of the MIDIInDriver class. As it is protected: don't touch it. Access it via the instance of the class. Share common data (the message) with the MQTT handler. 
+    - note 1: the msg is entered into the HardwareMsgIn handler via the MIDIInDriver class (in what direction is the flow of input information ?????)  
+    - note 2: Use port->setCallback(HardwareMsgIn, this) to set the callback  
+    - note 3: Investigate what the port->ignoreTypes(false, true, true); does. Does it switch of certain Midi message types?  
+  
   
   ## TODO
   
