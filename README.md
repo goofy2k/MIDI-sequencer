@@ -412,24 +412,34 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - v16 code is now quite messy. Cleanup postponed until after exploring more NiCMidi functionality.
   - See TODO for a non-prioritized list of actions
   
+  **v17:**  
+  - added copies of nimBLEdriver.cpp/.h to serve as templates for MQTTdriver.cpp/.h .  This will contain the MIDI input based on MQTT. 
+  
   ## TODO
   
-  1. clean up fckx_sequencer code
+  1. clean up fckx_sequencer code **STARTED v17**: needs continuous attention.  
   2. NimBLE output driver causes duplicate PRIMARY BLE service  **SOLVED** by moving all code from initialisation to openPort  
      This means that the first instantiation is only used for determining the number of ports (which is always 1). The real initialisation is postponed to the opnPort routine which is explicitely called by MIDIManager. If openPort has become too heavy by this, see if some of the code can be moved back to initialisation. 
-  3. nRF Connect sniffer reports "Indication received from ... " whereas the intention is to send a notification (root cause yet unknown)
-  4. test more NiCMidi functionality (recorder, sequencer, midi-thru).
+  3. nRF Connect sniffer reports "Indication received from ... " whereas the intention is to send a notification.  **SOLVED** removed the indication flag form the port setup
+     Note that indication is a protocol that requires acknowledgement by the receiver. It is also slower than notification, which is effectively pushing.  
+  4. test more NiCMidi functionality (recorder, sequencer, midi-thru).  **STARTED v17** with implementation of MIDI in via MQTT  (MQTTdriver.cpp/.h)  
   5. study suitability of BLE-MIDI standard (5 byte timestamped) vs NiCMidi 3 byte messages (does NiCMidi offer 5 byte messages)
   6. implement more message types (other than "note on", "note off"  on the synth side. AllNotesOff would be fine :-)
   7. implement recognition of MIDI channel in the synth firmware. This enables usage of multiple synths.
   8. Does NicMidi need the abilty to define callbacks for the "while connected" case , or is availability of send message sufficient?
   9. Harmonisation / adaptation of NiCMidi to accept NimBLE output driver
   10. 
-    a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  
+    a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  (see 4.) REMARKS also inside driver.cpp 
     b. Implement nimBLE Midi IN for seqencer app.  Testing is possible with a second board running e.g. the test_component example  
   11. More items in the list a few paragraphs back
   
 
-       
+Re 10a and 4. : 
+- uint8_t midiPacket already defined in nimBLEdriver.cpp  
+ PROBABLY WISE TO CREATE/RE-USE A STRUCTURE/CLASS WHERE MQTTdriver and niBLEdriver inherit this (AND MORE) from  
+- same for connectedTask (already defined). But in this case: MQTT probably doesn't need this a much is event-driven. This is also logical fr the input side.
+  So: commented out in MQTTdriver.cpp  
+- deviceConnected  double definition, commented out in MQTTdriver.cpp.  Reconnect for MQTT is probably already covered in MQTT part  
+
   
   
