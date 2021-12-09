@@ -438,7 +438,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
     a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  (see 4.) REMARKS also inside driver.cpp 
     b. Implement nimBLE Midi IN for seqencer app.  Testing is possible with a second board running e.g. the test_component example  
   11. More items in the list a few paragraphs back
-  12. See what to do with the blocking of the MIDIMAtrix out_matrix instantiation in driver.h ( #ifdef DRIVER_USES_MIDIMATRIX)
+  12. See what to do with the blocking of the MIDIMAtrix out_matrix instantiation in driver.h and driver.cpp ( #ifdef DRIVER_USES_MIDIMATRIX). Blocking this may be the cause of the missing key off in the tick component example !
 
   
 
