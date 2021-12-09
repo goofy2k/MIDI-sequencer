@@ -421,15 +421,16 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - let openPort/closePort do the subscription/unsubsription
   - in some way bind the MQTT handler to the (protected) HardwareMsgIn of the MIDIInDriver class. As it is protected: don't touch it. Access it via the instance of the class. Share common data (the message) with the MQTT handler. 
     - note 1: the msg is entered into the HardwareMsgIn handler via the MIDIInDriver class (in what direction is the flow of input information ?????)  
+  NO! it is a callback! the callback must be activated (preferably) directly by the MQTT event (see note 4 d) 
     - note 2: Use port->setCallback(HardwareMsgIn, this) to set the callback  
     - note 3: Investigate what the port->ignoreTypes(false, true, true); does. Does it switch of certain Midi message types?  
     - note 4: Nice milestones ----->  
-      - implement openPort  in MQTTdriver
-      - implement closePort in MQTTdriver 
-      - check proper implementation by using isPortOpen 
-      - implement port->setCallback(HardwareMsgIn, this); in MQTTdriver
-      - implement port->ignoreTypes(false, true, true); in MQTTdriver
-      - check triggering the HardwareMsgIn callback by detecting the output of: std::cout << drv->GetPortName() << " callback executed   ";  
+      - a implement openPort  in MQTTdriver
+      - b implement closePort in MQTTdriver 
+      - c check proper implementation by using isPortOpen 
+      - d implement port->setCallback(HardwareMsgIn, this); in MQTTdriver
+      - e implement port->ignoreTypes(false, true, true); in MQTTdriver
+      - f check triggering the HardwareMsgIn callback by detecting the output of: std::cout << drv->GetPortName() << " callback executed   ";  
   
   
   
