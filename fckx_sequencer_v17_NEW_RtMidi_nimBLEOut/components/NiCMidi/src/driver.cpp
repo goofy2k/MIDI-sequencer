@@ -22,13 +22,14 @@
  *   along with NiCMidi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define MIDI_IN_USED  //FCKX
 
 #include "../include/driver.h"
 #include "../include/timer.h"
 #include "esp_log.h"
 //FCKX
-#include "nimBLEdriver.h" //make driver globally accessible by including this header file
-
+#include "nimBLEdriver.h" 
+#include "MQTTdriver.h"
 
 static const char *TAG = "NICMIDI DRIVER";
 
@@ -256,14 +257,27 @@ void MIDIOutDriver::HardwareMsgOut(const MIDIMessage &msg) {
 
 MIDIInDriver::MIDIInDriver(int id, unsigned int queue_size) :
     processor(0), port_id(id), num_open(0), in_queue(queue_size) {
+
+/*  //FCKX
     try {
         port = new RtMidiIn();
         port->setCallback(HardwareMsgIn, this);
         port->ignoreTypes(false, true, true);
     }
-    catch (RtMidiError& error) {
+*/
+    try {//FCKX
+        //ESP_LOGE(TAG,"start creation of RtMidiOut port"); 
+        //port = new RtMidiOut();
+        //ESP_LOGE(TAG,"executed creation of RtMidiOut port");
+        ESP_LOGE(TAG,"start creation of MidiInMQTT port");         
+        port = new MidiInMQTT();
+        ESP_LOGE(TAG,"executed creation of MidiInMQTT port");
+        }
+
+    catch (RtMidiError& error) {  
+        ESP_LOGE(TAG,"catch ERROR on creation of RtMidiOut port");   //FCKX
         error.printMessage();
-        port = new RtMidiIn(RtMidi::RTMIDI_DUMMY);// A non functional MIDI out, which won't throw further exceptions
+        //port = new RtMidiIn(RtMidi::RTMIDI_DUMMY);// A non functional MIDI out, which won't throw further exceptions
     }
 }
 
@@ -284,6 +298,7 @@ void MIDIInDriver::Reset() {
 
 
 void MIDIInDriver::OpenPort() {
+    //FCKX probably use subscribe to MQTT topic here
     if (num_open == 0) {
         try {
             port->openPort(port_id);
@@ -303,6 +318,7 @@ void MIDIInDriver::OpenPort() {
 
 
 void MIDIInDriver::ClosePort() {
+    //FCKX probably use unsubscribe from MQTT topic here
     if (num_open == 1)
             port->closePort();
     if (num_open > 0) {
@@ -334,6 +350,8 @@ void MIDIInDriver::SetProcessor(MIDIProcessor* proc) {
 
 
 bool MIDIInDriver::InputMessage(MIDIRawMessage &msg) {
+    //try to keep this code untouched !
+    //let the MQTT handler put incoming messages in the queue
     if (!in_queue.IsEmpty()) {
         msg = in_queue.GetMessage();
         return true;
@@ -353,7 +371,17 @@ bool MIDIInDriver::ReadMessage(MIDIRawMessage& msg, unsigned int n) {
 void MIDIInDriver::HardwareMsgIn(double time,
                                  std::vector<unsigned char>* msg_bytes,
                                  void* p) {
-
+    //most changes for MQTT will be here
+    //rough first analysis of what happens here
+    //the message is entered into the procedure as msg_bytes (see above)
+    //create a MIDITimedMessage
+    //this is filled with data depending on the received msg_bytes (encoding)
+    //after processing the message is put into a queue
+    //this queue will be polled by.... manager(?)
+    
+    //most likely this routine is a callback to/from ..... can hopefully be used as an onMessage callback by the MQTT part
+    //openPort and closePort will probably use MQTT subscribe / unsubscribe
+    
     MIDIInDriver* drv = static_cast<MIDIInDriver*>(p);
 
     std::cout << drv->GetPortName() << " callback executed   ";

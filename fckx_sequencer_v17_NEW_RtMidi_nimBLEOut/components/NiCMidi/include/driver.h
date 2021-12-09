@@ -39,6 +39,7 @@
 // #include "../rtmidi-4.0.0/RtMidi.h" //FCKX
 #include "RtMidi.h" //FCKX
 #include "nimBLEdriver.h" //FCKX
+#include "MQTTdriver.h" //FCKC
 #include <vector>
 #include <string>
 #include <mutex>
@@ -304,7 +305,7 @@ protected:
         static const unsigned int       DEFAULT_QUEUE_SIZE = 256;
 
         MIDIProcessor*          processor;      // The in processor
-        RtMidiIn*               port;           // The hardware port
+        MidiInMQTT*               port;           // The hardware port
         const int               port_id;        // The id of the port
         int                     num_open;       // Counts the number of OpenPort() calls
 

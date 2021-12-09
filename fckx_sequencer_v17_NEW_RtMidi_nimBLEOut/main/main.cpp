@@ -32,6 +32,19 @@
 
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
 
+/* NiCMidi examples             MIDI     MIDI      COMMAND       FILE     FILE            WINDOWS
+                                OUTPUT   INPUT     CONSOLE       READ     WRITE    EDIT    GUI
+test_advancedsequencer.cpp       X        -           X            X        -       -
+test_component.cpp               X        -           X            -        -       -
+test_metronome.cpp               X        -           X            -        -       -
+test_midiports.cpp               -        -           X            -        -       -
+test_recorder.cpp                X        X           X            X        X       -
+test_sequencer.cpp               X        -           X            X        -       -
+test_stepsequencer.cpp           -        -           X            X        X       X
+test_thru.cpp                    X        X           X            -        -       -
+test_writefile.cpp               X        -           -            -        X       -
+test_win32_player.cpp                                              X                        X 
+*/
 
 
 //#define NIMBLE_IN_MAIN            //when is it considered as defined? what value is needed?
@@ -40,14 +53,16 @@
 //https://ncassetta.github.io/NiCMidi/docs/html/examples.html
 #define MIDIMESSAGE                //not an example but inspired by web page <ref> OK in main
 #define MIDITRACK_DUMPMIDITRACK    //OK in main
+#define TEST_COMPONENT           //test_component example OK (in main eternal loop)
 //metronome //output only
 //thru //input and output
+//#define TEST_RECORDER            //test_recorder
 
 //the following (adapted) examples depend on nimBLEdriver bluetooth output by FCKX
 //use only one at a time as instantiation of output ports may interfere (solve this in the future for flxibility)
 
-//#define TEST_COMPONENT           //test_component example OK (in main eternal loop) 
-#define TEST_RECORDER            //test_recorder
+ 
+
 //#define TEST_ADVANCEDSEQUENCER     //test_advancedsequencer
 
 
@@ -1182,6 +1197,10 @@ void TestComp::Start() {
 // The Stop() method should first call the base class Stop() which disables the callback.
 //
 void TestComp::Stop() {
+    MIDITimedMessage msg;
+    msg.SetNoteOff(0, 36, 0);
+    MIDIManager::GetOutDriver(0)->OutputMessage(msg); //FCKX added a final note off befor stopping the component
+
     MIDITickComponent::Stop();
     cout << "Stopping the component ... " << endl;
     //MIDIManager::GetOutDriver(0)->ClosePort();
@@ -1205,16 +1224,16 @@ void TestComp::StaticTickProc(tMsecs sys_time, void* pt) {
 void TestComp::TickProc(tMsecs sys_time) {
     MIDITimedMessage msg;
     tMsecs deltat = sys_time - sys_time_offset; // the relative time (now time - start time)
-/*
+
     if (deltat >= next_note_off) {              // we must turn off the note
         msg.SetNoteOff(0, 36, 0);
-        //MIDIManager::GetOutDriver(0)->OutputMessage(msg);
+        MIDIManager::GetOutDriver(0)->OutputMessage(msg);
                                                 // sends a note off message to the MIDI 0 port
-        sendToMIDIOut(msg);                         // sends a note off message to the BLE interface               
+        //sendToMIDIOut(msg);                         // sends a note off message to the BLE interface               
         cout << "and off" << endl;
         next_note_off += NOTE_INTERVAL;         // updates the next note off time
     }
-*/
+
     if (deltat >= next_note_on) {               // we must turn on the note
         msg.SetNoteOn(0, 36, 127);
         MIDIManager::GetOutDriver(0)->OutputMessage(msg);  //phase in
@@ -1223,6 +1242,8 @@ void TestComp::TickProc(tMsecs sys_time) {
         cout << "Note on ... ";
         next_note_on += NOTE_INTERVAL;          // updates the next note on time
     }
+    
+    /*
      //third event added by FCKX
     if (deltat >= next_note_off) {              // we must turn off the note
         msg.SetNoteOff(0, 36, 0);
@@ -1231,7 +1252,7 @@ void TestComp::TickProc(tMsecs sys_time) {
         //sendToMIDIOut(msg);                   // sends a note off message to the BLE interface               
         cout << "...  and off" << endl;
         next_note_off += NOTE_INTERVAL;         // updates the next note off time
-    }
+    } */
     
 }
 

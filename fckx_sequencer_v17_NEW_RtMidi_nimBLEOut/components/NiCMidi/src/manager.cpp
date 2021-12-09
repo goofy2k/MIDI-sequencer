@@ -25,6 +25,7 @@
 
 #include "../include/manager.h"
 #include "nimBLEdriver.h"
+#include "MQTTdriver.h"
 
 std::vector<MIDIOutDriver*>* MIDIManager::MIDI_outs;
 std::vector<std::string>* MIDIManager::MIDI_out_names;
@@ -289,13 +290,15 @@ void MIDIManager::Init() {
             MIDI_outs->push_back(new MIDIOutDriver(i)); //this again involves an instatiation of the nimBLE driver
             MIDI_out_names->push_back(temp_MIDI_out.getPortName(i));
         }
-     /*   
-        RtMidiIn temp_MIDI_in;
+        
+         std::cout << "Going to create temp MidiInMQTT for detecting nr of ports" << std::endl;
+        MidiInMQTT temp_MIDI_in;
+        std::cout << "Created temp MidiInMQTT for detecting nr of ports" << std::endl;
         for (unsigned int i = 0; i < temp_MIDI_in.getPortCount(); i++) {
             MIDI_ins->push_back(new MIDIInDriver(i));
             MIDI_in_names->push_back(temp_MIDI_in.getPortName(i));
         }
-        */
+        
         
         
     }

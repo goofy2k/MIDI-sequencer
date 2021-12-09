@@ -35,8 +35,10 @@ idf_component_register( SRCS
 				"./src/midi.cpp"
 #for some examples              
 				"./examples/functions.cpp"
-#hardware driver for BLE (nimBLE)
+#hardware driver for output via BLE (nimBLE)
 				"./src/nimBLEdriver.cpp"
+#hardware driver for input via MQTT
+                                "./src/MQTTdriver.cpp"
 				"./src/notifier.cpp"
  				"./src/processor.cpp"
  				"./src/recorder.cpp"
