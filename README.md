@@ -438,7 +438,8 @@ Re 10a and 4. :
 - uint8_t midiPacket already defined in nimBLEdriver.cpp  
  PROBABLY WISE TO CREATE/RE-USE A STRUCTURE/CLASS WHERE MQTTdriver and niBLEdriver inherit this (AND MORE) from  
 - same for connectedTask (already defined). But in this case: MQTT probably doesn't need this a much is event-driven. This is also logical fr the input side.
-  So: commented out in MQTTdriver.cpp
+  So: commented out in MQTTdriver.cpp  
+- deviceConnected  double definition, commented out in MQTTdriver.cpp.  Reconnect for MQTT is probably already covered in MQTT part  
 
   
   
