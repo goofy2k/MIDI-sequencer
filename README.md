@@ -413,7 +413,13 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - See TODO for a non-prioritized list of actions
   
   **v17:**  
-  - added copies of nimBLEdriver.cpp/.h to serve as templates for MQTTdriver.cpp/.h .  This will contain the MIDI input based on MQTT. 
+  - added copies of nimBLEdriver.cpp/.h to serve as templates for MQTTdriver.cpp/.h .  This now contains the barebone MQTTMidiIn class, with bindings to NiCMidi manager and driver. Compiles OK. Running without errors. Actual MQTT in to be implemented.  
+  
+  **v18:** 
+  - fresh version for implementation of MQTT Midi in.
+  - define an MQTT topic and handler for Midi messages
+  - let openPort/closePort do the subscription/unsubsription
+  - in some way bind the MQTT handler to the (protected) HardwareMsgIn of the MIDIInDriver class. As it is protected: don't touch it. Access it via the instance of the class. Share common data (the message) with the MQTT handler.  
   
   ## TODO
   
@@ -432,6 +438,8 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
     a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  (see 4.) REMARKS also inside driver.cpp 
     b. Implement nimBLE Midi IN for seqencer app.  Testing is possible with a second board running e.g. the test_component example  
   11. More items in the list a few paragraphs back
+  12. See what to do with the blocking of the MIDIMAtrix out_matrix instantiation in driver.h ( #ifdef DRIVER_USES_MIDIMATRIX)
+
   
 
 Re 10a and 4. : 
