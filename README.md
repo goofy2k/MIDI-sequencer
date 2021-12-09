@@ -413,7 +413,31 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - See TODO for a non-prioritized list of actions
   
   **v17:**  
-  - added copies of nimBLEdriver.cpp/.h to serve as templates for MQTTdriver.cpp/.h .  This will contain the MIDI input based on MQTT. 
+  - added copies of nimBLEdriver.cpp/.h to serve as templates for MQTTdriver.cpp/.h .  This now contains the barebone MQTTMidiIn class, with bindings to NiCMidi manager and driver. Compiles OK. Running without errors. Actual MQTT in to be implemented.  
+  
+  **v18:** 
+  - fresh version for implementation of MQTT Midi in.
+  - define an MQTT topic and handler for Midi messages
+  - let openPort/closePort do the subscription/unsubsription
+  - in some way bind the MQTT handler to the (protected) HardwareMsgIn of the MIDIInDriver class. As it is protected: don't touch it. Access it via the instance of the class. Share common data (the message) with the MQTT handler. 
+    - note 1: the msg is entered into the HardwareMsgIn handler via the MIDIInDriver class (in what direction is the flow of input information ?????)  
+  NO! it is a callback! the callback must be activated (preferably) directly by the MQTT event (see note 4 d) 
+    - note 2: Use port->setCallback(HardwareMsgIn, this) to set the callback  
+    - note 3: Investigate what the port->ignoreTypes(false, true, true); does. Does it switch of certain Midi message types?  
+    - note 4: Nice milestones ----->  
+      - a implement openPort  in MQTTdriver
+      - b implement closePort in MQTTdriver 
+      - c check proper implementation by using isPortOpen 
+      - d implement port->setCallback(HardwareMsgIn, this); in MQTTdriver  look in RtMidi init for how to set the callback
+      - e implement port->ignoreTypes(false, true, true); in MQTTdriver
+      - f check triggering the HardwareMsgIn callback by detecting the output of: std::cout << drv->GetPortName() << " callback executed   "; 
+  NOTE!!!! you probably have to use   
+  MQTTMidiInData *data = static_cast< MQTTMidiInData *> (inputData_);  
+  or an equivalent to locally (within the scope of a function) have a reference to the mididata and buffer
+  Why isn't this done with a lasting reference?
+  Possibly because is connects the hardware buffer with the "software" part?????
+  
+  
   
   ## TODO
   
@@ -432,6 +456,8 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
     a. Implement MQTT input driver for sequencer (useful for testing of recorder functionality)  (see 4.) REMARKS also inside driver.cpp 
     b. Implement nimBLE Midi IN for seqencer app.  Testing is possible with a second board running e.g. the test_component example  
   11. More items in the list a few paragraphs back
+  12. See what to do with the blocking of the MIDIMAtrix out_matrix instantiation in driver.h and driver.cpp ( #ifdef DRIVER_USES_MIDIMATRIX). Blocking this may be the cause of the missing key off in the tick component example !
+
   
 
 Re 10a and 4. : 
