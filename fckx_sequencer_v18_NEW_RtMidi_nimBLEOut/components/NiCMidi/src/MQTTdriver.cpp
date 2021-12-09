@@ -1,4 +1,4 @@
-/* implementation of class MidiInMQTT */
+/* implementation of class MQTTMidiIn */
 
 /*
 * FCKX december 2021
@@ -206,57 +206,39 @@ struct NimBLEMidiOutData {
   };
 */
 
+ //see RtMidi.cpp for detailed implementation
+ //class MidiInAPI for hardware independent part
+//othe classes for hardware implementation 
  
- 
- MidiInMQTT :: MidiInMQTT ()
-//MidiInMQTT :: MidiInMQTT (const std::string &clientName)
+ MQTTMidiIn :: MQTTMidiIn ()
+//MQTTMidiIn :: MQTTMidiIn (const std::string &clientName)
 {   
-    MidiInMQTT::initialize("fckx_seq2"); 
-    //MidiInMQTT::initialize(clientName);    
+    //MQTTMidiIn::initialize("fckx_seq2"); 
+    //MQTTMidiIn::initialize(clientName);    
 }
 
-MidiInMQTT :: ~MidiInMQTT ()
+MQTTMidiIn :: ~MQTTMidiIn ()
 {
     //close a connection if it exists
-    MidiInMQTT::closePort();
+    MQTTMidiIn::closePort();
     
     //Cleanup
     //what does this comprise for nimBLEDevice ?
     
 }
 
-void MidiInMQTT :: initialize ( const std::string& clientName)
-{
-  
-}
 
-
-unsigned int MidiInMQTT :: getPortCount()
-{
-  //CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
-  //return MIDIGetNumberOfDestinations();
-  return 1;
-}
-
-
-std::string MidiInMQTT :: getPortName(unsigned int portNumber)
-{
-  //must return clientName from niBLEMidiData ?
-  return "fckx_seq";
-}
-
-
-void MidiInMQTT :: openPort( unsigned int portNumber) {
-  ESP_LOGW(TAG, "open MidiInMQTT port"); 
+void MQTTMidiIn :: openPort( unsigned int portNumber) {
+  ESP_LOGW(TAG, "open MQTTMidiIn port"); 
 }
 
 #ifdef BLOCKMIDIINNIMBLE
-//void MidiInMQTT :: openPort( )
+//void MQTTMidiIn :: openPort( )
 void MidiInNimBLE :: openPort( unsigned int portNumber)
 {
    
    // Set up our client and give a sign of life
-  ESP_LOGW(TAG, "open MidiInMQTT port"); 
+  ESP_LOGW(TAG, "open MQTTMidiIn port"); 
   
   NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
   NimBLECharacteristic* pCharacteristic = NULL; 
@@ -349,7 +331,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
     
     //catch a number of error states    
     printf("OPENPORT ENTERED");
-    ESP_LOGW(TAG, "MidiInMQTT :: openPort entered "); 
+    ESP_LOGW(TAG, "MQTTMidiIn :: openPort entered "); 
 
 
 
@@ -382,8 +364,8 @@ ESP_LOGW(TAG, "BLE server characteristic created");
         
      //DO THIS BEFORE PREP OF ADVERTISING?   
      if (connected_) {
-    //errorString_ = "MidiInMQTT::openPort: a valid connection already exists!";
-    ESP_LOGE(TAG, "MidiInMQTT::openPort: a valid connection already exists!"); 
+    //errorString_ = "MQTTMidiIn::openPort: a valid connection already exists!";
+    ESP_LOGE(TAG, "MQTTMidiIn::openPort: a valid connection already exists!"); 
     //error( RtMidiError::WARNING, errorString_ );  //how  to implement this error case
     return;
   }
@@ -394,7 +376,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   unsigned int nDest = MIDIGetNumberOfDestinations();
   if (nDest < 1) {
-    errorString_ = "MidiInMQTT::openPort: no MIDI output destinations found!";
+    errorString_ = "MQTTMidiIn::openPort: no MIDI output destinations found!";
     ESP_LOGE(TAG, "%s" , errorString);
     //error( RtMidiError::NO_DEVICES_FOUND, errorString_ );
     return;
@@ -404,7 +386,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   //check if the 'portNumber' argument is valid
   if ( portNumber >= nDest ) {
     std::ostringstream ost;
-    ost << "MidiInMQTT::openPort: the 'portNumber' argument (" << portNumber << ") is invalid.";
+    ost << "MQTTMidiIn::openPort: the 'portNumber' argument (" << portNumber << ") is invalid.";
     errorString_ = ost.str();
     ESP_LOGE(TAG, "%s" , errorString);
     //error( RtMidiError::INVALID_PARAMETER, errorString_ );
@@ -419,7 +401,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   CFRelease( portNameRef );
   if ( result != noErr ) {
     MIDIClientDispose( data->client );
-    errorString_ = "MidiInMQTT::openPort: error creating OS-X MIDI output port.";
+    errorString_ = "MQTTMidiIn::openPort: error creating OS-X MIDI output port.";
     ESP_LOGE(TAG, "%s" , errorString);
     //error( RtMidiError::DRIVER_ERROR, errorString_ );
     return;
@@ -430,7 +412,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   if ( destination == 0 ) {
     MIDIPortDispose( port );
     MIDIClientDispose( data->client );
-    errorString_ = "MidiInMQTT::openPort: error getting MIDI output destination reference.";
+    errorString_ = "MQTTMidiIn::openPort: error getting MIDI output destination reference.";
     ESP_LOGE(TAG, "%s" , errorString);
     //error( RtMidiError::DRIVER_ERROR, errorString_ );
     return;
@@ -444,9 +426,39 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   connected_ = true;  
 }  
 #endif // BLOCKMIDIINNIMBLE
-void MidiInMQTT :: closePort( void )
-{
-  MQTTMidiInData *data = static_cast< MQTTMidiInData *> (apiData_);
+
+
+void MQTTMidiIn :: closePort( void ) {
+
+   //why instantiate here, on closing ???????
+  //how is this done in RtMidi   
+  //there it is used in every procedure that accessess MidiData
+  //it is probably a way to have a temp (local) access to the buffer etc
+  //so you have to understand the code
+  //....
+  
+  /*
+  in RtMidi there is some jiggling with pointers in the initialize parts
+  e.g.
+  CoreMidiData *data = (CoreMidiData *) new CoreMidiData;
+  data->client = client;
+  data->endpoint = 0;
+  apiData_ = (void *) data;
+  inputData_.apiData = (void *) data;
+  
+  THIS MAY HAVE TO DO WITH THE FOLLOWIN ERROR
+  */
+  
+  
+  
+  
+   
+   MQTTMidiInData *data = static_cast< MQTTMidiInData *> (inputData_); 
+   //error: invalid static_cast from type 'MQTTMidiIn::MQTTMidiInData' to type 'MQTTMidiIn::MQTTMidiInData*'
+   //error disappears when changing MQTTMidiInData  inputData_; in MQTTdriver.h into  MQTTMidiInData * inputData_; 
+   //but leads to:MQTTdriver.cpp:232:19: error: request for member 'usingCallback' in '((MQTTMidiIn*)this)->MQTTMidiIn::inputData_', which is of pointer type 'MQTTMidiIn::MQTTMidiInData*' (maybe you meant to use '->' ?)
+
+   
 /*
   if ( data->endpoint ) {
     MIDIEndpointDispose( data->endpoint );
@@ -459,33 +471,147 @@ void MidiInMQTT :: closePort( void )
     data->port = 0;
   }
 */
-  connected_ = false;
+//unsubscribe MQTT??
+//update MQTTMidiInData
+
+ // connected_ = false;
 }
+
+
+bool MQTTMidiIn :: isPortOpen( ) {
+    
+  return connected_;  
+}
+
+
+
+unsigned int MQTTMidiIn :: getPortCount()
+{
+  //CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
+  //return MIDIGetNumberOfDestinations();
+  return 1;
+}
+
+
+std::string MQTTMidiIn :: getPortName(unsigned int portNumber)
+{
+  //must return clientName from niBLEMidiData ?
+  return "fckx_seq";
+}
+
+
+double MQTTMidiIn :: getMessage( std::vector<unsigned char> *message )
+{
+  message->clear();
+  //if ( inputData_.usingCallback )  //FCKX!
+  if ( inputData_->usingCallback ) 
+  {
+   // errorString_ = "RtMidiIn::getNextMessage: a user callback is currently set for this port.";
+   // error( RtMidiError::WARNING, errorString_ );
+    ESP_LOGE(TAG, "RtMidiIn::getNextMessage: a user callback is currently set for this port."); //error( RtMidiError::DRIVER_ERROR, errorString_ );
+
+    return 0.0;
+  }
+
+  double timeStamp;
+    if ( !inputData_->queue.pop( message, &timeStamp ) )
+ // if ( !inputData_.queue.pop( message, &timeStamp ) ) //FCKX!
+    return 0.0;
+
+  return timeStamp;
+}
+
+
+
+void MQTTMidiIn :: setCallback( MQTTMidiIn::MQTTMidiCallback callback, void *userData )
+{
+    if ( inputData_->usingCallback ) {  //FCKX!
+  //if ( inputData_.usingCallback ) {
+    //errorString_ = "MidiInApi::setCallback: a callback function is already set!";
+ 
+    ESP_LOGE(TAG,"MidiInApi::setCallback: a callback function is already set!"); 
+    //error( RtMidiError::WARNING, errorString_ );
+    return;
+  }
+
+  if ( !callback ) {
+    //errorString_ = "RtMidiIn::setCallback: callback function value is invalid!";
+    //error( RtMidiError::WARNING, errorString_ );
+    ESP_LOGE(TAG,"RtMidiIn::setCallback: callback function value is invalid!");
+
+    return;
+  }
 /*
-void MidiInMQTT :: setClientName ( const std::string& )
+  inputData_.userCallback = callback;
+  inputData_.userData = userData;
+  inputData_.usingCallback = true;
+*/ //FCKX! 
+
+  inputData_->userCallback = callback;
+  inputData_->userData = userData;
+  inputData_->usingCallback = true; 
+}
+
+void MQTTMidiIn :: ignoreTypes( bool midiSysex, bool midiTime, bool midiSense )
 {
 
-  errorString_ = "MidiInMQTT::setClientName: this function is not implemented for the MACOSX_CORE API!";
+  /* //FCKX!
+    inputData_.ignoreFlags = 0;
+  if ( midiSysex ) inputData_.ignoreFlags = 0x01;
+  if ( midiTime ) inputData_.ignoreFlags |= 0x02;
+  if ( midiSense ) inputData_.ignoreFlags |= 0x04;
+  */
+  inputData_->ignoreFlags = 0;
+  if ( midiSysex ) inputData_->ignoreFlags = 0x01;
+  if ( midiTime ) inputData_->ignoreFlags |= 0x02;
+  if ( midiSense ) inputData_->ignoreFlags |= 0x04;
+  
+}
+
+
+
+  //! Set an error callback function to be invoked when an error has occured.
+  /*!
+    The callback function will be called whenever an error has occured. It is best
+    to set the error callback function before opening a port.
+  */
+//  virtual void setErrorCallback( MQTTMidiCallback errorCallback = NULL, void *userData = 0 );
+
+
+
+//initialize is only present in the classes nearest to the hardware 
+/*
+void MQTTMidiIn :: initialize ( const std::string& clientName)
+{
+  
+}
+*/
+
+/*
+void MQTTMidiIn :: setClientName ( const std::string& )
+{
+
+  errorString_ = "MQTTMidiIn::setClientName: this function is not implemented for the MACOSX_CORE API!";
   //error( RtMidiError::WARNING, errorString_ );
 
 }
 */
 /*
-void MidiInMQTT :: setPortName ( const std::string& )
+void MQTTMidiIn :: setPortName ( const std::string& )
 {
 
-  errorString_ = "MidiInMQTT::setPortName: this function is not implemented for the MACOSX_CORE API!";
+  errorString_ = "MQTTMidiIn::setPortName: this function is not implemented for the MACOSX_CORE API!";
   //error( RtMidiError::WARNING, errorString_ );
 
 }
 */
 /*
-void MidiInMQTT :: openVirtualPort( const std::string &portName )
+void MQTTMidiIn :: openVirtualPort( const std::string &portName )
 {
   NimBLEMidiOutData *data = static_cast<NimBLEMidiOutData *> (apiData_);
 
   if ( data->endpoint ) {
-    errorString_ = "MidiInMQTT::openVirtualPort: a virtual output port already exists!";
+    errorString_ = "MQTTMidiIn::openVirtualPort: a virtual output port already exists!";
     ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::WARNING, errorString_ );
     return;
   }
@@ -497,7 +623,7 @@ void MidiInMQTT :: openVirtualPort( const std::string &portName )
   CFRelease( portNameRef );
 
   if ( result != noErr ) {
-    errorString_ = "MidiInMQTT::initialize: error creating OS-X virtual MIDI source.";
+    errorString_ = "MQTTMidiIn::initialize: error creating OS-X virtual MIDI source.";
     ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::DRIVER_ERROR, errorString_ );
     return;
   }
@@ -506,8 +632,11 @@ void MidiInMQTT :: openVirtualPort( const std::string &portName )
   data->endpoint = endpoint;
 }
 */
-void MidiInMQTT :: sendMessage( const std::vector<unsigned char>  *message )
-//void MidiInMQTT :: sendMessage( const unsigned char *message, size_t size )
+
+
+#ifdef BLOCK2
+double MQTTMidiIn :: getMessage( const std::vector<unsigned char>  *message )
+//void MQTTMidiIn :: sendMessage( const unsigned char *message, size_t size )
 {
     ESP_LOGW(TAG, "sendMessage  TO BE IMPLEMENTED"); 
     /*
@@ -611,7 +740,7 @@ void MidiInMQTT :: sendMessage( const std::vector<unsigned char>  *message )
   /*
   unsigned int nBytes = static_cast<unsigned int> (size);
   if ( nBytes == 0 ) {
-    errorString_ = "MidiInMQTT::sendMessage: no data in message argument!";
+    errorString_ = "MQTTMidiIn::sendMessage: no data in message argument!";
     ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::WARNING, errorString_ );
     return;
   }
@@ -621,7 +750,7 @@ void MidiInMQTT :: sendMessage( const std::vector<unsigned char>  *message )
   OSStatus result;
 
   if ( message[0] != 0xF0 && nBytes > 3 ) {
-    errorString_ = "MidiInMQTT::sendMessage: message format problem ... not sysex but > 3 bytes?";
+    errorString_ = "MQTTMidiIn::sendMessage: message format problem ... not sysex but > 3 bytes?";
     ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::WARNING, errorString_ );
     return;
   }
@@ -640,7 +769,7 @@ void MidiInMQTT :: sendMessage( const std::vector<unsigned char>  *message )
   }
 
   if ( !packet ) {
-    errorString_ = "MidiInMQTT::sendMessage: could not allocate packet list";
+    errorString_ = "MQTTMidiIn::sendMessage: could not allocate packet list";
     ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::DRIVER_ERROR, errorString_ );
     return;
   }
@@ -649,7 +778,7 @@ void MidiInMQTT :: sendMessage( const std::vector<unsigned char>  *message )
   if ( data->endpoint ) {
     result = MIDIReceived( data->endpoint, packetList );
     if ( result != noErr ) {
-      errorString_ = "MidiInMQTT::sendMessage: error sending MIDI to virtual destinations.";
+      errorString_ = "MQTTMidiIn::sendMessage: error sending MIDI to virtual destinations.";
       //error( RtMidiError::WARNING, errorString_ );
     }
   }
@@ -659,10 +788,11 @@ void MidiInMQTT :: sendMessage( const std::vector<unsigned char>  *message )
   if ( connected_ ) {
     result = MIDISend( data->port, data->destinationId, packetList );
     if ( result != noErr ) {
-      errorString_ = "MidiInMQTT::sendMessage: error sending MIDI message to port.";
+      errorString_ = "MQTTMidiIn::sendMessage: error sending MIDI message to port.";
       //error( RtMidiError::WARNING, errorString_ );
     }
   }
   */
   
 }
+#endif

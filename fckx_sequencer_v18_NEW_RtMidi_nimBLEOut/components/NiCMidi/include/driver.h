@@ -305,7 +305,7 @@ protected:
         static const unsigned int       DEFAULT_QUEUE_SIZE = 256;
 
         MIDIProcessor*          processor;      // The in processor
-        MidiInMQTT*               port;           // The hardware port
+        MQTTMidiIn*               port;           // The hardware port
         const int               port_id;        // The id of the port
         int                     num_open;       // Counts the number of OpenPort() calls
 

@@ -291,9 +291,9 @@ void MIDIManager::Init() {
             MIDI_out_names->push_back(temp_MIDI_out.getPortName(i));
         }
         
-         std::cout << "Going to create temp MidiInMQTT for detecting nr of ports" << std::endl;
-        MidiInMQTT temp_MIDI_in;
-        std::cout << "Created temp MidiInMQTT for detecting nr of ports" << std::endl;
+         std::cout << "Going to create temp MQTTMidiIn for detecting nr of ports" << std::endl;
+        MQTTMidiIn temp_MIDI_in;
+        std::cout << "Created temp MQTTMidiIn for detecting nr of ports" << std::endl;
         for (unsigned int i = 0; i < temp_MIDI_in.getPortCount(); i++) {
             MIDI_ins->push_back(new MIDIInDriver(i));
             MIDI_in_names->push_back(temp_MIDI_in.getPortName(i));

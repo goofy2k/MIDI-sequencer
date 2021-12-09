@@ -269,9 +269,11 @@ MIDIInDriver::MIDIInDriver(int id, unsigned int queue_size) :
         //ESP_LOGE(TAG,"start creation of RtMidiOut port"); 
         //port = new RtMidiOut();
         //ESP_LOGE(TAG,"executed creation of RtMidiOut port");
-        ESP_LOGE(TAG,"start creation of MidiInMQTT port");         
-        port = new MidiInMQTT();
-        ESP_LOGE(TAG,"executed creation of MidiInMQTT port");
+        ESP_LOGE(TAG,"start creation of MQTTMidiIn port");         
+        port = new MQTTMidiIn();
+        port->setCallback(HardwareMsgIn, this);
+        port->ignoreTypes(false, true, true);
+        ESP_LOGE(TAG,"executed creation of MQTTMidiIn port");
         }
 
     catch (RtMidiError& error) {  
@@ -281,10 +283,14 @@ MIDIInDriver::MIDIInDriver(int id, unsigned int queue_size) :
     }
 }
 
+/* FCKX
+error: deleting object of polymorphic class type 'MQTTMidiIn' which has non-virtual destructor might cause undefined behavior [-Werror=delete-non-virtual-dtor]
+     delete port;
+*/
 
 MIDIInDriver::~MIDIInDriver() {
     port->closePort();
-    delete port;
+ //  delete port; //FCKX
 }
 
 
