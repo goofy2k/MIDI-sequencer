@@ -428,7 +428,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
       - a implement openPort  in MQTTdriver
       - b implement closePort in MQTTdriver 
       - c check proper implementation by using isPortOpen 
-      - d implement port->setCallback(HardwareMsgIn, this); in MQTTdriver
+      - d implement port->setCallback(HardwareMsgIn, this); in MQTTdriver  look in RtMidi init for how to set the callback
       - e implement port->ignoreTypes(false, true, true); in MQTTdriver
       - f check triggering the HardwareMsgIn callback by detecting the output of: std::cout << drv->GetPortName() << " callback executed   ";  
   
