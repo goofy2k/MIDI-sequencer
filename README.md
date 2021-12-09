@@ -424,10 +424,12 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
     - note 2: Use port->setCallback(HardwareMsgIn, this) to set the callback  
     - note 3: Investigate what the port->ignoreTypes(false, true, true); does. Does it switch of certain Midi message types?  
     - note 4: Nice milestones ----->  
-      - implement openPort  
-      - implement closePort  
-      - check proper implemetation by using isPortOpen  
-      - check triggering the HardwareMsgIn callback by deteecting the output of: std::cout << drv->GetPortName() << " callback executed   ";  
+      - implement openPort  in MQTTdriver
+      - implement closePort in MQTTdriver 
+      - check proper implementation by using isPortOpen 
+      - implement port->setCallback(HardwareMsgIn, this); in MQTTdriver
+      - implement port->ignoreTypes(false, true, true); in MQTTdriver
+      - check triggering the HardwareMsgIn callback by detecting the output of: std::cout << drv->GetPortName() << " callback executed   ";  
   
   
   
