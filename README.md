@@ -430,7 +430,12 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
       - c check proper implementation by using isPortOpen 
       - d implement port->setCallback(HardwareMsgIn, this); in MQTTdriver  look in RtMidi init for how to set the callback
       - e implement port->ignoreTypes(false, true, true); in MQTTdriver
-      - f check triggering the HardwareMsgIn callback by detecting the output of: std::cout << drv->GetPortName() << " callback executed   ";  
+      - f check triggering the HardwareMsgIn callback by detecting the output of: std::cout << drv->GetPortName() << " callback executed   "; 
+  NOTE!!!! you probably have to use   
+  MQTTMidiInData *data = static_cast< MQTTMidiInData *> (inputData_);  
+  or an equivalent to locally (within the scope of a function) have a reference to the mididata and buffer
+  Why isn't this done with a lasting reference?
+  Possibly because is connects the hardware buffer with the "software" part?????
   
   
   
