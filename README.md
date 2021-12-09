@@ -434,6 +434,8 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   11. More items in the list a few paragraphs back
   
 
-       
+ Re 10a and 4. : uint8_t midiPacket already defined in nimBLEdriver.cpp  
+ PROBABLY WISE TO CREATE/RE-USE A STRUCTURE/CLASS WHERE MQTTdriver and niBLEdriver inherit this (AND MORE) from  
+
   
   
