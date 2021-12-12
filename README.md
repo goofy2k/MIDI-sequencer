@@ -436,6 +436,9 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   or an equivalent to locally (within the scope of a function) have a reference to the mididata and buffer
   Why isn't this done with a lasting reference?
   Possibly because is connects the hardware buffer with the "software" part?????
+  V19:  fresh version for further implementation of MQTT input.  Forget the version 19 SKIP version. It is messy.
+  Important to do first:  remove depedencies on RtMidi.  This is probably only in driver.h
+  This will give you a clearer view on shortcomings of your own drivers.
   
   
   
