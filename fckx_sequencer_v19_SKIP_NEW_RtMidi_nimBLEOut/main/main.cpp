@@ -53,10 +53,10 @@ test_win32_player.cpp                                              X            
 //https://ncassetta.github.io/NiCMidi/docs/html/examples.html
 #define MIDIMESSAGE                //not an example but inspired by web page <ref> OK in main
 #define MIDITRACK_DUMPMIDITRACK    //OK in main
-#define TEST_COMPONENT           //test_component example OK (in main eternal loop)
+//#define TEST_COMPONENT           //test_component example OK (in main eternal loop)
 //metronome //output only
 //thru //input and output
-//#define TEST_RECORDER            //test_recorder
+#define TEST_RECORDER            //test_recorder
 
 //the following (adapted) examples depend on nimBLEdriver bluetooth output by FCKX
 //use only one at a time as instantiation of output ports may interfere (solve this in the future for flxibility)

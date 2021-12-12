@@ -53,10 +53,10 @@ test_win32_player.cpp                                              X            
 //https://ncassetta.github.io/NiCMidi/docs/html/examples.html
 #define MIDIMESSAGE                //not an example but inspired by web page <ref> OK in main
 #define MIDITRACK_DUMPMIDITRACK    //OK in main
-#define TEST_COMPONENT           //test_component example OK (in main eternal loop)
+//#define TEST_COMPONENT           //test_component example OK (in main eternal loop)
 //metronome //output only
 //thru //input and output
-//#define TEST_RECORDER            //test_recorder
+#define TEST_RECORDER            //test_recorder
 
 //the following (adapted) examples depend on nimBLEdriver bluetooth output by FCKX
 //use only one at a time as instantiation of output ports may interfere (solve this in the future for flxibility)
@@ -1259,8 +1259,17 @@ void TestComp::TickProc(tMsecs sys_time) {
 // The main() creates a class instance, adds it to the MIDIManager queue and then calls
 // Start() and Stop() for enabling and disabling the callback
 int main_test_component() {
+    static const char *TAG = "TEST_COMPONENT"; 
     TestComp comp;                              // creates the component
     MIDIManager::AddMIDITick(&comp);            // adds it to the MIDIManager queue
+    
+    //some trials to learn about the MIDIManager interfae and indrivers
+    ESP_LOGE(TAG,"Learning about MIDIManager Interface"); 
+    ESP_LOGE(TAG,"MIDIManager::GetNumMIDIIns() %d",MIDIManager::GetNumMIDIIns());          //FCKX
+    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
+    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->CanGet() %d",MIDIManager::GetInDriver(0)->CanGet());
+
+    
     comp.Start();                               // starts the callback
     cout << "Waiting 10 secs ... " << endl;
     MIDITimer::Wait(10000);                     // waits 10 secs
@@ -1422,14 +1431,22 @@ Here is an example:
   //Create the BLE Device
 
 #ifdef TEST_RECORDER
+ 
     ESP_LOGE(TAG,"instantiations for TEST_RECORDER EXAMPLE");
     ESP_LOGE(TAG,"Entering MIDISequencerGUINotifierText");
     MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
     /*******************************************************************************************
-    * AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, RtMidi)
+    * AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, NOT (?) RtMidi)
     ********************************************************************************************/
     ESP_LOGE(TAG,"Entering AdvancedSequencer");
     AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+
+    //some trials to learn about the MIDIManager interfae and indrivers
+    ESP_LOGE(TAG,"Learning about MIDIManager Interface"); 
+    ESP_LOGE(TAG,"MIDIManager::GetNumMIDIIns() %d",MIDIManager::GetNumMIDIIns());          //FCKX
+    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
+    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->CanGet() %d",MIDIManager::GetInDriver(0)->CanGet()); 
+    
     ESP_LOGE(TAG,"Entering MIDIRecorder");                        
     MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
 #endif //ifdef TEST_RECORDER 
@@ -1446,10 +1463,13 @@ Here is an example:
 #else //TEST_RECORDER
    ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING test_recorder()");
   while (1) {      
+/*
     //code here 
     bool verbose = true;
     DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
+*/    
     vTaskDelay(10 / portTICK_PERIOD_MS);  
+  
   } 
   
 

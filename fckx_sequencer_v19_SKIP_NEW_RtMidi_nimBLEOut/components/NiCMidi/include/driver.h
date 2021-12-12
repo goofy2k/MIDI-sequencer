@@ -37,7 +37,7 @@
 
 
 // #include "../rtmidi-4.0.0/RtMidi.h" //FCKX
-#include "RtMidi.h" //FCKX
+//#include "RtMidi.h" //FCKX
 #include "nimBLEdriver.h" //FCKX
 #include "MQTTdriver.h" //FCKC
 #include <vector>
