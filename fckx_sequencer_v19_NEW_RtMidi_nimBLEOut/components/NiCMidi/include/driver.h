@@ -293,12 +293,13 @@ class MIDIInDriver {
         /// \return **true** if such a message really exists in the queue (and _msg_ is valid), otherwise **false**.
         virtual bool            ReadMessage(MIDIRawMessage& msg, unsigned int n);
 
-protected:
+//protected:   //FCKX
 
         /// This is the RtMidi callback function (you must not call it directly)
         static void             HardwareMsgIn(double time,
                                               std::vector<unsigned char>* msg_bytes,
                                               void* p);
+protected:   //FCKX  temporary make HardwareMsgIn public
 
         /// \cond EXCLUDED
         // This is the default queue size.

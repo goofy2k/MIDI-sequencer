@@ -87,12 +87,20 @@ class MQTTMidiIn   //:public MidiInApi //(what does this parent class add?)
     //typedef void (*RtMidiCallback)( double timeStamp, std::vector<unsigned char> *message, void *userData );
     typedef void (*MQTTMidiCallback)( double timeStamp, std::vector<unsigned char> *message, void *userData );
    
-    MQTTMidiIn();
+    MQTTMidiIn( const std::string &clientName, unsigned int queueSizeLimit);
+
+
+
+
+
+
     //! If a MIDI connection is still open, it will be closed by the destructor.
     // ~MQTTMidiIn();
     ~MQTTMidiIn (void) throw();
     //! Open a MIDI input connection given by enumeration number.
-                           
+            
+
+            
     void   openPort(unsigned int portNumber=0);
          //! Close an open MIDI connection (if one exists).
     void   closePort(void);
@@ -135,7 +143,7 @@ class MQTTMidiIn   //:public MidiInApi //(what does this parent class add?)
     Subsequent incoming MIDI messages will be written to the queue
     and can be retrieved with the \e getMessage function.
   */
-    //void cancelCallback();
+    void cancelCallback();
        
         
         //call in driver.cpp: port->setCallback(HardwareMsgIn, this);
@@ -168,6 +176,7 @@ class MQTTMidiIn   //:public MidiInApi //(what does this parent class add?)
     to set the error callback function before opening a port.
   */
  // virtual void setErrorCallback( MQTTMidiCallback errorCallback = NULL, void *userData = 0 );
+
 
 
 /*
@@ -232,6 +241,7 @@ inline void RtMidiIn :: setErrorCallback( RtMidiErrorCallback errorCallback, voi
     MQTTMidiIn::MQTTMidiCallback userCallback;
     void *userData;
     bool continueSysex;
+    
 
     // Default constructor.
     MQTTMidiInData()
@@ -239,12 +249,28 @@ inline void RtMidiIn :: setErrorCallback( RtMidiErrorCallback errorCallback, voi
         userCallback(0), userData(0), continueSysex(false) {}
   };
 
-        
+ 
+
+ 
     protected:
-        MQTTMidiInData * inputData_;  //FCKX
-         // MQTTMidiInData inputData_;
-        //void initialize( const std::string& clientName  ); 
-        //void *apiData_;   //in the RtMidi case this is in class .... MidiApi
+
+       MQTTMidiInData inputData_;  //ORIGINAL
+       //MQTTMidiInData * inputData_;  //FCKX! 
+
+       //If defined as pointer, many references with -> must be changed
+       //If NOT defined as pointer: 
+ /*      
+../components/NiCMidi/src/MQTTdriver.cpp: In member function 'void MQTTMidiIn::closePort()':
+../components/NiCMidi/src/MQTTdriver.cpp:215:69: error: invalid static_cast from type 'MQTTMidiIn::MQTTMidiInData' to type 'MQTTMidiIn::MQTTMidiInData*'
+    MQTTMidiInData *data = static_cast< MQTTMidiInData *> (inputData_);
+                                                                     ^
+../components/NiCMidi/src/MQTTdriver.cpp:215:20: warning: unused variable 'data' [-Wunused-variable]
+    MQTTMidiInData *data = static_cast< MQTTMidiInData *> (inputData_);
+*/
+       
+        void initialize( const std::string& clientName  ); 
+        
+        void *apiData_;   //in the RtMidi case this is in class .... MidiApi
         bool connected_;  //in the RtMidi case this is in class .... MidiApi      
         //callback1  ee rtMidi for examples
         //callback2

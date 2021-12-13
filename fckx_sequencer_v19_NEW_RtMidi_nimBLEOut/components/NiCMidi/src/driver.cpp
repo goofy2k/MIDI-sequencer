@@ -377,7 +377,15 @@ bool MIDIInDriver::ReadMessage(MIDIRawMessage& msg, unsigned int n) {
 void MIDIInDriver::HardwareMsgIn(double time,
                                  std::vector<unsigned char>* msg_bytes,
                                  void* p) {
-    //most changes for MQTT will be here
+                                     
+    ESP_LOGW(TAG,"A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)");                                 
+    
+    
+    //changes for MQTT will NOT be here
+    //This function is called as a call back.
+    //The changes on the MQTT side must be where msg_bytes are prepared for feeding the callback with data 
+    //The data are available in the MQTT event handler!
+    
     //rough first analysis of what happens here
     //the message is entered into the procedure as msg_bytes (see above)
     //create a MIDITimedMessage

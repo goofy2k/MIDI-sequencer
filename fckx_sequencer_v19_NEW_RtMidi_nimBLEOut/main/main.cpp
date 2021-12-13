@@ -548,7 +548,10 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     //receive a 5 byte array 
  
     static const char *TAG = "FCKX_SEQ_API";
-    
+  
+
+
+  
     //MIDI COMMANDS               
     if (strncmp(event->topic, "/fckx_seq/midi/single",strlen("/fckx_seq/midi/single")) == 0) {
     //receive a 5 byte MIDI message 
@@ -556,6 +559,8 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     //display incoming MIDI data
     ESP_LOGI(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
     ESP_LOGI(TAG,"DATA:%.*s ", event->data_len, event->data);
+    ESP_LOGI(TAG,"data_len %d",event->data_len);  
+
     ESP_LOGI(TAG,"DATA0 %d", event->data[0]);
     ESP_LOGI(TAG,"DATA1 %d", event->data[1]); 
     ESP_LOGI(TAG,"DATA2 %d", event->data[2]); 
@@ -575,8 +580,26 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
        //store in input buffer
    //storeMIDI_Input(event, inQ );
    printf("going to store input\n");
-storeMIDI_Input(event);    
-        
+   storeMIDI_Input(event);    
+      
+    ESP_LOGE(TAG,"SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
+ 
+    double time = 111; 
+    void* p = MIDIManager::GetInDriver(0);  //when called in the driver this should be "this"
+
+    std::vector<unsigned char> msg_bytes_data = {};
+    std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
+    /*
+    std::vector<unsigned char> msg_bytes_data =  { 0x10, 0x20, 0x30 };    
+    std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
+    */
+    
+    msg_bytes_data =  { 0x90, 0x20, 0x7f };
+    MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
+    
+
+
+      
     //if MIDI THRU
     //send midiPacket immediately to sound board
     //add check on NimBLE connection
@@ -1446,6 +1469,30 @@ Here is an example:
     ESP_LOGE(TAG,"MIDIManager::GetNumMIDIIns() %d",MIDIManager::GetNumMIDIIns());          //FCKX
     ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
     ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->CanGet() %d",MIDIManager::GetInDriver(0)->CanGet()); 
+  
+  
+    //*******************************************************************
+    //testing!!!! make HardwareMsgIn protected again in driver.h
+    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
+ 
+    double time = 111; 
+    void* p = MIDIManager::GetInDriver(0);  //when called in the driver this should be "this"
+
+    std::vector<unsigned char> msg_bytes_data;
+    std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
+    /*
+    std::vector<unsigned char> msg_bytes_data =  { 0x10, 0x20, 0x30 };    
+    std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
+    */
+    
+    msg_bytes_data =  { 0x90, 0x20, 0x7f };
+    MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
+    
+    msg_bytes_data =  { 0x80, 0x20, 0x00 };
+    MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
+    
+    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->HardwareMsgIn TEST END DIRECT CALL (no callback)");
+    //*******************************************************************
     
     ESP_LOGE(TAG,"Entering MIDIRecorder");                        
     MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX

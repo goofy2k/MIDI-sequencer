@@ -135,52 +135,7 @@ uint8_t midiPacket[] = {
     0x00  //velocity
 };
 */
-
-// See the following for generating UUIDs:
-// https://www.uuidgenerator.net/
-#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
-
-#ifdef BLOCKED
-/**  None of these are required as they will be handled by the library with defaults. **
- **                       Remove as you see fit for your needs                        */  
-class MyServerCallbacks: public BLEServerCallbacks {
-    void onConnect(BLEServer* pServer) {
-      static const char *TAG = "NIMBLE_ONCONNECT";
-      ESP_LOGW(TAG, "-----");  
-      deviceConnected = true;
-      BLEDevice::startAdvertising(); //keep advertising to find more connections
-    };
-
-    void onDisconnect(BLEServer* pServer) {
-      static const char *TAG = "NIMBLE_ONDISCONNECT";
-      ESP_LOGW(TAG, "-----");   
-      deviceConnected = false;
-    }
-/***************** New - Security handled here ********************
-****** Note: these are the same return values as defaults ********/
-  uint32_t onPassKeyRequest(){
-    static const char *TAG = "NIMBLE_ONPASSKEYREQUEST";
-    ESP_LOGW(TAG, "-----");   
-    printf("Server PassKeyRequest\n");
-    return 123456; 
-  }
-
-  bool onConfirmPIN(uint32_t pass_key){
-    static const char *TAG = "NIMBLE_ONCONFIRMPIN";
-    ESP_LOGW(TAG, "-----");  
-    printf("The passkey YES/NO number: %d\n", pass_key);
-    return true; 
-  }
-
-  void onAuthenticationComplete(ble_gap_conn_desc desc){
-    static const char *TAG = "NIMBLE_ONAUTHENTICATIONCOMPLETE";
-    ESP_LOGW(TAG, "-----");  
-    printf("Starting BLE work!\n");
-  }
-  };
-#endif //BLOCKED  
-  
+ 
 /*******************************************************************/
 
 /*
@@ -209,224 +164,202 @@ struct NimBLEMidiOutData {
  //see RtMidi.cpp for detailed implementation
  //class MidiInAPI for hardware independent part
 //othe classes for hardware implementation 
- 
- MQTTMidiIn :: MQTTMidiIn ()
-//MQTTMidiIn :: MQTTMidiIn (const std::string &clientName)
-{   
-    //MQTTMidiIn::initialize("fckx_seq2"); 
-    //MQTTMidiIn::initialize(clientName);    
+
+#ifdef MQTTPROCESSIN
+static int MQTTProcessIn( jack_nframes_t nframes, void *arg )
+//static int jackProcessIn( jack_nframes_t nframes, void *arg )
+{
+  /*  
+  JackMidiData *jData = (JackMidiData *) arg;
+  MidiInApi :: RtMidiInData *rtData = jData->rtMidiIn;
+  jack_midi_event_t event;
+  jack_time_t time;
+
+  // Is port created?
+  if ( jData->port == NULL ) return 0;
+
+  void *buff = jack_port_get_buffer( jData->port, nframes );
+  bool& continueSysex = rtData->continueSysex;
+  unsigned char& ignoreFlags = rtData->ignoreFlags;
+
+  // We have midi events in buffer
+  int evCount = jack_midi_get_event_count( buff );
+  for (int j = 0; j < evCount; j++) {
+    MidiInApi::MidiMessage& message = rtData->message;
+    jack_midi_event_get( &event, buff, j );
+
+    // Compute the delta time.
+    time = jack_get_time();
+    if ( rtData->firstMessage == true ) {
+      message.timeStamp = 0.0;
+      rtData->firstMessage = false;
+    } else
+      message.timeStamp = ( time - jData->lastTime ) * 0.000001;
+
+    jData->lastTime = time;
+
+    if ( !continueSysex )
+      message.bytes.clear();
+
+    if ( !( ( continueSysex || event.buffer[0] == 0xF0 ) && ( ignoreFlags & 0x01 ) ) ) {
+      // Unless this is a (possibly continued) SysEx message and we're ignoring SysEx,
+      // copy the event buffer into the MIDI message struct.
+      for ( unsigned int i = 0; i < event.size; i++ )
+        message.bytes.push_back( event.buffer[i] );
+    }
+
+    switch ( event.buffer[0] ) {
+      case 0xF0:
+        // Start of a SysEx message
+        continueSysex = event.buffer[event.size - 1] != 0xF7;
+        if ( ignoreFlags & 0x01 ) continue;
+        break;
+      case 0xF1:
+      case 0xF8:
+        // MIDI Time Code or Timing Clock message
+        if ( ignoreFlags & 0x02 ) continue;
+        break;
+      case 0xFE:
+        // Active Sensing message
+        if ( ignoreFlags & 0x04 ) continue;
+        break;
+      default:
+        if ( continueSysex ) {
+          // Continuation of a SysEx message
+          continueSysex = event.buffer[event.size - 1] != 0xF7;
+          if ( ignoreFlags & 0x01 ) continue;
+        }
+        // All other MIDI messages
+    }
+
+    if ( !continueSysex ) {
+      // If not a continuation of a SysEx message,
+      // invoke the user callback function or queue the message.
+      if ( rtData->usingCallback ) {
+        RtMidiIn::RtMidiCallback callback = (RtMidiIn::RtMidiCallback) rtData->userCallback;
+        callback( message.timeStamp, &message.bytes, rtData->userData );
+      }
+      else {
+        // As long as we haven't reached our queue size limit, push the message.
+        if ( !rtData->queue.push( message ) )
+          std::cerr << "\nMidiInJack: message queue limit reached!!\n\n";
+      }
+    }
+  }
+
+  return 0;
+  */
 }
+
+#endif //MQTTPROCESSIN
+
+
+
+
+ 
+ MQTTMidiIn :: MQTTMidiIn ( const std::string &clientName, unsigned int queueSizeLimit)
+//MQTTMidiIn :: MQTTMidiIn (const std::string &clientName)
+{     ESP_LOGW(TAG,"MQTTMidiIn instantiation");
+    //MQTTMidiIn::initialize("fckx_seq2"); 
+     //Instantiation automatically calls initialize
+     MQTTMidiIn::initialize(clientName);    
+}
+
+#ifdef CONNECTON
+void MQTTMidiIn :: connect()
+{
+  MQTTMidiData *data = static_cast<MQTTMidiData *> (apiData_);
+  if ( data->client )
+    return;
+  //For MQTT init of client NOT required as it is already part of the basic setup
+ 
+ /*
+ // Initialize Jack client
+  if (( data->client = jack_client_open( clientName.c_str(), JackNoStartServer, NULL )) == 0) {
+    errorString_ = "MidiInJack::initialize: JACK server not running?";
+    error( RtMidiError::WARNING, errorString_ );
+    return;
+  }
+*/
+
+  //MUST SEE WHAT IS THE ESSENCE OF THIS PART OF THE CODE FOR MQTT
+  //It may mean that the VERY ESSENCE of connect() is seting the callback !
+  //Also see equivalents for other OS's !!!
+  //It is about the ProcessIn which is set as a callback here
+  // THis could relate to HardwareMsgIn and the callback!  //FCKX! 
+  /*
+  jack_set_process_callback( data->client, jackProcessIn, data );
+  jack_activate( data->client );
+  */
+}
+#endif //CONNECTON
+
+void MQTTMidiIn :: initialize( const std::string& clientName )
+{
+  ESP_LOGW(TAG,"MQTTMidiIn :: initialize");  
+ // MQTTMidiData *data = new MQTTMidiData;
+ MQTTMidiInData *data = new MQTTMidiInData;
+
+
+#ifdef BLOCKTHEAPIDATA
+  apiData_ = (void *) data;  //ORGINAL ORIGINAL
+  
+  
+//error: 'apiData_' was not declared in this scope
+//some example occurrence:   
+//AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);  
+  
+  
+  //inputData_ = (void *) data;  //ORIGINAL
+
+
+/*
+this error is probably due to non-matching types
+look up what was the type of the original variable (apiData_)
+
+error: no match for 'operator=' (operand types are 'MQTTMidiIn::MQTTMidiInData' and 'void*')
+ inputData_ = (void *) data;
+ 
+ apiData_ and inputData_  both exist in RtMidi
+ DO WE NEED BOTH?
+ CHECK THIS: IS IN THE END ONE A SUB OBJECT OF THE OTHER ??
+*/
+
+  data->rtMidiIn = &inputData_;   //FCKX! ??????? is rtMidiIn OK?
+                                  //----> have a look where this member is accessed in the Jack case
+#endif //BLOCKTHEAPIDATA
+
+  //data->port = NULL;                   //FCKX!
+  //data->client = NULL;
+  //this->clientName = clientName;
+  #ifdef CONNECTON
+  connect();
+  #endif
+}
+
 
 MQTTMidiIn :: ~MQTTMidiIn ()
 {
+    MQTTMidiInData *data = static_cast<MQTTMidiInData *> (apiData_); 
     //close a connection if it exists
     MQTTMidiIn::closePort();
     
     //Cleanup
-    //what does this comprise for nimBLEDevice ?
-    
+    //For MQTT no need to cleanup client as there are still other tasks for that client
+/*
+      if ( data->client )
+    jack_client_close( data->client );
+*/
+  delete data;
+
+
+ 
 }
 
 
 void MQTTMidiIn :: openPort( unsigned int portNumber) {
   ESP_LOGW(TAG, "open MQTTMidiIn port"); 
 }
-
-#ifdef BLOCKMIDIINNIMBLE
-//void MQTTMidiIn :: openPort( )
-void MidiInNimBLE :: openPort( unsigned int portNumber)
-{
-   
-   // Set up our client and give a sign of life
-  ESP_LOGW(TAG, "open MQTTMidiIn port"); 
-  
-  NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
-  NimBLECharacteristic* pCharacteristic = NULL; 
-  //Create the BLE Device 
-  //This is also for Midi input, so should ideally be in a super class
-  NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
-                                  //and include the unique device ID in it
-                                  //take care of max length of this string!
-  
-  ESP_LOGW(TAG, "NimBLEDevice created"); 
-#define TEMP_BLOCK1 1  
- #ifdef TEMP_BLOCK1 
-  pServer = NimBLEDevice::createServer();
-     ESP_LOGW(TAG, "BLE server created"); 
-  pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
-   ESP_LOGW(TAG, "BLE server callbacks created"); 
-   
-  // Create the BLE Service
-  NimBLEService *pService = pServer->createService(SERVICE_UUID);
-ESP_LOGW(TAG, "BLE server service created");
-  // Create a BLE Characteristic
-  pCharacteristic = pService->createCharacteristic(
-                      CHARACTERISTIC_UUID,
-                /******* Enum Type NIMBLE_PROPERTY now *******     
-                      BLECharacteristic::PROPERTY_READ   |
-                      BLECharacteristic::PROPERTY_WRITE  |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_INDICATE
-                    );
-                **********************************************/    
-                      NIMBLE_PROPERTY::READ   |
-                      NIMBLE_PROPERTY::WRITE  |
-                      NIMBLE_PROPERTY::NOTIFY //|
-                    //  NIMBLE_PROPERTY::INDICATE
-                    );
-ESP_LOGW(TAG, "BLE server characteristic created");
-  // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
-  // Create a BLE Descriptor
-  /***************************************************   
-   NOTE: DO NOT create a 2902 descriptor. 
-   it will be created automatically if notifications 
-   or indications are enabled on a characteristic.
-   
-   pCharacteristic->addDescriptor(new BLE2902());
-  ****************************************************/
-  
-    // Start the service
-  pService->start();
-  ESP_LOGW(TAG, "BLE service started");
-  /*
-  //MOVE THIS TO openPort
-
-  // Start advertising
-  ESP_LOGI(TAG, "Start advertising");
-  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
-  pAdvertising->setScanResponse(false); 
-*/
-  #endif
-  
-  
-    // Save our connection information
-    
-    connectionData.pServer = pServer;
-      connectionData.pService = pService;
-        connectionData.pCharacteristic = pCharacteristic;
-  
- /*  
-  // Save our connection information
-  //define NimBLEMidiOutData somewhere
-  NimBLEMidiOutData *data = (NimBLEMidiOutData *) new NimBLEMidiOutData;
-  //data->connected_ = false; //in RtMidi, this is in the parent class
-  connected_ = false; 
-  
-  //data->client = client;
-  //data->endpoint = 0;
-  apiData_ = (void *) data;  //??
-  //CFRelease( name );         //??
-  */ 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //catch a number of error states    
-    printf("OPENPORT ENTERED");
-    ESP_LOGW(TAG, "MQTTMidiIn :: openPort entered "); 
-
-
-
-
-    //start background task HERE????
-    // depends on kind of task
-    xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
-    
-      
-  //MOVE THIS TO openPort
-  
-
-  // Start advertising
-  ESP_LOGI(TAG, "Prepare advertising");
-  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
-  pAdvertising->setScanResponse(false); 
-  
-  connectionData.pAdvertising = pAdvertising;
-    
-      // Start advertising
-  ESP_LOGI(TAG, "Start advertising");
-
-    NimBLEDevice::startAdvertising();
-    ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
-
-    //check if a connection already exists
-    //if ( apiData->connected_ ) {
-    // if ( data->connected_ ) {
-        
-     //DO THIS BEFORE PREP OF ADVERTISING?   
-     if (connected_) {
-    //errorString_ = "MQTTMidiIn::openPort: a valid connection already exists!";
-    ESP_LOGE(TAG, "MQTTMidiIn::openPort: a valid connection already exists!"); 
-    //error( RtMidiError::WARNING, errorString_ );  //how  to implement this error case
-    return;
-  }
-  
-#ifdef BLOCK_TEMP  
-/*  
-  //check if output destination exists
-  CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
-  unsigned int nDest = MIDIGetNumberOfDestinations();
-  if (nDest < 1) {
-    errorString_ = "MQTTMidiIn::openPort: no MIDI output destinations found!";
-    ESP_LOGE(TAG, "%s" , errorString);
-    //error( RtMidiError::NO_DEVICES_FOUND, errorString_ );
-    return;
-  }
-*/
-/*
-  //check if the 'portNumber' argument is valid
-  if ( portNumber >= nDest ) {
-    std::ostringstream ost;
-    ost << "MQTTMidiIn::openPort: the 'portNumber' argument (" << portNumber << ") is invalid.";
-    errorString_ = ost.str();
-    ESP_LOGE(TAG, "%s" , errorString);
-    //error( RtMidiError::INVALID_PARAMETER, errorString_ );
-    return;
-  }  
-*/
-  
- MIDIPortRef port;
-  NimBLEMidiOutData *data = static_cast<NimBLEMidiOutData *> (apiData_);
-  CFStringRef portNameRef = CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingASCII );
-  OSStatus result = MIDIOutputPortCreate( data->client, portNameRef, &port );
-  CFRelease( portNameRef );
-  if ( result != noErr ) {
-    MIDIClientDispose( data->client );
-    errorString_ = "MQTTMidiIn::openPort: error creating OS-X MIDI output port.";
-    ESP_LOGE(TAG, "%s" , errorString);
-    //error( RtMidiError::DRIVER_ERROR, errorString_ );
-    return;
-  }
-
-  // Get the desired output port identifier.
-  MIDIEndpointRef destination = MIDIGetDestination( portNumber );
-  if ( destination == 0 ) {
-    MIDIPortDispose( port );
-    MIDIClientDispose( data->client );
-    errorString_ = "MQTTMidiIn::openPort: error getting MIDI output destination reference.";
-    ESP_LOGE(TAG, "%s" , errorString);
-    //error( RtMidiError::DRIVER_ERROR, errorString_ );
-    return;
-  }
-#endif
-
-  // Save our (api-specific) connection information.
-  
-  //data->port = port;  
-  //data->destinationId = destination;
-  connected_ = true;  
-}  
-#endif // BLOCKMIDIINNIMBLE
-
 
 void MQTTMidiIn :: closePort( void ) {
 
@@ -449,15 +382,27 @@ void MQTTMidiIn :: closePort( void ) {
   THIS MAY HAVE TO DO WITH THE FOLLOWIN ERROR
   */
   
-  
-  
-  
    
-   MQTTMidiInData *data = static_cast< MQTTMidiInData *> (inputData_); 
-   //error: invalid static_cast from type 'MQTTMidiIn::MQTTMidiInData' to type 'MQTTMidiIn::MQTTMidiInData*'
+   //MQTTMidiInData *data = static_cast< MQTTMidiInData *> (inputData_); 
+ MQTTMidiInData *data = static_cast< MQTTMidiInData *> (apiData_);
+ //FCKX!
+ //error: invalid static_cast from type 'MQTTMidiIn::MQTTMidiInData' to type 'MQTTMidiIn::MQTTMidiInData*'
    //error disappears when changing MQTTMidiInData  inputData_; in MQTTdriver.h into  MQTTMidiInData * inputData_; 
    //but leads to:MQTTdriver.cpp:232:19: error: request for member 'usingCallback' in '((MQTTMidiIn*)this)->MQTTMidiIn::inputData_', which is of pointer type 'MQTTMidiIn::MQTTMidiInData*' (maybe you meant to use '->' ?)
+/*
+NOTE!!!! in a number of hardware initialize codes we have:
 
+  // Save our api-specific connection information.
+  WinMidiData *data = (WinMidiData *) new WinMidiData;
+  apiData_ = (void *) data;
+  inputData_.apiData = (void *) data;
+  
+  Where the last two lines are non-specific
+  
+  We still miss this code in MQTTdriver.cpp
+
+
+*/
    
 /*
   if ( data->endpoint ) {
@@ -500,32 +445,16 @@ std::string MQTTMidiIn :: getPortName(unsigned int portNumber)
 }
 
 
-double MQTTMidiIn :: getMessage( std::vector<unsigned char> *message )
-{
-  message->clear();
-  //if ( inputData_.usingCallback )  //FCKX!
-  if ( inputData_->usingCallback ) 
-  {
-   // errorString_ = "RtMidiIn::getNextMessage: a user callback is currently set for this port.";
-   // error( RtMidiError::WARNING, errorString_ );
-    ESP_LOGE(TAG, "RtMidiIn::getNextMessage: a user callback is currently set for this port."); //error( RtMidiError::DRIVER_ERROR, errorString_ );
+//*********************************************************************//
+//  Heritage from MidiInApi RtMidi.cpp:580 e.v.
+//*********************************************************************//
 
-    return 0.0;
-  }
-
-  double timeStamp;
-    if ( !inputData_->queue.pop( message, &timeStamp ) )
- // if ( !inputData_.queue.pop( message, &timeStamp ) ) //FCKX!
-    return 0.0;
-
-  return timeStamp;
-}
-
+//constructor and destructor of MidiInApi are obsolete here
 
 
 void MQTTMidiIn :: setCallback( MQTTMidiIn::MQTTMidiCallback callback, void *userData )
-{
-    if ( inputData_->usingCallback ) {  //FCKX!
+{   //IMPLEMENTATION CHECKED OK against CLEAN RtMidi.cpp 580 
+    if ( inputData_.usingCallback ) {  //FCKX!
   //if ( inputData_.usingCallback ) {
     //errorString_ = "MidiInApi::setCallback: a callback function is already set!";
  
@@ -546,14 +475,40 @@ void MQTTMidiIn :: setCallback( MQTTMidiIn::MQTTMidiCallback callback, void *use
   inputData_.userData = userData;
   inputData_.usingCallback = true;
 */ //FCKX! 
+  ESP_LOGE(TAG,"RtMidiIn::setCallback: STORING CALLBACK IN inputData_");
+  inputData_.userCallback = callback;
+  inputData_.userData = userData;
+  inputData_.usingCallback = true; 
+}
 
-  inputData_->userCallback = callback;
-  inputData_->userData = userData;
-  inputData_->usingCallback = true; 
+void MQTTMidiIn :: cancelCallback()  //member MidiInApi in RtMidi 
+{   //IMPLEMENTATION CHECKED OK against CLEAN RtMidi.cpp 599 
+    /*  SOMEWHERE BEFORE THIS inputData_ should have been converted to an object
+    where is it instantiated?
+    error: request for member 'usingCallback' in '((MQTTMidiIn*)this)->MQTTMidiIn::inputData_', which is of pointer type 'MQTTMidiIn::MQTTMidiInData*' (maybe you meant to use '->' ?)
+   if ( !inputData_.usingCallback )
+    */   
+    
+  if ( !inputData_.usingCallback ) {
+   // errorString_ = "RtMidiIn::cancelCallback: no callback function was set!";
+   // error( RtMidiError::WARNING, errorString_ );
+   ESP_LOGE(TAG,"RtMidiIn::cancelCallback: no callback function was set!"); 
+ 
+ return;
+  }
+  /*
+  inputData_.userCallback = 0;
+  inputData_.userData = 0;
+  inputData_.usingCallback = false;
+  */
+  inputData_.userCallback = 0;
+  inputData_.userData = 0;
+  inputData_.usingCallback = false;
+  
 }
 
 void MQTTMidiIn :: ignoreTypes( bool midiSysex, bool midiTime, bool midiSense )
-{
+{ //IMPLEMENTATION CHECKED OK against CLEAN RtMidi.cpp 612 
 
   /* //FCKX!
     inputData_.ignoreFlags = 0;
@@ -561,11 +516,89 @@ void MQTTMidiIn :: ignoreTypes( bool midiSysex, bool midiTime, bool midiSense )
   if ( midiTime ) inputData_.ignoreFlags |= 0x02;
   if ( midiSense ) inputData_.ignoreFlags |= 0x04;
   */
-  inputData_->ignoreFlags = 0;
-  if ( midiSysex ) inputData_->ignoreFlags = 0x01;
-  if ( midiTime ) inputData_->ignoreFlags |= 0x02;
-  if ( midiSense ) inputData_->ignoreFlags |= 0x04;
+  inputData_.ignoreFlags = 0;
+  if ( midiSysex ) inputData_.ignoreFlags = 0x01;
+  if ( midiTime ) inputData_.ignoreFlags |= 0x02;
+  if ( midiSense ) inputData_.ignoreFlags |= 0x04;
   
+}
+
+double MQTTMidiIn :: getMessage( std::vector<unsigned char> *message )
+{ //IMPLEMENTATION CHECKED OK against CLEAN RtMidi.cpp 620
+  message->clear();
+  //if ( inputData_.usingCallback )  //FCKX!
+  if ( inputData_.usingCallback ) 
+  {
+   // errorString_ = "RtMidiIn::getNextMessage: a user callback is currently set for this port.";
+   // error( RtMidiError::WARNING, errorString_ );
+    ESP_LOGE(TAG, "RtMidiIn::getNextMessage: a user callback is currently set for this port."); //error( RtMidiError::DRIVER_ERROR, errorString_ );
+
+    return 0.0;
+  }
+
+  double timeStamp;
+    if ( !inputData_.queue.pop( message, &timeStamp ) )
+ // if ( !inputData_.queue.pop( message, &timeStamp ) ) //FCKX!
+    return 0.0;
+
+  return timeStamp;
+}
+
+unsigned int MQTTMidiIn::MidiQueue::size( unsigned int *__back,
+                                         unsigned int *__front )
+{//IMPLEMENTATION CHECKED OK against CLEAN RtMidi.cpp 637
+  // Access back/front members exactly once and make stack copies for
+  // size calculation
+  unsigned int _back = back, _front = front, _size;
+  if ( _back >= _front )
+    _size = _back - _front;
+  else
+    _size = ringSize - _front + _back;
+
+  // Return copies of back/front so no new and unsynchronized accesses
+  // to member variables are needed.
+  if ( __back ) *__back = _back;
+  if ( __front ) *__front = _front;
+  return _size;
+}
+
+// As long as we haven't reached our queue size limit, push the message.
+bool MQTTMidiIn::MidiQueue::push( const MQTTMidiIn::MidiMessage& msg )
+{  //IMPLEMENTATION CHECKED OK against CLEAN RtMidi.cpp 656
+  // Local stack copies of front/back
+  unsigned int _back, _front, _size;
+
+  // Get back/front indexes exactly once and calculate current size
+  _size = size( &_back, &_front );
+
+  if ( _size < ringSize-1 )
+  {
+    ring[_back] = msg;
+    back = (back+1)%ringSize;
+    return true;
+  }
+
+  return false;
+}
+
+bool MQTTMidiIn::MidiQueue::pop( std::vector<unsigned char> *msg, double* timeStamp )
+{  //IMPLEMENTATION CHECKED OK against CLEAN RtMidi.cpp 674
+  // Local stack copies of front/back
+  unsigned int _back, _front, _size;
+
+  // Get back/front indexes exactly once and calculate current size
+  _size = size( &_back, &_front );
+
+  if ( _size == 0 )
+    return false;
+
+  // Copy queued message to the vector pointer argument and then "pop" it.
+  msg->assign( ring[_front].bytes.begin(), ring[_front].bytes.end() );
+  *timeStamp = ring[_front].timeStamp;
+
+  // Update front
+  front = (front+1)%ringSize;
+  return true;
 }
 
 
