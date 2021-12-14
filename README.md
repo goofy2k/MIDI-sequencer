@@ -440,7 +440,17 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   Important to do first:  remove depedencies on RtMidi.  This is probably only in driver.h
   This will give you a clearer view on shortcomings of your own drivers.
   
+  **v19:** 
+   - made HardwareMsgIn temporary public to allow direct calls i.s.o. using it as a callback
+   - introduced direct call to HardwareMsgIn in MQTT event handler. System reports receipt of messages over MQTT:
   
+E (67276) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (67286) NICMIDI DRIVER: A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+MQTT_In callback executed   Got message, queue size: 3
+E (67306) FCKX_SEQ_API: Learning about MIDIManager Interface
+E (67306) FCKX_SEQ_API: MIDIManager::GetNumMIDIIns() 1
+E (67316) FCKX_SEQ_API: MIDIManager::GetInDriver(0)->GetQueueSize() 3
+E (67326) FCKX_SEQ_API: MIDIManager::GetInDriver(0)->CanGet() 1
   
   ## TODO
   
