@@ -532,7 +532,7 @@ void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
 
 
    for (unsigned i=0; i<message->size(); i++) {
-    ESP_LOGW(TAG, "message->at(i) %d", message->at(i));
+    ESP_LOGW(TAG, "message->at(i) %d (0x%X)", message->at(i),message->at(i) );
     midiPacket[i] = message->at(i);
    };
 

@@ -250,8 +250,6 @@ inline void RtMidiIn :: setErrorCallback( RtMidiErrorCallback errorCallback, voi
   };
 
  
-
- 
     protected:
 
        MQTTMidiInData inputData_;  //ORIGINAL
@@ -268,7 +266,7 @@ inline void RtMidiIn :: setErrorCallback( RtMidiErrorCallback errorCallback, voi
     MQTTMidiInData *data = static_cast< MQTTMidiInData *> (inputData_);
 */
        
-        void initialize( const std::string& clientName  ); 
+        void initialize( const std::string& clientName  );  //ORIG
         
         void *apiData_;   //in the RtMidi case this is in class .... MidiApi
         bool connected_;  //in the RtMidi case this is in class .... MidiApi      

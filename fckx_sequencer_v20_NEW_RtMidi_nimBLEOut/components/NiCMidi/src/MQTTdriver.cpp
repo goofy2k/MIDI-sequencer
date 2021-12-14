@@ -263,7 +263,7 @@ static int MQTTProcessIn( jack_nframes_t nframes, void *arg )
     //MQTTMidiIn::initialize("fckx_seq2"); 
      //Instantiation automatically calls initialize
      const std::string &clientName = "testName";
-     MQTTMidiIn::initialize(clientName);    
+     MQTTMidiIn::initialize(clientName);  //ORIG    
 }
 
 #ifdef CONNECTON
@@ -352,8 +352,8 @@ MQTTMidiIn :: ~MQTTMidiIn ()
       if ( data->client )
     jack_client_close( data->client );
 */
-  delete data;
-
+  delete data;  //ORIG
+//delete &data;  
 
  
 }

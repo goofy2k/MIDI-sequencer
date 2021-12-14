@@ -51,12 +51,12 @@ test_win32_player.cpp                                              X            
 
 //switches for NiCMidi examples in order of priority for implementation
 //https://ncassetta.github.io/NiCMidi/docs/html/examples.html
-#define MIDIMESSAGE                //not an example but inspired by web page <ref> OK in main
-#define MIDITRACK_DUMPMIDITRACK    //OK in main
+//#define MIDIMESSAGE                //not an example but inspired by web page <ref> OK in main
+//#define MIDITRACK_DUMPMIDITRACK    //OK in main
 //#define TEST_COMPONENT           //test_component example OK (in main eternal loop)
-//metronome //output only
-//thru //input and output
-#define TEST_RECORDER            //test_recorder
+//#define METRONOME //output only
+//#define THRU     //input and output
+#define TEST_RECORDER            //test_recorder  OK
 
 //the following (adapted) examples depend on nimBLEdriver bluetooth output by FCKX
 //use only one at a time as instantiation of output ports may interfere (solve this in the future for flxibility)
@@ -106,9 +106,9 @@ I suspect the error might be coming from `ble_buf_alloc` as well. Can you please
 
 //define queue sizes
 //max total queue size is at least 2048 (fckx_sequencer_v4)
-#define INQ_SIZE    128
-#define OUTQ_SIZE   128
-#define SEQ_SIZE    1024
+//#define INQ_SIZE    128
+//#define OUTQ_SIZE   128
+//#define SEQ_SIZE    1024
 
 //#include "jdksmidi/track.h" //FCKX
 //#include <jdksmidi/track.h> //FCKX
@@ -467,7 +467,7 @@ jdksmidi::MIDIQueue inQ(INQ_SIZE);
 int bufCount = 0;  
 
  
-
+ #ifdef USEJDKSMIDIQUEUE 
 namespace jdksmidi {
     
  
@@ -481,6 +481,8 @@ bool insertMIDI_Sorted(MIDIQueue inQ, MIDIQueue sortedQueue){
 };
 
 }
+#endif
+
 
 #endif 
 bool printMIDI_Input(esp_mqtt_event_handle_t event){
@@ -883,6 +885,8 @@ AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI no
                         
 MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
 #endif
+
+
 //extern string command, par1, par2;          // used by GetCommand() for parsing the user input
 //char filename[200];                         // used for saving files
 /*
@@ -1137,6 +1141,52 @@ int main_test_metronome( string command) {
 // to every method for details.
 //
 
+#ifdef THRU
+
+//GLOBALS for test_thru example
+
+MIDIThru* thru;                  // a MIDIThru ORIG
+MIDIProcessorPrinter printer;    // a MIDIProcessor which prints passing MIDI events                 
+
+
+
+
+int thru_main(  ) {
+
+//init port here. this is not in the original code
+    //MIDIManager::OpenInPorts();
+try {
+        ESP_LOGE(TAG,"thru = new MIDIThru;");         
+
+
+     thru = new MIDIThru;  //ORIG
+  //  MIDIThru* thru = new MIDIThru; //NOK
+     //MIDIThru thru = new MIDIThru; //NOK
+    // MIDIThru* thru; 
+}
+catch( ... ) {
+    
+    ESP_LOGE(TAG,"The MIDIThru constructor throws an exception if in the system are not present almost a MIDI in and a MIDI out ports!");         
+    return 0;
+}
+
+     //MIDIThru thru;  //was not here !!!!!
+    // adds the thru to the MIDIManager queue
+    MIDIManager::AddMIDITick(thru);
+    // plugs the MIDIProcessorPrinter into the metronome, so all MIDI message will
+    // be printed to stdout
+    thru->SetProcessor(&printer);
+    // sets the printing of passing events on and off
+                  printer.SetPrint(true); 
+              //printer.SetPrint(false);
+//thru->Start(); //not here
+  return 1;
+              
+              
+} //thru_main(  )
+#endif // #ifdef THRU
+
+
 
 
     /**********************************************************************************
@@ -1147,7 +1197,7 @@ int main_test_metronome( string command) {
     ***********************************************************************************/ 
 
 #ifdef TEST_COMPONENT  
-
+//GLOBALS for test_component example
 //NOTE: required includes are not in this block
 
  /*
@@ -1317,6 +1367,8 @@ int main_test_component() {
     ***********************************************************************************/    
 #endif 
 
+
+
 void app_main(void) {
 /*************************************************************************************************
 *NOTE: NimBLEData is a test object to demonstrate a globally accessible object 
@@ -1423,8 +1475,9 @@ Here is an example:
 */
 //#include "track.h"
 //#include "dump_tracks.h"             // contains helper functions to print track content
-//#include "../include/dump_tracks_dirty.h"   //FCKX          // contains helper functions to print track content
-   ESP_LOGE(TAG,"Testing NiCMidi functionality: MidiTrack/DumpMidiTrack");
+/*
+
+ ESP_LOGE(TAG,"Testing NiCMidi functionality: MidiTrack/DumpMidiTrack");
 //int main() {
    MIDITrack track;
    MIDITimedMessage msg;             // a new MIDITimedMessage has time set to 0
@@ -1438,6 +1491,7 @@ Here is an example:
    DumpMIDITrack(&track);            // prints the contents of the track
 //   return 0;
 //}
+*/
 
 /*  //FCKX
   ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
@@ -1508,6 +1562,8 @@ Here is an example:
 #endif //ifdef TEST_RECORDER 
   
 
+/* CALL EXAMPLE MAINS */
+
   
 #ifdef TEST_COMPONENT 
   ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING main_test_component()");
@@ -1515,8 +1571,30 @@ Here is an example:
     main_test_component();  
     vTaskDelay(10 / portTICK_PERIOD_MS);  
   }
+#endif
+
+
+
+#ifdef THRU
+   ESP_LOGW(TAG, "GOINT TO INITALIZE THRU");
+   int thru_result = thru_main();
+   ESP_LOGW(TAG, "INITIALIZED THRU WITH RESULT: %d", thru_result);
+   thru->Start(); // sets the MIDI thru on and off ORIG
+//thru->Stop();
+  while (1) {      
+    //empty loop forever 
+    vTaskDelay(10 / portTICK_PERIOD_MS);  
+  }
+
+//delete thru;  //this code is never reached
+
+#endif //ifdef THRU
+
+
  
-#else //TEST_RECORDER
+#ifdef TEST_RECORDER
+    MIDIManager::AddMIDITick(&recorder);
+    text_n.SetSequencer(&sequencer);
    ESP_LOGW(TAG, "START RECORDER test_recorder()");
    recorder.Start();
    
@@ -1526,11 +1604,33 @@ Here is an example:
     //code here 
     bool verbose = true;
     DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
-*/    
+   
+*/
+    MIDIRawMessage mymsg; 
+   // while (MIDIManager::GetInDriver(0)->CanGet()) {
+        
+       
+        //get the message
+        //virtual bool 	InputMessage (MIDIRawMessage &msg)
+     while (MIDIManager::GetInDriver(0)->InputMessage(mymsg)) {
+        //this whole ado should be done automaticallly    
+             ESP_LOGI(TAG,">>>>>>>>>>>>>GOT MESSAGE>>>>>>>>>>>>>>>>>>>>>");
+        
+        //process
+        //convert MIDIRawMessage to MIDITimedMessage
+        //output
+        //MIDIManager::GetOutDriver(0)->OutputMessage(msg)
+        //OutputMessage (const MIDITimedMessage &msg)
+    }
+
+    
     vTaskDelay(10 / portTICK_PERIOD_MS);  
   
   } 
-  
+#endif  
+
+
+
 
 /*
 #else 
@@ -1541,7 +1641,7 @@ Here is an example:
         vTaskDelay(10 / portTICK_PERIOD_MS);  
     }
 */    
-#endif //#else
+//#endif //#else
     
 
 }; //app_main
