@@ -452,6 +452,13 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
     E (67316) FCKX_SEQ_API: MIDIManager::GetInDriver(0)->GetQueueSize() 3
     E (67326) FCKX_SEQ_API: MIDIManager::GetInDriver(0)->CanGet() 1
   
+  **v20 TASKS AHEAD:**
+   - test response of recorder on current status of MQTT input
+   - IF OK: convert HardwareMsgIn to a real callback (triggered by ...receipt of a message.... ? )
+   - IF NOT OK critically evaluate proper implementation of MidiInData for MQTT input 
+  
+ 
+  
   ## TODO
   
   1. clean up fckx_sequencer code **STARTED v17**: needs continuous attention.  
