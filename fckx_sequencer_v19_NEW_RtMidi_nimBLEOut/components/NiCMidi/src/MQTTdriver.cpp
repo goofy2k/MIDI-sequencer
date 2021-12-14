@@ -256,12 +256,13 @@ static int MQTTProcessIn( jack_nframes_t nframes, void *arg )
 
 
 
- 
- MQTTMidiIn :: MQTTMidiIn ( const std::string &clientName, unsigned int queueSizeLimit)
+ MQTTMidiIn :: MQTTMidiIn ()
+ //MQTTMidiIn :: MQTTMidiIn ( const std::string &clientName, unsigned int queueSizeLimit)
 //MQTTMidiIn :: MQTTMidiIn (const std::string &clientName)
 {     ESP_LOGW(TAG,"MQTTMidiIn instantiation");
     //MQTTMidiIn::initialize("fckx_seq2"); 
      //Instantiation automatically calls initialize
+     const std::string &clientName = "testName";
      MQTTMidiIn::initialize(clientName);    
 }
 
@@ -298,7 +299,8 @@ void MQTTMidiIn :: initialize( const std::string& clientName )
 {
   ESP_LOGW(TAG,"MQTTMidiIn :: initialize");  
  // MQTTMidiData *data = new MQTTMidiData;
- MQTTMidiInData *data = new MQTTMidiInData;
+ MQTTMidiInData *data = new MQTTMidiInData;  //construct MQTTMidiInData with default constructor
+                                             //check on these
 
 
 #ifdef BLOCKTHEAPIDATA
@@ -354,6 +356,13 @@ MQTTMidiIn :: ~MQTTMidiIn ()
 
 
  
+}
+
+
+void MQTTMidiIn :: printData(void) {
+  //development helper to check analyze proper operation of the private data object
+  ESP_LOGW(TAG,"MQTTMidiIn private data object");  
+    
 }
 
 
@@ -419,7 +428,7 @@ NOTE!!!! in a number of hardware initialize codes we have:
 //unsubscribe MQTT??
 //update MQTTMidiInData
 
- // connected_ = false;
+  connected_ = false;
 }
 
 
@@ -441,7 +450,7 @@ unsigned int MQTTMidiIn :: getPortCount()
 std::string MQTTMidiIn :: getPortName(unsigned int portNumber)
 {
   //must return clientName from niBLEMidiData ?
-  return "fckx_seq";
+  return "MQTT_In";
 }
 
 

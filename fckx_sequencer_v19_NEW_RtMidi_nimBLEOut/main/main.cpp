@@ -85,7 +85,7 @@ I suspect the error might be coming from `ble_buf_alloc` as well. Can you please
     #include <NimBLEDevice.h>
 #endif
 //#include "fckxMsg.h"
-#include "queue.h"   //MUST BE ON
+//#include "queue.h"   //MUST BE ON
 
 //NiCMidi includes
 //REMOVED AS YOU NOW USE IT AS A COMPONENT
@@ -459,7 +459,7 @@ static const char *TAG = "execute_single_midi_command";
 
 
 
-
+#ifdef USEJDKSMIDIQUEUE
 
  //may extend to class
 
@@ -482,8 +482,8 @@ bool insertMIDI_Sorted(MIDIQueue inQ, MIDIQueue sortedQueue){
 
 }
 
-
-bool storeMIDI_Input(esp_mqtt_event_handle_t event){
+#endif 
+bool printMIDI_Input(esp_mqtt_event_handle_t event){
 
 //bool storeMIDI_Input(esp_mqtt_event_handle_t event, jdksmidi::MIDIQueue inQ){
     // store incoming MQTT MIDI event in input buffer    
@@ -498,7 +498,7 @@ bool storeMIDI_Input(esp_mqtt_event_handle_t event){
     ESP_LOGI(TAG,"DATA3 %d", event->data[3]); 
     ESP_LOGI(TAG,"DATA4 %d", event->data[4]);
     
-    
+ #ifdef USEJDKSMIDIQUEUE   
     //SEQUENCER TASK 3.
     //prepare for storing MIDI input
     
@@ -512,7 +512,8 @@ bool storeMIDI_Input(esp_mqtt_event_handle_t event){
     ESP_LOGI(TAG,"inMsg.status %d", inMsg.status); 
     ESP_LOGI(TAG,"inMsg.data1 %d", inMsg.data1); 
     ESP_LOGI(TAG,"inMsg.data2 %d", inMsg.data2); 
-     //printf("storeMIDI_Input");
+    
+
      printf("bufCount %d\n",bufCount);
      if (inQ.CanGet()) {
          printf("CanGet true\n");
@@ -531,7 +532,7 @@ bool storeMIDI_Input(esp_mqtt_event_handle_t event){
     };
    bufCount = bufCount + 1;
    
-
+#endif //#ifdef USEJDKSMIDIQUEUE
 
 
     //Append inMsg to input buffer    
@@ -579,8 +580,8 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
         
        //store in input buffer
    //storeMIDI_Input(event, inQ );
-   printf("going to store input\n");
-   storeMIDI_Input(event);    
+   //printf("going to store input\n");
+   printMIDI_Input(event);    
       
     ESP_LOGE(TAG,"SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
  
@@ -596,8 +597,13 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     
     msg_bytes_data =  { 0x90, 0x20, 0x7f };
     MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
-    
-
+    //development helper to check analyze proper operation of the private data object        
+   // MIDIManager::GetInDriver(0)->printData();
+    ESP_LOGE(TAG,"Learning about MIDIManager Interface"); 
+    ESP_LOGE(TAG,"MIDIManager::GetNumMIDIIns() %d",MIDIManager::GetNumMIDIIns());          //FCKX
+    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
+    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->CanGet() %d",MIDIManager::GetInDriver(0)->CanGet()); 
+  
 
       
     //if MIDI THRU
@@ -1469,7 +1475,8 @@ Here is an example:
     ESP_LOGE(TAG,"MIDIManager::GetNumMIDIIns() %d",MIDIManager::GetNumMIDIIns());          //FCKX
     ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
     ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->CanGet() %d",MIDIManager::GetInDriver(0)->CanGet()); 
-  
+    //development helper to check analyze proper operation of the private data object        
+//    MIDIManager::GetInDriver(0)->printData();
   
     //*******************************************************************
     //testing!!!! make HardwareMsgIn protected again in driver.h

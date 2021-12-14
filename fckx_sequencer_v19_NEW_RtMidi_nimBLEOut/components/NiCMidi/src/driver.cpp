@@ -117,7 +117,8 @@ void MIDIOutDriver::OpenPort() {
             ESP_LOGE(TAG,"MIDIOutDriver::OpenPort()");
             port->openPort(port_id);
 #if DRIVER_USES_MIDIMATRIX
-            out_matrix.Clear();
+            //out_matrix.Clear();
+            out_matrix.Reset();
 #endif
         }
         catch (RtMidiError& error) {

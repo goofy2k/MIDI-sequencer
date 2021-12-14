@@ -46,8 +46,7 @@ FCKX: make sure that the members of this class correpond to the state and state 
 that are expected by the equivalent class(es) in RtMidi and NicMidi
 
 */
-
-
+#ifdef UNBLOCK1
 struct MQTTMidiInData {
  /*   
     NimBLEServer* pServer;
@@ -73,7 +72,7 @@ struct MQTTMidiInData {
 #endif
   //MidiInApi :: MQTTMidiInData *rtMidiIn; //???
   };
-
+#endif //UNBLOCK1
 
 
 class MQTTMidiIn   //:public MidiInApi //(what does this parent class add?) 
@@ -86,8 +85,8 @@ class MQTTMidiIn   //:public MidiInApi //(what does this parent class add?)
     //! User callback function type definition.
     //typedef void (*RtMidiCallback)( double timeStamp, std::vector<unsigned char> *message, void *userData );
     typedef void (*MQTTMidiCallback)( double timeStamp, std::vector<unsigned char> *message, void *userData );
-   
-    MQTTMidiIn( const std::string &clientName, unsigned int queueSizeLimit);
+       MQTTMidiIn();
+    //MQTTMidiIn( const std::string &clientName, unsigned int queueSizeLimit);
 
 
 
@@ -98,8 +97,9 @@ class MQTTMidiIn   //:public MidiInApi //(what does this parent class add?)
     // ~MQTTMidiIn();
     ~MQTTMidiIn (void) throw();
     //! Open a MIDI input connection given by enumeration number.
-            
-
+    
+    //development helper to check analyze proper operation of the private data object        
+    void printData(void);
             
     void   openPort(unsigned int portNumber=0);
          //! Close an open MIDI connection (if one exists).
