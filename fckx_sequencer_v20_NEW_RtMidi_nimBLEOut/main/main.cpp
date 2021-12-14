@@ -1478,6 +1478,8 @@ Here is an example:
     //development helper to check analyze proper operation of the private data object        
 //    MIDIManager::GetInDriver(0)->printData();
   
+  
+    #ifdef INPUTBYHAND
     //*******************************************************************
     //testing!!!! make HardwareMsgIn protected again in driver.h
     ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
@@ -1487,19 +1489,19 @@ Here is an example:
 
     std::vector<unsigned char> msg_bytes_data;
     std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
-    /*
-    std::vector<unsigned char> msg_bytes_data =  { 0x10, 0x20, 0x30 };    
-    std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
-    */
     
+    //create raw dummy note on message
     msg_bytes_data =  { 0x90, 0x20, 0x7f };
+    //send it to input (HardwareMsgIn is normally protected, then this call is not possible)
     MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
-    
+    //create raw dummy note off message
     msg_bytes_data =  { 0x80, 0x20, 0x00 };
+    //send it to input (HardwareMsgIn is normally protected, then this call is not possible) 
     MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
     
     ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->HardwareMsgIn TEST END DIRECT CALL (no callback)");
     //*******************************************************************
+    #endif //#ifdef INPUTBYHAND
     
     ESP_LOGE(TAG,"Entering MIDIRecorder");                        
     MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
@@ -1515,6 +1517,9 @@ Here is an example:
   }
  
 #else //TEST_RECORDER
+   ESP_LOGW(TAG, "START RECORDER test_recorder()");
+   recorder.Start();
+   
    ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING test_recorder()");
   while (1) {      
 /*

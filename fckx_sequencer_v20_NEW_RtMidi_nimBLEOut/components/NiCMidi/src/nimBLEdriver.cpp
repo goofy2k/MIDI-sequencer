@@ -481,8 +481,9 @@ void MidiOutNimBLE :: openVirtualPort( const std::string &portName )
 */
 void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
 //void MidiOutNimBLE :: sendMessage( const unsigned char *message, size_t size )
-{
+{    static const char *TAG = "MidiOutNimBLE :: sendMessage";
     ESP_LOGW(TAG, "sendMessage  TO BE IMPLEMENTED"); 
+    ESP_LOGW(TAG, "message->size() %d", message->size());
     /*
     ESP_LOGW(TAG, "message.size %d", message->size());
     for (unsigned i=0; i<message->size(); i++)
@@ -491,7 +492,7 @@ void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
     //raw version copied from main::sendToMIDIOut
         //prepare for sending to output
     //convert MIDIMessage to midiPacket
-    static const char *TAG = "sendToMIDIOut";  
+  
     //unsigned long int mididata;
     uint8_t midiPacket[8];
     unsigned char header;
@@ -531,7 +532,7 @@ void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
 
 
    for (unsigned i=0; i<message->size(); i++) {
-    ESP_LOGW(TAG, "message.size %d", message->at(i));
+    ESP_LOGW(TAG, "message->at(i) %d", message->at(i));
     midiPacket[i] = message->at(i);
    };
 

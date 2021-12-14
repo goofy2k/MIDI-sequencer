@@ -231,12 +231,17 @@ static void notifyCallback(
     ESP_LOGE(TAG,"DATA2: %u (0x%X)", pData[4], pData[4]) ; //integers are 32 bits!!!!             
 */
     //for 3 bytes messages
-     DSP->propagateMidi(3, 0, pData[0], 0, pData[1], pData[1]);  
+    DSP->propagateMidi(3, 0, pData[0]& 0xf0, 0, pData[1], pData[2]);
+   //  DSP->propagateMidi(3, 0, pData[0], 0, pData[1], pData[1]);  
     //ESP_LOGE(TAG,"HEADER: %u (0x%X)", pData[0], pData[0]);
     //ESP_LOGE(TAG,"TIMESTAMP: %u (0x%X)", pData[1], pData[1]);    
-    ESP_LOGE(TAG,"STATUS: %u (0x%X)", pData[0], pData[0]);
-    ESP_LOGE(TAG,"DATA1: %u (0x%X)", pData[1], pData[1]);
-    ESP_LOGE(TAG,"DATA2: %u (0x%X)", pData[2], pData[2]) ; //integers are 32 bits!!!! 
+    ESP_LOGE(TAG,"BYTE0: %u (0x%X)", pData[0], pData[0]);
+    ESP_LOGE(TAG,"BYTE1: %u (0x%X)", pData[1], pData[1]);
+    ESP_LOGE(TAG,"BYTE2: %u (0x%X)", pData[2], pData[2]) ; //integers are 32 bits!!!!
+    ESP_LOGE(TAG,"STATUS: %u (0x%X)",pData[0] & 0xf0, pData[0] & 0xf0);
+    ESP_LOGE(TAG,"CHANNEL: %u (0x%X)",pData[0] & 0x0f, pData[0] & 0x0f);
+    ESP_LOGE(TAG,"PITCH: %u (0x%X)", pData[1], pData[1]);
+    ESP_LOGE(TAG,"VELOCITY: %u (0x%X)", pData[2], pData[2]) ; //integers are 32 bits!!!!     
 }
 
 /**  None of these are required as they will be handled by the library with defaults. **
