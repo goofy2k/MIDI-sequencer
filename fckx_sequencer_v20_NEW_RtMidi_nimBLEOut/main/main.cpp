@@ -485,62 +485,17 @@ bool insertMIDI_Sorted(MIDIQueue inQ, MIDIQueue sortedQueue){
 
 
 #endif 
-bool printMIDI_Input(esp_mqtt_event_handle_t event){
 
-//bool storeMIDI_Input(esp_mqtt_event_handle_t event, jdksmidi::MIDIQueue inQ){
-    // store incoming MQTT MIDI event in input buffer    
-    static const char *TAG = "storeMIDI_Input"; 
-    bool result = false;   
-     //display incoming data
-    ESP_LOGI(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
-    ESP_LOGI(TAG,"DATA:%.*s ", event->data_len, event->data);
-    ESP_LOGI(TAG,"DATA0 %d", event->data[0]);
-    ESP_LOGI(TAG,"DATA1 %d", event->data[1]); 
-    ESP_LOGI(TAG,"DATA2 %d", event->data[2]); 
-    ESP_LOGI(TAG,"DATA3 %d", event->data[3]); 
-    ESP_LOGI(TAG,"DATA4 %d", event->data[4]);
-    
- #ifdef USEJDKSMIDIQUEUE   
-    //SEQUENCER TASK 3.
-    //prepare for storing MIDI input
-    
-    fckxMIDITimedMessage inMsg;
-    inMsg.timestamp = xTaskGetTickCount();
-    inMsg.status = event->data[2];    
-    inMsg.data1 = event->data[3];  
-    inMsg.data2 = event->data[4];  
-   
-    ESP_LOGI(TAG,"inMsg.timestamp %lu", inMsg.timestamp);
-    ESP_LOGI(TAG,"inMsg.status %d", inMsg.status); 
-    ESP_LOGI(TAG,"inMsg.data1 %d", inMsg.data1); 
-    ESP_LOGI(TAG,"inMsg.data2 %d", inMsg.data2); 
-    
-
-     printf("bufCount %d\n",bufCount);
-     if (inQ.CanGet()) {
-         printf("CanGet true\n");
-     //ESP_LOGE(TAG,"inQ.CanGet() is true"); 
-     } else {
-     ESP_LOGE(TAG,"inQ.CanGet() is false"); }
-     
-    if (inQ.CanPut()) {
-       // ESP_LOGE(TAG,"inQ.CanPut() is true");
-       printf("CanPut true\n");
-         inQ.Put(inMsg); 
-        
-    } else {
-       ESP_LOGE(TAG,"inQ.CanPut() is false");
-       //printf("CanPut false");
-    };
-   bufCount = bufCount + 1;
-   
-#endif //#ifdef USEJDKSMIDIQUEUE
-
-
-    //Append inMsg to input buffer    
-    //<code here>    
-    
-    return result;
+void printMIDI_Input(esp_mqtt_event_handle_t event){  
+    //display incoming data 
+    static const char *TAG = "printMIDI_Input"; 
+    ESP_LOGD(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
+    ESP_LOGD(TAG,"DATA:%.*s ", event->data_len, event->data);
+    ESP_LOGD(TAG,"DATA0 %d", event->data[0]);
+    ESP_LOGD(TAG,"DATA1 %d", event->data[1]); 
+    ESP_LOGD(TAG,"DATA2 %d", event->data[2]); 
+    ESP_LOGD(TAG,"DATA3 %d", event->data[3]); 
+    ESP_LOGD(TAG,"DATA4 %d", event->data[4]);
 };
 
 
@@ -560,15 +515,15 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     //receive a 5 byte MIDI message 
 
     //display incoming MIDI data
-    ESP_LOGI(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
-    ESP_LOGI(TAG,"DATA:%.*s ", event->data_len, event->data);
-    ESP_LOGI(TAG,"data_len %d",event->data_len);  
+    ESP_LOGD(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
+    ESP_LOGD(TAG,"DATA:%.*s ", event->data_len, event->data);
+    ESP_LOGD(TAG,"data_len %d",event->data_len);  
 
-    ESP_LOGI(TAG,"DATA0 %d", event->data[0]);
-    ESP_LOGI(TAG,"DATA1 %d", event->data[1]); 
-    ESP_LOGI(TAG,"DATA2 %d", event->data[2]); 
-    ESP_LOGI(TAG,"DATA3 %d", event->data[3]); 
-    ESP_LOGI(TAG,"DATA4 %d", event->data[4]);
+    ESP_LOGD(TAG,"DATA0 %d", event->data[0]);
+    ESP_LOGD(TAG,"DATA1 %d", event->data[1]); 
+    ESP_LOGD(TAG,"DATA2 %d", event->data[2]); 
+    ESP_LOGD(TAG,"DATA3 %d", event->data[3]); 
+    ESP_LOGD(TAG,"DATA4 %d", event->data[4]);
     
     //prepare for immediate sending to sound board (MIDI THRU)
     //create midiPacket for BLE notify
@@ -601,10 +556,10 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
     //development helper to check analyze proper operation of the private data object        
    // MIDIManager::GetInDriver(0)->printData();
-    ESP_LOGE(TAG,"Learning about MIDIManager Interface"); 
-    ESP_LOGE(TAG,"MIDIManager::GetNumMIDIIns() %d",MIDIManager::GetNumMIDIIns());          //FCKX
-    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
-    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->CanGet() %d",MIDIManager::GetInDriver(0)->CanGet()); 
+    ESP_LOGV(TAG,"Learning about MIDIManager Interface"); 
+    ESP_LOGV(TAG,"MIDIManager::GetNumMIDIIns() %d",MIDIManager::GetNumMIDIIns());          //FCKX
+    ESP_LOGV(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
+    ESP_LOGV(TAG,"MIDIManager::GetInDriver(0)->CanGet() %d",MIDIManager::GetInDriver(0)->CanGet()); 
   
 
       
@@ -1393,9 +1348,14 @@ void app_main(void) {
 
     
     static const char *TAG = "APP_MAIN";   
-    esp_log_level_set("*", ESP_LOG_INFO);
+    
+    esp_log_level_set("*", ESP_LOG_VERBOSE);
+    esp_log_level_set("MidiOutNimBLE :: sendMessage", ESP_LOG_ERROR);
+    esp_log_level_set("RECORDER_FCKX", ESP_LOG_WARN);
+    esp_log_level_set("FCKX_SEQ_API", ESP_LOG_DEBUG);
     esp_log_level_set("NimBLE", ESP_LOG_VERBOSE);
     esp_log_level_set("storeMIDI_Input", ESP_LOG_INFO);
+    
     ESP_LOGI(TAG, "[APP] Startup..");
     ESP_LOGI(TAG, "[APP] Free memory: %d bytes", esp_get_free_heap_size());
     ESP_LOGI(TAG, "[APP] IDF version: %s", esp_get_idf_version());
@@ -1404,7 +1364,7 @@ void app_main(void) {
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
-//jdksmidi::MIDIQueue inQ(5);  
+
     /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
     * Read "Establishing Wi-Fi or Ethernet Connection" section in
     * examples/protocols/README.md for more information about this function.
@@ -1559,6 +1519,7 @@ Here is an example:
     
     ESP_LOGE(TAG,"Entering MIDIRecorder");                        
     MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+
 #endif //ifdef TEST_RECORDER 
   
 
@@ -1593,9 +1554,12 @@ Here is an example:
 
  
 #ifdef TEST_RECORDER
-    MIDIManager::AddMIDITick(&recorder);
-    text_n.SetSequencer(&sequencer);
    ESP_LOGW(TAG, "START RECORDER test_recorder()");
+   MIDIManager::AddMIDITick(&recorder);
+   text_n.SetSequencer(&sequencer);
+
+   recorder.EnableTrack(0);  //FCKX
+   recorder.SetTrackRecChannel(0,0);
    recorder.Start();
    
    ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING test_recorder()");
@@ -1606,6 +1570,8 @@ Here is an example:
     DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
    
 */
+
+/*
     MIDIRawMessage mymsg; 
    // while (MIDIManager::GetInDriver(0)->CanGet()) {
         
@@ -1623,7 +1589,7 @@ Here is an example:
         //OutputMessage (const MIDITimedMessage &msg)
     }
 
-    
+  */  
     vTaskDelay(10 / portTICK_PERIOD_MS);  
   
   } 

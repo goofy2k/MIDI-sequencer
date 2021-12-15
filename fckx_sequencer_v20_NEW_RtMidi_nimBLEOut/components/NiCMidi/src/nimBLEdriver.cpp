@@ -482,7 +482,7 @@ void MidiOutNimBLE :: openVirtualPort( const std::string &portName )
 void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
 //void MidiOutNimBLE :: sendMessage( const unsigned char *message, size_t size )
 {    static const char *TAG = "MidiOutNimBLE :: sendMessage";
-    ESP_LOGW(TAG, "sendMessage  TO BE IMPLEMENTED"); 
+    //ESP_LOGW(TAG, "sendMessage  TO BE IMPLEMENTED"); 
     ESP_LOGW(TAG, "message->size() %d", message->size());
     /*
     ESP_LOGW(TAG, "message.size %d", message->size());
