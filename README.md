@@ -454,8 +454,13 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   **v20 TASKS AHEAD:**
    - test response of recorder on current status of MQTT input
+  
+  **v21 TASKS AHEAD:**
+   - Solve issue with repeated usage of data in input queue. Input queue is not emptied after using the data
    - IF OK: convert HardwareMsgIn to a real callback (triggered by ...receipt of a message.... ? )
-   - IF NOT OK critically evaluate proper implementation of MidiInData for MQTT input 
+   - Critically evaluate input of MIDI data in sequencer.  Nordered MQTT sends 5 byte timed BLE_MIDI format
+     sequencer MIDI in (MQTT API / HardwareMsgIn uses only 3 bytes now but adds a timestamp on receipt.
+   - Decide on usage of timestamp on send or timestamp on receipt. Keep both methods as options. Note:  if using timestamp on send, both clocks need to be synchronized.
   
  
   
