@@ -378,9 +378,15 @@ bool MIDIInDriver::ReadMessage(MIDIRawMessage& msg, unsigned int n) {
 void MIDIInDriver::HardwareMsgIn(double time,
                                  std::vector<unsigned char>* msg_bytes,
                                  void* p) {
-                                     
+    static const char *TAG = "HardwareMsgIn";                                
     ESP_LOGW(TAG,"A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)");                                 
     
+    
+    
+    for (int i = 0; i < msg_bytes->size(); i++) {
+
+    ESP_LOGI(TAG, "msg_bytes.at(%d) %u (0x%X)" ,i, msg_bytes->at(i), msg_bytes->at(i));
+    };
     
     //changes for MQTT will NOT be here
     //This function is called as a call back.
@@ -421,12 +427,18 @@ void MIDIInDriver::HardwareMsgIn(double time,
             msg.SetByte2(msg_bytes->operator[](2)); // byte3 surely 0 in non-meta messages
     }
 
-    if (!msg.IsNoOp()) {                            // now we have a valid message
 
+
+    if (!msg.IsNoOp()) {                            // now we have a valid message
+    
+        ESP_LOGI(TAG,"MSG BEFORE PROCESSOR %s", msg.MsgToText().c_str()); 
         if (drv->processor)
             drv->processor->Process(&msg);          // process it with the in processor
-                                                    // adds the message to the queue
-        drv->in_queue.PutMessage(MIDIRawMessage(msg,
+
+
+        ESP_LOGI(TAG,"MSG AFTER PROCESSOR %s", msg.MsgToText().c_str());                                            
+
+        drv->in_queue.PutMessage(MIDIRawMessage(msg,   // adds the message to the queue
                                                 MIDITimer::GetSysTimeMs(),
                                                 drv->port_id));
         std::cout << "Got message, queue size: " << drv->in_queue.GetLength() << std::endl;

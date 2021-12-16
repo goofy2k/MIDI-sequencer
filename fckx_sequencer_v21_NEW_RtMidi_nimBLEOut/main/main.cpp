@@ -552,8 +552,11 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
     */
     
-    msg_bytes_data =  { 0x90, 0x20, 0x7f };
-    MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
+//   msg_bytes_data =  { 0x90, 0x20, 0x7f };
+msg_bytes_data =  { event->data[2], event->data[3], event->data[4] };
+    MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);  //should contain msg_bytes_data!!!!
+
+
     //development helper to check analyze proper operation of the private data object        
    // MIDIManager::GetInDriver(0)->printData();
     ESP_LOGV(TAG,"Learning about MIDIManager Interface"); 
@@ -1354,7 +1357,7 @@ void app_main(void) {
     esp_log_level_set("RECORDER_FCKX", ESP_LOG_WARN);
     esp_log_level_set("FCKX_SEQ_API", ESP_LOG_DEBUG);
     esp_log_level_set("NimBLE", ESP_LOG_VERBOSE);
-    esp_log_level_set("storeMIDI_Input", ESP_LOG_INFO);
+    esp_log_level_set("printMIDI_Input", ESP_LOG_VERBOSE);
     
     ESP_LOGI(TAG, "[APP] Startup..");
     ESP_LOGI(TAG, "[APP] Free memory: %d bytes", esp_get_free_heap_size());
@@ -1495,11 +1498,11 @@ Here is an example:
   
     #ifdef INPUTBYHAND
     //*******************************************************************
-    //testing!!!! make HardwareMsgIn protected again in driver.h
+    //JUST TESTING, NORMALLY BLOCKED!!!! make HardwareMsgIn protected again in driver.h
     ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
  
     double time = 111; 
-    void* p = MIDIManager::GetInDriver(0);  //when called in the driver this should be "this"
+    void* p = MIDIManager::GetInDriver(0);  //when called in the driver this should be "this" (?)
 
     std::vector<unsigned char> msg_bytes_data;
     std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
