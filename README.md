@@ -466,6 +466,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
    - Critically evaluate input of MIDI data in sequencer.  Nordered MQTT sends 5 byte timed BLE_MIDI format
      sequencer MIDI in (MQTT API / HardwareMsgIn uses only 3 bytes now but adds a timestamp on receipt.
    - Decide on usage of timestamp on send or timestamp on receipt. Keep both methods as options. Note:  if using timestamp on send, both clocks need to be synchronized.
+   - Investigate output of data via MQTT, using the ost option in dump_tracks.h/.cpp .  Also see http://videocortex.io/2017/custom-stream-buffers/ for implementation of ostream. 
   
  
   
