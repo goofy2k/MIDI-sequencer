@@ -452,8 +452,10 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
     E (67316) FCKX_SEQ_API: MIDIManager::GetInDriver(0)->GetQueueSize() 3
     E (67326) FCKX_SEQ_API: MIDIManager::GetInDriver(0)->CanGet() 1
   
-  **v20 TASKS AHEAD:**
-   - test response of recorder on current status of MQTT input
+  **v20:**
+   - tested response of recorder on current status of MQTT input
+   - sequencer example plays a note on receipt via MQTT, but keeps on playing at every miditick (input queue NOT flushed).
+   - V20a, repaired issue with wrong data. Removed usage of dummy note for testing.
   
   **v21 TASKS AHEAD:**
    - Solve issue with repeated usage of data in input queue. Input queue is not emptied after using the data
