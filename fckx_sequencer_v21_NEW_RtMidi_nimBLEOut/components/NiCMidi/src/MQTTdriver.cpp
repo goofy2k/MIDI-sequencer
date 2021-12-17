@@ -484,7 +484,7 @@ void MQTTMidiIn :: setCallback( MQTTMidiIn::MQTTMidiCallback callback, void *use
   inputData_.userData = userData;
   inputData_.usingCallback = true;
 */ //FCKX! 
-  ESP_LOGE(TAG,"RtMidiIn::setCallback: STORING CALLBACK IN inputData_");
+  ESP_LOGE(TAG,"MQTTMidiIn::setCallback: STORING CALLBACK IN inputData_");
   inputData_.userCallback = callback;
   inputData_.userData = userData;
   inputData_.usingCallback = true; 
@@ -535,21 +535,22 @@ void MQTTMidiIn :: ignoreTypes( bool midiSysex, bool midiTime, bool midiSense )
 double MQTTMidiIn :: getMessage( std::vector<unsigned char> *message )
 { //IMPLEMENTATION CHECKED OK against CLEAN RtMidi.cpp 620
   message->clear();
-  //if ( inputData_.usingCallback )  //FCKX!
+
   if ( inputData_.usingCallback ) 
   {
    // errorString_ = "RtMidiIn::getNextMessage: a user callback is currently set for this port.";
    // error( RtMidiError::WARNING, errorString_ );
-    ESP_LOGE(TAG, "RtMidiIn::getNextMessage: a user callback is currently set for this port."); //error( RtMidiError::DRIVER_ERROR, errorString_ );
-
+    ESP_LOGE(TAG, "MQTTMidiIn::getMessage: ERROR !!!!! a user callback is currently set for this port."); //error( RtMidiError::DRIVER_ERROR, errorString_ );
     return 0.0;
   }
 
   double timeStamp;
-    if ( !inputData_.queue.pop( message, &timeStamp ) )
- // if ( !inputData_.queue.pop( message, &timeStamp ) ) //FCKX!
-    return 0.0;
+    if ( !inputData_.queue.pop( message, &timeStamp ) ) {
 
+    ESP_LOGE(TAG, "MQTTMidiIn::getMessage: queue.pop FALSE return timestamp 0.0"); 
+    return 0.0; 
+    }
+    ESP_LOGE(TAG, "MQTTMidiIn::getMessage: INFO timestamp %f", timeStamp); 
   return timeStamp;
 }
 

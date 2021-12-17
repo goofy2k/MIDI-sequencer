@@ -1,0 +1,303 @@
+TRACE INSERTION IN TRACK
+
+PLAY 3 NOTES AFTER FRESH BOOT (6 EVENTS)
+
+3x (KEY ON - KEY OFF)  same pitch and velocity
+
+SUMMARY of traces (track.cpp:210 ....) :
+
+E (21578) InsertEvent: INSERT 1a
+E (21578) InsertEvent: FindEventNumber 1 (must be true)
+E (21588) InsertEvent: ev_num 0
+E (21588) InsertEvent: INSERT 4
+E (21588) InsertEvent: INSERT 4a
+E (21598) InsertEvent: INSERT 5
+E (21598) InsertEvent: INSERT 8
+E (21608) InsertEvent: INSERT 7
+
+E (22088) InsertEvent: INSERT 1a
+E (22088) InsertEvent: FindEventNumber 1 (must be true)
+E (22098) InsertEvent: ev_num 0
+E (22098) InsertEvent: INSERT 4
+E (22108) InsertEvent: INSERT 4a
+E (22108) InsertEvent: INSERT 5
+E (22108) InsertEvent: INSERT 4a
+E (22118) InsertEvent: INSERT 5
+E (22118) InsertEvent: INSERT 8
+E (22118) InsertEvent: INSERT 7
+
+E (22908) InsertEvent: INSERT 1a
+E (22908) InsertEvent: FindEventNumber 1 (must be true)
+E (22918) InsertEvent: ev_num 0
+E (22918) InsertEvent: INSERT 4
+E (22928) InsertEvent: INSERT 4a
+E (22928) InsertEvent: INSERT 5
+E (22928) InsertEvent: INSERT 4a
+E (22938) InsertEvent: INSERT 4b
+
+E (23418) InsertEvent: INSERT 1a
+E (23418) InsertEvent: FindEventNumber 1 (must be true)
+E (23428) InsertEvent: ev_num 0
+E (23428) InsertEvent: INSERT 4
+E (23438) InsertEvent: INSERT 4a
+E (23438) InsertEvent: INSERT 4b
+
+E (24438) InsertEvent: INSERT 1a
+E (24448) InsertEvent: FindEventNumber 1 (must be true)
+E (24448) InsertEvent: ev_num 0
+E (24458) InsertEvent: INSERT 4
+E (24458) InsertEvent: INSERT 4a
+E (24468) InsertEvent: INSERT 5
+E (24468) InsertEvent: INSERT 4a
+E (24468) InsertEvent: INSERT 4b
+
+E (24958) InsertEvent: INSERT 1a
+E (24958) InsertEvent: FindEventNumber 1 (must be true)
+E (24968) InsertEvent: ev_num 0
+E (24968) InsertEvent: INSERT 4
+E (24968) InsertEvent: INSERT 4a
+E (24978) InsertEvent: INSERT 4b
+
+
+
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 7 BEAT 2
+E (21088) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E (21088) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 7 BEAT 3
+I (21478) FCKX_SEQ: MQTT_EVENT_DATA
+E (21478) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (21478) HardwareMsgIn: A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (21488) HardwareMsgIn: msg_bytes.at(0) 144 (0x90)
+I (21498) HardwareMsgIn: msg_bytes.at(1) 47 (0x2F)
+I (21498) HardwareMsgIn: msg_bytes.at(2) 127 (0x7F)
+MQTT_In callback executed   I (21508) HardwareMsgIn: MSG BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  47  Vel  127
+I (21518) HardwareMsgIn: MSG AFTER PROCESSOR        0 : Ch  0     NOTE ON         Note  47  Vel  127
+Got message, queue size: 1
+W (21528) RECORDER_FCKX: port->ReadMessage 0
+W (21538) RECORDER_FCKX: IsChannelMsg() TRUE
+W (21538) RECORDER_FCKX: msg.GetChannel 0
+W (21548) RECORDER_FCKX: LOC1 track 0
+W (21548) RECORDER_FCKX: LOC2 track 0
+W (21558) RECORDER_FCKX: GetTrack(i)->GetRecChannel 0
+W (21558) RECORDER_FCKX: LOC3 track 0
+W (21568) RECORDER_FCKX: LOC4 track 0
+W (21568) RECORDER_FCKX: insert the event into the track 0
+
+E (21578) InsertEvent: INSERT 1a
+E (21578) InsertEvent: FindEventNumber 1 (must be true)
+E (21588) InsertEvent: ev_num 0
+E (21588) InsertEvent: INSERT 4
+E (21588) InsertEvent: INSERT 4a
+E (21598) InsertEvent: INSERT 5
+E (21598) InsertEvent: INSERT 8
+E (21608) InsertEvent: INSERT 7
+
+W (21608) RECORDER_FCKX: tell the driver to send this message 0
+E (21618) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+W (21628) RECORDER_FCKX: LOC5 track 0
+E (21628) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E (21638) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 8
+GUI EVENT: Transport MEAS 8 BEAT 0
+I (21988) FCKX_SEQ: MQTT_EVENT_DATA
+E (21988) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (21998) HardwareMsgIn: A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (21998) HardwareMsgIn: msg_bytes.at(0) 128 (0x80)
+I (22008) HardwareMsgIn: msg_bytes.at(1) 47 (0x2F)
+I (22018) HardwareMsgIn: msg_bytes.at(2) 0 (0x0)
+MQTT_In callback executed   I (22018) HardwareMsgIn: MSG BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  47  Vel    0
+I (22028) HardwareMsgIn: MSG AFTER PROCESSOR        0 : Ch  0     NOTE OFF        Note  47  Vel    0
+Got message, queue size: 1
+W (22048) RECORDER_FCKX: port->ReadMessage 0
+W (22048) RECORDER_FCKX: IsChannelMsg() TRUE
+W (22058) RECORDER_FCKX: msg.GetChannel 0
+W (22058) RECORDER_FCKX: LOC1 track 0
+W (22058) RECORDER_FCKX: LOC2 track 0
+W (22068) RECORDER_FCKX: GetTrack(i)->GetRecChannel 0
+W (22068) RECORDER_FCKX: LOC3 track 0
+W (22078) RECORDER_FCKX: LOC4 track 0
+W (22078) RECORDER_FCKX: insert the event into the track 0
+
+E (22088) InsertEvent: INSERT 1a
+E (22088) InsertEvent: FindEventNumber 1 (must be true)
+E (22098) InsertEvent: ev_num 0
+E (22098) InsertEvent: INSERT 4
+E (22108) InsertEvent: INSERT 4a
+E (22108) InsertEvent: INSERT 5
+E (22108) InsertEvent: INSERT 4a
+E (22118) InsertEvent: INSERT 5
+E (22118) InsertEvent: INSERT 8
+E (22118) InsertEvent: INSERT 7
+
+W (22128) RECORDER_FCKX: tell the driver to send this message 0
+E (22138) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+W (22148) RECORDER_FCKX: LOC5 track 0
+E (22148) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E (22158) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 8 BEAT 1
+E (22588) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E (22588) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 8 BEAT 2
+I (22808) FCKX_SEQ: MQTT_EVENT_DATA
+E (22808) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (22808) HardwareMsgIn: A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (22818) HardwareMsgIn: msg_bytes.at(0) 144 (0x90)
+I (22828) HardwareMsgIn: msg_bytes.at(1) 47 (0x2F)
+I (22828) HardwareMsgIn: msg_bytes.at(2) 127 (0x7F)
+MQTT_In callback executed   I (22838) HardwareMsgIn: MSG BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  47  Vel  127
+I (22848) HardwareMsgIn: MSG AFTER PROCESSOR        0 : Ch  0     NOTE ON         Note  47  Vel  127
+Got message, queue size: 1
+W (22868) RECORDER_FCKX: port->ReadMessage 0
+W (22868) RECORDER_FCKX: IsChannelMsg() TRUE
+W (22868) RECORDER_FCKX: msg.GetChannel 0
+W (22878) RECORDER_FCKX: LOC1 track 0
+W (22878) RECORDER_FCKX: LOC2 track 0
+W (22888) RECORDER_FCKX: GetTrack(i)->GetRecChannel 0
+W (22888) RECORDER_FCKX: LOC3 track 0
+W (22898) RECORDER_FCKX: LOC4 track 0
+W (22898) RECORDER_FCKX: insert the event into the track 0
+
+
+E (22908) InsertEvent: INSERT 1a
+E (22908) InsertEvent: FindEventNumber 1 (must be true)
+E (22918) InsertEvent: ev_num 0
+E (22918) InsertEvent: INSERT 4
+E (22928) InsertEvent: INSERT 4a
+E (22928) InsertEvent: INSERT 5
+E (22928) InsertEvent: INSERT 4a
+E (22938) InsertEvent: INSERT 4b
+
+
+W (22938) RECORDER_FCKX: tell the driver to send this message 0
+E (22948) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+W (22958) RECORDER_FCKX: LOC5 track 0
+E (23088) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E (23088) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 8 BEAT 3
+I (23318) FCKX_SEQ: MQTT_EVENT_DATA
+E (23318) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (23328) HardwareMsgIn: A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (23338) HardwareMsgIn: msg_bytes.at(0) 128 (0x80)
+I (23338) HardwareMsgIn: msg_bytes.at(1) 47 (0x2F)
+I (23348) HardwareMsgIn: msg_bytes.at(2) 0 (0x0)
+MQTT_In callback executed   I (23348) HardwareMsgIn: MSG BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  47  Vel    0
+I (23358) HardwareMsgIn: MSG AFTER PROCESSOR        0 : Ch  0     NOTE OFF        Note  47  Vel    0
+Got message, queue size: 1
+W (23378) RECORDER_FCKX: port->ReadMessage 0
+W (23378) RECORDER_FCKX: IsChannelMsg() TRUE
+W (23388) RECORDER_FCKX: msg.GetChannel 0
+W (23388) RECORDER_FCKX: LOC1 track 0
+W (23398) RECORDER_FCKX: LOC2 track 0
+W (23398) RECORDER_FCKX: GetTrack(i)->GetRecChannel 0
+W (23408) RECORDER_FCKX: LOC3 track 0
+W (23408) RECORDER_FCKX: LOC4 track 0
+W (23408) RECORDER_FCKX: insert the event into the track 0
+
+E (23418) InsertEvent: INSERT 1a
+E (23418) InsertEvent: FindEventNumber 1 (must be true)
+E (23428) InsertEvent: ev_num 0
+E (23428) InsertEvent: INSERT 4
+E (23438) InsertEvent: INSERT 4a
+E (23438) InsertEvent: INSERT 4b
+
+
+W (23438) RECORDER_FCKX: tell the driver to send this message 0
+E (23448) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+W (23458) RECORDER_FCKX: LOC5 track 0
+E (23588) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E (23588) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 9
+GUI EVENT: Transport MEAS 9 BEAT 0
+E (24088) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E (24088) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 9 BEAT 1
+I (24348) FCKX_SEQ: MQTT_EVENT_DATA
+E (24348) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (24348) HardwareMsgIn: A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (24358) HardwareMsgIn: msg_bytes.at(0) 144 (0x90)
+I (24368) HardwareMsgIn: msg_bytes.at(1) 47 (0x2F)
+I (24368) HardwareMsgIn: msg_bytes.at(2) 127 (0x7F)
+MQTT_In callback executed   I (24378) HardwareMsgIn: MSG BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  47  Vel  127
+I (24388) HardwareMsgIn: MSG AFTER PROCESSOR        0 : Ch  0     NOTE ON         Note  47  Vel  127
+Got message, queue size: 1
+W (24398) RECORDER_FCKX: port->ReadMessage 0
+W (24408) RECORDER_FCKX: IsChannelMsg() TRUE
+W (24408) RECORDER_FCKX: msg.GetChannel 0
+W (24418) RECORDER_FCKX: LOC1 track 0
+W (24418) RECORDER_FCKX: LOC2 track 0
+W (24418) RECORDER_FCKX: GetTrack(i)->GetRecChannel 0
+W (24428) RECORDER_FCKX: LOC3 track 0
+W (24428) RECORDER_FCKX: LOC4 track 0
+W (24438) RECORDER_FCKX: insert the event into the track 0
+
+E (24438) InsertEvent: INSERT 1a
+E (24448) InsertEvent: FindEventNumber 1 (must be true)
+E (24448) InsertEvent: ev_num 0
+E (24458) InsertEvent: INSERT 4
+E (24458) InsertEvent: INSERT 4a
+E (24468) InsertEvent: INSERT 5
+E (24468) InsertEvent: INSERT 4a
+E (24468) InsertEvent: INSERT 4b
+
+W (24478) RECORDER_FCKX: tell the driver to send this message 0
+E (24478) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+W (24488) RECORDER_FCKX: LOC5 track 0
+E (24588) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E (24588) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 9 BEAT 2
+I (24858) FCKX_SEQ: MQTT_EVENT_DATA
+E (24858) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (24858) HardwareMsgIn: A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (24868) HardwareMsgIn: msg_bytes.at(0) 128 (0x80)
+I (24878) HardwareMsgIn: msg_bytes.at(1) 47 (0x2F)
+I (24878) HardwareMsgIn: msg_bytes.at(2) 0 (0x0)
+MQTT_In callback executed   I (24888) HardwareMsgIn: MSG BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  47  Vel    0
+I (24898) HardwareMsgIn: MSG AFTER PROCESSOR        0 : Ch  0     NOTE OFF        Note  47  Vel    0
+Got message, queue size: 1
+W (24908) RECORDER_FCKX: port->ReadMessage 0
+W (24918) RECORDER_FCKX: IsChannelMsg() TRUE
+W (24918) RECORDER_FCKX: msg.GetChannel 0
+W (24928) RECORDER_FCKX: LOC1 track 0
+W (24928) RECORDER_FCKX: LOC2 track 0
+W (24938) RECORDER_FCKX: GetTrack(i)->GetRecChannel 0
+W (24938) RECORDER_FCKX: LOC3 track 0
+W (24948) RECORDER_FCKX: LOC4 track 0
+W (24948) RECORDER_FCKX: insert the event into the track 0
+
+E (24958) InsertEvent: INSERT 1a
+E (24958) InsertEvent: FindEventNumber 1 (must be true)
+E (24968) InsertEvent: ev_num 0
+E (24968) InsertEvent: INSERT 4
+E (24968) InsertEvent: INSERT 4a
+E (24978) InsertEvent: INSERT 4b
+
+
+W (24978) RECORDER_FCKX: tell the driver to send this message 0
+E (24988) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+W (24998) RECORDER_FCKX: LOC5 track 0
+E (25088) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E

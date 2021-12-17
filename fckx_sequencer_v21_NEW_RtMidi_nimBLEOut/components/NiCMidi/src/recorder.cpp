@@ -416,7 +416,7 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
     proc_lock.lock();
     MIDIClockTime cur_time = seq->GetCurrentMIDIClockTime();
     // we are recording
-    if (cur_time >= rec_start_time && cur_time < rec_end_time) {    // TODO or <= rec_end_rime ??
+    if (cur_time >= rec_start_time && cur_time < rec_end_time) {    // TODO or <= rec_end_time ??
      ESP_LOGV(TAG,"TICKPROC WITHIN TIME WINDOW"); //FCKX 
  // if this is the first time send a message to the GUI
         if (rec_on.load() == false) {
@@ -446,7 +446,7 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
                 //convert MIDIRawMessage to MIDITimedMessage
                 MIDITimedMessage msg(rmsg.msg);
                 //set time of MIDITimedMessage
-                //msg.SetTime(cur_time); //where is cur_time coming from?
+                msg.SetTime(cur_time); //where is cur_time coming from?
                 if (msg.IsChannelMsg()) {
                 //MIDIManager::GetOutDriver(tracks->GetTrack(0)->GetOutPort())->OutputMessage(msg); //temp code    
                  #define BLOCKIT

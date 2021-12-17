@@ -27,7 +27,7 @@
 
 #include "../include/track.h"
 #include "../include/matrix.h"
-
+#include "esp_log.h"
 
 ////////////////////////////////////////////////////////////////////////////
 //                                class MIDITrack                         //
@@ -207,19 +207,24 @@ void MIDITrack::SetInsertMode(tInsMode mode) {
 }
 
 
-bool MIDITrack::InsertEvent(const MIDITimedMessage& msg, tInsMode mode) {
+bool MIDITrack::InsertEvent(const MIDITimedMessage& msg, tInsMode mode) {  //FCKX many breadcrumbs
+    static const char *TAG = "InsertEvent"; 
     if (msg.IsDataEnd()) return false;                  // DATA_END only auto managed
 
-    if (GetEndTime() < msg.GetTime()) {                 // insert as last event
+    if (GetEndTime() < msg.GetTime()) {     // insert as last event
+        ESP_LOGE(TAG,"INSERT 1, GetEndTime() %lu < msg.GetTime() %lu ", GetEndTime(), msg.GetTime());   //FCKX 
         SetEndTime(msg.GetTime());                      // adjust DATA_END
         events.insert(events.end() - 1, msg);           // insert just before DATA_END
         status |= STATUS_DIRTY;
         return true;
     }
+    ESP_LOGE(TAG,"INSERT 1a, GetEndTime() %lu NOT < msg.GetTime() %lu ", GetEndTime(), msg.GetTime());   //FCKX 
 
     int ev_num;
-        // find the first event in the track with time <= msg time
-    FindEventNumber(msg.GetTime(), &ev_num);            // must return true
+    // find the first event in the track with time <= msg time
+    ESP_LOGE(TAG,"FindEventNumber %d (must be true)", FindEventNumber(msg.GetTime(), &ev_num)); //FCKX
+    //FindEventNumber(msg.GetTime(), &ev_num);            // must return true
+    ESP_LOGE(TAG,"ev_num %d", ev_num);  //FCKX
     int old_ev_num = ev_num;
 
     if (mode == INSMODE_DEFAULT)
@@ -229,6 +234,7 @@ bool MIDITrack::InsertEvent(const MIDITimedMessage& msg, tInsMode mode) {
         case INSMODE_DEFAULT:                           // dummy, for avoiding a warning
         case INSMODE_INSERT:                            // always insert the event
                 // find the right place among events with same time
+            ESP_LOGE(TAG,"INSERT 2");    
             while (CompareEventsForInsert(msg, events[ev_num]) == 1)
                 ev_num++;
             events.insert(events.begin() + ev_num, msg);
@@ -237,8 +243,11 @@ bool MIDITrack::InsertEvent(const MIDITimedMessage& msg, tInsMode mode) {
 
         case INSMODE_REPLACE:                           // replace a same kind event, or do nothing
                 // find a same kind event at same time
+            ESP_LOGE(TAG,"INSERT 3");    
             while (IsValidEventNum(ev_num) && events[ev_num].GetTime() == msg.GetTime()) {
+                 ESP_LOGE(TAG,"INSERT 3a"); 
                 if (IsSameKind(events[ev_num], msg)) {
+                     ESP_LOGE(TAG,"INSERT 3b"); 
                     events[ev_num] = msg;               // replace if found
                     status |= STATUS_DIRTY;
                     return true;
@@ -250,24 +259,31 @@ bool MIDITrack::InsertEvent(const MIDITimedMessage& msg, tInsMode mode) {
         case INSMODE_INSERT_OR_REPLACE:                 // replace a same kind, or insert
         case INSMODE_INSERT_OR_REPLACE_BUT_NOTE:        // (always insert notes)
                 // first search for a same kind event, as above
+            ESP_LOGE(TAG,"INSERT 4");
             while (IsValidEventNum(ev_num) && events[ev_num].GetTime() == msg.GetTime()) {
+                ESP_LOGE(TAG,"INSERT 4a");
                 if (IsSameKind(events[ev_num], msg) &&
                      (mode == INSMODE_INSERT_OR_REPLACE || !msg.IsNote())) {
+                    ESP_LOGE(TAG,"INSERT 4b");     
                     events[ev_num] = msg;               // replace if found
                     status |= STATUS_DIRTY;
                     return true;
                 }
                 ev_num++;
+                ESP_LOGE(TAG,"INSERT 5");
             }
                 // if not found a same kind insert the event
             ev_num = old_ev_num;
+            ESP_LOGE(TAG,"INSERT 8");
             while (CompareEventsForInsert(msg, events[ev_num]) == 1)
-                ev_num++;
+            {ev_num++;
+            ESP_LOGE(TAG,"INSERT 6"); }
             events.insert(events.begin() + ev_num, msg);
             status |= STATUS_DIRTY;
+            ESP_LOGE(TAG,"INSERT 7");
             return true;                                // insert
     }
-
+ESP_LOGE(TAG,"INSERT 8");
     return false;                                       // this should not happen
 }
 

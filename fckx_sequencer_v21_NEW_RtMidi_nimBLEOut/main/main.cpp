@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+#include <sstream> //for ost /stringbuf
 #include "esp_wifi.h"
 #include "esp_system.h"
 #include "nvs_flash.h"
@@ -123,6 +124,7 @@ BLEServer* pServer = NULL; //FCKX phase out //compile conditionally
 BLECharacteristic* pCharacteristic = NULL;  //FCKX phase out
 #endif
 
+bool dumpflag;
 
 static const char *TAG = "FCKX_SEQ";
 
@@ -323,6 +325,21 @@ static const char *TAG = "execute_single_midi_command";
 }
 
 #endif
+
+
+#define CUSTOM_OST
+//code for writing to custom output port, useful for re-directing UI/GUI output to e.g. MQTT
+//http://videocortex.io/2017/custom-stream-buffers/  //not suited for C++11
+//https://codereview.stackexchange.com/questions/185490/custom-ostream-for-a-println-like-function
+//https://coderedirect.com/questions/196423/a-custom-ostream //
+//https://www.cprogramming.com/tutorial/c++-iostreams.html
+#ifdef CUSTOM_OST
+
+
+
+#endif //CUSTOM_OST
+
+
 
 void printMsgBytes(MIDIMessage msg1){   //add an identifier text
     static const char *TAG = "printMsgBytes";  
@@ -564,8 +581,7 @@ msg_bytes_data =  { event->data[2], event->data[3], event->data[4] };
     ESP_LOGV(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
     ESP_LOGV(TAG,"MIDIManager::GetInDriver(0)->CanGet() %d",MIDIManager::GetInDriver(0)->CanGet()); 
   
-
-      
+    dumpflag = true;
     //if MIDI THRU
     //send midiPacket immediately to sound board
     //add check on NimBLE connection
@@ -1386,9 +1402,9 @@ void app_main(void) {
     wifi_init_sta();
    
     ESP_LOGW(TAG, "Initialize MQTT connection here");
-   esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
-  //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
-   //MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
+    esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
+    //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
+    //MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
 
     /**********************************************************************************
     *TEST  NiCMidi functionality
@@ -1557,6 +1573,7 @@ Here is an example:
 
  
 #ifdef TEST_RECORDER
+   dumpflag = false;
    ESP_LOGW(TAG, "START RECORDER test_recorder()");
    MIDIManager::AddMIDITick(&recorder);
    text_n.SetSequencer(&sequencer);
@@ -1564,35 +1581,22 @@ Here is an example:
    recorder.EnableTrack(0);  //FCKX
    recorder.SetTrackRecChannel(0,0);
    recorder.Start();
+
    
    ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING test_recorder()");
-  while (1) {      
-/*
-    //code here 
-    bool verbose = true;
-    DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
-   
-*/
+  
 
-/*
-    MIDIRawMessage mymsg; 
-   // while (MIDIManager::GetInDriver(0)->CanGet()) {
-        
-       
-        //get the message
-        //virtual bool 	InputMessage (MIDIRawMessage &msg)
-     while (MIDIManager::GetInDriver(0)->InputMessage(mymsg)) {
-        //this whole ado should be done automaticallly    
-             ESP_LOGI(TAG,">>>>>>>>>>>>>GOT MESSAGE>>>>>>>>>>>>>>>>>>>>>");
-        
-        //process
-        //convert MIDIRawMessage to MIDITimedMessage
-        //output
-        //MIDIManager::GetOutDriver(0)->OutputMessage(msg)
-        //OutputMessage (const MIDITimedMessage &msg)
+  while (1) {      
+  
+    if (dumpflag) {
+        ESP_LOGE(TAG, "********************* DUMP ALL Tracks **************************");    
+        bool verbose = true;
+        DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
+        dumpflag = false;
     }
 
-  */  
+
+  
     vTaskDelay(10 / portTICK_PERIOD_MS);  
   
   } 
