@@ -452,11 +452,22 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
     E (67316) FCKX_SEQ_API: MIDIManager::GetInDriver(0)->GetQueueSize() 3
     E (67326) FCKX_SEQ_API: MIDIManager::GetInDriver(0)->CanGet() 1
   
-  **v20 TASKS AHEAD:**
-   - test response of recorder on current status of MQTT input
-   - IF OK: convert HardwareMsgIn to a real callback (triggered by ...receipt of a message.... ? )
-   - IF NOT OK critically evaluate proper implementation of MidiInData for MQTT input 
+  **v20:**
+   - tested response of recorder on current status of MQTT input
+   - sequencer example plays a note on receipt via MQTT, but keeps on playing at every miditick (input queue NOT flushed).
+   - V20a, repaired issue with wrong data. Removed usage of dummy note for testing.
   
+  **v21 TASKS AHEAD:**
+   - SOLVED issue with repeated usage of data in input queue. Input queue is not emptied after using the data because FlushQueue was commented in manager.cpp:255
+   - Inspect data in tracks
+   - Switch off / control metronome in recorder example
+   - Allow usage of AllNotesOff command to ease the developer :-)
+   - IF OK: convert HardwareMsgIn to a real callback (triggered by ...receipt of a message.... ? )
+   - Critically evaluate input of MIDI data in sequencer.  Nordered MQTT sends 5 byte timed BLE_MIDI format
+     sequencer MIDI in (MQTT API / HardwareMsgIn uses only 3 bytes now but adds a timestamp on receipt.
+   - Decide on usage of timestamp on send or timestamp on receipt. Keep both methods as options. Note:  if using timestamp on send, both clocks need to be synchronized.
+   - Investigate output of data via MQTT, using the ost option in dump_tracks.h/.cpp .  Also see http://videocortex.io/2017/custom-stream-buffers/ for implementation of ostream. 
+   https://codereview.stackexchange.com/questions/185490/custom-ostream-for-a-println-like-function
  
   
   ## TODO
