@@ -214,7 +214,10 @@ bool MIDITrack::InsertEvent(const MIDITimedMessage& msg, tInsMode mode) {  //FCK
     if (GetEndTime() < msg.GetTime()) {     // insert as last event
         ESP_LOGE(TAG,"INSERT 1, GetEndTime() %lu < msg.GetTime() %lu ", GetEndTime(), msg.GetTime());   //FCKX 
         SetEndTime(msg.GetTime());                      // adjust DATA_END
+        ESP_LOGE(TAG, "BEFORE insert GetNumEvents() %d", GetNumEvents()); //FCKX
         events.insert(events.end() - 1, msg);           // insert just before DATA_END
+          ESP_LOGE(TAG, "BEFORE insert GetNumEvents() %d", GetNumEvents()); //FCKX
+          //also have a look what Analyze does with this STATUS_DIRTY!!! //FCKX
         status |= STATUS_DIRTY;
         return true;
     }

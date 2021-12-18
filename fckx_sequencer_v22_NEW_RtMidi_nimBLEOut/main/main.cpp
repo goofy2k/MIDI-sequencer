@@ -1578,9 +1578,24 @@ Here is an example:
    MIDIManager::AddMIDITick(&recorder);
    text_n.SetSequencer(&sequencer);
 
-   recorder.EnableTrack(0);  //FCKX
-   recorder.SetTrackRecChannel(0,0);
-   recorder.Start();
+   recorder.EnableTrack(1);  //FCKX
+   /*
+        /// Sets the recording channel for the given track. This cannot be called during recording.
+        /// \param trk_num the track number
+        /// \param chan the channel: you can specify a number between 0 ... 15 or -1 for any channel.
+        /// \return **true** if parameters are valid (and the channel has been changed), **false** otherwise.
+        bool                            SetTrackRecChannel(unsigned int trk_num, char chan);
+   */
+   
+   if (recorder.SetTrackRecChannel(1,0)) { // 
+   recorder.Start(); }
+   else {
+       while(1) {
+           ESP_LOGE(TAG,"SetTrackRecChannel FALSE");
+           
+       }
+       
+   }
 
    
    ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING test_recorder()");
@@ -1591,7 +1606,12 @@ Here is an example:
     if (dumpflag) {
         ESP_LOGE(TAG, "********************* DUMP ALL Tracks **************************");    
         bool verbose = true;
-        DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
+       // DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
+        //DumpMIDITrack(sequencer.GetMultiTrack()->GetTrack(1));//
+        if (recorder.GetMultiTrack()->IsValidTrackNumber(1)) {
+                    MIDITrack* trk = recorder.GetTrack(1);
+                    DumpMIDITrackWithPauses(trk, 1);              // in functions.cpp
+                }
         dumpflag = false;
     }
 

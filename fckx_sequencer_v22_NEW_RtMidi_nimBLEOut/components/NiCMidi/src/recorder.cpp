@@ -455,22 +455,34 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
                      ESP_LOGW(TAG,"IsChannelMsg() TRUE"); //FCKX
                     // search among the tracks which can accept the message
                     char ch1 = msg.GetChannel();
-                    ESP_LOGW(TAG,"msg.GetChannel %u",ch1);
+                    ESP_LOGW(TAG,"msg.GetChannel ch1: %u",ch1);
                     for (i = 0; i < tracks->GetNumTracks(); i++) {
                         ESP_LOGW(TAG,"LOC1 track %d",i); //FCKX
                         if (!en_tracks[i]) continue;
                          ESP_LOGW(TAG,"LOC2 track %d",i); //FCKX
                         char ch2 = tracks->GetTrack(i)->GetRecChannel();
-                         ESP_LOGW(TAG,"GetTrack(i)->GetRecChannel %u",ch2);
+                         ESP_LOGW(TAG,"GetTrack(i)->GetRecChannel ch2: %u",ch2);
                           ESP_LOGW(TAG,"LOC3 track %d",i); //FCKX
                        if (ch1 == ch2 || ch2 == -1) {
                         //  if (true)
                             ESP_LOGW(TAG,"LOC4 track %d",i); //FCKX
                             // insert the event into the track
-                            ESP_LOGW(TAG,"insert the event into the track %u", j); //FCKX
-                            tracks->InsertEvent(i, msg);
+                            ESP_LOGW(TAG,"insert the event into the track %u", i); //FCKX
+                            if (tracks->InsertEvent(i, msg)) {
+                                
+                                ESP_LOGW(TAG,"tracks->InsertEvent(i, msg) TRUE");
+                            } else {
+                                
+                                while (1) {
+                                  ESP_LOGW(TAG,"Insert not successful"); //FCKX   
+                                    
+                                }
+                                
+                                
+                                
+                            };
                             // tell the driver to send this message
-                            ESP_LOGW(TAG,"tell the driver to send this message %u", j); //FCKX 
+                            ESP_LOGW(TAG,"tell the driver to send this message %u", i); //FCKX 
                             MIDIManager::GetOutDriver(tracks->GetTrack(i)->GetOutPort())->OutputMessage(msg);
                         }
                         ESP_LOGW(TAG,"LOC5 track %d",i); //FCKX
@@ -490,6 +502,7 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
                 }
                 else {
                     tracks->GetTrack(0)->PushEvent(msg);
+                     ESP_LOGW(TAG,"LOC6");
                     ESP_LOGW(TAG,"IsChannelMsg() FALSE (push event to track"); //FCKX
                     //added brackets to accomodate the LOG code
                 }
