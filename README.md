@@ -459,8 +459,13 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   **v21 TASKS AHEAD:**
    - SOLVED issue with repeated usage of data in input queue. Input queue is not emptied after using the data because FlushQueue was commented in manager.cpp:255
-   - Inspect data in tracks
-   - Switch off / control metronome in recorder example
+  
+  **v22:**
+   - DONE Inspect data in tracks (changed the used track dumping routine). See notes in main.cpp.
+  
+  **v23:**  
+   - Try to record notes in a loop and play them
+   - Switch off / control metronome in recorder example  NOTE: metronome plays on channel 9, maybe can mute a channel?
    - Allow usage of AllNotesOff command to ease the developer :-)
    - IF OK: convert HardwareMsgIn to a real callback (triggered by ...receipt of a message.... ? )
    - Critically evaluate input of MIDI data in sequencer.  Nordered MQTT sends 5 byte timed BLE_MIDI format
