@@ -421,6 +421,105 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
     proc_lock.lock();
     MIDIClockTime cur_time = seq->GetCurrentMIDIClockTime();
     // we are recording
+    //this code mirrored with Nic's line 424-
+    if (cur_time >= rec_start_time && cur_time < rec_end_time) {    // TODO or <= rec_end_rime ??
+                                                         
+        // if this is the first time send a message to the GUI
+        if (rec_on.load() == false) {
+                                                                     
+            MIDISequencerGUIEvent ev(MIDISequencerGUIEvent::GROUP_RECORDER,
+                                     0,
+                                     MIDISequencerGUIEvent::GROUP_RECORDER_START);
+            notifier.Notify(ev);
+            rec_on.store(true);
+        }
+        MIDIRawMessage rmsg;
+
+        //tMsecs cur_time = sys_time - sys_time_offset + rec_time_offset;
+        //float clocks_per_ms = (tempobpm * multitrack->GetClksPerBeat()) / 60000.0;
+
+        // collect messages incoming from MIDI in ports
+        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++) {
+                                                                 
+            if (en_ports.count(i) == 0)
+                continue;
+            MIDIInDriver* port = MIDIManager::GetInDriver(i);
+            port->LockQueue();
+                                                                     
+            for (unsigned int j = 0, out_count = 0; j < port->GetQueueSize() && out_count < 100; j++, out_count++) {
+                                                                
+                port->ReadMessage(rmsg, j);
+                                                            
+                MIDITimedMessage msg(rmsg.msg);
+                                              
+                msg.SetTime(cur_time);
+                if (msg.IsChannelMsg()) {
+                                                                                                                   
+                                
+                               
+                 
+                                                                
+                    // search among the tracks which can accept the message
+                    char ch1 = msg.GetChannel();
+                                                               
+                    for (i = 0; i < tracks->GetNumTracks(); i++) {
+                                                               
+                        if (!en_tracks[i]) continue;
+                                                                
+                        char ch2 = tracks->GetTrack(i)->GetRecChannel();
+                                                                                
+                                                                 
+                        if (ch1 == ch2 || ch2 == -1) {
+                                     
+                                                                   
+                            // insert the event into the track
+                                                                                         
+                            tracks->InsertEvent(i, msg);
+                                
+                                                                                 
+                                    
+                                
+                                           
+                                                                                  
+                                    
+                        }
+                                
+                                
+                                
+                              
+                        // tell the driver to send this message
+                                                                                               
+                        MIDIManager::GetOutDriver(tracks->GetTrack(i)->GetOutPort())->OutputMessage(msg);
+                    }
+                                                               
+
+  
+                                                                                                                                    
+                                                       
+                                               
+                    
+             
+                    //if ((*en_ports[i])[ch] != 0)
+                    //    (*en_ports[i])[ch]->PushEvent(msg);
+                    // std::cout << "Added MIDI channel message to track " << std::endl;
+                                                                                      
+                    
+                    
+                }
+                else
+                    tracks->GetTrack(0)->PushEvent(msg);
+                                          
+                                                                                     
+                                                               
+                 
+
+            }
+            port->UnlockQueue();
+                                                                                              
+        }
+    }
+    
+    #ifdef BLOCKAGAIN
     if (cur_time >= rec_start_time && cur_time < rec_end_time) {    // TODO or <= rec_end_time ??
      ESP_LOGV(TAG,"TICKPROC WITHIN TIME WINDOW"); //FCKX 
  // if this is the first time send a message to the GUI
@@ -457,23 +556,26 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
                  #define BLOCKIT
                  #ifdef BLOCKIT
                  
-                     ESP_LOGW(TAG,"IsChannelMsg() TRUE"); //FCKX
+               //      ESP_LOGW(TAG,"IsChannelMsg() TRUE"); //FCKX
                     // search among the tracks which can accept the message
                     char ch1 = msg.GetChannel();
-                    ESP_LOGW(TAG,"msg.GetChannel ch1: %u",ch1);
+               //     ESP_LOGW(TAG,"msg.GetChannel ch1: %u",ch1);
                     for (i = 0; i < tracks->GetNumTracks(); i++) {
-                        ESP_LOGW(TAG,"LOC1 track %d",i); //FCKX
+               //         ESP_LOGW(TAG,"LOC1 track %d",i); //FCKX
                         if (!en_tracks[i]) continue;
-                         ESP_LOGW(TAG,"LOC2 track %d",i); //FCKX
+               //          ESP_LOGW(TAG,"LOC2 track %d",i); //FCKX
                         char ch2 = tracks->GetTrack(i)->GetRecChannel();
-                         ESP_LOGW(TAG,"GetTrack(i)->GetRecChannel ch2: %u",ch2);
-                          ESP_LOGW(TAG,"LOC3 track %d",i); //FCKX
+                //         ESP_LOGW(TAG,"GetTrack(i)->GetRecChannel ch2: %u",ch2);
+                //          ESP_LOGW(TAG,"LOC3 track %d",i); //FCKX
                        if (ch1 == ch2 || ch2 == -1) {
-                        //  if (true)
-                            ESP_LOGW(TAG,"LOC4 track %d",i); //FCKX
+                //        //  if (true)
+                 //           ESP_LOGW(TAG,"LOC4 track %d",i); //FCKX
                             // insert the event into the track
-                            ESP_LOGW(TAG,"insert the event into the track %u", i); //FCKX
-                            if (tracks->InsertEvent(i, msg)) {
+                //            ESP_LOGW(TAG,"insert the event into the track %u", i); //FCKX
+        
+      tracks->InsertEvent(i, msg);
+        /*
+                if (tracks->InsertEvent(i, msg)) {
                                 
                                 ESP_LOGW(TAG,"tracks->InsertEvent(i, msg) TRUE");
                             } else {
@@ -483,11 +585,11 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
                                     
                                 }
                                 
+                     */           
                                 
-                                
-                            };
+                            }
                             // tell the driver to send this message
-                            ESP_LOGW(TAG,"tell the driver to send this message %u", i); //FCKX 
+                        //    ESP_LOGW(TAG,"tell the driver to send this message %u", i); //FCKX 
                             MIDIManager::GetOutDriver(tracks->GetTrack(i)->GetOutPort())->OutputMessage(msg);
                         }
                         ESP_LOGW(TAG,"LOC5 track %d",i); //FCKX
@@ -505,18 +607,17 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
               #endif
                     
                 }
-                else {
+                else 
                     tracks->GetTrack(0)->PushEvent(msg);
-                     ESP_LOGW(TAG,"LOC6");
-                    ESP_LOGW(TAG,"IsChannelMsg() FALSE (push event to track"); //FCKX
-                    //added brackets to accomodate the LOG code
-                }
+
 
             }
             port->UnlockQueue();
         //    MIDIManager::GetInDriver(tracks->GetTrack(0)->GetInPort())->FlushQueue(); //FCKX
         }
     }
+    #endif //BLOCKAGAIN
+    
     // we are after the rec end time
     else if (cur_time >= rec_end_time) {
         ESP_LOGI(TAG,"TICKPROC OUTSIDE TIME WINDOW"); //FCKX 
