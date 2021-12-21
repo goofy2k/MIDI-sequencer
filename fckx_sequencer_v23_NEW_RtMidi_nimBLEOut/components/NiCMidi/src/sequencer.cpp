@@ -25,8 +25,8 @@
 
 #include "../include/sequencer.h"
 #include "../include/manager.h"     // goes here, for SetPort()
-
-
+#include "esp_log.h" //FCKX
+    static const char *TAG = "SEQUENCER"; 
 
 
 
@@ -66,7 +66,7 @@ MIDISequencerState::MIDISequencerState(MIDIMultiTrack *m, MIDISequencerGUINotifi
 
 
 MIDISequencerState::~MIDISequencerState() {
-    for (unsigned int i = 0; i < track_states.size(); i++)
+    for (unsigned int i = 0; i < track_states.size(); i++) //FCKX
         delete track_states[i];
 }
 
@@ -82,8 +82,14 @@ MIDISequencerState::MIDISequencerState(const MIDISequencerState& s) :
     last_tempo_change(s.last_tempo_change), count_in_time(s.count_in_time), count_in_status(s.count_in_status)
 {
     track_states.resize(multitrack->GetNumTracks());
-    for (unsigned int i = 0; i < track_states.size(); i++)
-        track_states[i] = new MIDISequencerTrackState(*s.track_states[i]);
+ESP_LOGE(TAG,"track_states.size() %d", track_states.size());
+
+   for (unsigned int i = 0; i < track_states.size(); i++) { //FCKX    //ORIG
+        ESP_LOGE(TAG,"BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
+        track_states[i] = new MIDISequencerTrackState(*s.track_states[i]); //ORIG
+        ESP_LOGE(TAG,"AFTER new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
+    }
+      
 }
 
 
@@ -106,10 +112,10 @@ const MIDISequencerState& MIDISequencerState::operator= (const MIDISequencerStat
     keysig_mode = s.keysig_mode;
     marker_text = s.marker_text;
 
-    for (unsigned int i = 0; i < track_states.size(); i++)
+    for (unsigned int i = 0; i < track_states.size(); i++) //FCKX
         delete track_states[i];
     track_states.resize(multitrack->GetNumTracks());
-    for (unsigned int i = 0; i < track_states.size(); i++)
+    for (unsigned int i = 0; i < track_states.size(); i++) //FCKX
         track_states[i] = new MIDISequencerTrackState(*s.track_states[i]);
     last_event_track = s.last_event_track;
     last_beat_time = s.last_beat_time;
@@ -140,14 +146,14 @@ void MIDISequencerState::Reset() {
     keysig_mode = MIDI_DEFAULT_KEYSIG_MODE;
     marker_text = "";
     if (multitrack->GetNumTracks() != track_states.size()) {
-        for (unsigned int i = 0; i < track_states.size(); i++)
+        for (unsigned int i = 0; i < track_states.size(); i++) //FCKX
             delete track_states[i];
         track_states.resize(multitrack->GetNumTracks());
-        for (unsigned int i = 0; i < track_states.size(); i++)
+        for (unsigned int i = 0; i < track_states.size(); i++) //FCKX
             track_states[i] = new MIDISequencerTrackState;
     }
     else
-        for (unsigned int i = 0; i < track_states.size(); i++)
+        for (unsigned int i = 0; i < track_states.size(); i++) //FCKX
             track_states[i]->Reset();
     last_event_track = -1;
     last_beat_time = 0;

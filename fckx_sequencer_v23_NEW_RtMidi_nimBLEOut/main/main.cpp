@@ -57,7 +57,7 @@ test_win32_player.cpp                                              X            
 //#define TEST_COMPONENT           //test_component example OK (in main eternal loop)
 //#define METRONOME //output only
 //#define THRU     //input and output
-#define TEST_RECORDER            //test_recorder  OK
+//#define TEST_RECORDER            //test_recorder  OK
 
 //the following (adapted) examples depend on nimBLEdriver bluetooth output by FCKX
 //use only one at a time as instantiation of output ports may interfere (solve this in the future for flxibility)
@@ -1340,8 +1340,42 @@ int main_test_component() {
     *    
     ***********************************************************************************/    
 #endif 
+ 
+#define RECORDINGPROPOSAL
+#ifdef RECORDINGPROPOSAL  //see issue #6 NiCMidi repo
 
+MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
 
+void main_proposal( void ) {
+
+    MIDIManager::AddMIDITick(&recorder);
+    //text_n.SetSequencer(&sequencer);      // This is already called by AdvancedSequencer constructor
+
+    MIDIClockTime t = sequencer.MeasToMIDI(5,0); //endMeasure, endBeat record the first 6 beats
+    recorder.SetEndRecTime(t);
+    recorder.EnableTrack(1); //FCKX
+    recorder.SetTrackRecChannel(1,-1);      // Can you set this? YES Otherwise set a specific channel
+    //recorder.SetTrackRecChannel(1,0);  
+    recorder.Start();
+    std::cout << "Recorder started\n";
+   
+
+    MIDITimer::Wait(15000);                 // Waits 15 secs: play something to record (remember to match
+                                            // the input channel with the one set in SetTrackRecChannel)
+
+    recorder.Stop();
+    std::cout << "Recorder stopped\n";
+
+    sequencer.GoToZero();                   // rewinds
+    sequencer.Start();
+    std::cout << "Now the sequencer plays what you have recorded\n";
+
+    while (sequencer.IsPlaying())         // waits until the sequencer finishes
+        MIDITimer::Wait(50);
+}
+#endif
 
 void app_main(void) {
 /*************************************************************************************************
@@ -1498,46 +1532,89 @@ Here is an example:
     ESP_LOGE(TAG,"Entering MIDISequencerGUINotifierText");
     MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
     /*******************************************************************************************
-    * AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver, NOT (?) RtMidi)
+    * AdvancedSequencer also instantiates nimBLEDevice (via sequencer, manager, driver)
     ********************************************************************************************/
     ESP_LOGE(TAG,"Entering AdvancedSequencer");
     AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
 
-    //some trials to learn about the MIDIManager interfae and indrivers
+
+
+    //some trials to learn about the MIDIManager interface and indrivers
     ESP_LOGE(TAG,"Learning about MIDIManager Interface"); 
     ESP_LOGE(TAG,"MIDIManager::GetNumMIDIIns() %d",MIDIManager::GetNumMIDIIns());          //FCKX
     ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
     ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->CanGet() %d",MIDIManager::GetInDriver(0)->CanGet()); 
     //development helper to check analyze proper operation of the private data object        
-//    MIDIManager::GetInDriver(0)->printData();
-  
-  
-    #ifdef INPUTBYHAND
-    //*******************************************************************
-    //JUST TESTING, NORMALLY BLOCKED!!!! make HardwareMsgIn protected again in driver.h
-    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
- 
-    double time = 111; 
-    void* p = MIDIManager::GetInDriver(0);  //when called in the driver this should be "this" (?)
+    //MIDIManager::GetInDriver(0)->printData();
 
-    std::vector<unsigned char> msg_bytes_data;
-    std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
-    
-    //create raw dummy note on message
-    msg_bytes_data =  { 0x90, 0x20, 0x7f };
-    //send it to input (HardwareMsgIn is normally protected, then this call is not possible)
-    MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
-    //create raw dummy note off message
-    msg_bytes_data =  { 0x80, 0x20, 0x00 };
-    //send it to input (HardwareMsgIn is normally protected, then this call is not possible) 
-    MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);
-    
-    ESP_LOGE(TAG,"MIDIManager::GetInDriver(0)->HardwareMsgIn TEST END DIRECT CALL (no callback)");
-    //*******************************************************************
-    #endif //#ifdef INPUTBYHAND
-    
+
     ESP_LOGE(TAG,"Entering MIDIRecorder");                        
     MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+
+    dumpflag = false;  //dumpflag is set when a message arrives over MQTT
+                       //this leads activation of a DumpTrack in the continous loop
+                       //after dumping the flag is reset, thus preventing dumping in each cycle
+    ESP_LOGW(TAG, "START RECORDER test_recorder()");
+    MIDIManager::AddMIDITick(&recorder);
+    text_n.SetSequencer(&sequencer);
+    
+    #define RECORDLOOP
+    #ifdef RECORDLOOP
+
+
+    ESP_LOGW(TAG, "setEndRecTime 1");
+    MIDIClockTime t = sequencer.MeasToMIDI(19,0); //endMeasure, endBeat   record the first 20 beats
+    ESP_LOGW(TAG, "setEndRecTime 2");
+    recorder.SetEndRecTime(t);
+
+    ESP_LOGW(TAG, "setRepeatPlay 2");                                   
+
+    //The following line causes a crash
+    sequencer.SetRepeatPlay(true, 0, 10); //beginMeasure endMeasure      loop the first 11 beats
+
+    #endif
+ 
+
+ 
+ 
+    ESP_LOGW(TAG, "EnableTrack"); 
+    recorder.EnableTrack(1);  //FCKX
+    /*
+        /// Sets the recording channel for the given track. This cannot be called during recording.
+        /// \param trk_num the track number
+        /// \param chan the channel: you can specify a number between 0 ... 15 or -1 for any channel.
+        /// \return **true** if parameters are valid (and the channel has been changed), **false** otherwise.
+        bool                            SetTrackRecChannel(unsigned int trk_num, char chan);
+    */
+
+    if (recorder.SetTrackRecChannel(1,0)) { // 
+    recorder.Start(); }
+    else {
+       while(1) {
+           ESP_LOGE(TAG,"SetTrackRecChannel FALSE");           
+       }       
+    }
+
+
+    ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING test_recorder()");
+
+
+    while (1) {      
+
+    if (dumpflag) {
+        ESP_LOGE(TAG, "********************* DUMP ALL Tracks **************************");    
+        bool verbose = true;
+       // DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
+        //DumpMIDITrack(sequencer.GetMultiTrack()->GetTrack(1));//
+        if (recorder.GetMultiTrack()->IsValidTrackNumber(1)) {
+                    MIDITrack* trk = recorder.GetTrack(1);
+                    DumpMIDITrackWithPauses(trk, 1);              // in functions.cpp
+                }
+        dumpflag = false;
+    }
+    vTaskDelay(10 / portTICK_PERIOD_MS);    
+    }  
+
 
 #endif //ifdef TEST_RECORDER 
   
@@ -1552,6 +1629,16 @@ Here is an example:
     vTaskDelay(10 / portTICK_PERIOD_MS);  
   }
 #endif
+
+#ifdef RECORDINGPROPOSAL 
+  ESP_LOGW(TAG, "ENTERING main_proposal()");
+//  while (1) {      
+    main_proposal();  
+    //vTaskDelay(10 / portTICK_PERIOD_MS);  
+//  }
+#endif
+
+
 
 
 
@@ -1571,56 +1658,8 @@ Here is an example:
 #endif //ifdef THRU
 
 
- 
-#ifdef TEST_RECORDER
-   dumpflag = false;
-   ESP_LOGW(TAG, "START RECORDER test_recorder()");
-   MIDIManager::AddMIDITick(&recorder);
-   text_n.SetSequencer(&sequencer);
-
-   recorder.EnableTrack(1);  //FCKX
-   /*
-        /// Sets the recording channel for the given track. This cannot be called during recording.
-        /// \param trk_num the track number
-        /// \param chan the channel: you can specify a number between 0 ... 15 or -1 for any channel.
-        /// \return **true** if parameters are valid (and the channel has been changed), **false** otherwise.
-        bool                            SetTrackRecChannel(unsigned int trk_num, char chan);
-   */
-   
-   if (recorder.SetTrackRecChannel(1,0)) { // 
-   recorder.Start(); }
-   else {
-       while(1) {
-           ESP_LOGE(TAG,"SetTrackRecChannel FALSE");
-           
-       }
-       
-   }
-
-   
-   ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING test_recorder()");
-  
-
-  while (1) {      
-  
-    if (dumpflag) {
-        ESP_LOGE(TAG, "********************* DUMP ALL Tracks **************************");    
-        bool verbose = true;
-       // DumpAllTracksAttr(sequencer.GetMultiTrack(), verbose);
-        //DumpMIDITrack(sequencer.GetMultiTrack()->GetTrack(1));//
-        if (recorder.GetMultiTrack()->IsValidTrackNumber(1)) {
-                    MIDITrack* trk = recorder.GetTrack(1);
-                    DumpMIDITrackWithPauses(trk, 1);              // in functions.cpp
-                }
-        dumpflag = false;
-    }
 
 
-  
-    vTaskDelay(10 / portTICK_PERIOD_MS);  
-  
-  } 
-#endif  
 
 
 
