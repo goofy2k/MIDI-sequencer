@@ -83,6 +83,9 @@ MIDISequencerState::MIDISequencerState(const MIDISequencerState& s) :
 {
     track_states.resize(multitrack->GetNumTracks());
 ESP_LOGE(TAG,"track_states.size() %d", track_states.size());
+    // TODO: these were added only for a bug checking; eliminate, this should never happen
+    if (track_states.size() != s.track_states.size())
+        std::cout << "MIDISequencerState constructor - Warning: the two vectors have different sizes" << std::endl;
 
    for (unsigned int i = 0; i < track_states.size(); i++) { //FCKX    //ORIG
         ESP_LOGE(TAG,"BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
@@ -115,6 +118,10 @@ const MIDISequencerState& MIDISequencerState::operator= (const MIDISequencerStat
     for (unsigned int i = 0; i < track_states.size(); i++) //FCKX
         delete track_states[i];
     track_states.resize(multitrack->GetNumTracks());
+   // TODO: see above
+    if (track_states.size() != s.track_states.size())
+        std::cout << "MIDISequencerState operator= - Warning: the two vectors have different sizes" << std::endl;
+
     for (unsigned int i = 0; i < track_states.size(); i++) //FCKX
         track_states[i] = new MIDISequencerTrackState(*s.track_states[i]);
     last_event_track = s.last_event_track;
@@ -1319,7 +1326,12 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
     //times++;
     //if (!(times % 100))
         //std::cout << "MIDISequencer::TickProc() " << times << " times" << std::endl;
-
+    // check if already autostopped
+    if (state.count_in_status & AUTO_STOPPED) {
+        //std::cout << "MIDISequencer::TickProc called after Auto Stop" << std::endl;
+        proc_lock.unlock();
+        return;
+    }
     // check if we we are counting in
     if (state.count_in_status & COUNT_IN_PENDING) {
         MIDIClockTime clocks = (MIDIClockTime)((sys_time - sys_time_offset) / state.ms_per_clock);
@@ -1379,8 +1391,10 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
     if (!(repeat_play_mode && GetCurrentMeasure() >= repeat_end_meas) &&
         !GetNextEventTime(&tmp) && (play_mode == PLAY_BOUNDED)) {
         // no events left
+        std::cout << "Auto stopping the sequencer: StaticStopProc called" << std::endl;
+        state.count_in_status |= AUTO_STOPPED;
         std::thread(StaticStopProc, this).detach();
-        std::cout << "Stopping the sequencer: StaticStopProc called" << std::endl;
+      //  std::cout << "Stopping the sequencer: StaticStopProc called" << std::endl;
     }
     proc_lock.unlock();
 }

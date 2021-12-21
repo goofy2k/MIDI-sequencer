@@ -82,6 +82,11 @@ MIDIRecorder::MIDIRecorder(MIDISequencer* const s) :
     old_seq_mode(MIDISequencer::PLAY_BOUNDED),
     rec_on(false)
 {
+       //check if an in port exists
+    //if (!MIDIManager::IsValidInPortNumber(0))
+        //throw RtMidiError("MIDIRecorder needs almost a MIDI in port in the system\n", RtMidiError::INVALID_DEVICE);
+
+    
     tracks = new MIDIMultiTrack();
     seq_tracks = s->GetState()->multitrack;
 }
