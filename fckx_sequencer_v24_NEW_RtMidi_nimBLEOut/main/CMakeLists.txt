@@ -1,6 +1,7 @@
 set(COMPONENT_SRCS 
 
        "main.cpp"
+       #"test_advancedsequencer_noinput.cpp"
           
 )
         

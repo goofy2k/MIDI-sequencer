@@ -126,6 +126,11 @@ bool MIDIRecorder::SetTrackInPort(unsigned int trk_num, unsigned int port) {
 
 
 bool MIDIRecorder::SetTrackRecChannel(unsigned int trk_num, char chan) {
+/*
+    NOTE a compiler warning is given for this line:
+    warning: comparison is always false due to limited range of data type [-Wtype-limits] 
+   if (IsPlaying() || !tracks->IsValidTrackNumber(trk_num) || (chan < -1 || chan > 15))
+*/
     if (IsPlaying() || !tracks->IsValidTrackNumber(trk_num) || (chan < -1 || chan > 15))
         return false;
     seq_tracks->GetTrack(trk_num)->SetRecChannel(chan);
@@ -468,21 +473,19 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
                                                                 
                         char ch2 = tracks->GetTrack(i)->GetRecChannel();
                                                                                 
-                                                                 
-                        if (ch1 == ch2 || ch2 == -1) {
+  // if (ch1 == ch2 || ch2 == -1)                                                                
+if (ch1 == ch2 || ch2 == 255) 
+
+{  // try to change -1 with 255
+                                // I suspect a mismatch between signed and unsigned char in MIDIRecorder::TickProc.
+            // insert the event into the track
+            tracks->InsertEvent(i, msg);
+            //you should see it at every note you record
+            std::cout << "Message recorder on track " << i << std::endl;
+       }
                                      
-                                                                   
-                            // insert the event into the track
-                                                                                         
-                            tracks->InsertEvent(i, msg);
-                                
-                                                                                 
-                                    
-                                
-                                           
-                                                                                  
-                                    
-                        }
+
+
                                 
                                 
                                 

@@ -39,6 +39,19 @@ MIDISequencerTrackState::MIDISequencerTrackState() {
     Reset();
 }
 
+/*   //NiCMidi 211222
+MIDISequencerTrackState::MIDISequencerTrackState(const MIDISequencerTrackState &s) {
+    //std::cout << "MIDISequencerTrackState copy constructor" << std::endl;
+    program = s.program;
+    bender_value = s.bender_value;
+    track_name = s.track_name;
+    notes_are_on = s.notes_are_on;
+    note_matrix = s.note_matrix;
+    memmove(control_values, s.control_values, C_ALL_NOTES_OFF);
+    got_good_track_name = s.got_good_track_name;
+}
+*/
+
 
 void MIDISequencerTrackState::Reset() {
     program = -1;
@@ -88,9 +101,9 @@ ESP_LOGE(TAG,"track_states.size() %d", track_states.size());
         std::cout << "MIDISequencerState constructor - Warning: the two vectors have different sizes" << std::endl;
 
    for (unsigned int i = 0; i < track_states.size(); i++) { //FCKX    //ORIG
-        ESP_LOGE(TAG,"BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
+        ESP_LOGI(TAG,"BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
         track_states[i] = new MIDISequencerTrackState(*s.track_states[i]); //ORIG
-        ESP_LOGE(TAG,"AFTER new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
+        ESP_LOGI(TAG,"AFTER new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
     }
       
 }
@@ -1206,16 +1219,11 @@ MIDIClockTime MIDISequencer::MeasToMIDI(unsigned int meas, unsigned int beat, un
 }
 
 
-
-
-
-
-
-
 // Inherited from MIDITICK
 
 void MIDISequencer::Start() {
     if (!IsPlaying()) {
+        stop_lock.lock(); //NiCMidi 211222
         std::cout << "\t\tEntered in MIDISequencer::Start() ..." << std::endl;
         MIDIManager::OpenOutPorts();
         state.iterator.SetTimeShiftMode(true);
@@ -1230,12 +1238,18 @@ void MIDISequencer::Start() {
         SetDevOffset((tMsecs)GetCurrentTimeMs());
         MIDITickComponent::Start();
         std::cout << "\t\t ... Exiting from MIDISequencer::Start()" << std::endl;
-    }
+        stop_lock.unlock(); //NiCMidi 211222  
+  }
 }
 
 
 void MIDISequencer::Stop() {
     if (IsPlaying()) {
+        //NiCMidi 211222
+        // stop_mutex is acquired when Stop() is called by TickProc autostopping (in a separate thread)
+        // so no overlap of two Stop()
+        stop_lock.lock();       
+           
         std::cout << "\t\tEntered in MIDISequencer::Stop() ..." << std::endl;
         MIDITickComponent::Stop();
         state.iterator.SetTimeShiftMode(time_shift_mode);
@@ -1245,7 +1259,9 @@ void MIDISequencer::Stop() {
         state.Notify (MIDISequencerGUIEvent::GROUP_TRANSPORT,
                       MIDISequencerGUIEvent::GROUP_TRANSPORT_STOP);
         std::cout << "\t\t ... Exiting from MIDISequencer::Stop()" << std::endl;
-    }
+ 
+        stop_lock.unlock(); //NiCMidi 211222
+ }
 }
 
 
@@ -1319,19 +1335,35 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
 
     //std::cout << "MIDISequencer::TickProc; sys_time_offset " << sys_time_offset << " sys_time " << sys_time
     //     << " dev_time_offset " << dev_time_offset << std::endl;
+ 
+ // check if already autostopped  //NiCMidi 211222
+    if (!stop_lock.try_lock()) {
+        std::cout << "MIDISequencer::TickProc called after Auto Stop" << std::endl;
+        return;
+    }
+    stop_lock.unlock();
+
 
     proc_lock.lock();
+    //NiCMidi 211222
+    //std::cout << "MIDISequencer::TickProc; sys_time_offset " << sys_time_offset << " sys_time " << sys_time
+    //     << " dev_time_offset " << dev_time_offset << std::endl;
+
+
 
     //static unsigned int times;
     //times++;
     //if (!(times % 100))
         //std::cout << "MIDISequencer::TickProc() " << times << " times" << std::endl;
-    // check if already autostopped
+
+/*  //NiCMidi 211222 
+ // check if already autostopped
     if (state.count_in_status & AUTO_STOPPED) {
         //std::cout << "MIDISequencer::TickProc called after Auto Stop" << std::endl;
         proc_lock.unlock();
         return;
     }
+*/    
     // check if we we are counting in
     if (state.count_in_status & COUNT_IN_PENDING) {
         MIDIClockTime clocks = (MIDIClockTime)((sys_time - sys_time_offset) / state.ms_per_clock);
@@ -1392,7 +1424,7 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
         !GetNextEventTime(&tmp) && (play_mode == PLAY_BOUNDED)) {
         // no events left
         std::cout << "Auto stopping the sequencer: StaticStopProc called" << std::endl;
-        state.count_in_status |= AUTO_STOPPED;
+       // state.count_in_status |= AUTO_STOPPED; //NiCMidi 211222
         std::thread(StaticStopProc, this).detach();
       //  std::cout << "Stopping the sequencer: StaticStopProc called" << std::endl;
     }
