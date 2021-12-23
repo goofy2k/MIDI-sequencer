@@ -36,6 +36,7 @@
 /* NiCMidi examples             MIDI     MIDI      COMMAND       FILE     FILE            WINDOWS
                                 OUTPUT   INPUT     CONSOLE       READ     WRITE    EDIT    GUI
 test_advancedsequencer.cpp       X        -           X            X        -       -
+test_advancedsequencer_noinput   X        -                        -        -       -
 test_component.cpp               X        -           X            -        -       -
 test_metronome.cpp               X        -           X            -        -       -
 test_midiports.cpp               -        -           X            -        -       -
@@ -1503,7 +1504,7 @@ int test_main( ) {
 
     // When you edit the AdvancedSequencer multitrack you must update the
     // sequencer parameters before playing: this does the job
-    sequencer.UpdateStatus();
+ //   sequencer.UpdateStatus();
 
     // now we can play track 1 only
     cout << "Playing track 1 ..." << endl;
@@ -1528,10 +1529,13 @@ int test_main( ) {
         msg.SetTime(track2[i].time);
         trk->InsertNote(msg, track2[i].length);
     }
+    
+    
 
     // ... and 3 (percussion, channel 10)
     trk = tracks->GetTrack(3);
     channel = 9;
+
 
     msg.Clear();
     //msg.SetProgramChange(channel, 33);    // uncomment these if your device doesn't sets
@@ -1543,9 +1547,9 @@ int test_main( ) {
         msg.SetTime(track3[i].time);
         trk->InsertNote(msg, track3[i].length);
     }
-
-    sequencer.UpdateStatus();
-   */ 
+  
+    sequencer.UpdateStatus();  //causes crash
+   */
     sequencer.GoToZero();
 
     cout << "Playing 3 tracks ..." << endl;
@@ -1599,7 +1603,7 @@ void app_main(void) {
     esp_log_level_set("FCKX_SEQ_API", ESP_LOG_DEBUG);
     esp_log_level_set("NimBLE", ESP_LOG_VERBOSE);
     esp_log_level_set("printMIDI_Input", ESP_LOG_VERBOSE);
-    //esp_log_level_set("SEQUENCER", ESP_LOG_ERROR);  
+    esp_log_level_set("SEQUENCER", ESP_LOG_ERROR);  
     
     
     

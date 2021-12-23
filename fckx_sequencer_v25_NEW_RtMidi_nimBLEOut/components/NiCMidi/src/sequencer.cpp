@@ -101,9 +101,9 @@ ESP_LOGE(TAG,"track_states.size() %d", track_states.size());
         std::cout << "MIDISequencerState constructor - Warning: the two vectors have different sizes" << std::endl;
 
    for (unsigned int i = 0; i < track_states.size(); i++) { //FCKX    //ORIG
-        ESP_LOGI(TAG,"BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
+        //ESP_LOGI(TAG,"BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
         track_states[i] = new MIDISequencerTrackState(*s.track_states[i]); //ORIG
-        ESP_LOGI(TAG,"AFTER new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
+        //ESP_LOGI(TAG,"AFTER new MIDISequencerTrackState(*s.track_states[i]) for i %d", i);
     }
       
 }
