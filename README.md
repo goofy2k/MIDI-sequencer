@@ -482,14 +482,20 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
         Found a bug when the MIDISequencer auto stops, and corrected it.
         This affects files sequencer.h, sequencer.cpp and advancedsequencer.cpp.
         Minor changes in notifier.h and processor.h
-        commit 92d5c2ab5ead6399e2b79da905139c4a6daebd6a
-    - NEW TODO's:
-        - create more stable connection procedure to nimBLE output (initialize before any call to NiCMidi)
-        - implement other channels than 0 in synth app
-        - make channels > 1 recognizable in synth (e.g. by changing some FaustDSP settings)
-        - try to uncomment playing other channel numbers (uncomment line ~1514 and further, "THE REST IS COMMENTED OUT")
-        - try to revert back to Heltec LORA32 hardware
-        - try recording again
+        commit 92d5c2ab5ead6399e2b79da905139c4a6daebd6a  
+  
+   - NEW TODO's:
+
+  
+**v25:**
+  
+  - create more stable connection procedure to nimBLE output (initialize before any call to NiCMidi)
+  - implement other channels than 0 in synth app
+  - make channels > 1 recognizable in synth (e.g. by changing some FaustDSP settings) NEW REPO CREATED FOR SYNTH APP:  Faust-Synth-MIDIBLE
+  - try to uncomment playing other channel numbers (uncomment line ~1514 and further, "THE REST IS COMMENTED OUT")
+  - try to revert back to Heltec LORA32 hardware
+  - try recording again
+  
   
   ## TODO
   
