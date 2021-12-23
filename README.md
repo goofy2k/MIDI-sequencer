@@ -473,7 +473,23 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
    - Decide on usage of timestamp on send or timestamp on receipt. Keep both methods as options. Note:  if using timestamp on send, both clocks need to be synchronized.
    - Investigate output of data via MQTT, using the ost option in dump_tracks.h/.cpp .  Also see http://videocortex.io/2017/custom-stream-buffers/ for implementation of ostream. 
    https://codereview.stackexchange.com/questions/185490/custom-ostream-for-a-println-like-function
- 
+  
+  **v24:**
+   - reverted to playing a song (twinkle twinkle) instead of recording
+   - switched to different board (TTGO TAudio) and some other settings in menuconfig (SPI / external memory) NEED TO COMPARE SDCONGFIG OF V24 and V23 to see those!
+   - implemented some commits by NiCMidi to repair bugs: 
+        Bug on autostop corrected
+        Found a bug when the MIDISequencer auto stops, and corrected it.
+        This affects files sequencer.h, sequencer.cpp and advancedsequencer.cpp.
+        Minor changes in notifier.h and processor.h
+        commit 92d5c2ab5ead6399e2b79da905139c4a6daebd6a
+    - NEW TODO's:
+        - create more stable connection procedure to nimBLE output (initialize before any call to NiCMidi)
+        - implement other channels than 0 in synth app
+        - make channels > 1 recognizable in synth (e.g. by changing some FaustDSP settings)
+        - try to uncomment playing other channel numbers (uncomment line ~1514 and further, "THE REST IS COMMENTED OUT")
+        - try to revert back to Heltec LORA32 hardware
+        - try recording again
   
   ## TODO
   
