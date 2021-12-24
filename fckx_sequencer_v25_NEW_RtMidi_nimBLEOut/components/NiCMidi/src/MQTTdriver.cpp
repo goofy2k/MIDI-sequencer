@@ -345,14 +345,14 @@ MQTTMidiIn :: ~MQTTMidiIn ()
     MQTTMidiInData *data = static_cast<MQTTMidiInData *> (apiData_); 
     //close a connection if it exists
     MQTTMidiIn::closePort();
-    
+     ESP_LOGW(TAG, "Closed MQTTMidiIn NO CLEANUP: BEWARE of MEMORY LEAKS"); 
     //Cleanup
     //For MQTT no need to cleanup client as there are still other tasks for that client
 /*
       if ( data->client )
     jack_client_close( data->client );
 */
-  delete data;  //ORIG
+//  delete data;  //ORIG BEWARE OF MEMORY LEAK
 //delete &data;  
 
  

@@ -85,7 +85,8 @@ MIDIOutDriver::MIDIOutDriver(int id) :
         //ESP_LOGE(TAG,"start creation of RtMidiOut port"); 
         //port = new RtMidiOut();
         //ESP_LOGE(TAG,"executed creation of RtMidiOut port");
-        ESP_LOGE(TAG,"start creation of MidiOutNimBLE port");         
+        ESP_LOGE(TAG,"start creation of MidiOutNimBLE port");  
+        //do not create a new port, but use one that is available globally        
         port = new MidiOutNimBLE();
         ESP_LOGE(TAG,"executed creation of MidiOutNimBLE port");
         }

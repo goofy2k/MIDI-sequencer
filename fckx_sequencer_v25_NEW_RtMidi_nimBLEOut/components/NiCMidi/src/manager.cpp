@@ -284,7 +284,7 @@ void MIDIManager::Init() {
         //(see how you can create multiple outputs, e.g. for multiplle MIDI channels)
       std::cout << "Going to create temp MidiOutNimBLE for detecting nr of ports" << std::endl;
       MidiOutNimBLE temp_MIDI_out;
-         std::cout << "Created temp MidiOutNimBLE for detecting nr of ports" << std::endl;
+      std::cout << "Created temp MidiOutNimBLE for detecting nr of ports" << std::endl;
 
         for (unsigned int i = 0; i < temp_MIDI_out.getPortCount(); i++) {
             MIDI_outs->push_back(new MIDIOutDriver(i)); //this again involves an instatiation of the nimBLE driver

@@ -8,6 +8,11 @@
 #ifndef __NIMBLEDRIVER__
 #define __NIMBLEDRIVER__
 
+
+#define RTMIDI_DLL_PUBLIC __attribute__( (visibility( "default" )))
+
+//#define RTMIDI_DLL_PUBLIC 
+
 #include <string>   //maybe try to prevent using this
 #include <vector>
 #include <NimBLEDevice.h>
@@ -71,7 +76,7 @@ struct NimBLEMidiOutData {
 
 
 
-class MidiOutNimBLE   //:public MidiOutApi //(what does this parent class add?) 
+class RTMIDI_DLL_PUBLIC MidiOutNimBLE   //:public MidiOutApi //(what does this parent class add?) 
 {
     public:                          MidiOutNimBLE();
                                     //MidiOutNimBLE(const std::string &clientName);
@@ -84,7 +89,10 @@ class MidiOutNimBLE   //:public MidiOutApi //(what does this parent class add?)
         unsigned int                 getPortCount();// { return 1; }
         std::string                  getPortName(unsigned int portNumber=0);
         void                         sendMessage(const std::vector<unsigned char> *message);
-        //setcallback1               see rtMidi for examples
+        void                         sendMessage(const unsigned char *message, size_t size);
+
+
+       //setcallback1               see rtMidi for examples
         //setcallback2
         
     protected:

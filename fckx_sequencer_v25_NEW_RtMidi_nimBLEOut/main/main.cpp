@@ -84,6 +84,7 @@ I suspect the error might be coming from `ble_buf_alloc` as well. Can you please
 #define EXAMPLE_ESP_MAXIMUM_RETRY  SECRET_ESP_MAXIMUM_RETRY
 
 #ifdef NIMBLE_IN_MAIN   //phase out
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  NIMBLE_IN_MAIN");
     #include <NimBLEDevice.h>
 #endif
 //#include "fckxMsg.h"
@@ -120,6 +121,7 @@ I suspect the error might be coming from `ble_buf_alloc` as well. Can you please
 extern "C" {void app_main(void);}
 
 #ifdef NIMBLE_IN_MAIN
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  NIMBLE_IN_MAIN");
 //test using "NIM" before "BLE"
 BLEServer* pServer = NULL; //FCKX phase out //compile conditionally
 BLECharacteristic* pCharacteristic = NULL;  //FCKX phase out
@@ -128,6 +130,17 @@ BLECharacteristic* pCharacteristic = NULL;  //FCKX phase out
 bool dumpflag;
 
 static const char *TAG = "FCKX_SEQ";
+
+
+void nbDelay(int delayTicks) {      //NON-BLOCKING DELAY HELPER  
+        TickType_t startTick = xTaskGetTickCount();
+        while( (xTaskGetTickCount()-startTick) < pdMS_TO_TICKS(delayTicks)){
+          //…
+        } 
+    };
+
+
+
 
 /* WIFI functionality, taken from ESP-IDF example: xxxxxxxxxxxx
 *
@@ -217,8 +230,10 @@ void wifi_init_sta(void)
     /* xEventGroupWaitBits() returns the bits before the call returned, hence we can test which event actually
      * happened. */
     if (bits & WIFI_CONNECTED_BIT) {
-        ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
-                 EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
+                ESP_LOGI(TAG, "connected to ap SSID:%s password: XXXXXXXXXXXX",
+                 EXAMPLE_ESP_WIFI_SSID);
+     /*   ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
+                 EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS); */
     } else if (bits & WIFI_FAIL_BIT) {
         ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
                  EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
@@ -280,7 +295,7 @@ static const char *TAG = "execute_single_midi_command";
 */
 
 #ifdef NIMBLE_IN_MAIN  //phase out
-
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  NIMBLE_IN_MAIN");
  void ble_notify_midi(BLECharacteristic* pCharacteristic, unsigned long int mididata){
     static const char *TAG = "ble_notify_midi";
     //MIDI data packet, taken from Brian Duhan arduino-esp32-BLE-MIDI / BLE_MIDI.ino
@@ -365,7 +380,7 @@ void printMsgBytes(MIDIMessage msg1){   //add an identifier text
 };
 
 #ifdef NIMBLE_IN_MAIN  //phase out
-
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  NIMBLE_IN_MAIN");
 void sendToMIDIOut (MIDIMessage msg1) {  
     //prepare for sending to output
     //convert MIDIMessage to midiPacket
@@ -850,7 +865,7 @@ using namespace std;
 
 #ifdef TEST_ADVANCEDSEQUENCER
 
-
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_ADVANCEDSEQUENCER");
 MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
 
 /*******************************************************************************************
@@ -1117,7 +1132,7 @@ int main_test_metronome( string command) {
 //
 
 #ifdef THRU
-
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  THRU");
 //GLOBALS for test_thru example
 
 MIDIThru* thru;                  // a MIDIThru ORIG
@@ -1172,6 +1187,7 @@ catch( ... ) {
     ***********************************************************************************/ 
 
 #ifdef TEST_COMPONENT  
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_COMPONENT");
 //GLOBALS for test_component example
 //NOTE: required includes are not in this block
 
@@ -1348,7 +1364,7 @@ int main_test_component() {
  
 //#define RECORDINGPROPOSAL
 #ifdef RECORDINGPROPOSAL  //see issue #6 NiCMidi repo
-
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  RECORDINGPROPOSAL");
 MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
 AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
 MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
@@ -1384,6 +1400,8 @@ void main_proposal( void ) {
 
 #define TEST_MAIN
 #ifdef TEST_MAIN
+//ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_MAIN");
+
 /*
  *   Example file for NiCMidi - A C++ Class Library for MIDI
  *
@@ -1435,7 +1453,7 @@ struct note_data {
 
 
 // The default ctor creates an AdvancedSequencer with 17 empty tracks (1 master + 16 channel)
-AdvancedSequencer sequencer;
+//AdvancedSequencer sequencer; //move into the proc to prevent early initialisation of nimBLE ?
 
 
 // Data for "Twinkle twinkle", track 1
@@ -1471,6 +1489,9 @@ note_data track3[] = {
 
 int test_main( ) {
 //int test_main( int argc, char **argv ) {
+    ESP_LOGE(TAG,"Entering test_main example");
+
+    AdvancedSequencer sequencer; //was under GLOBALS, see above
     // gets the address of the sequencer MIDIMultiTrack, so we can edit it
     MIDIMultiTrack* tracks = sequencer.GetMultiTrack();
     MIDITrack* trk;
@@ -1504,7 +1525,7 @@ int test_main( ) {
 
     // When you edit the AdvancedSequencer multitrack you must update the
     // sequencer parameters before playing: this does the job
- //   sequencer.UpdateStatus();
+    sequencer.UpdateStatus();
 
     // now we can play track 1 only
     cout << "Playing track 1 ..." << endl;
@@ -1637,9 +1658,14 @@ void app_main(void) {
     esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
     //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
     //MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
+    
+    
+    ESP_LOGW(TAG, "WAITING SOME TIME BEFORE DOING MAIN TASKS");
+    nbDelay(50);
+    ESP_LOGW(TAG, "GO!");
 
     #ifdef TESTMESSAGE
-
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TESTMESSAGE");
     /**********************************************************************************
     *TEST  NiCMidi functionality
     *
@@ -1729,7 +1755,47 @@ Here is an example:
   //NimBLE Bluetooth
   //Create the BLE Device
 
+#ifdef TEST_MAIN
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_MAIN");
+ 
+ /*
+ uint8_t chipid[6];esp_efuse_mac_get_custom(chipid);
+    //esp_efuse_read_mac(chipid);
+   
+   // ESP_LOGI(TAG,"chipid %X",chipid[0]);
+   ESP_LOGI(TAG,"chipid %s",chipid);
+*/  
 
+#ifdef STANDALONE 
+//test stand-alone init of nimBLE here, may depend on RTMIDI_DDL_PUBLIC
+
+ MidiOutNimBLE*  port = new MidiOutNimBLE;
+ //It can be opened
+
+  ESP_LOGW(TAG,"port-isPortOpen() %d", port->isPortOpen());
+  port->openPort(0);
+  ESP_LOGW(TAG,"port->getPortName(0)) %s",port->getPortName(0).c_str());
+    ESP_LOGW(TAG,"port-isPortOpen() %d", port->isPortOpen());
+
+ //Now see if you can remove init from MQTTDriver or nimBLEdriver....
+   //use isPortOpen is there a kind of doesPortExist?
+   //filter on MIDI capable port via nimBLE characteristic
+   //send message
+   //sendMessage(const std::vector<unsigned char> *message);
+   const unsigned char test[] = "abcde";  // This will add a terminating \0 character to the array
+   port->sendMessage(test,5);
+#endif //STANDALONE
+
+   
+ESP_LOGW(TAG, "GO GO!");
+
+/*
+while (true) {    
+  nbDelay(2);   //test loop
+  
+}
+
+*/
 test_main(); //NiCMidi 211222
 while (true) {
  
@@ -1738,8 +1804,10 @@ vTaskDelay(500 / portTICK_PERIOD_MS);
  
 };    
 
+#endif
+
 #ifdef TEST_RECORDER
- 
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDER");
     ESP_LOGE(TAG,"instantiations for TEST_RECORDER EXAMPLE");
     ESP_LOGE(TAG,"Entering MIDISequencerGUINotifierText");
     MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
@@ -1835,6 +1903,7 @@ vTaskDelay(500 / portTICK_PERIOD_MS);
 
   
 #ifdef TEST_COMPONENT 
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_COMPONENT");
   ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING main_test_component()");
   while (1) {      
     main_test_component();  
@@ -1843,6 +1912,7 @@ vTaskDelay(500 / portTICK_PERIOD_MS);
 #endif
 
 #ifdef RECORDINGPROPOSAL 
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  RECORDINGPROPOSAL");
   ESP_LOGW(TAG, "ENTERING main_proposal()");
 //  while (1) {      
     main_proposal();  
@@ -1855,6 +1925,7 @@ vTaskDelay(500 / portTICK_PERIOD_MS);
 
 
 #ifdef THRU
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  THRU");
    ESP_LOGW(TAG, "GOINT TO INITALIZE THRU");
    int thru_result = thru_main();
    ESP_LOGW(TAG, "INITIALIZED THRU WITH RESULT: %d", thru_result);
