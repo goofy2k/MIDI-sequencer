@@ -139,6 +139,8 @@ I (3434) FCKX_SEQ: sent publish successful, msg_id=0
 I (3444) FCKX_SEQ: MQTT_EVENT_UNSUBSCRIBED, msg_id=4924
 I (3454) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=21479
 I (3454) FCKX_SEQ: sent publish successful, msg_id=0
+
+
 W (3464) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
 W (3464) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
 I (3464) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=46453
@@ -175,6 +177,8 @@ W (3874) NIMBLEDRIVER: BLE server characteristic created
 W (3894) NIMBLEDRIVER: BLE service started
 Created temp MidiOutNimBLE for detecting nr of ports
 E (3904) NICMIDI DRIVER: start creation of MidiOutNimBLE port
+
+
 W (3904) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
 W (3914) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
 I (3914) NimBLEDevice.cpp: NimBLEDevice::init entered
@@ -346,6 +350,8 @@ E (4834) SEQUENCER: track_states.size() 17
 E (4844) SEQUENCER: track_states.size() 17
 Playing track 1 ...
                 Entered in AdvancedSequencer::Start() ...
+
+
 E (4854) NICMIDI DRIVER: MIDIOutDriver::OpenPort()
 W (4854) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
 OPENPORT2 ENTEREDW (4864) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
@@ -445,6 +451,8 @@ E (16864) SEQUENCER: track_states.size() 17
 E (16874) SEQUENCER: track_states.size() 17
 Playing 3 tracks ...
                 Entered in AdvancedSequencer::Start() ...
+
+
 E (16894) NICMIDI DRIVER: MIDIOutDriver::OpenPort()
 W (16894) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
 OPENPORT2 ENTEREDW (16894) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
