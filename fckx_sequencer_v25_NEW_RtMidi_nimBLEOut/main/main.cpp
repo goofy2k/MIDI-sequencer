@@ -1580,7 +1580,7 @@ int test_main( ) {
     cout << "    Stop" << endl;
 
 //
-
+    ESP_LOGE(TAG,"Exiting test_main example");
     return EXIT_SUCCESS;
 }
 
@@ -1796,7 +1796,9 @@ while (true) {
 }
 
 */
-test_main(); //NiCMidi 211222
+
+int success_int = test_main(); //NiCMidi 211222
+ ESP_LOGE(TAG,"Exited test_main successfully %d", success_int);
 while (true) {
  
 ESP_LOGW(TAG,"END OF TEST_MAIN"); 
