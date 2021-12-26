@@ -488,8 +488,10 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
 
   
 **v25:**
+  - DONE create more stable connection procedure to nimBLE output (initialize before any call to NiCMidi)
+  - repaired bugs in NiCMidi
   
-  - create more stable connection procedure to nimBLE output (initialize before any call to NiCMidi)
+**v26:**  
   - implement other channels than 0 in synth app
   - make channels > 1 recognizable in synth (e.g. by changing some FaustDSP settings) NEW REPO CREATED FOR SYNTH APP:  Faust-Synth-MIDIBLE
   - try to uncomment playing other channel numbers (uncomment line ~1514 and further, "THE REST IS COMMENTED OUT")
