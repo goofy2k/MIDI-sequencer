@@ -499,7 +499,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - try recording again
   
 Nic:    
-For testing recording and playing you can try the code in the 4th message in this thread. Remember that I assumed incorrectly the char to be signed, while in your compiler they should be unsigned, so perhaps you must change something in recorder::SetTrackRecChannel() (I am working on these bugs on types, which are scattered throughout all the files of the library).
+For testing recording and playing you can try the code in the 4th message in this thread (labeled TEST_RECORDING in the app. Remember that I assumed incorrectly the char to be signed, while in your compiler they should be unsigned, so perhaps you must change something in recorder::SetTrackRecChannel() (I am working on these bugs on types, which are scattered throughout all the files of the library).
 Trace the MIDIRecorder::TickProc(), the line
 452 // insert the event into the track
 453 tracks->InsertEvent(i, msg);
