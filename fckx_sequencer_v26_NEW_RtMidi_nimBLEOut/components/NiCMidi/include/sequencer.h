@@ -481,9 +481,9 @@ class MIDISequencer : public MIDITickComponent {
 
         /// Values for count_in_status
         enum {
-            COUNT_IN_ENABLED = 1,           ///< 0 if no count in before starting, 1 if yes
-            COUNT_IN_PENDING = 2,           ///< 0 if count in is done, 2 if it is pending
-        //    AUTO_STOPPED     = 4            ///<0 if playing, 4 if already stopped
+            COUNT_IN_ENABLED  = 1,           ///< 0 if no count in before starting, 1 if yes
+            COUNT_IN_PENDING  = 2,           ///< 0 if count in is done, 2 if it is pending
+            AUTO_STOP_PENDING = 4            ///<0 if no autostop, 4 if yes
         //NiCMidi 211222
         };
 
@@ -518,7 +518,7 @@ static void                     StaticStopProc(MIDISequencer* p)    { p->Stop();
         //std::vector<unsigned int>       track_ports;        // The port id for every track
         MIDISequencerState              state;              // The sequencer state
 
-        std::recursive_mutex            stop_lock;          // used to ensure autostopping and normal stop doesn't overlap //NiCMidi 211222
+        //std::recursive_mutex            stop_lock;          // used to ensure autostopping and normal stop doesn't overlap //NiCMidi 211222
   
         /// \endcond
 };

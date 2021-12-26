@@ -1493,10 +1493,15 @@ int test_main( ) {
 
     AdvancedSequencer sequencer; //was under GLOBALS, see above
     // gets the address of the sequencer MIDIMultiTrack, so we can edit it
+    
+while(true){
+    
     MIDIMultiTrack* tracks = sequencer.GetMultiTrack();
     MIDITrack* trk;
     // the constructor creates an undefined (NoOp) message with time 0
     MIDITimedMessage msg;
+    ESP_LOGE(TAG,"WAITING A WHILE FOR A STABLE NIMBLE CONNECTION");
+    MIDITimer::Wait(1000); //wait a while for a stable nimBLE connection
 
     // now trk points to the master track (track 0 of the multitrack)
     trk = tracks->GetTrack(0);
@@ -1532,8 +1537,8 @@ int test_main( ) {
     sequencer.Play();
     while (sequencer.IsPlaying())
         MIDITimer::Wait(50);
-    cout << "    Stop" << endl;
-/*
+    cout << "    Stop Playing track 1" << endl;
+// /*
 // THE REST IS COMMENTED OUT. IF YOU SUCCEED CAN UNCOMMENT AND PLAY OTHER TWO TRACKS
 
     // now do the same for track 2 (bass, channel 2)
@@ -1568,18 +1573,19 @@ int test_main( ) {
         msg.SetTime(track3[i].time);
         trk->InsertNote(msg, track3[i].length);
     }
-  
+    //MIDITimer::Wait(1000); //TEMP FIX FOR UPCOMING CRASH
     sequencer.UpdateStatus();  //causes crash
-   */
+ //  */
     sequencer.GoToZero();
 
     cout << "Playing 3 tracks ..." << endl;
     sequencer.Play();
     while (sequencer.IsPlaying())
         MIDITimer::Wait(50);
-    cout << "    Stop" << endl;
+    cout << "    Stop Playing 3 tracks" << endl;
 
 //
+}//while true
     ESP_LOGE(TAG,"Exiting test_main example");
     return EXIT_SUCCESS;
 }
