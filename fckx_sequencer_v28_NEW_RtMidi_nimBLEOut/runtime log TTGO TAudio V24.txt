@@ -1,0 +1,282 @@
+GUI EVENT: Transport MEAS 27 BEAT 3
+E (64068) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+E (64068) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=12
+GUI EVENT: Transport MEAS 28
+GUI EVENT: Transport MEAS 28 BEAT 0
+Timer stopped by MIDITimer::Stop()
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+GATT procedure initiated: notify; att_handle=12
+OUT Port fckx_seq closed
+GUI EVENT: Transport SEQUENCER STOP
+                 ... Exiting from MIDISequencer::Stop()
+E (64168) SEQUENCER: track_states.size() 17
+E (64168) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (64168) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (64178) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (64188) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (64198) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (64208) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (64208) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (64218) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (64228) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (64238) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (64238) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (64248) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (64258) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (64268) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (64278) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (64288) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (64298) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (64298) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (64308) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (64318) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (64328) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (64328) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (64338) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (64348) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (64358) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (64358) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (64368) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (64388) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (64398) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (64398) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (64408) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (64418) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (64428) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (64428) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (64448) SEQUENCER: track_states.size() 17
+E (64448) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (64448) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (64458) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (64468) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (64488) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (64488) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (64498) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (64508) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (64508) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (64518) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (64528) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (64538) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (64538) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (64548) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (64558) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (64568) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (64578) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (64588) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (64598) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (64608) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (64608) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (64618) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (64628) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (64638) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (64638) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (64648) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (64658) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (64668) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (64678) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (64688) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (64698) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (64708) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (64708) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (64718) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (64728) SEQUENCER: track_states.size() 17
+E (64728) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (64738) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (64748) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (64748) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (64758) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (64768) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (64788) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (64788) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (64798) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (64808) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (64818) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (64818) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (64828) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (64838) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (64848) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (64848) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (64858) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (64868) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (64878) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (64888) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (64898) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (64908) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (64908) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (64918) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (64928) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (64938) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (64938) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (64948) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (64958) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (64968) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (64978) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (64988) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (64998) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (65008) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (65008) SEQUENCER: track_states.size() 17
+E (65018) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (65028) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (65028) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (65038) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (65048) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (65058) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (65058) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (65078) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (65088) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (65088) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (65098) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (65108) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (65118) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (65118) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (65128) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (65138) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (65148) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (65148) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (65158) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (65168) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (65188) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (65188) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (65198) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (65208) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (65218) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (65218) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (65228) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (65238) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (65248) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (65248) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (65258) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (65278) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (65288) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (65288) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 16
+GUI EVENT: All       GENERAL RESET
+GUI EVENT: All       GENERAL RESET
+E (65308) SEQUENCER: track_states.size() 17
+E (65308) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (65318) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (65328) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (65328) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (65338) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (65348) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (65348) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (65358) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (65368) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (65388) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (65388) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (65398) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (65408) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (65418) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (65418) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (65428) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (65438) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (65448) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (65448) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (65458) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (65468) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (65488) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (65488) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (65498) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (65508) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (65518) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (65518) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (65528) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (65538) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (65548) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (65548) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (65558) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (65568) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (65588) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 16
+GUI EVENT: All       GENERAL RESET
+E (65598) SEQUENCER: track_states.size() 17
+E (65598) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (65608) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (65608) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (65618) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (65628) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (65638) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (65638) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (65648) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (65658) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (65668) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (65668) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (65688) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (65698) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (65708) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (65708) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (65718) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (65728) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (65738) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (65738) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (65748) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (65758) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (65758) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (65768) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (65788) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (65798) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (65798) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (65808) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (65818) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (65828) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (65828) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (65838) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (65848) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (65858) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (65858) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 16
+GUI EVENT: All       GENERAL RESET
+                 ... Exiting from MIDIRecorder::Stop()
+Recorder stopped
+GUI EVENT: All       GENERAL RESET
+E (65888) SEQUENCER: track_states.size() 17
+E (65888) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (65898) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 0
+E (65908) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (65918) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 1
+E (65918) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (65928) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 2
+E (65938) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (65958) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 3
+E (65958) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (65968) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 4
+E (65978) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (65978) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 5
+E (65988) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (65998) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 6
+E (66008) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (66008) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 7
+E (66018) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (66028) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 8
+E (66038) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (66038) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 9
+E (66058) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (66068) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 10
+E (66078) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (66078) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 11
+E (66088) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (66098) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 12
+E (66108) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (66108) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 13
+E (66118) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (66128) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 14
+E (66138) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (66138) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 15
+E (66158) SEQUENCER: BEFORE new MIDISequencerTrackState(*s.track_states[i]) for i 16
+E (66168) SEQUENCER: AFTER new MIDISequencerTrackState(*s.track_states[i]) for i 16
+GUI EVENT: All       GENERAL RESET
+Now the sequencer plays what you have recorded
+I (69078) wifi:bcn_timout,ap_probe_send_
