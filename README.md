@@ -493,11 +493,16 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
 
 **v26:**  
   
-**v27**  
+**v27:**  
   - improvements in creation of nimBLE connection (sequencer example is the test case, still not flawless
   
-**v28**  
-  -implement modifications in Nic's commit of dec 29th
+**v28:**  
+  - implemented modifications in Nic's commit of dec 29th.
+  - TEST_SEQUENCER part now runs pretty smoothly. Some hick-ups when playing in a loop. To be analyzed.
+  
+**v29:**
+  - test recording
+  - analyze hick-ups in sequencing loop
   
   
   - implement other channels than 0 in synth app
