@@ -585,7 +585,7 @@ bool AdvancedSequencer::GoToMeasure (int measure, int beat) {
 
 
 void AdvancedSequencer::Start () {
-    // If you call this while already èlaying the sequencer will restart from the
+    // If you call this while already playing the sequencer will restart from the
     // loop initial measure (if repeat play is on)
     if (!file_loaded && play_mode == PLAY_BOUNDED)
         return;

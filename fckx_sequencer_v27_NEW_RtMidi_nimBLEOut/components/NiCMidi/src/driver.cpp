@@ -24,6 +24,8 @@
 
 #define MIDI_IN_USED  //FCKX
 
+
+
 #include "../include/driver.h"
 #include "../include/timer.h"
 #include "esp_log.h"
@@ -31,7 +33,7 @@
 #include "nimBLEdriver.h" 
 #include "MQTTdriver.h"
 
-static const char *TAG = "NICMIDI DRIVER";
+//static const char *TAG = "NICMIDI DRIVER";
 
 /////////////////////////////////////////////////
 //         class MIDIRawMessageQueue           //
@@ -81,6 +83,7 @@ MIDIRawMessage& MIDIRawMessageQueue::ReadMessage(unsigned int n) {
 
 MIDIOutDriver::MIDIOutDriver(int id) :
     processor(0), port_id(id), num_open(0) {
+    static const char *TAG = "NICMIDI DRIVER";  
     try {//FCKX
         //ESP_LOGE(TAG,"start creation of RtMidiOut port"); 
         //port = new RtMidiOut();
@@ -113,9 +116,10 @@ void MIDIOutDriver::Reset() {
 
 
 void MIDIOutDriver::OpenPort() {
+    static const char *TAG = "NICMIDI DRIVER";
     if (num_open == 0) {
         try {
-            ESP_LOGE(TAG,"MIDIOutDriver::OpenPort()");
+            ESP_LOGE(TAG,"MIDIOutDriver::OpenPort() port_id %d", port_id);
             port->openPort(port_id);
 #if DRIVER_USES_MIDIMATRIX
             //out_matrix.Clear();
@@ -137,6 +141,8 @@ void MIDIOutDriver::OpenPort() {
 
 
 void MIDIOutDriver::ClosePort() {
+    static const char *TAG = "NICMIDI DRIVER";
+    ESP_LOGE(TAG,"MIDIOutDriver::ClosePort()");
     if (num_open == 1)
         port->closePort();
     if (num_open > 0) {
@@ -154,7 +160,8 @@ void MIDIOutDriver::ClosePort() {
 
 void MIDIOutDriver::AllNotesOff(int chan) {
     MIDIMessage msg;
-
+    static const char *TAG = "NICMIDI DRIVER";
+        ESP_LOGE(TAG,"MIDIOutDriver::AllNotesOff");
     if (!port->isPortOpen())
         return;
 
@@ -186,7 +193,8 @@ void MIDIOutDriver::AllNotesOff(int chan) {
 
 
 void MIDIOutDriver::OutputMessage(const MIDITimedMessage& msg) {
-    ESP_LOGE(TAG,"MIDIOutDriver::OutputMessage");    
+    static const char *TAG = "NICMIDI OutputMessage";
+    ESP_LOGI(TAG,"MIDIOutDriver::OutputMessage");    
 
     // MIDITimedMessage is good also for MIDIMessage
     MIDITimedMessage msg_copy(msg);
@@ -210,8 +218,11 @@ void MIDIOutDriver::OutputMessage(const MIDITimedMessage& msg) {
 
 
 void MIDIOutDriver::HardwareMsgOut(const MIDIMessage &msg) {
-    if (!port->isPortOpen())
-        return;
+        static const char *TAG = "NICMIDI HardwareMsgOut";
+    ESP_LOGI(TAG,"MIDIOutDriver::HardwareMsgOut"); 
+    if (!port->isPortOpen()) {
+    ESP_LOGE(TAG,"MIDIOutDriver::HardwareMsgOut **** PORT IS NOT OPEN ****");    
+    return;}
     msg_bytes.clear();
 #if DRIVER_USES_MIDIMATRIX
     if (msg.IsChannelMsg())
@@ -259,7 +270,7 @@ void MIDIOutDriver::HardwareMsgOut(const MIDIMessage &msg) {
 
 MIDIInDriver::MIDIInDriver(int id, unsigned int queue_size) :
     processor(0), port_id(id), num_open(0), in_queue(queue_size) {
-
+        static const char *TAG = "NICMIDI DRIVER INPUT";
 /*  //FCKX
     try {
         port = new RtMidiIn();

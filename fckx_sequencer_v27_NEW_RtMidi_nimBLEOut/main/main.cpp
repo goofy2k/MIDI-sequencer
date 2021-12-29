@@ -1,3 +1,6 @@
+#define TEST_SEQUENCER //"succesfully" looping twinkle twinkle
+//#define TEST_RECORDING   //in development
+
 //CONSIDER TO RENAME BLEDevice etc to NimBLEDevice etc. But test carefully when you have running code!
 //tmove references to the old jdks lib
 #include <stdio.h>
@@ -1362,14 +1365,27 @@ int main_test_component() {
  
  
  
-//#define RECORDINGPROPOSAL
-#ifdef RECORDINGPROPOSAL  //see issue #6 NiCMidi repo
-ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  RECORDINGPROPOSAL");
+
+#ifdef TEST_RECORDING  //see issue #6 NiCMidi repo
+
+
+void main_proposal( void ) {
+    ESP_LOGE(TAG,"Entering main_proposal of TEST_RECORDING example");
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING");
 MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
 AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
 MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
 
-void main_proposal( void ) {
+//create a waiting loop for availability of port(s)
+//port->isPortOpen())
+/*
+while (true) {
+ESP_LOGE(TAG,"TEST IF PORT IS OPEN %d",MIDIManager::GetOutDriver(0)->IsPortOpen());
+
+}
+*/
+
+    ESP_LOGE(TAG,"PROCEEDING with TEST_RECORDING example (a connection should be available here, because tested before)");
 
     MIDIManager::AddMIDITick(&recorder);
     //text_n.SetSequencer(&sequencer);      // This is already called by AdvancedSequencer constructor
@@ -1377,8 +1393,8 @@ void main_proposal( void ) {
     MIDIClockTime t = sequencer.MeasToMIDI(5,0); //endMeasure, endBeat record the first 6 beats
     recorder.SetEndRecTime(t);
     recorder.EnableTrack(1); //FCKX
-    recorder.SetTrackRecChannel(1,-1);      // Can you set this? YES Otherwise set a specific channel
-    //recorder.SetTrackRecChannel(1,0);  
+    recorder.SetTrackRecChannel(1,0);      // Can you set this? YES Otherwise set a specific channel
+    //recorder.SetTrackRecChannel(1,-1);  
     recorder.Start();
     std::cout << "Recorder started\n";
    
@@ -1398,9 +1414,8 @@ void main_proposal( void ) {
 }
 #endif
 
-#define TEST_MAIN
-#ifdef TEST_MAIN
-//ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_MAIN");
+
+#ifdef TEST_SEQUENCER
 
 /*
  *   Example file for NiCMidi - A C++ Class Library for MIDI
@@ -1488,34 +1503,58 @@ note_data track3[] = {
 //////////////////////////////////////////////////////////////////
 
 int test_main( ) {
-//int test_main( int argc, char **argv ) {
-    ESP_LOGE(TAG,"Entering test_main example");
+    ESP_LOGE(TAG,"WAITING A WHILE FOR MAIN APP INITS TO FINISH");    
+    MIDITimer::Wait(10000); //wait a while for a stable nimBLE connection
+    ESP_LOGE(TAG,"Entering test_main of TEST_SEQUENCER example");
 
     AdvancedSequencer sequencer; //was under GLOBALS, see above
     // gets the address of the sequencer MIDIMultiTrack, so we can edit it
     
-while(true){
+    //create a waiting loop for availability of port(s)
+    //it is integrated in the nimBLEdriver, that is called by Manager on instantiation of sequencer 
+    //int concount = MIDIManager::GetOutDriver(0)->getConnectedCOunt();
+    //int concount = MIDIManager::GetOutDriver(0)->IsPortOpen();
+
+
+    ESP_LOGE(TAG,"NIMBLE CONNECTION SHOULD BE OK HERE"); 
+
+//while(true){
     
     MIDIMultiTrack* tracks = sequencer.GetMultiTrack();
     MIDITrack* trk;
+    ESP_LOGE(TAG,"READY TO CREATE TRACK CONTENT"); 
     // the constructor creates an undefined (NoOp) message with time 0
     MIDITimedMessage msg;
-    ESP_LOGE(TAG,"WAITING A WHILE FOR A STABLE NIMBLE CONNECTION");
-    MIDITimer::Wait(1000); //wait a while for a stable nimBLE connection
+    int masterTrack = 0;
+    int songTrack = 1;
+    //Reset 
+//Clear
+//GetNumEvents
 
+while(true){
     // now trk points to the master track (track 0 of the multitrack)
-    trk = tracks->GetTrack(0);
+    
+    trk = tracks->GetTrack(masterTrack);
+    ESP_LOGE(TAG,"*************BEFORE CLEAN trk->GetNumEvents() masterTrack %d %d", masterTrack, trk->GetNumEvents());
+    trk->Clear();
+    ESP_LOGE(TAG,"*************AFTER CLEAN trk->GetNumEvents() masterTrack %d %d", masterTrack, trk->GetNumEvents());
+
 
     msg.SetTimeSig(4, 4);           // remember that the message time is 0
     trk->InsertEvent(msg);          // inserts the time signature (4/4)
     msg.SetKeySig(0, 0);
     trk->InsertEvent(msg);          // inserts the key signature (CM)
-    msg.SetTempo(100.0);
+    msg.SetTempo(200.0);
     trk->InsertEvent(msg);          // inserts the tempo
 
     // now trk points to track 1, we'll use it for MIDI channel 1
-    trk = tracks->GetTrack(1);
-    unsigned char channel = 0;      // MIDI channel 1
+    trk = tracks->GetTrack(songTrack);
+    ESP_LOGE(TAG,"*************BEFORE CLEAN trk->GetNumEvents() songTrack %d %d", songTrack, trk->GetNumEvents());
+    trk->Clear();
+    ESP_LOGE(TAG,"*************AFTER CLEAN trk->GetNumEvents() songTrack %d %d", songTrack, trk->GetNumEvents());
+
+
+    unsigned char channel = 1;      // MIDI channel 1
 
     msg.SetProgramChange(channel, 11);
     trk->InsertEvent(msg);          // inserts the program change at time 0
@@ -1538,12 +1577,14 @@ while(true){
     while (sequencer.IsPlaying())
         MIDITimer::Wait(50);
     cout << "    Stop Playing track 1" << endl;
-// /*
+
 // THE REST IS COMMENTED OUT. IF YOU SUCCEED CAN UNCOMMENT AND PLAY OTHER TWO TRACKS
 
+    #define BASS
+    #ifdef BASS
     // now do the same for track 2 (bass, channel 2)
     trk = tracks->GetTrack(2);
-    channel = 1;
+    channel = 1;  //was 1
 
     msg.Clear();                    // resets the message
     msg.SetProgramChange(channel, 33);
@@ -1555,14 +1596,19 @@ while(true){
         msg.SetTime(track2[i].time);
         trk->InsertNote(msg, track2[i].length);
     }
-    
-    
+    #endif //BASS
 
+    sequencer.UpdateStatus();
+    sequencer.GoToZero();
+
+
+    //#define DRUMS
+    #ifdef DRUMS
     // ... and 3 (percussion, channel 10)
     trk = tracks->GetTrack(3);
     channel = 9;
 
-
+   
     msg.Clear();
     //msg.SetProgramChange(channel, 33);    // uncomment these if your device doesn't sets
     //trk->InsertEvent(msg);                // automatically the drums on channel 10
@@ -1573,16 +1619,18 @@ while(true){
         msg.SetTime(track3[i].time);
         trk->InsertNote(msg, track3[i].length);
     }
-    //MIDITimer::Wait(1000); //TEMP FIX FOR UPCOMING CRASH
-    sequencer.UpdateStatus();  //causes crash
- //  */
-    sequencer.GoToZero();
+    #endif DRUMS
+    
 
+
+    #define PLAYSECOND
+    #ifdef PLAYSECOND
     cout << "Playing 3 tracks ..." << endl;
     sequencer.Play();
     while (sequencer.IsPlaying())
         MIDITimer::Wait(50);
     cout << "    Stop Playing 3 tracks" << endl;
+    #endif //PLAYSECOND
 
 //
 }//while true
@@ -1591,10 +1639,7 @@ while(true){
 }
 
 
-#endif // TEST_MAIN
-
-
-
+#endif // TEST_SEQUENCER
 
 
 
@@ -1624,6 +1669,14 @@ void app_main(void) {
     
     static const char *TAG = "APP_MAIN";   
     
+/*    
+ESP_LOGE - error (lowest)
+ESP_LOGW - warn
+ESP_LOGI - info
+ESP_LOGD - debug
+ESP_LOGV - verbose (highest)
+*/    
+    
     esp_log_level_set("*", ESP_LOG_VERBOSE);
     esp_log_level_set("MidiOutNimBLE :: sendMessage", ESP_LOG_ERROR);
     esp_log_level_set("RECORDER_FCKX", ESP_LOG_WARN);
@@ -1631,8 +1684,10 @@ void app_main(void) {
     esp_log_level_set("NimBLE", ESP_LOG_VERBOSE);
     esp_log_level_set("printMIDI_Input", ESP_LOG_VERBOSE);
     esp_log_level_set("SEQUENCER", ESP_LOG_ERROR);  
-    
-    
+    esp_log_level_set("NICMIDI HardwareMsgOut", ESP_LOG_ERROR);
+    esp_log_level_set("NICMIDI OutputMessage", ESP_LOG_VERBOSE);
+    esp_log_level_set("NimBLEDevice.cpp", ESP_LOG_VERBOSE);
+    //NimBLEDevice.cpp
     
     ESP_LOGI(TAG, "[APP] Startup..");
     ESP_LOGI(TAG, "[APP] Free memory: %d bytes", esp_get_free_heap_size());
@@ -1663,13 +1718,10 @@ void app_main(void) {
     ESP_LOGW(TAG, "Initialize MQTT connection here");
     esp_mqtt_client_handle_t  mqtt_client =  mqtt_app_start();
     //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
+    
     //MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
-    
-    
-    ESP_LOGW(TAG, "WAITING SOME TIME BEFORE DOING MAIN TASKS");
-    nbDelay(50);
-    ESP_LOGW(TAG, "GO!");
 
+   
     #ifdef TESTMESSAGE
     ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TESTMESSAGE");
     /**********************************************************************************
@@ -1709,43 +1761,6 @@ void app_main(void) {
 #endif //TESTMESSAGE
 
 
-    /*
-    printf("msg1.MsgToText(): %s\n", msg1.MsgToText()); //does not print
-    printf("msg2.MsgToText(): %s\n", msg2.MsgToText()); 
-    printf("msg3.MsgToText(): %s\n", msg3.MsgToText()); 
-    */ 
-
-//Can I use the NicMidi Track class?
-/*
-The constructor creates an empty track, with only the EOT; you can then edit it: the MIDITrack::InsertEvent(), MIDITrack::InsertNote(), MIDITrack::DeleteEvent() and MIDITrack::DeleteNote() methods insert and delete MIDITimedMessage objects, while other methods can insert or delete entire time intervals.
-
-Here is an example:
-*/
-//#include "track.h"
-//#include "dump_tracks.h"             // contains helper functions to print track content
-/*
-
- ESP_LOGE(TAG,"Testing NiCMidi functionality: MidiTrack/DumpMidiTrack");
-//int main() {
-   MIDITrack track;
-   MIDITimedMessage msg;             // a new MIDITimedMessage has time set to 0
-   msg.SetProgramChange(0, 49);      // msg becomes a Program Change, channel 1, program 49, time 0
-   track.InsertEvent(msg);           // inserts a copy of msg into the track
-   msg.SetVolumeChange(0, 127);      // msg becomes a Volume Change (CC 7), channel 1, volume 127, time 0
-   track.InsertEvent(msg);
-   msg.SetNoteOn(0, 60, 100);        // msg becomes a Note On, channel 1, note 60, velocity 100
-//   msg3.SetTime(480);                // sets the time of msg to 480 MIDI ticks
-   track.InsertNote(msg, 240);       // inserts the Note On and the corresponding Note Off after 240 ticks
-   DumpMIDITrack(&track);            // prints the contents of the track
-//   return 0;
-//}
-*/
-
-/*  //FCKX
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: MIDItimer MIDITickComponent, MIDIManager");
-  ESP_LOGE(TAG,"Testing NiCMidi functionality: test_component.cpp");    
-  main(); //code above
-*/  
  
     /**********************************************************************************
     *END OF TEST  NiCMidi functionality
@@ -1753,16 +1768,9 @@ Here is an example:
     * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
     *    
     ***********************************************************************************/
-  
-  //code for NicMidi test_recorder example
-  //MIDIManager::AddMIDITick(&recorder);
-  //text_n.SetSequencer(&sequencer);
-   
-  //NimBLE Bluetooth
-  //Create the BLE Device
 
-#ifdef TEST_MAIN
-    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_MAIN");
+#ifdef TEST_SEQUENCER
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_SEQUENCER");
  
  /*
  uint8_t chipid[6];esp_efuse_mac_get_custom(chipid);
@@ -1792,22 +1800,13 @@ Here is an example:
    port->sendMessage(test,5);
 #endif //STANDALONE
 
-   
-ESP_LOGW(TAG, "GO GO!");
 
-/*
-while (true) {    
-  nbDelay(2);   //test loop
-  
-}
-
-*/
 
 int success_int = test_main(); //NiCMidi 211222
  ESP_LOGE(TAG,"Exited test_main successfully %d", success_int);
 while (true) {
  
-ESP_LOGW(TAG,"END OF TEST_MAIN"); 
+ESP_LOGW(TAG,"END OF TEST_SEQUENCER"); 
 vTaskDelay(500 / portTICK_PERIOD_MS);
  
 };    
@@ -1906,10 +1905,6 @@ vTaskDelay(500 / portTICK_PERIOD_MS);
 
 #endif //ifdef TEST_RECORDER 
   
-
-/* CALL EXAMPLE MAINS */
-
-  
 #ifdef TEST_COMPONENT 
 ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_COMPONENT");
   ESP_LOGW(TAG, "ENTERING MAIN LOOP EXECUTING main_test_component()");
@@ -1919,18 +1914,14 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_COM
   }
 #endif
 
-#ifdef RECORDINGPROPOSAL 
-ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  RECORDINGPROPOSAL");
+#ifdef TEST_RECORDING 
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING");
   ESP_LOGW(TAG, "ENTERING main_proposal()");
 //  while (1) {      
     main_proposal();  
     //vTaskDelay(10 / portTICK_PERIOD_MS);  
 //  }
 #endif
-
-
-
-
 
 #ifdef THRU
 ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  THRU");
@@ -1947,12 +1938,6 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  THRU");
 //delete thru;  //this code is never reached
 
 #endif //ifdef THRU
-
-
-
-
-
-
 
 
 /*

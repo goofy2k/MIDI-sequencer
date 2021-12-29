@@ -427,14 +427,22 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(false); 
 */
-  #endif  
-  
-  
-    // Save our connection information
+
+      // Save our connection information
     
     connectionData.pServer = pServer;
     connectionData.pService = pService;
     connectionData.pCharacteristic = pCharacteristic;
+
+  #endif  
+  
+  /*
+      // Save our connection information
+    
+    connectionData.pServer = pServer;
+    connectionData.pService = pService;
+    connectionData.pCharacteristic = pCharacteristic;
+*/
   
  /*  
   // Save our connection information
@@ -457,9 +465,6 @@ ESP_LOGW(TAG, "BLE server characteristic created");
     printf("OPENPORT2 ENTERED");
     ESP_LOGW(TAG, "MidiOutNimBLE :: openPort entered "); 
 
-
-
-
     //start background task HERE????
     // depends on kind of task
     ESP_LOGW(TAG, "xTaskCreate(connectedTask) IS THIS REQUIRED?"); 
@@ -468,7 +473,50 @@ ESP_LOGW(TAG, "BLE server characteristic created");
       
   //MOVE THIS TO openPort
   
+   if (connected_) {
+           //check if a connection already exists
+    //if ( apiData->connected_ ) {
+    // if ( data->connected_ ) {
+        
+     //DO THIS BEFORE PREP OF ADVERTISING?   
+ 
+    //errorString_ = "MidiOutNimBLE::openPort: a valid connection already exists!";
+    ESP_LOGE(TAG, "MidiOutNimBLE::openPort: a valid connection already exists nevertheless start advertising (DIRTY!)"); 
+    //error( RtMidiError::WARNING, errorString_ );  //how  to implement this error case
+    
+#define DIRTYOPEN
+#ifdef DIRTYOPEN
+    //connected_ is probably not a valid flag
+    // Start advertising
+  ESP_LOGI(TAG, "Prepare advertising");
+  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(false); 
+  
+  connectionData.pAdvertising = pAdvertising;
+        // Start advertising
+  ESP_LOGI(TAG, "Start advertising");
 
+    NimBLEDevice::startAdvertising();
+
+
+
+   while (NimBLEDevice::getServer()->getConnectedCount() == 0) {
+    ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
+       vTaskDelay(5000/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
+
+
+
+   };
+
+    
+#else    
+    
+   return;   //DIRTY
+#endif   //DIRTYOPEN 
+   
+   } else {
+   
   // Start advertising
   ESP_LOGI(TAG, "Prepare advertising");
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
@@ -480,18 +528,15 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   ESP_LOGI(TAG, "Start advertising");
 
     NimBLEDevice::startAdvertising();
-    ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
 
-    //check if a connection already exists
-    //if ( apiData->connected_ ) {
-    // if ( data->connected_ ) {
-        
-     //DO THIS BEFORE PREP OF ADVERTISING?   
-     if (connected_) {
-    //errorString_ = "MidiOutNimBLE::openPort: a valid connection already exists!";
-    ESP_LOGE(TAG, "MidiOutNimBLE::openPort: a valid connection already exists!"); 
-    //error( RtMidiError::WARNING, errorString_ );  //how  to implement this error case
-    return;
+
+
+   while (NimBLEDevice::getServer()->getConnectedCount() == 0) {
+    ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
+       vTaskDelay(5000/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
+
+   };
+
    }
 #endif //OPEN2 
 
@@ -552,6 +597,13 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   
   //data->port = port;  
   //data->destinationId = destination;
+  
+  //a connection exist, get a list of connected devices
+  std::vector< uint16_t > 	currentPeers = NimBLEDevice::getServer()->getPeerDevices ();
+  
+  ESP_LOGI(TAG, "Number of connected peers: %d",currentPeers.size());
+ 
+  
   connected_ = true;  
 }  
 
