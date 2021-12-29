@@ -493,12 +493,10 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
 
 **v26:**  
   
-**v26:**
-  
-**v27** 
+**v27**  
   - improvements in creation of nimBLE connection (sequencer example is the test case, still not flawless
   
-**v28**
+**v28**  
   -implement modifications in Nic's commit of dec 29th
   
   
