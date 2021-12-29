@@ -460,18 +460,15 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
                 msg.SetTime(cur_time);
                 if (msg.IsChannelMsg()) {
                                                                                                                    
-                                
-                               
-                 
-                                                                
+                                                         
                     // search among the tracks which can accept the message
-                    char ch1 = msg.GetChannel();
+                    signed char ch1 = msg.GetChannel();
                                                                
                     for (i = 0; i < tracks->GetNumTracks(); i++) {
                                                                
                         if (!en_tracks[i]) continue;
                                                                 
-                        char ch2 = tracks->GetTrack(i)->GetRecChannel();
+                        signed char ch2 = tracks->GetTrack(i)->GetRecChannel();
                                                                                 
   // if (ch1 == ch2 || ch2 == -1)                                                                
 if (ch1 == ch2 || ch2 == 255) 

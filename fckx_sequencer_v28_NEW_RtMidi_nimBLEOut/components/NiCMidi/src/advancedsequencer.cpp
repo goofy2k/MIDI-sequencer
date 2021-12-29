@@ -492,71 +492,64 @@ bool AdvancedSequencer::GoToTime (MIDIClockTime time_clk) {
 
     // figure out which warp item we use
     // try warp to the last warp point BEFORE the
-    // requested measure
+    // requested time //measure
     unsigned int warp_to_item = 0;
-    for (; warp_to_item < warp_positions.size(); warp_to_item++) {
-        if (warp_positions[warp_to_item].cur_clock > time_clk)
+    for (; warp_to_item < warp_positions.size() - 1; warp_to_item++) {
+        if (warp_positions[warp_to_item + 1].cur_clock > time_clk)
             break;
     }
-    if (warp_to_item == warp_positions.size() && warp_to_item != 0)
-        warp_to_item--;
 
-    if (IsPlaying()) {
-        proc_lock.lock();
-        SetState (&warp_positions[warp_to_item]);
-        ret = MIDISequencer::GoToTime (time_clk);
-        if (ret)                // we have effectively moved time
+    SetState (&warp_positions[warp_to_item]);
+    ret = MIDISequencer::GoToTime (time_clk);
+    if (ret) {              // we have effectively moved time
+        if (IsPlaying())
+
             CatchEventsBefore();
-        proc_lock.unlock();
-    }
-    else {
-        SetState (&warp_positions[warp_to_item]);
-        ret = MIDISequencer::GoToTime (time_clk);
-        if (ret)                // we have effectively moved time
-            for (unsigned int i = 0; i < GetNumTracks(); ++i)
-                GetTrackState(i)->note_matrix.Reset();
-    }
+
+
+    else
+        for (unsigned int i = 0; i < GetNumTracks(); ++i)
+            GetTrackState(i)->note_matrix.Reset();
+ 
+
+ }
+     proc_lock.unlock();
     return ret;
 }
 
 
 bool AdvancedSequencer::GoToTimeMs(float time_ms) {
     bool ret;
-
+     proc_lock.lock();
     // figure out which warp item we use
     // try warp to the last warp point BEFORE the
-    // requested measure
+    // requested time //measure
     unsigned int warp_to_item = 0;
-    for (; warp_to_item < warp_positions.size(); warp_to_item++) {
-        if (warp_positions[warp_to_item].cur_time_ms > time_ms)
+   for (; warp_to_item < warp_positions.size() - 1; warp_to_item++) {
+        if (warp_positions[warp_to_item + 1].cur_time_ms > time_ms)
             break;
     }
-    if (warp_to_item == warp_positions.size() && warp_to_item != 0)
-        warp_to_item--;
+    
+    SetState (&warp_positions[warp_to_item]);
+    ret = MIDISequencer::GoToTimeMs (time_ms);
+    if (ret) {              // we have effectively moved time
+        if (IsPlaying())
 
-    if (IsPlaying()) {
-        proc_lock.lock();
-        SetState (&warp_positions[warp_to_item]);
-        ret = MIDISequencer::GoToTimeMs (time_ms);
-        if (ret)                // we have effectively moved time
-            CatchEventsBefore();
-        proc_lock.unlock();
-    }
-    else {
-        SetState (&warp_positions[warp_to_item]);
-        ret = MIDISequencer::GoToTimeMs (time_ms);
-        if (ret)                // we have effectively moved time
-            for (unsigned int i = 0; i < GetNumTracks(); ++i)
+  CatchEventsBefore();
+  
+else
+ for (unsigned int i = 0; i < GetNumTracks(); ++i)
                 GetTrackState(i)->note_matrix.Reset();
     }
+        proc_lock.unlock();
     return ret;
 }
 
 
 
 bool AdvancedSequencer::GoToMeasure (int measure, int beat) {
-    bool ret;
-
+    bool ret;           
+    proc_lock.lock();
     // figure out which warp item we use
     // try warp to the last warp point BEFORE the
     // requested measure
@@ -565,21 +558,19 @@ bool AdvancedSequencer::GoToMeasure (int measure, int beat) {
     if (warp_to_item >= warp_positions.size())
         warp_to_item = warp_positions.size() - 1;
 
-    if (IsPlaying()) {
-        proc_lock.lock();
-        SetState (&warp_positions[warp_to_item]);
-        ret = MIDISequencer::GoToMeasure (measure, beat);
-        if (ret)                // we have effectively moved time
+    SetState (&warp_positions[warp_to_item]);
+    ret = MIDISequencer::GoToMeasure (measure, beat);
+    if (ret) {                  // we have effectively moved time
+        if (IsPlaying())
+        
             CatchEventsBefore();
-        proc_lock.unlock();
-    }
-    else {
-        SetState (&warp_positions[warp_to_item]);
-        ret = MIDISequencer::GoToMeasure (measure, beat);
-        if (ret)                // we have effectively moved time
+
+          else
+        
             for (unsigned int i = 0; i < GetNumTracks(); ++i)
                 GetTrackState (i)->note_matrix.Reset();
     }
+     proc_lock.unlock();
     return ret;
 }
 
@@ -587,9 +578,11 @@ bool AdvancedSequencer::GoToMeasure (int measure, int beat) {
 void AdvancedSequencer::Start () {
     // If you call this while already playing the sequencer will restart from the
     // loop initial measure (if repeat play is on)
-    if (!file_loaded && play_mode == PLAY_BOUNDED)
+    if (!file_loaded && play_mode == PLAY_BOUNDED) {
         return;
-    //stop_lock.lock(); //NiCMidi 211222
+    }
+    
+    proc_lock.lock();
     std::cout << "\t\tEntered in AdvancedSequencer::Start() ...\n";
     MIDISequencer::Stop();
     if (repeat_play_mode)
@@ -612,31 +605,29 @@ void AdvancedSequencer::Start () {
     MIDITickComponent::Start();
     std::cout << "\t\t ... Exiting from AdvancedSequencer::Start()" << std::endl;
     //std::cout << "sys_time_offset = " << sys_time_offset << " sys_time = " << MIDITimer::GetSysTimeMs() << std::endl;
-    //stop_lock.unlock(); //NiCMidi 211222
+  proc_lock.unlock();
 }
 
 
 void AdvancedSequencer::Stop() {
     if (!IsPlaying())
         return;
-       //stop_lock.lock(); //NiCMidi 211222
+
+    proc_lock.lock();
     std::cout << "\t\tEntered in AdvancedSequencer::Stop() ...\n";
-    //MIDITickComponent::Stop();
-    state.count_in_status |= AUTO_STOP_PENDING;
+    // waits until the timer thread has stopped
+    MIDITickComponent::Stop();
+    // resets the autostop flag
+    state.playing_status &= ~AUTO_STOP_PENDING;
     state.iterator.SetTimeShiftMode(time_shift_mode);
     MIDIManager::AllNotesOff();
     MIDIManager::CloseOutPorts();
     state.Notify (MIDISequencerGUIEvent::GROUP_TRANSPORT,
                   MIDISequencerGUIEvent::GROUP_TRANSPORT_STOP);
-    //MIDIManager::CloseOutPorts();
-    //mgr->AllNotesOff();       // already done by SeqStop()
-    //mgr->Reset();
     // stops on a beat (and clear midi matrix)
     GoToMeasure(state.cur_measure, state.cur_beat);
-    MIDITickComponent::Stop();
-    state.count_in_status &= ~AUTO_STOP_PENDING;
     std::cout << "\t\t ... Exiting from AdvancedSequencer::Stop()" << std::endl;
-    //stop_lock.unlock(); //NiCMidi 211222
+    proc_lock.unlock();
 }
 
 
@@ -704,7 +695,7 @@ void AdvancedSequencer::UpdateStatus() {
     proc_lock.lock();
     file_loaded = !GetMultiTrack()->IsEmpty();
     ExtractWarpPositions();
-    GoToTime(state.cur_clock);
+     //GoToTime(state.cur_clock);     //   done by ExtractWarpPositions()
     proc_lock.unlock();
 }
 
@@ -716,7 +707,7 @@ void AdvancedSequencer::UpdateStatus() {
 
 
 void AdvancedSequencer::ExtractWarpPositions() {
-    MIDISequencerGUINotifier* notifier = state.notifier;
+    //MIDISequencerGUINotifier* notifier = state.notifier;
 
     Stop();         //TODO: this forbids to edit the multitrack while the sequencer is playing
                     // is this right?
@@ -725,11 +716,11 @@ void AdvancedSequencer::ExtractWarpPositions() {
     MIDIClockTime cur_time = GetCurrentMIDIClockTime();
 
     // temporarily disable the gui notifier
-    bool notifier_mode = false;
-    if (notifier) {
-        notifier_mode = notifier->GetEnable();
-        notifier->SetEnable (false);
-    }
+  //  bool notifier_mode = false;
+  //  if (notifier) {
+  //      notifier_mode = notifier->GetEnable();
+  //      notifier->SetEnable (false);
+  //  }
     char old_play_mode = play_mode;
     play_mode = PLAY_BOUNDED;
 
@@ -747,9 +738,9 @@ void AdvancedSequencer::ExtractWarpPositions() {
     }
     if (warp_positions.size() > num_warp_positions)
         // adjust vector size if it was greater than actual
-        warp_positions.resize(num_warp_positions, MIDISequencerState(GetMultiTrack(), notifier));
-
-    // now find the actual number of measures
+           warp_positions.resize(num_warp_positions, MIDISequencerState(GetMultiTrack(), state.notifier));
+   
+   // now find the actual number of measures
     num_measures = (num_warp_positions - 1) * MEASURES_PER_WARP;
     while (MIDISequencer::GoToMeasure(num_measures + 1))
         num_measures++;
@@ -758,11 +749,11 @@ void AdvancedSequencer::ExtractWarpPositions() {
 
     play_mode = old_play_mode;
     // re-enable the gui notifier if it was enabled previously
-    if (notifier) {
-        notifier->SetEnable (notifier_mode);
+//    if (notifier) {
+//        notifier->SetEnable (notifier_mode);
         // cause a full gui refresh now
-        notifier->Notify (MIDISequencerGUIEvent::GROUP_ALL);
-    }
+        //notifier->Notify (MIDISequencerGUIEvent::GROUP_ALL);
+   // }
 }
 
 

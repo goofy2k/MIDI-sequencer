@@ -1510,15 +1510,14 @@ int test_main( ) {
     AdvancedSequencer sequencer; //was under GLOBALS, see above
     // gets the address of the sequencer MIDIMultiTrack, so we can edit it
     
-    //create a waiting loop for availability of port(s)
+    //create a waiting loop for availability of port(s) NOT NECESSARY
     //it is integrated in the nimBLEdriver, that is called by Manager on instantiation of sequencer 
     //int concount = MIDIManager::GetOutDriver(0)->getConnectedCOunt();
     //int concount = MIDIManager::GetOutDriver(0)->IsPortOpen();
 
-
     ESP_LOGE(TAG,"NIMBLE CONNECTION SHOULD BE OK HERE"); 
 
-//while(true){
+    //while(true){   //get instatiation of tracks , trk , msg outside the loop
     
     MIDIMultiTrack* tracks = sequencer.GetMultiTrack();
     MIDITrack* trk;
@@ -1527,16 +1526,17 @@ int test_main( ) {
     MIDITimedMessage msg;
     int masterTrack = 0;
     int songTrack = 1;
+    //use these
     //Reset 
-//Clear
-//GetNumEvents
+    //Clear
+    //GetNumEvents
 
 while(true){
     // now trk points to the master track (track 0 of the multitrack)
     
     trk = tracks->GetTrack(masterTrack);
     ESP_LOGE(TAG,"*************BEFORE CLEAN trk->GetNumEvents() masterTrack %d %d", masterTrack, trk->GetNumEvents());
-    trk->Clear();
+    trk->Clear(); //clear to prevent multiple inserts when looping
     ESP_LOGE(TAG,"*************AFTER CLEAN trk->GetNumEvents() masterTrack %d %d", masterTrack, trk->GetNumEvents());
 
 
@@ -1550,12 +1550,16 @@ while(true){
     // now trk points to track 1, we'll use it for MIDI channel 1
     trk = tracks->GetTrack(songTrack);
     ESP_LOGE(TAG,"*************BEFORE CLEAN trk->GetNumEvents() songTrack %d %d", songTrack, trk->GetNumEvents());
-    trk->Clear();
+    trk->Clear(); //clear to prevent multiple inserts when looping
     ESP_LOGE(TAG,"*************AFTER CLEAN trk->GetNumEvents() songTrack %d %d", songTrack, trk->GetNumEvents());
 
-
+       // now trk points to track 1, we'll use it for MIDI channel 1
+    trk = tracks->GetTrack(1);
+    /* //FCKX
     unsigned char channel = 1;      // MIDI channel 1
-
+    */
+     unsigned char channel = 0;      // MIDI channel 1 //Nic
+     
     msg.SetProgramChange(channel, 11);
     trk->InsertEvent(msg);          // inserts the program change at time 0
     msg.SetVolumeChange(channel, 110);
@@ -1574,9 +1578,9 @@ while(true){
     // now we can play track 1 only
     cout << "Playing track 1 ..." << endl;
     sequencer.Play();
-    while (sequencer.IsPlaying())
-        MIDITimer::Wait(50);
-    cout << "    Stop Playing track 1" << endl;
+    while (sequencer.IsPlaying()) {
+    MIDITimer::Wait(50); };
+        cout << "The sequencer finished" << endl;
 
 // THE REST IS COMMENTED OUT. IF YOU SUCCEED CAN UNCOMMENT AND PLAY OTHER TWO TRACKS
 
@@ -1598,8 +1602,8 @@ while(true){
     }
     #endif //BASS
 
-    sequencer.UpdateStatus();
-    sequencer.GoToZero();
+  //  sequencer.UpdateStatus(); //FCKX check check
+  //  sequencer.GoToZero();
 
 
     //#define DRUMS
@@ -1621,7 +1625,8 @@ while(true){
     }
     #endif DRUMS
     
-
+    sequencer.UpdateStatus(); //FCKX check check
+    sequencer.GoToZero();
 
     #define PLAYSECOND
     #ifdef PLAYSECOND

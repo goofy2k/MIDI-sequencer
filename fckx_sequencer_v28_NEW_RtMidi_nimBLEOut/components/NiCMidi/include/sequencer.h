@@ -37,6 +37,7 @@
 
 #include <string>
 #include <mutex>   //NiCMidi 211222
+#include <atomic>  //NiCMidi 211229
 
 class MIDISequencer;        // forward declaration
 
@@ -66,14 +67,14 @@ class MIDISequencerTrackState {
         virtual void    Reset();
 
         //char            program;		    ///< the current program change, or -1 if undefined
-                signed char     program;		    ///< the current program change, or -1 if undefined //NiCMidi 211222
+                int16_t     program;		    ///< the current program change, or -1 if undefined //NiCMidi 211222
 
         int             bender_value;		///< the last seen bender value
         std::string     track_name;	        ///< the track name
         bool            notes_are_on;       ///< true if there are notes currently on
         MIDIMatrix      note_matrix;        ///< to keep track of all notes on
   //      char            control_values[C_ALL_NOTES_OFF];
-       unsigned char        control_values[C_ALL_NOTES_OFF];  //NiCMidi 211222
+       int16_t        control_values[C_ALL_NOTES_OFF];  //NiCMidi 211222
                                             ///< an array of current control change values, or -1 if not defined
         bool            got_good_track_name;///< internal use
 };
@@ -162,7 +163,7 @@ class MIDISequencerState : public MIDIProcessor {
         double                  last_time_ms;       ///< Internal use
         MIDIClockTime           last_tempo_change;  ///< Internal use
         MIDIClockTime           count_in_time;      ///< Internal use
-        char                    count_in_status;    ///< Flag affecting the count in
+       char                    playing_status;     ///< Flag affecting the TickProc (count in, auto stop, etc\.)
         static int              metronome_mode;     ///< Flag affecting how metronome beat is calculated
 };
 
@@ -211,6 +212,7 @@ class MIDISequencer : public MIDITickComponent {
         /// the MIDISequencer according to the new contents.
         void                            Reset();
 
+        //virtual bool                    IsPlaying() const       { return (MIDITickComponent::IsPlaying() || autostop.load()); }
         /// Returns current MIDIClockTime in MIDI ticks; it is effective even during playback
         MIDIClockTime                   GetCurrentMIDIClockTime() const;
         /// Returns current time in milliseconds; it is effective even during playback
@@ -255,9 +257,9 @@ class MIDISequencer : public MIDITickComponent {
         unsigned int                    GetRepeatPlayEnd() const
                                                                 { return repeat_end_meas; }
         /// Returns **true** if the count in is enabled.
-        bool                            GetCountInEnable() const    { return state.count_in_status & COUNT_IN_ENABLED; }
-        /// Returns **true** if the count in is pending (the sequencer is counting in).
-        bool                            GetCountInPending() const   { return state.count_in_status & COUNT_IN_PENDING; }
+         bool                            GetCountInEnable() const    { return state.playing_status & COUNT_IN_ENABLED; }
+         /// Returns **true** if the count in is pending (the sequencer is counting in).
+       bool                            GetCountInPending() const   { return state.playing_status & COUNT_IN_PENDING; }
 
         /// Returns the time shift mode (on or off). This is the value of the internal parameter, **not**
         /// the actual mode (during the playback the Start() method always sets it to on, while at the end
@@ -518,8 +520,7 @@ static void                     StaticStopProc(MIDISequencer* p)    { p->Stop();
         //std::vector<unsigned int>       track_ports;        // The port id for every track
         MIDISequencerState              state;              // The sequencer state
 
-        //std::recursive_mutex            stop_lock;          // used to ensure autostopping and normal stop doesn't overlap //NiCMidi 211222
-  
+
         /// \endcond
 };
 
