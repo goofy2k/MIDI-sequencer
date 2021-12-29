@@ -1,0 +1,586 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x17 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7068
+load:0x40078000,len:13652
+load:0x40080400,len:4632
+0x40080400: _init at ??:?
+
+entry 0x400806f4
+I (29) boot: ESP-IDF v4.2-dirty 2nd stage bootloader
+I (29) boot: compile time 17:39:53
+I (29) boot: chip revision: 3
+I (32) boot_comm: chip revision: 3, min. bootloader chip revision: 1
+I (40) boot.esp32: SPI Speed      : 40MHz
+I (44) boot.esp32: SPI Mode       : DIO
+I (49) boot.esp32: SPI Flash Size : 8MB
+I (53) boot: Enabling RNG early entropy source...
+I (59) boot: Partition Table:
+I (62) boot: ## Label            Usage          Type ST Offset   Length
+I (70) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (77) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (84) boot:  2 factory          factory app      00 00 00010000 00200000
+I (92) boot: End of partition table
+I (96) boot_comm: chip revision: 3, min. application chip revision: 1
+I (103) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x30484 (197764) map
+I (195) esp_image: segment 1: paddr=0x000404ac vaddr=0x3ffbdb60 size=0x0430c ( 17164) load
+I (203) esp_image: segment 2: paddr=0x000447c0 vaddr=0x40080000 size=0x00404 (  1028) load
+0x40080000: _WindowOverflow4 at C:/Users/Fred/esp-idf/components/freertos/xtensa/xtensa_vectors.S:1730
+
+I (204) esp_image: segment 3: paddr=0x00044bcc vaddr=0x40080404 size=0x0b44c ( 46156) load
+I (233) esp_image: segment 4: paddr=0x00050020 vaddr=0x400d0020 size=0xd7c24 (883748) map
+0x400d0020: _stext at ??:?
+
+I (602) esp_image: segment 5: paddr=0x00127c4c vaddr=0x4008b850 size=0x0f25c ( 62044) load
+0x4008b850: coex_classic_bt_release$part$0 at ld_fm.c:?
+
+I (646) boot: Loaded app from partition at offset 0x10000
+I (647) boot: Disabling RNG early entropy source...
+I (647) psram: This chip is ESP32-D0WD
+I (652) spiram: Found 64MBit SPI RAM device
+I (656) spiram: SPI RAM mode: flash 40m sram 40m
+I (661) spiram: PSRAM initialized, cache is in low/high (2-core) mode.
+I (669) cpu_start: Pro cpu up.
+I (672) cpu_start: Application information:
+I (677) cpu_start: Project name:     fckx_sequencer
+I (683) cpu_start: App version:      26c1243-dirty
+I (688) cpu_start: Compile time:     Dec 24 2021 17:39:37
+I (694) cpu_start: ELF file SHA256:  24664e50fce13546...
+I (700) cpu_start: ESP-IDF:          v4.2-dirty
+I (706) cpu_start: Starting app cpu, entry point is 0x40081ba8
+0x40081ba8: call_start_cpu1 at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:287
+
+I (0) cpu_start: App cpu up.
+I (1600) spiram: SPI SRAM memory test OK
+I (1601) heap_init: Initializing. RAM available for dynamic allocation:
+I (1601) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM
+I (1607) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM
+I (1613) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM
+I (1619) heap_init: At 3FFC9CD0 len 00016330 (88 KiB): DRAM
+I (1626) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (1632) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (1638) heap_init: At 4009AAAC len 00005554 (21 KiB): IRAM
+I (1645) cpu_start: Pro cpu start user code
+I (1650) spiram: Adding pool of 4096K of external SPI memory to heap allocator
+W (1675) spi_flash: Detected size(16384k) larger than the size in the binary image header(8192k). Using the size in the binary image header.
+I (1675) spi_flash: detected chip: gd
+I (1675) spi_flash: flash io: dio
+I (1677) cpu_start: StartinI (0) cpu_start: Starting scheduler on APP CPU.
+I (1694) spiram: Reserving pool of 32K of internal memory for DMA/internal allocations
+g scheduler on PRO CPU.
+I (1704) APP_MAIN: [APP] Startup..
+I (1704) APP_MAIN: [APP] Free memory: 4384372 bytes
+I (1714) APP_MAIN: [APP] IDF version: v4.2-dirty
+W (1714) APP_MAIN: Initialize WIFI connection here
+I (1774) APP_MAIN: ESP_WIFI_MODE_STA
+I (1784) wifi:wifi driver task: 3ffd4b68, prio:23, stack:3072, core=0
+I (1784) system_api: Base MAC address is not set
+I (1784) system_api: read default base MAC address from EFUSE
+I (1804) wifi:wifi firmware version: 1865b55
+I (1804) wifi:wifi certification version: v7.0
+I (1804) wifi:config NVS flash: enabled
+I (1814) wifi:config nano formating: enabled
+I (1814) wifi:Init data frame dynamic rx buffer num: 32
+I (1814) wifi:Init management frame dynamic rx buffer num: 32
+I (1824) wifi:Init management short buffer num: 32
+I (1824) wifi:Init static tx buffer num: 16
+I (1834) wifi:Init tx cache buffer num: 32
+I (1834) wifi:Init static rx buffer size: 1600
+I (1834) wifi:Init static rx buffer num: 10
+I (1844) wifi:Init dynamic rx buffer num: 32
+I (1844) wifi_init: rx ba win: 6
+I (1844) wifi_init: tcpip mbox: 32
+I (1854) wifi_init: udp mbox: 6
+I (1854) wifi_init: tcp mbox: 6
+I (1854) wifi_init: tcp tx win: 5744
+I (1874) wifi_init: tcp rx win: 5744
+I (1874) wifi_init: tcp mss: 1440
+I (18I (1974) phy: phy_version: 4500, 0cd6843, Sep 17 2020, 15:37:07, 0, 0
+74) wifi_init: WiFi/LWIP prefer SPIRAM
+I (1974) wifi:mode : sta (84:cc:a8:0d:3b:70)
+I (1974) FCKX_SEQ: wifi_init_sta finished.
+I (2104) wifi:new:<8,0>, old:<1,0>, ap:<255,255>, sta:<8,0>, prof:1
+I (2104) wifi:state: init -> auth (b0)
+I (2124) wifi:state: auth -> assoc (0)
+I (2174) wifi:state: assoc -> run (10)
+I (2274) wifi:connected with Verhoeckx_glas, aid = 10, channel 8, BW20, bssid = 96:6a:b0:c3:3b:27
+I (2274) wifi:security: WPA2-PSK, phy: bgn, rssi: -52
+I (2284) wifi:pm start, type: 1
+I (2344) wifi:AP's beacon interval = 102400 us, DTIM period = 1
+I (3274) esp_netif_handlers: sta ip: 192.168.2.17, mask: 255.255.255.0, gw: 192.168.2.254
+I (3274) FCKX_SEQ: got ip:192.168.2.17
+I (3274) FCKX_SEQ: connected to ap SSID:Verhoeckx_glas password: XXXXXXXXXXXX
+W (3284) APP_MAIN: Initialize MQTT connection here
+I (3284) FCKX_SEQ: MQTT CLIENT STARTED
+I (3284) FCKX_SEQ: Other event id:7
+W (3304) APP_MAIN: WAITING SOME TIME BEFORE DOING MAIN TASKS
+W (3354) APP_MAIN: GO!
+E (3354) APP_MAIN: CONDITIONAL----------------------------------CONDITIONAL  TEST_MAIN
+W (3354) APP_MAIN: GO GO!
+E (3354) FCKX_SEQ: Entering test_main example
+I (3364) FCKX_SEQ: MQTT_EVENT_CONNECTED
+I (3364) FCKX_SEQ: sent publish successful, msg_id=28064
+I (3364) FCKX_SEQ: sent subscribe successful, msg_id=8667
+I (3374) FCKX_SEQ: sent subscribe successful, msg_id=14999
+I (3374) FCKX_SEQ: sent unsubscribe successful, msg_id=4924
+I (3394) FCKX_SEQ: sent subscribe successful, msg_id=21479
+I (3404) FCKX_SEQ: sent subscribe successful, msg_id=46453
+Executing MIDIManager::Init()I (3404) FCKX_SEQ: sent subscribe successful, msg_id=53538
+I (3414) FCKX_SEQ: MQTT_EVENT_PUBLISHED, msg_id=28064
+I (3414) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=8667
+I (3424) FCKX_SEQ: sent publish successful, msg_id=0
+I (3424) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=14999
+Going to create temp MidiOutNimBLE for detecting nr of ports
+I (3434) FCKX_SEQ: sent publish successful, msg_id=0
+I (3444) FCKX_SEQ: MQTT_EVENT_UNSUBSCRIBED, msg_id=4924
+I (3454) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=21479
+I (3454) FCKX_SEQ: sent publish successful, msg_id=0
+
+
+W (3464) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (3464) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (3464) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=46453
+I (3474) FCKX_SEQ: sent publish successful, msg_id=0
+I (3484) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (3484) NimBLEDevice.cpp: NimBLEDevice::init !initialized
+I (3484) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=15165
+I (3494) FCKX_SEQ: sent publish successful, msg_id=0
+I (3504) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=53538
+I (3514) FCKX_SEQ: sent publish successful, msg_id=0
+I (3514) NimBLEDevice.cpp: Controller status A: 0
+I (3514) NimBLEDevice.cpp: Controller status B: 0
+I (3524) NimBLEDevice.cpp: Controller status C: 0
+I (3524) NimBLEDevice.cpp: NimBLEDevice::init B
+I (3544) NimBLEDevice.cpp: NimBLEDevice::init C
+I (3544) NimBLEDevice.cpp: Controller status D: 0
+I (3554) BTDM_INIT: BT controller compile version [3723d5b]
+I (3554) NimBLEDevice.cpp: Controller status E: 1
+I (3564) NimBLEDevice.cpp: NimBLEDevice::init E
+I (3814) NimBLEDevice.cpp: Controller status F: 2
+I (3814) NimBLEDevice.cpp: Controller status G: 2
+I (3814) NimBLEDevice.cpp: Controller status H: 2
+I (3824) NimBLEDevice.cpp: NimBLEDevice::init I
+I (3824) NimBLEDevice.cpp: NimBLEDevice::init J
+I (3834) NimBLEDevice: BLE Host Task Started
+I (3834) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (3864) NimBLEDevice: NimBle host synced.
+I (3864) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (3864) NIMBLEDRIVER: NimBLEDevice created
+W (3864) NIMBLEDRIVER: BLE server created
+W (3864) NIMBLEDRIVER: BLE server callbacks created
+W (3874) NIMBLEDRIVER: BLE server service created
+W (3874) NIMBLEDRIVER: BLE server characteristic created
+W (3894) NIMBLEDRIVER: BLE service started
+Created temp MidiOutNimBLE for detecting nr of ports
+E (3904) NICMIDI DRIVER: start creation of MidiOutNimBLE port
+
+
+W (3904) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (3914) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (3914) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (3924) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (3924) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (3934) NIMBLEDRIVER: NimBLEDevice created
+W (3934) NIMBLEDRIVER: BLE server created
+W (3944) NIMBLEDRIVER: BLE server callbacks created
+W (3944) NimBLEServer: Warning creating a duplicate service UUID: 4fafc201-1fb5-459e-8fcc-c5c9c331914b
+W (3964) NIMBLEDRIVER: BLE server service created
+W (3974) NIMBLEDRIVER: BLE server characteristic created
+W (3974) NIMBLEDRIVER: BLE service started
+E (3984) NICMIDI DRIVER: executed creation of MidiOutNimBLE port
+Going to create temp MQTTMidiIn for detecting nr of ports
+W (3994) MQTTDRIVER: MQTTMidiIn instantiation
+W (3994) MQTTDRIVER: MQTTMidiIn :: initialize
+Created temp MQTTMidiIn for detecting nr of ports
+E (4014) NICMIDI DRIVER: start creation of MQTTMidiIn port
+W (4014) MQTTDRIVER: MQTTMidiIn instantiation
+W (4014) MQTTDRIVER: MQTTMidiIn :: initialize
+E (4024) MQTTDRIVER: MQTTMidiIn::setCallback: STORING CALLBACK IN inputData_
+E (4034) NICMIDI DRIVER: executed creation of MQTTMidiIn port
+W (4034) MQTTDRIVER: Closed MQTTMidiIn NO CLEANUP: BEWARE of MEMORY LEAKS
+Exiting MIDIManager::Init() Found 1 midi out and 1 midi in
+E (4054) SEQUENCER: track_states.size() 17
+E (4064) SEQUENCER: track_states.size() 17
+E (4064) SEQUENCER: track_states.size() 17
+E (4064) SEQUENCER: track_states.size() 17
+E (4074) SEQUENCER: track_states.size() 17
+E (4094) InsertEvent: INSERT 1a, GetEndTime() 0 NOT < msg.GetTime() 0
+E (4094) InsertEvent: FindEventNumber 1 (must be true)
+E (4094) InsertEvent: ev_num 0
+E (4094) InsertEvent: INSERT 4
+E (4094) InsertEvent: INSERT 4a
+E (4104) InsertEvent: INSERT 5
+E (4104) InsertEvent: INSERT 8
+E (4104) InsertEvent: INSERT 7
+E (4114) InsertEvent: INSERT 1a, GetEndTime() 0 NOT < msg.GetTime() 0
+E (4114) InsertEvent: FindEventNumber 1 (must be true)
+E (4124) InsertEvent: ev_num 0
+E (4124) InsertEvent: INSERT 4
+E (4134) InsertEvent: INSERT 4a
+E (4134) InsertEvent: INSERT 5
+E (4134) InsertEvent: INSERT 4a
+E (4144) InsertEvent: INSERT 5
+E (4144) InsertEvent: INSERT 8
+E (4144) InsertEvent: INSERT 7
+E (4164) InsertEvent: INSERT 1a, GetEndTime() 0 NOT < msg.GetTime() 0
+E (4164) InsertEvent: FindEventNumber 1 (must be true)
+E (4174) InsertEvent: ev_num 0
+E (4174) InsertEvent: INSERT 4
+E (4174) InsertEvent: INSERT 4a
+E (4184) InsertEvent: INSERT 5
+E (4184) InsertEvent: INSERT 4a
+E (4184) InsertEvent: INSERT 5
+E (4194) InsertEvent: INSERT 4a
+E (4194) InsertEvent: INSERT 5
+E (4194) InsertEvent: INSERT 8
+E (4204) InsertEvent: INSERT 7
+E (4204) InsertEvent: INSERT 1a, GetEndTime() 0 NOT < msg.GetTime() 0
+E (4214) InsertEvent: FindEventNumber 1 (must be true)
+E (4214) InsertEvent: ev_num 0
+E (4214) InsertEvent: INSERT 4
+E (4224) InsertEvent: INSERT 4a
+E (4224) InsertEvent: INSERT 5
+E (4224) InsertEvent: INSERT 8
+E (4234) InsertEvent: INSERT 7
+E (4234) InsertEvent: INSERT 1a, GetEndTime() 0 NOT < msg.GetTime() 0
+E (4244) InsertEvent: FindEventNumber 1 (must be true)
+E (4244) InsertEvent: ev_num 0
+E (4264) InsertEvent: INSERT 4
+E (4264) InsertEvent: INSERT 4a
+E (4264) InsertEvent: INSERT 5
+E (4274) InsertEvent: INSERT 4a
+E (4274) InsertEvent: INSERT 5
+E (4274) InsertEvent: INSERT 8
+E (4284) InsertEvent: INSERT 7
+E (4284) InsertEvent: INSERT 1, GetEndTime() 0 < msg.GetTime() 480
+E (4294) InsertEvent: BEFORE insert GetNumEvents() 3
+E (4294) InsertEvent: BEFORE insert GetNumEvents() 4
+E (4304) InsertEvent: INSERT 1, GetEndTime() 480 < msg.GetTime() 590
+E (4304) InsertEvent: BEFORE insert GetNumEvents() 4
+E (4314) InsertEvent: BEFORE insert GetNumEvents() 5
+E (4314) InsertEvent: INSERT 1, GetEndTime() 590 < msg.GetTime() 600
+E (4324) InsertEvent: BEFORE insert GetNumEvents() 5
+E (4324) InsertEvent: BEFORE insert GetNumEvents() 6
+E (4334) InsertEvent: INSERT 1, GetEndTime() 600 < msg.GetTime() 710
+E (4334) InsertEvent: BEFORE insert GetNumEvents() 6
+E (4344) InsertEvent: BEFORE insert GetNumEvents() 7
+E (4344) InsertEvent: INSERT 1, GetEndTime() 710 < msg.GetTime() 720
+E (4364) InsertEvent: BEFORE insert GetNumEvents() 7
+E (4374) InsertEvent: BEFORE insert GetNumEvents() 8
+E (4374) InsertEvent: INSERT 1, GetEndTime() 720 < msg.GetTime() 830
+E (4384) InsertEvent: BEFORE insert GetNumEvents() 8
+E (4384) InsertEvent: BEFORE insert GetNumEvents() 9
+E (4394) InsertEvent: INSERT 1, GetEndTime() 830 < msg.GetTime() 840
+E (4394) InsertEvent: BEFORE insert GetNumEvents() 9
+E (4404) InsertEvent: BEFORE insert GetNumEvents() 10
+E (4404) InsertEvent: INSERT 1, GetEndTime() 840 < msg.GetTime() 950
+E (4414) InsertEvent: BEFORE insert GetNumEvents() 10
+E (4414) InsertEvent: BEFORE insert GetNumEvents() 11
+E (4424) InsertEvent: INSERT 1, GetEndTime() 950 < msg.GetTime() 960
+E (4434) InsertEvent: BEFORE insert GetNumEvents() 11
+E (4434) InsertEvent: BEFORE insert GetNumEvents() 12
+E (4444) InsertEvent: INSERT 1, GetEndTime() 960 < msg.GetTime() 1070
+E (4444) InsertEvent: BEFORE insert GetNumEvents() 12
+E (4464) InsertEvent: BEFORE insert GetNumEvents() 13
+E (4464) InsertEvent: INSERT 1, GetEndTime() 1070 < msg.GetTime() 1080
+E (4474) InsertEvent: BEFORE insert GetNumEvents() 13
+E (4474) InsertEvent: BEFORE insert GetNumEvents() 14
+E (4484) InsertEvent: INSERT 1, GetEndTime() 1080 < msg.GetTime() 1190
+E (4494) InsertEvent: BEFORE insert GetNumEvents() 14
+E (4494) InsertEvent: BEFORE insert GetNumEvents() 15
+E (4504) InsertEvent: INSERT 1, GetEndTime() 1190 < msg.GetTime() 1200
+E (4504) InsertEvent: BEFORE insert GetNumEvents() 15
+E (4514) InsertEvent: BEFORE insert GetNumEvents() 16
+E (4514) InsertEvent: INSERT 1, GetEndTime() 1200 < msg.GetTime() 1430
+E (4524) InsertEvent: BEFORE insert GetNumEvents() 16
+E (4524) InsertEvent: BEFORE insert GetNumEvents() 17
+E (4534) InsertEvent: INSERT 1, GetEndTime() 1430 < msg.GetTime() 1440
+E (4544) InsertEvent: BEFORE insert GetNumEvents() 17
+E (4544) InsertEvent: BEFORE insert GetNumEvents() 18
+E (4564) InsertEvent: INSERT 1, GetEndTime() 1440 < msg.GetTime() 1550
+E (4564) InsertEvent: BEFORE insert GetNumEvents() 18
+E (4574) InsertEvent: BEFORE insert GetNumEvents() 19
+E (4574) InsertEvent: INSERT 1, GetEndTime() 1550 < msg.GetTime() 1560
+E (4584) InsertEvent: BEFORE insert GetNumEvents() 19
+E (4584) InsertEvent: BEFORE insert GetNumEvents() 20
+E (4594) InsertEvent: INSERT 1, GetEndTime() 1560 < msg.GetTime() 1670
+E (4604) InsertEvent: BEFORE insert GetNumEvents() 20
+E (4604) InsertEvent: BEFORE insert GetNumEvents() 21
+E (4614) InsertEvent: INSERT 1, GetEndTime() 1670 < msg.GetTime() 1680
+E (4614) InsertEvent: BEFORE insert GetNumEvents() 21
+E (4624) InsertEvent: BEFORE insert GetNumEvents() 22
+E (4624) InsertEvent: INSERT 1, GetEndTime() 1680 < msg.GetTime() 1790
+E (4634) InsertEvent: BEFORE insert GetNumEvents() 22
+E (4634) InsertEvent: BEFORE insert GetNumEvents() 23
+E (4644) InsertEvent: INSERT 1, GetEndTime() 1790 < msg.GetTime() 1800
+E (4664) InsertEvent: BEFORE insert GetNumEvents() 23
+E (4664) InsertEvent: BEFORE insert GetNumEvents() 24
+E (4674) InsertEvent: INSERT 1, GetEndTime() 1800 < msg.GetTime() 1910
+E (4674) InsertEvent: BEFORE insert GetNumEvents() 24
+E (4684) InsertEvent: BEFORE insert GetNumEvents() 25
+E (4684) InsertEvent: INSERT 1, GetEndTime() 1910 < msg.GetTime() 1920
+E (4694) InsertEvent: BEFORE insert GetNumEvents() 25
+E (4694) InsertEvent: BEFORE insert GetNumEvents() 26
+E (4704) InsertEvent: INSERT 1, GetEndTime() 1920 < msg.GetTime() 2030
+E (4714) InsertEvent: BEFORE insert GetNumEvents() 26
+E (4714) InsertEvent: BEFORE insert GetNumEvents() 27
+E (4724) InsertEvent: INSERT 1, GetEndTime() 2030 < msg.GetTime() 2040
+E (4724) InsertEvent: BEFORE insert GetNumEvents() 27
+E (4734) InsertEvent: BEFORE insert GetNumEvents() 28
+E (4734) InsertEvent: INSERT 1, GetEndTime() 2040 < msg.GetTime() 2150
+E (4744) InsertEvent: BEFORE insert GetNumEvents() 28
+E (4744) InsertEvent: BEFORE insert GetNumEvents() 29
+E (4764) InsertEvent: INSERT 1, GetEndTime() 2150 < msg.GetTime() 2160
+E (4774) InsertEvent: BEFORE insert GetNumEvents() 29
+E (4774) InsertEvent: BEFORE insert GetNumEvents() 30
+E (4784) InsertEvent: INSERT 1, GetEndTime() 2160 < msg.GetTime() 2370
+E (4784) InsertEvent: BEFORE insert GetNumEvents() 30
+E (4794) InsertEvent: BEFORE insert GetNumEvents() 31
+E (4794) SEQUENCER: track_states.size() 17
+E (4814) SEQUENCER: track_states.size() 17
+E (4814) SEQUENCER: track_states.size() 17
+E (4814) SEQUENCER: track_states.size() 17
+E (4824) SEQUENCER: track_states.size() 17
+E (4824) SEQUENCER: track_states.size() 17
+E (4834) SEQUENCER: track_states.size() 17
+E (4844) SEQUENCER: track_states.size() 17
+Playing track 1 ...
+                Entered in AdvancedSequencer::Start() ...
+
+
+E (4854) NICMIDI DRIVER: MIDIOutDriver::OpenPort()
+W (4854) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
+OPENPORT2 ENTEREDW (4864) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
+W (4874) NIMBLEDRIVER: xTaskCreate(connectedTask) IS THIS REQUIRED?
+I (4874) NIMBLEDRIVER: Prepare advertising
+I (4884) NIMBLEDRIVER: Start advertising
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (4904) NIMBLEDRIVER: OPENPORT Waiting for a client connection to notify...
+E (4904) NIMBLEDRIVER: MidiOutNimBLE::openPort: a valid connection already exists!
+OUT Port fckx_seq open
+Timer open with 10 msecs resolution
+                 ... Exiting from AdvancedSequencer::Start()
+E (4934) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+E (4934) NICMIDI DRIVER: MIDIOutDriver::OutputMessageW (6274) NIMBLE_ONCONNECT: -----
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (6304) NimBLEServer: mtu update event; conn_handle=0 mtu=256
+I (7244) NimBLEServer: subscribe event; attr_handle=16, subscribed: true
+I (7254) NimBLECharacteristic: New subscribe value for conn: 0 val: 1
+E (7334) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (7884) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (7934) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (8484) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (8534) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (9084) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (9134) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (9684) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (9734) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (10284) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (10334) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (10884) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (10934) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (12084) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (12134) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (12684) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (12734) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (13284) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (13334) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (13884) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (13934) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (14484) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (14534) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (15084) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (15134) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (15684) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (15734) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (16784) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called
+                Entered in AdvancedSequencer::Stop() ...
+Timer stopped by MIDITimer::Stop()
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+    StopGATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+OUT Port fckx_seq closed
+E (16864) SEQUENCER: track_states.size() 17
+                 ... Exiting from AdvancedSequencer::Stop()
+E (16874) SEQUENCER: track_states.size() 17
+Playing 3 tracks ...
+                Entered in AdvancedSequencer::Start() ...
+
+
+E (16894) NICMIDI DRIVER: MIDIOutDriver::OpenPort()
+W (16894) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
+OPENPORT2 ENTEREDW (16894) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
+W (16904) NIMBLEDRIVER: xTaskCreate(connectedTask) IS THIS REQUIRED?
+I (16914) NIMBLEDRIVER: Prepare advertising
+I (16924) NIMBLEDRIVER: Start advertising
+W (16924) NimBLEAdvertising: Advertising already active
+I (16934) NIMBLEDRIVER: OPENPORT Waiting for a client connection to notify...
+OUT Port fckx_seq open
+Timer open with 10 msecs resolution
+                 ... Exiting from AdvancedSequencer::Start()
+E (17054) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (17054) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (19444) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (19994) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (20044) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (20594) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (20644) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (21194) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (21244) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16E (21794) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (21844) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (22394) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (22444) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (22994) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (23044) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (24194) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (24244) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (24794) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (24844) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (25394) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (25444) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (25994) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (26044) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (26594) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (26644) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (27194) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (27244) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (27794) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (27844) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (28894) NICMIDI DRIVER: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called
+                Entered in AdvancedSequencer::Stop() ...
+Timer stopped by MIDITimer::Stop()
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+    Stop
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+GATT procedure initiated: notify; att_handle=16
+W (28974) APP_MAIN: END OF TEST_MAIN
+GATT procedure initiated: notify; att_handle=16
+OUT Port fckx_seq closed
+Guru Meditation Error: Core  0 panic'ed (LoadProhibited). Exception was unhandled.
+
+Core  0 register dump:
+PC      : 0x400d84ef  PS      : 0x00060930  A0      : 0x801a17d4  A1      : 0x3ffce4c0
+0x400d84ef: AdvancedSequencer::Stop() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v25_new_rtmidi_nimbleout\build/../components/NiCMidi/src/advancedsequencer.cpp:634
+
+A2      : 0x3ffbb070  A3      : 0x3ffc98a8  A4      : 0x00000004  A5      : 0x00060023
+A6      : 0x000000fe  A7      : 0x00000001  A8      : 0x8019becc  A9      : 0x3ffce490
+A10     : 0x3ffbb0c0  A11     : 0x00000002  A12     : 0x00000001  A13     : 0x3ffc98a8
+A14     : 0x00000000  A15     : 0x00060023  SAR     : 0x00000019  EXCCAUSE: 0x0000001c
+EXCVADDR: 0x8019bf44  LBEG    : 0x400910a0  LEND    : 0x400910b6  LCOUNT  : 0xffffffff
+0x400910a0: memcpy at /builds/idf/crosstool-NG/.build/HOST-x86_64-w64-mingw32/xtensa-esp32-elf/src/newlib/newlib/libc/machine/xtensa/memcpy.S:163
+
+0x400910b6: memcpy at /builds/idf/crosstool-NG/.build/HOST-x86_64-w64-mingw32/xtensa-esp32-elf/src/newlib/newlib/libc/machine/xtensa/memcpy.S:197
+
+
+Backtrace:0x400d84ec:0x3ffce4c0 0x401a17d1:0x3ffce4e0 0x401a182f:0x3ffce500 0x4017cb91:0x3ffce520 0x400d2fe4:0x3ffce540 0x40093ab5:0x3ffce560
+0x400d84ec: AdvancedSequencer::Stop() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v25_new_rtmidi_nimbleout\build/../components/NiCMidi/src/advancedsequencer.cpp:628
+
+0x401a17d1: MIDISequencer::StaticStopProc(MIDISequencer*) at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v25_new_rtmidi_nimbleout\build/../components/NiCMidi/src/../include/sequencer.h:500
+
+0x401a182f: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(MIDISequencer*), MIDISequencer*> > >::_M_run() at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0\bits/invoke.h:60
+ (inlined by) ?? at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0\bits/invoke.h:95
+ (inlined by) ?? at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0/thread:244
+ (inlined by) ?? at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0/thread:253
+ (inlined by) std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(MIDISequencer*), MIDISequencer*> > >::_M_run() at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0/thread:196
+
+0x4017cb91: execute_native_thread_routine at /builds/idf/crosstool-NG/.build/HOST-x86_64-w64-mingw32/xtensa-esp32-elf/src/gcc/libstdc++-v3/src/c++11/thread.cc:80
+
+0x400d2fe4: pthread_task_func at C:/Users/Fred/esp-idf/components/pthread/pthread.c:209 (discriminator 15)
+
+0x40093ab5: vPortTaskWrapper at C:/Users/Fred/esp-idf/components/freertos/xtensa/port.c:143
+
+
+
+ELF file SHA256: 24664e50fce13546
+
+Rebooting...
+ets Jul 29 2019 12:21:46
