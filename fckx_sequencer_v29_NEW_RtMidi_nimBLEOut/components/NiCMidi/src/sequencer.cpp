@@ -1340,24 +1340,9 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
     int msg_track;
     MIDITimedMessage msg;
 
-    //std::cout << "MIDISequencer::TickProc; sys_time_offset " << sys_time_offset << " sys_time " << sys_time
-    //     << " dev_time_offset " << dev_time_offset << std::endl;
- 
- // check if already autostopped  //NiCMidi 211222
- 
- /* if (!stop_lock.try_lock()) {
-        std::cout << "MIDISequencer::TickProc called after Auto Stop" << std::endl;
-        return;
-    }
-    stop_lock.unlock();
-  */
-
     proc_lock.lock();
-    //NiCMidi 211222
     //std::cout << "MIDISequencer::TickProc; sys_time_offset " << sys_time_offset << " sys_time " << sys_time
     //     << " dev_time_offset " << dev_time_offset << std::endl;
-
-
 
     // check if already autostopped
     if (state.playing_status & AUTO_STOP_PENDING) {
@@ -1365,8 +1350,8 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
         proc_lock.unlock();
         return;
     }
-    
-        if (sys_time < sys_time_offset) {
+
+    if (sys_time < sys_time_offset) {
         std::cout << "WARNING! sys_time = " << sys_time << " sys_time_offset = " << sys_time_offset << std::endl;
         std::cout << "This causes an error when starting from the beginning" << std::endl;
     }
@@ -1377,8 +1362,7 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
     //    std::cout << "sys_time_offset = " << sys_time_offset << "  sys_time = " << sys_time << std::endl;
     //}
     //times++;
-    
-    
+
     // check if we we are counting in
     if (state.playing_status & COUNT_IN_PENDING) {
         MIDIClockTime clocks = (MIDIClockTime)((sys_time - sys_time_offset) / state.ms_per_clock);
@@ -1435,16 +1419,16 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
     }
     // auto stop at end of sequence
     MIDIClockTime tmp;
-   if (!(repeat_play_mode && state.cur_measure >= repeat_end_meas) &&
+    if (!(repeat_play_mode && state.cur_measure >= repeat_end_meas) &&
         !GetNextEventTime(&tmp) && (play_mode == PLAY_BOUNDED)) {
         // no events left
-              std::cout << "Auto stopping the sequencer: StaticStopProc called at time " << GetCurrentMIDIClockTime() << std::endl;
+        std::cout << "Auto stopping the sequencer: StaticStopProc called at time " << GetCurrentMIDIClockTime() << std::endl;
         //<< "GetNextEventTime() returned " << retval << std::endl;
-        
-       state.playing_status |= AUTO_STOP_PENDING;
-         //times = 0;      // only for log, comment if you don't need
+        state.playing_status |= AUTO_STOP_PENDING;      // must be here, not in StaticStopProc
+        //times = 0;      // only for log, comment if you don't need
         std::thread(StaticStopProc, this).detach();
-          }
+    }
+
     proc_lock.unlock();
 }
 

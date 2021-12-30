@@ -391,10 +391,8 @@ void MIDIInDriver::HardwareMsgIn(double time,
                                  std::vector<unsigned char>* msg_bytes,
                                  void* p) {
     static const char *TAG = "HardwareMsgIn";                                
-    ESP_LOGW(TAG,"A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)");                                 
-    
-    
-    
+    ESP_LOGW(TAG,"A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)");                             
+ 
     for (int i = 0; i < msg_bytes->size(); i++) {
 
     ESP_LOGI(TAG, "msg_bytes.at(%d) %u (0x%X)" ,i, msg_bytes->at(i), msg_bytes->at(i));
@@ -417,11 +415,23 @@ void MIDIInDriver::HardwareMsgIn(double time,
     
     MIDIInDriver* drv = static_cast<MIDIInDriver*>(p);
 
-    std::cout << drv->GetPortName() << " callback executed   ";
+    std::cout <<"Midi In PortName "<< drv->GetPortName() << " callback executed   ";
 
-    if (!drv->port->isPortOpen() || msg_bytes->size() == 0)
-        return;
+    if (!drv->port->isPortOpen() || msg_bytes->size() == 0) {
+        ESP_LOGE(TAG,"Something is wrong with the Midi In Port");
+        ESP_LOGE(TAG,"drv->port->isPortOpen() %d", drv->port->isPortOpen() );
+        ESP_LOGE(TAG,"msg_bytes->size() %d", msg_bytes->size());
+    return; }
 
+//obsolete repair for failing isPortOpen()
+/*
+    if (!drv->port->isPortOpen() || msg_bytes->size() == 0) {
+        ESP_LOGE(TAG,"Midi In Port is reported to be closed but we override exiting this call");
+        ESP_LOGE(TAG,"drv->port->isPortOpen() %d", drv->port->isPortOpen() );
+        ESP_LOGE(TAG,"msg_bytes->size() %d", msg_bytes->size());
+    }
+
+*/
     drv->in_mutex.lock();
     MIDITimedMessage msg;
     msg.SetStatus(msg_bytes->operator[](0));        // in msg_bytes[0] there is the status byte

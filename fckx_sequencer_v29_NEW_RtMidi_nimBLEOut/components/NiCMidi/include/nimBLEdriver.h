@@ -90,9 +90,7 @@ class RTMIDI_DLL_PUBLIC MidiOutNimBLE   //:public MidiOutApi //(what does this p
         std::string                  getPortName(unsigned int portNumber=0);
         void                         sendMessage(const std::vector<unsigned char> *message);
         void                         sendMessage(const unsigned char *message, size_t size);
-
-
-       //setcallback1               see rtMidi for examples
+        //setcallback1               see rtMidi for examples
         //setcallback2
         
     protected:

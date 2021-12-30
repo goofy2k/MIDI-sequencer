@@ -254,8 +254,10 @@ void MIDIManager::TickProc(tMsecs sys_time, void* p) {
     }
    //FCKX  flush input queue (this is after all other Tick components have used the data
     for (unsigned int i = 0; i < MIDI_ins->size(); i++)
-        if ((*MIDI_ins)[i]->IsPortOpen())
+        if ((*MIDI_ins)[i]->IsPortOpen())  //FCKX!!
             (*MIDI_ins)[i]->FlushQueue();
+        
+  //    (*MIDI_ins)[0]->FlushQueue(); //FCKX for the "NON-OPEN MQTT IN"
       
     proc_lock->unlock();
 

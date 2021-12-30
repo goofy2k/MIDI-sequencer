@@ -368,6 +368,7 @@ void MQTTMidiIn :: printData(void) {
 
 void MQTTMidiIn :: openPort( unsigned int portNumber) {
   ESP_LOGW(TAG, "open MQTTMidiIn port"); 
+  connected_ = true;
 }
 
 void MQTTMidiIn :: closePort( void ) {

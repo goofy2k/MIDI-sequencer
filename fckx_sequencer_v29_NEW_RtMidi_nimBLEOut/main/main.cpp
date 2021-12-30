@@ -1,5 +1,6 @@
 //#define TEST_SEQUENCER //"succesfully" looping twinkle twinkle
-#define TEST_RECORDING   //in development
+//#define TEST_RECORDING   //in development
+#define THRU     //input and output
 
 //CONSIDER TO RENAME BLEDevice etc to NimBLEDevice etc. But test carefully when you have running code!
 //tmove references to the old jdks lib
@@ -579,6 +580,7 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     ESP_LOGE(TAG,"SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
  
     double time = 111; 
+    
     void* p = MIDIManager::GetInDriver(0);  //when called in the driver this should be "this"
 
     std::vector<unsigned char> msg_bytes_data = {};
@@ -588,13 +590,14 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     std::vector<unsigned char>* msg_bytes = &msg_bytes_data; 
     */
     
-//   msg_bytes_data =  { 0x90, 0x20, 0x7f };
-msg_bytes_data =  { event->data[2], event->data[3], event->data[4] };
+    //msg_bytes_data =  { 0x90, 0x20, 0x7f };
+    msg_bytes_data =  { event->data[2], event->data[3], event->data[4] };
+    //push incoming message to input queue.  Normally used as a callback on input port
     MIDIManager::GetInDriver(0)->HardwareMsgIn(time,msg_bytes, p);  //should contain msg_bytes_data!!!!
 
 
     //development helper to check analyze proper operation of the private data object        
-   // MIDIManager::GetInDriver(0)->printData();
+    //MIDIManager::GetInDriver(0)->printData();
     ESP_LOGV(TAG,"Learning about MIDIManager Interface"); 
     ESP_LOGV(TAG,"MIDIManager::GetNumMIDIIns() %d",MIDIManager::GetNumMIDIIns());          //FCKX
     ESP_LOGV(TAG,"MIDIManager::GetInDriver(0)->GetQueueSize() %d",MIDIManager::GetInDriver(0)->GetQueueSize()); 
@@ -1135,13 +1138,11 @@ int main_test_metronome( string command) {
 //
 
 #ifdef THRU
-ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  THRU");
+
 //GLOBALS for test_thru example
 
 MIDIThru* thru;                  // a MIDIThru ORIG
 MIDIProcessorPrinter printer;    // a MIDIProcessor which prints passing MIDI events                 
-
-
 
 
 int thru_main(  ) {
@@ -1149,10 +1150,18 @@ int thru_main(  ) {
 //init port here. this is not in the original code
     //MIDIManager::OpenInPorts();
 try {
-        ESP_LOGE(TAG,"thru = new MIDIThru;");         
+    ESP_LOGE(TAG,"thru = new MIDIThru;");         
 
 
-     thru = new MIDIThru;  //ORIG
+    thru = new MIDIThru;  //ORIG
+        thru->SetInPort(0); //FCKX  select MQTT port, it should exist
+    thru->SetOutPort(0); //FCKX  select nimBLE port, it should exist
+  
+//must select channel
+//NOTE: -1 does not work
+
+  thru->SetInChannel(0); //FCKX select only inputs on channel 0
+  // MIDIManager::OpenOutPorts();  //you may have to do this after  MIDIManager::AddMIDITick(thru) 
   //  MIDIThru* thru = new MIDIThru; //NOK
      //MIDIThru thru = new MIDIThru; //NOK
     // MIDIThru* thru; 
@@ -1163,16 +1172,18 @@ catch( ... ) {
     return 0;
 }
 
-     //MIDIThru thru;  //was not here !!!!!
+    //MIDIThru thru;  //was not here !!!!!
     // adds the thru to the MIDIManager queue
     MIDIManager::AddMIDITick(thru);
+   // MIDIManager::OpenOutPorts();  //you may have to do this after  MIDIManager::AddMIDITick(thru) 
+
     // plugs the MIDIProcessorPrinter into the metronome, so all MIDI message will
     // be printed to stdout
     thru->SetProcessor(&printer);
     // sets the printing of passing events on and off
-                  printer.SetPrint(true); 
-              //printer.SetPrint(false);
-//thru->Start(); //not here
+    printer.SetPrint(true); 
+    //printer.SetPrint(false);
+    //thru->Start(); //not here
   return 1;
               
               
@@ -1393,13 +1404,13 @@ ESP_LOGE(TAG,"TEST IF PORT IS OPEN %d",MIDIManager::GetOutDriver(0)->IsPortOpen(
     MIDIClockTime t = sequencer.MeasToMIDI(5,0); //endMeasure, endBeat record the first 6 beats
     recorder.SetEndRecTime(t);
     recorder.EnableTrack(1); //FCKX
-    //recorder.SetTrackRecChannel(1,0);      
-    recorder.SetTrackRecChannel(1,-1);  // Can you set this? YES Otherwise set a specific channel
+    recorder.SetTrackRecChannel(1,0);      // Can you set this? YES Otherwise set a specific channel
+    //recorder.SetTrackRecChannel(1,-1);  
     recorder.Start();
     std::cout << "Recorder started\n";
    
 
-    MIDITimer::Wait(10000);                 // Waits 15 secs: play something to record (remember to match
+    MIDITimer::Wait(15000);                 // Waits 15 secs: play something to record (remember to match
                                             // the input channel with the one set in SetTrackRecChannel)
 
     recorder.Stop();
@@ -1503,10 +1514,8 @@ note_data track3[] = {
 //////////////////////////////////////////////////////////////////
 
 int test_main( ) {
-    ESP_LOGE(TAG,"WAITING A WHILE FOR MAIN APP INITS TO FINISH");    
-    MIDITimer::Wait(10000); //wait a while for a stable nimBLE connection
     ESP_LOGE(TAG,"Entering test_main of TEST_SEQUENCER example");
-
+        ESP_LOGE(TAG,"************* DEBUG -4 *************");
     AdvancedSequencer sequencer; //was under GLOBALS, see above
     // gets the address of the sequencer MIDIMultiTrack, so we can edit it
     
@@ -1514,14 +1523,19 @@ int test_main( ) {
     //it is integrated in the nimBLEdriver, that is called by Manager on instantiation of sequencer 
     //int concount = MIDIManager::GetOutDriver(0)->getConnectedCOunt();
     //int concount = MIDIManager::GetOutDriver(0)->IsPortOpen();
-
+    ESP_LOGE(TAG,"WAITING A WHILE FOR SEQUENCER INITS (INCLUDING NIMBLE) TO FINISH"); 
+    ESP_LOGE(TAG,"SHOULD BE DONE INSIDE THIS INIT, BY DETECTING PRESENCE OF CONNECTION WITH SYNTH");     
+    MIDITimer::Wait(5000); //wait a while for a stable nimBLE connection
     ESP_LOGE(TAG,"NIMBLE CONNECTION SHOULD BE OK HERE"); 
 
     //while(true){   //get instatiation of tracks , trk , msg outside the loop
-    
+            ESP_LOGE(TAG,"************* DEBUG -3 *************");
     MIDIMultiTrack* tracks = sequencer.GetMultiTrack();
+            ESP_LOGE(TAG,"************* DEBUG -2 *************");
     MIDITrack* trk;
+    
     ESP_LOGE(TAG,"READY TO CREATE TRACK CONTENT"); 
+        ESP_LOGE(TAG,"************* DEBUG -1 *************");
     // the constructor creates an undefined (NoOp) message with time 0
     MIDITimedMessage msg;
     int masterTrack = 0;
@@ -1530,7 +1544,7 @@ int test_main( ) {
     //Reset 
     //Clear
     //GetNumEvents
-
+    ESP_LOGE(TAG,"************* DEBUG 0 *************");
 while(true){
     // now trk points to the master track (track 0 of the multitrack)
     
@@ -1546,7 +1560,7 @@ while(true){
     trk->InsertEvent(msg);          // inserts the key signature (CM)
     msg.SetTempo(200.0);
     trk->InsertEvent(msg);          // inserts the tempo
-
+    ESP_LOGE(TAG,"************* DEBUG 1 *************");
     // now trk points to track 1, we'll use it for MIDI channel 1
     trk = tracks->GetTrack(songTrack);
     ESP_LOGE(TAG,"*************BEFORE CLEAN trk->GetNumEvents() songTrack %d %d", songTrack, trk->GetNumEvents());
@@ -1565,21 +1579,25 @@ while(true){
     msg.SetVolumeChange(channel, 110);
     trk->InsertEvent(msg);          // inserts the track volume
     // and now inserts all the notes, taking them from our track1[] array
+    ESP_LOGE(TAG,"************* DEBUG 2 *************");
     for(int i = 0; i < track1_len; i++) {
         msg.SetNoteOn(channel, track1[i].note, 100);
         msg.SetTime(track1[i].time);
         trk->InsertNote(msg, track1[i].length);
     }
-
+    ESP_LOGE(TAG,"************* DEBUG 3 *************");
     // When you edit the AdvancedSequencer multitrack you must update the
     // sequencer parameters before playing: this does the job
     sequencer.UpdateStatus();
-
+    ESP_LOGE(TAG,"************* DEBUG 4 *************");
     // now we can play track 1 only
     cout << "Playing track 1 ..." << endl;
+    sequencer.GoToZero();
     sequencer.Play();
+        ESP_LOGE(TAG,"************* DEBUG 5 *************");
     while (sequencer.IsPlaying()) {
     MIDITimer::Wait(50); };
+        ESP_LOGE(TAG,"************* DEBUG 6 *************");
         cout << "The sequencer finished" << endl;
 
 // THE REST IS COMMENTED OUT. IF YOU SUCCEED CAN UNCOMMENT AND PLAY OTHER TWO TRACKS
@@ -1587,19 +1605,22 @@ while(true){
     #define BASS
     #ifdef BASS
     // now do the same for track 2 (bass, channel 2)
+        ESP_LOGE(TAG,"************* DEBUG 7 *************");
     trk = tracks->GetTrack(2);
     channel = 1;  //was 1
-
+    ESP_LOGE(TAG,"************* DEBUG 8 *************");
     msg.Clear();                    // resets the message
     msg.SetProgramChange(channel, 33);
     trk->InsertEvent(msg);
     msg.SetVolumeChange(channel, 90);
     trk->InsertEvent(msg);
+        ESP_LOGE(TAG,"************* DEBUG 9 *************");
     for(int i = 0; i < track2_len; i++) {
         msg.SetNoteOn(channel, track2[i].note, 100);
         msg.SetTime(track2[i].time);
         trk->InsertNote(msg, track2[i].length);
     }
+        ESP_LOGE(TAG,"************* DEBUG 10 *************");
     #endif //BASS
 
   //  sequencer.UpdateStatus(); //FCKX check check
@@ -1609,6 +1630,7 @@ while(true){
     //#define DRUMS
     #ifdef DRUMS
     // ... and 3 (percussion, channel 10)
+        ESP_LOGE(TAG,"************* DEBUG 11 *************");
     trk = tracks->GetTrack(3);
     channel = 9;
 
@@ -1626,17 +1648,22 @@ while(true){
     #endif DRUMS
     
     sequencer.UpdateStatus(); //FCKX check check
-    sequencer.GoToZero();
-
+    //sequencer.GoToZero();
+    ESP_LOGE(TAG,"************* DEBUG 12 *************");
     #define PLAYSECOND
     #ifdef PLAYSECOND
-    cout << "Playing 3 tracks ..." << endl;
-    sequencer.Play();
-    while (sequencer.IsPlaying())
-        MIDITimer::Wait(50);
-    cout << "    Stop Playing 3 tracks" << endl;
+        ESP_LOGE(TAG,"************* DEBUG 13 *************");
+   // while (true) {   
+        cout << "Playing 3 tracks ..." << endl;
+        sequencer.GoToZero();
+        sequencer.Play();
+        while (sequencer.IsPlaying())
+            MIDITimer::Wait(50);
+        cout << "    Stop Playing 3 tracks" << endl;
+ //  } //while true
+    
     #endif //PLAYSECOND
-
+    //sequencer.GoToZero();
 //
 }//while true
     ESP_LOGE(TAG,"Exiting test_main example");
@@ -1686,6 +1713,7 @@ ESP_LOGV - verbose (highest)
     esp_log_level_set("MidiOutNimBLE :: sendMessage", ESP_LOG_ERROR);
     esp_log_level_set("RECORDER_FCKX", ESP_LOG_WARN);
     esp_log_level_set("FCKX_SEQ_API", ESP_LOG_DEBUG);
+    esp_log_level_set("FCKX_SEQ", ESP_LOG_DEBUG);
     esp_log_level_set("NimBLE", ESP_LOG_VERBOSE);
     esp_log_level_set("printMIDI_Input", ESP_LOG_VERBOSE);
     esp_log_level_set("SEQUENCER", ESP_LOG_ERROR);  
@@ -1725,6 +1753,9 @@ ESP_LOGV - verbose (highest)
     //esp_mqtt_client_handle_t  mqtt_client = 0; //to turn MQTT OFF
     
     //MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
+
+    ESP_LOGE(TAG,"WAITING A WHILE FOR MQTT INITS TO FINISH");    
+    MIDITimer::Wait(5000); 
 
    
     #ifdef TESTMESSAGE
@@ -1929,18 +1960,17 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_REC
 #endif
 
 #ifdef THRU
-ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  THRU");
-   ESP_LOGW(TAG, "GOINT TO INITALIZE THRU");
-   int thru_result = thru_main();
-   ESP_LOGW(TAG, "INITIALIZED THRU WITH RESULT: %d", thru_result);
-   thru->Start(); // sets the MIDI thru on and off ORIG
-//thru->Stop();
-  while (1) {      
-    //empty loop forever 
-    vTaskDelay(10 / portTICK_PERIOD_MS);  
-  }
-
-//delete thru;  //this code is never reached
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  THRU");
+    ESP_LOGW(TAG, "GOINT TO INITALIZE THRU");
+    int thru_result = thru_main();
+    ESP_LOGW(TAG, "INITIALIZED THRU WITH RESULT: %d", thru_result);
+    thru->Start(); // sets the MIDI thru on and off ORIG
+    //thru->Stop();
+    while (1) {      
+        //empty loop forever 
+        vTaskDelay(10 / portTICK_PERIOD_MS);  
+    }
+    //delete thru;  //this code is never reached
 
 #endif //ifdef THRU
 
