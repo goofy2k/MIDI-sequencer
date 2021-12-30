@@ -1,0 +1,459 @@
+rst:0x1 (POWERON_RESET),boot:0x17 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7068
+load:0x40078000,len:13652
+load:0x40080400,len:4632
+0x40080400: _init at ??:?
+
+entry 0x400806f4
+I (29) boot: ESP-IDF v4.2-dirty 2nd stage bootloader
+I (29) boot: compile time 19:19:48
+I (29) boot: chip revision: 3
+I (32) boot_comm: chip revision: 3, min. bootloader chip revision: 1
+I (40) boot.esp32: SPI Speed      : 40MHz
+I (44) boot.esp32: SPI Mode       : DIO
+I (49) boot.esp32: SPI Flash Size : 8MB
+I (53) boot: Enabling RNG early entropy source...
+I (59) boot: Partition Table:
+I (62) boot: ## Label            Usage          Type ST Offset   Length
+I (70) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (77) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (84) boot:  2 factory          factory app      00 00 00010000 00200000
+I (92) boot: End of partition table
+I (96) boot_comm: chip revision: 3, min. application chip revision: 1
+I (103) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x30610 (198160) map
+I (195) esp_image: segment 1: paddr=0x00040638 vaddr=0x3ffbdb60 size=0x04384 ( 17284) load
+I (203) esp_image: segment 2: paddr=0x000449c4 vaddr=0x40080000 size=0x00404 (  1028) load
+0x40080000: _WindowOverflow4 at C:/Users/Fred/esp-idf/components/freertos/xtensa/xtensa_vectors.S:1730
+
+I (204) esp_image: segment 3: paddr=0x00044dd0 vaddr=0x40080404 size=0x0b248 ( 45640) load
+I (233) esp_image: segment 4: paddr=0x00050020 vaddr=0x400d0020 size=0xd80a0 (884896) map
+0x400d0020: _stext at ??:?
+
+I (602) esp_image: segment 5: paddr=0x001280c8 vaddr=0x4008b64c size=0x0f460 ( 62560) load
+0x4008b64c: r_ld_fm_prog_push at ??:?
+
+I (647) boot: Loaded app from partition at offset 0x10000
+I (647) boot: Disabling RNG early entropy source...
+I (648) psram: This chip is ESP32-D0WD
+I (653) spiram: Found 64MBit SPI RAM device
+I (657) spiram: SPI RAM mode: flash 40m sram 40m
+I (662) spiram: PSRAM initialized, cache is in low/high (2-core) mode.
+I (669) cpu_start: Pro cpu up.
+I (673) cpu_start: Application information:
+I (678) cpu_start: Project name:     fckx_sequencer
+I (683) cpu_start: App version:      cf73814
+I (688) cpu_start: Compile time:     Dec 29 2021 22:53:08
+I (694) cpu_start: ELF file SHA256:  82089fb675b52739...
+I (700) cpu_start: ESP-IDF:          v4.2-dirty
+I (706) cpu_start: Starting app cpu, entry point is 0x40081ba8
+0x40081ba8: call_start_cpu1 at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:287
+
+I (0) cpu_start: App cpu up.
+I (1600) spiram: SPI SRAM memory test OK
+I (1600) heap_init: Initializing. RAM available for dynamic allocation:
+I (1601) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM
+I (1607) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM
+I (1613) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM
+I (1619) heap_init: At 3FFC9D48 len 000162B8 (88 KiB): DRAM
+I (1625) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (1632) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (1638) heap_init: At 4009AAAC len 00005554 (21 KiB): IRAM
+I (1645) cpu_start: Pro cpu start user code
+I (1649) spiram: Adding pool of 4096K of external SPI memory to heap allocator
+W (1675) spi_flash: Detected size(16384k) larger than the size in the binary image header(8192k). Using the size in the binary image header.
+I (1675) spi_flash: detected chip: gd
+I (1675) spi_flash: flash io: dio
+I (1677) cpu_start: StartinI (0) cpu_start: Starting scheduler on APP CPU.
+I (1694) spiram: Reserving pool of 32K of internal memory for DMA/internal allocations
+g scheduler on PRO CPU.
+I (1704) APP_MAIN: [APP] Startup..
+I (1704) APP_MAIN: [APP] Free memory: 4384160 bytes
+I (1714) APP_MAIN: [APP] IDF version: v4.2-dirty
+W (1714) APP_MAIN: Initialize WIFI connection here
+I (1774) APP_MAIN: ESP_WIFI_MODE_STA
+I (1784) wifi:wifi driver task: 3ffd4c3c, prio:23, stack:3072, core=0
+I (1784) system_api: Base MAC address is not set
+I (1784) system_api: read default base MAC address from EFUSE
+I (1804) wifi:wifi firmware version: 1865b55
+I (1804) wifi:wifi certification version: v7.0
+I (1804) wifi:config NVS flash: enabled
+I (1814) wifi:config nano formating: enabled
+I (1814) wifi:Init data frame dynamic rx buffer num: 32
+I (1814) wifi:Init management frame dynamic rx buffer num: 32
+I (1824) wifi:Init management short buffer num: 32
+I (1824) wifi:Init static tx buffer num: 16
+I (1834) wifi:Init tx cache buffer num: 32
+I (1834) wifi:Init static rx buffer size: 1600
+I (1834) wifi:Init static rx buffer num: 10
+I (1844) wifi:Init dynamic rx buffer num: 32
+I (1844) wifi_init: rx ba win: 6
+I (1844) wifi_init: tcpip mbox: 32
+I (1854) wifi_init: udp mbox: 6
+I (1854) wifi_init: tcp mbox: 6
+I (1854) wifi_init: tcp tx win: 5744
+I (1874) wifi_init: tcp rx win: 5744
+I (1874) wifi_init: tcp mss: 1440
+I (18I (1974) phy: phy_version: 4500, 0cd6843, Sep 17 2020, 15:37:07, 0, 0
+74) wifi_init: WiFi/LWIP prefer SPIRAM
+I (1974) wifi:mode : sta (84:cc:a8:0d:3b:70)
+I (1974) FCKX_SEQ: wifi_init_sta finished.
+I (2104) wifi:new:<8,0>, old:<1,0>, ap:<255,255>, sta:<8,0>, prof:1
+I (2104) wifi:state: init -> auth (b0)
+I (2124) wifi:state: auth -> assoc (0)
+I (2174) wifi:state: assoc -> run (10)
+I (2274) wifi:connected with Verhoeckx_glas, aid = 5, channel 8, BW20, bssid = 96:6a:b0:c3:3b:27
+I (2284) wifi:security: WPA2-PSK, phy: bgn, rssi: -47
+I (2284) wifi:pm start, type: 1
+I (2354) wifi:AP's beacon interval = 102400 us, DTIM period = 1
+I (3774) esp_netif_handlers: sta ip: 192.168.2.17, mask: 255.255.255.0, gw: 192.168.2.254
+I (3774) FCKX_SEQ: got ip:192.168.2.17
+I (3774) FCKX_SEQ: connected to ap SSID:Verhoeckx_glas password: XXXXXXXXXXXX
+W (3784) APP_MAIN: Initialize MQTT connection here
+I (3794) FCKX_SEQ: MQTT CLIENT STARTED
+I (3794) FCKX_SEQ: Other event id:7
+E (3804) APP_MAIN: CONDITIONAL----------------------------------CONDITIONAL  TEST_SEQUENCER
+E (3804) FCKX_SEQ: WAITING A WHILE FOR MAIN APP INITS TO FINISH
+I (3854) FCKX_SEQ: MQTT_EVENT_CONNECTED
+I (3854) FCKX_SEQ: sent publish successful, msg_id=45815
+I (3854) FCKX_SEQ: sent subscribe successful, msg_id=34998
+I (3874) FCKX_SEQ: sent subscribe successful, msg_id=48130
+I (3884) FCKX_SEQ: sent unsubscribe successful, msg_id=21437
+I (3884) FCKX_SEQ: sent subscribe successful, msg_id=25988
+I (3894) FCKX_SEQ: sent subscribe successful, msg_id=54335
+I (3894) FCKX_SEQ: sent subscribe successful, msg_id=34252
+I (3904) FCKX_SEQ: MQTT_EVENT_PUBLISHED, msg_id=45815
+I (3904) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=34998
+I (3914) FCKX_SEQ: sent publish successful, msg_id=0
+I (3914) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=48130
+I (3924) FCKX_SEQ: sent publish successful, msg_id=0
+I (3924) FCKX_SEQ: MQTT_EVENT_UNSUBSCRIBED, msg_id=21437
+I (3934) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=25988
+I (3934) FCKX_SEQ: sent publish successful, msg_id=0
+I (3944) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=54335
+I (3944) FCKX_SEQ: sent publish successful, msg_id=0
+I (3954) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=36406
+I (3954) FCKX_SEQ: sent publish successful, msg_id=0
+I (3974) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=34252
+I (3974) FCKX_SEQ: sent publish successful, msg_id=0
+E (13804) FCKX_SEQ: Entering test_main of TEST_SEQUENCER example
+Executing MIDIManager::Init()
+Going to create temp MidiOutNimBLE for detecting nr of ports
+W (13814) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (13814) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (13834) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (13834) NimBLEDevice.cpp: NimBLEDevice::init !initialized
+I (13844) NimBLEDevice.cpp: Controller status A: 0
+I (13844) NimBLEDevice.cpp: Controller status B: 0
+I (13854) NimBLEDevice.cpp: Controller status C: 0
+I (13854) NimBLEDevice.cpp: NimBLEDevice::init B
+I (13864) NimBLEDevice.cpp: NimBLEDevice::init C
+I (13864) NimBLEDevice.cpp: Controller status D: 0
+I (13874) BTDM_INIT: BT controller compile version [3723d5b]
+I (13874) NimBLEDevice.cpp: Controller status E: 1
+I (13884) NimBLEDevice.cpp: NimBLEDevice::init E
+I (14134) NimBLEDevice.cpp: Controller status F: 2
+I (14134) NimBLEDevice.cpp: Controller status G: 2
+I (14134) NimBLEDevice.cpp: Controller status H: 2
+I (14144) NimBLEDevice.cpp: NimBLEDevice::init I
+I (14144) NimBLEDevice.cpp: NimBLEDevice::init J
+I (14164) NimBLEDevice: BLE Host Task Started
+I (14164) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (14184) NimBLEDevice: NimBle host synced.
+I (14184) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (14184) NIMBLEDRIVER: NimBLEDevice created
+W (14184) NIMBLEDRIVER: BLE server created
+W (14194) NIMBLEDRIVER: BLE server callbacks created
+W (14204) NIMBLEDRIVER: BLE server service created
+W (14214) NIMBLEDRIVER: BLE server characteristic created
+W (14214) NIMBLEDRIVER: BLE service started
+Created temp MidiOutNimBLE for detecting nr of ports
+E (14224) NICMIDI DRIVER: start creation of MidiOutNimBLE port
+W (14224) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (14234) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (14234) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (14244) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (14264) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (14264) NIMBLEDRIVER: NimBLEDevice created
+W (14274) NIMBLEDRIVER: BLE server created
+W (14274) NIMBLEDRIVER: BLE server callbacks created
+W (14274) NimBLEServer: Warning creating a duplicate service UUID: 4fafc201-1fb5-459e-8fcc-c5c9c331914b
+W (14284) NIMBLEDRIVER: BLE server service created
+W (14294) NIMBLEDRIVER: BLE server characteristic created
+W (14294) NIMBLEDRIVER: BLE service started
+E (14304) NICMIDI DRIVER: executed creation of MidiOutNimBLE port
+Going to create temp MQTTMidiIn for detecting nr of ports
+W (14314) MQTTDRIVER: MQTTMidiIn instantiation
+W (14324) MQTTDRIVER: MQTTMidiIn :: initialize
+Created temp MQTTMidiIn for detecting nr of ports
+E (14334) NICMIDI DRIVER INPUT: start creation of MQTTMidiIn port
+W (14334) MQTTDRIVER: MQTTMidiIn instantiation
+W (14344) MQTTDRIVER: MQTTMidiIn :: initialize
+E (14344) MQTTDRIVER: MQTTMidiIn::setCallback: STORING CALLBACK IN inputData_
+E (14354) NICMIDI DRIVER INPUT: executed creation of MQTTMidiIn port
+W (14354) MQTTDRIVER: Closed MQTTMidiIn NO CLEANUP: BEWARE of MEMORY LEAKS
+Exiting MIDIManager::Init() Found 1 midi out and 1 midi in
+E (14374) SEQUENCER: track_states.size() 17
+E (14384) SEQUENCER: track_states.size() 17
+E (14384) SEQUENCER: track_states.size() 17
+E (14394) SEQUENCER: track_states.size() 17
+E (14394) SEQUENCER: track_states.size() 17
+E (14414) FCKX_SEQ: NIMBLE CONNECTION SHOULD BE OK HERE
+E (14414) FCKX_SEQ: READY TO CREATE TRACK CONTENT
+E (14414) FCKX_SEQ: *************BEFORE CLEAN trk->GetNumEvents() masterTrack 0 1
+E (14414) FCKX_SEQ: *************AFTER CLEAN trk->GetNumEvents() masterTrack 0 1
+E (14424) FCKX_SEQ: *************BEFORE CLEAN trk->GetNumEvents() songTrack 1 1
+E (14434) FCKX_SEQ: *************AFTER CLEAN trk->GetNumEvents() songTrack 1 1
+E (14444) SEQUENCER: track_states.size() 17
+E (14454) SEQUENCER: track_states.size() 17
+E (14464) SEQUENCER: track_states.size() 17
+E (14464) SEQUENCER: track_states.size() 17
+E (14474) SEQUENCER: track_states.size() 17
+E (14474) SEQUENCER: track_states.size() 17
+E (14484) SEQUENCER: track_states.size() 17
+Playing track 1 ...
+                Entered in AdvancedSequencer::Start() ...
+E (14494) NICMIDI DRIVER: MIDIOutDriver::OpenPort() port_id 0
+W (14494) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
+OPENPORT2 ENTEREDW (14504) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
+W (14514) NIMBLEDRIVER: xTaskCreate(connectedTask) IS THIS REQUIRED?
+E (14514) NIMBLEDRIVER: MidiOutNimBLE::openPort: a valid connection already exists nevertheless start advertising (DIRTY!)
+I (14524) NIMBLEDRIVER: Prepare advertising
+I (14534) NIMBLEDRIVER: Start advertising
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (14544) NIMBLEDRIVER: OPENPORT Waiting for a client connection to notify...
+W (16434) NIMBLE_ONCONNECT: -----
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (16474) NimBLEServer: mtu update event; conn_handle=0 mtu=256
+I (17324) NimBLEServer: subscribe event; attr_handle=16, subscribed: true
+I (17324) NimBLECharacteristic: New subscribe value for conn: 0 val: 1
+I (19554) NIMBLEDRIVER: Number of connected peers: 1
+OUT Port fckx_seq open
+Timer open with 10 msecs resolution
+                 ... Exiting from AdvancedSequencer::Start()
+I (19564) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (19564) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (20754) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (21034) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (21054) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (21334) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (21354) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (21634) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (21654) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (21934) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (21954) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (22234) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (22254) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (22534) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (22554) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (23134) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (23154) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (23434) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16I (23454) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (23734) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (23754) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (24034) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (24054) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (24334) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (24354) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (24634) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (24654) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (24934) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (24954) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (25484) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called at time 2374
+                Entered in AdvancedSequencer::Stop() ...
+Timer stopped by MIDITimer::Stop()
+E (25504) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+E (25504) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25514) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25524) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+The sequencer finished
+E (25544) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25544) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25554) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25564) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25574) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25584) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25594) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25614) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25614) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25614) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25634) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25644) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25654) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (25664) NICMIDI DRIVER: MIDIOutDriver::ClosePort()
+OUT Port fckx_seq closed
+E (25674) SEQUENCER: track_states.size() 17
+                 ... Exiting from AdvancedSequencer::Stop()
+E (25684) SEQUENCER: track_states.size() 17
+E (25694) SEQUENCER: track_states.size() 17
+E (25714) SEQUENCER: track_states.size() 17
+E (25724) SEQUENCER: track_states.size() 17
+E (25744) SEQUENCER: track_states.size() 17
+E (25754) SEQUENCER: track_states.size() 17
+Playing 3 tracks ...
+                Entered in AdvancedSequencer::Start() ...
+E (25774) NICMIDI DRIVER: MIDIOutDriver::OpenPort() port_id 0
+W (25774) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
+OPENPORT2 ENTEREDW (25784) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
+W (25794) NIMBLEDRIVER: xTaskCreate(connectedTask) IS THIS REQUIRED?
+I (25794) NIMBLEDRIVER: Prepare advertising
+I (25804) NIMBLEDRIVER: Start advertising
+W (25804) NimBLEAdvertising: Advertising already active
+I (25814) NIMBLEDRIVER: Number of connected peers: 1
+OUT Port fckx_seq open
+Timer open with 10 msecs resolution
+                 ... Exiting from AdvancedSequencer::Start()
+I (25834) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (25844) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (25854) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (25864) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27034) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27034) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27304) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27324) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27564) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27604) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27624) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27634) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27914) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (27924) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28164) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28204) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28224) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28234) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16I (28514) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28514) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28524) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28534) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28814) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28814) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28824) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (28834) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (29354) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (29414) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (29424) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (29434) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (29714) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (29724) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (29964) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30014) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30034) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30034) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30314) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30324) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30564) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30604) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30634) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30634) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30914) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30914) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30924) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (30934) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (31204) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (31214) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (31224) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (31234) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (31764) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (31764) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called at time 2378

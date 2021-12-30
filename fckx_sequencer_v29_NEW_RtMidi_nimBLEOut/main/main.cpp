@@ -1,5 +1,5 @@
-#define TEST_SEQUENCER //"succesfully" looping twinkle twinkle
-//#define TEST_RECORDING   //in development
+//#define TEST_SEQUENCER //"succesfully" looping twinkle twinkle
+#define TEST_RECORDING   //in development
 
 //CONSIDER TO RENAME BLEDevice etc to NimBLEDevice etc. But test carefully when you have running code!
 //tmove references to the old jdks lib
@@ -1393,13 +1393,13 @@ ESP_LOGE(TAG,"TEST IF PORT IS OPEN %d",MIDIManager::GetOutDriver(0)->IsPortOpen(
     MIDIClockTime t = sequencer.MeasToMIDI(5,0); //endMeasure, endBeat record the first 6 beats
     recorder.SetEndRecTime(t);
     recorder.EnableTrack(1); //FCKX
-    recorder.SetTrackRecChannel(1,0);      // Can you set this? YES Otherwise set a specific channel
-    //recorder.SetTrackRecChannel(1,-1);  
+    //recorder.SetTrackRecChannel(1,0);      
+    recorder.SetTrackRecChannel(1,-1);  // Can you set this? YES Otherwise set a specific channel
     recorder.Start();
     std::cout << "Recorder started\n";
    
 
-    MIDITimer::Wait(15000);                 // Waits 15 secs: play something to record (remember to match
+    MIDITimer::Wait(10000);                 // Waits 15 secs: play something to record (remember to match
                                             // the input channel with the one set in SetTrackRecChannel)
 
     recorder.Stop();

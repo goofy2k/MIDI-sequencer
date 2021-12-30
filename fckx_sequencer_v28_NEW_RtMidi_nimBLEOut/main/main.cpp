@@ -1504,7 +1504,7 @@ note_data track3[] = {
 
 int test_main( ) {
     ESP_LOGE(TAG,"WAITING A WHILE FOR MAIN APP INITS TO FINISH");    
-    MIDITimer::Wait(10000); //wait a while for a stable nimBLE connection
+    MIDITimer::Wait(5000); //wait a while for a stable nimBLE connection
     ESP_LOGE(TAG,"Entering test_main of TEST_SEQUENCER example");
 
     AdvancedSequencer sequencer; //was under GLOBALS, see above
@@ -1577,6 +1577,7 @@ while(true){
 
     // now we can play track 1 only
     cout << "Playing track 1 ..." << endl;
+    sequencer.GoToZero();
     sequencer.Play();
     while (sequencer.IsPlaying()) {
     MIDITimer::Wait(50); };
@@ -1626,17 +1627,22 @@ while(true){
     #endif DRUMS
     
     sequencer.UpdateStatus(); //FCKX check check
-    sequencer.GoToZero();
+    //sequencer.GoToZero();
 
     #define PLAYSECOND
     #ifdef PLAYSECOND
-    cout << "Playing 3 tracks ..." << endl;
-    sequencer.Play();
-    while (sequencer.IsPlaying())
-        MIDITimer::Wait(50);
-    cout << "    Stop Playing 3 tracks" << endl;
+    
+   // while (true) {   
+        cout << "Playing 3 tracks ..." << endl;
+        sequencer.GoToZero();
+        sequencer.Play();
+        while (sequencer.IsPlaying())
+            MIDITimer::Wait(50);
+        cout << "    Stop Playing 3 tracks" << endl;
+ //  } //while true
+    
     #endif //PLAYSECOND
-
+    //sequencer.GoToZero();
 //
 }//while true
     ESP_LOGE(TAG,"Exiting test_main example");
