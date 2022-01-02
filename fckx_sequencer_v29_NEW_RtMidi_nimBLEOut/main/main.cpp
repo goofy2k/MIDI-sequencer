@@ -1154,14 +1154,16 @@ try {
 
 
     thru = new MIDIThru;  //ORIG
-        thru->SetInPort(0); //FCKX  select MQTT port, it should exist
+    thru->SetInPort(0); //FCKX  select MQTT port, it should exist
     thru->SetOutPort(0); //FCKX  select nimBLE port, it should exist
   
 //must select channel
 //NOTE: -1 does not work
 
-  thru->SetInChannel(0); //FCKX select only inputs on channel 0
-  // MIDIManager::OpenOutPorts();  //you may have to do this after  MIDIManager::AddMIDITick(thru) 
+  thru->SetInChannel(-1); //FCKX select only inputs on channel 0
+  thru->SetOutChannel(-1); //FCKX select only inputs on channel 0
+ 
+ // MIDIManager::OpenOutPorts();  //you may have to do this after  MIDIManager::AddMIDITick(thru) 
   //  MIDIThru* thru = new MIDIThru; //NOK
      //MIDIThru thru = new MIDIThru; //NOK
     // MIDIThru* thru; 
@@ -1215,7 +1217,8 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_COM
  *
  *   NiCMidi is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
+ *   the Free 
+ Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
  *
  *   NiCMidi is distributed in the hope that it will be useful,
@@ -1409,13 +1412,13 @@ ESP_LOGE(TAG,"TEST IF PORT IS OPEN %d",MIDIManager::GetOutDriver(0)->IsPortOpen(
     recorder.Start();
     std::cout << "Recorder started\n";
    
-
     MIDITimer::Wait(15000);                 // Waits 15 secs: play something to record (remember to match
                                             // the input channel with the one set in SetTrackRecChannel)
-
+    std::cout << "Calling recorder.Stop()\n";
     recorder.Stop();
     std::cout << "Recorder stopped\n";
-
+    MIDITimer::Wait(5000); 
+    std::cout << "Proceeding with next steps\n";
     sequencer.GoToZero();                   // rewinds
     sequencer.Start();
     std::cout << "Now the sequencer plays what you have recorded\n";
@@ -1596,9 +1599,9 @@ while(true){
     sequencer.Play();
         ESP_LOGE(TAG,"************* DEBUG 5 *************");
     while (sequencer.IsPlaying()) {
-    MIDITimer::Wait(50); };
-        ESP_LOGE(TAG,"************* DEBUG 6 *************");
-        cout << "The sequencer finished" << endl;
+        MIDITimer::Wait(50); };
+    ESP_LOGE(TAG,"************* DEBUG 6 *************");
+    cout << "The sequencer finished" << endl;
 
 // THE REST IS COMMENTED OUT. IF YOU SUCCEED CAN UNCOMMENT AND PLAY OTHER TWO TRACKS
 

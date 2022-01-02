@@ -175,7 +175,8 @@ void MIDIThru::StaticTickProc(tMsecs sys_time, void* pt) {
 
 void MIDIThru::TickProc(tMsecs sys_time_)
 {
-    proc_lock.lock();
+   static const char *TAG = "MIDIThru::TickProc";
+   proc_lock.lock();
     /*
     static unsigned int times = 0;
     times++;
@@ -190,6 +191,7 @@ void MIDIThru::TickProc(tMsecs sys_time_)
     MIDIOutDriver* out_driver = MIDIManager::GetOutDriver(out_port);
     in_driver->LockQueue();
     //std::cout << "FCKX MIDIThru::TickProc() inspects input queue: size ="<<in_driver->GetQueueSize()<<"\n";
+
     for (unsigned int i = 0; i < in_driver->GetQueueSize(); i++) {
         std::cout << "Message found\n";
         //get message from the queue WITHOUT deleting it. This is done by Manager at the end of the MidiTicks queue
@@ -209,23 +211,27 @@ void MIDIThru::TickProc(tMsecs sys_time_)
         */
         //ESP_LOGE(TAG,"MIDIThru::TickProc msg.IsChannelMsg() %d", msg.IsChannelMsg()); 
 
+        ESP_LOGE(TAG,"MIDIThru::TickProc msg.IsChannelMsg() %d", msg.IsChannelMsg()); 
+   
         if (msg.IsChannelMsg()) {
-            if (in_channel == msg.GetChannel() || in_channel == -1) {
-                if (out_channel != -1) {
-                    msg.SetChannel(out_channel);
-                    //std::cout << "MIDIThru::TickProc out_channel != -1\n";
-                    }
-                if (processor) {
-                    processor->Process(&msg); 
-                    //std::cout << "MIDIThru::TickProc processor\n";                   
-                    }
-                //std::cout << "MIDIThru::TickProc BEFORE out_driver->OutputMessage(msg) \n";      
-                out_driver->OutputMessage(msg);
-                //std::cout << "MIDIThru::TickProc AFTER out_driver->OutputMessage(msg) \n";
-                
-            }
+                ESP_LOGE(TAG,"in_channel %d out_channel %d msg.GetChannel() %d ",in_channel, out_channel, msg.GetChannel());     
+                if (in_channel == msg.GetChannel() || in_channel == 255) { //FCKX!!
+                //if (in_channel == msg.GetChannel() || in_channel == -1) {
+                    if (out_channel != 255) { //FCKX!!
+                    //if (out_channel != -1) {
+                        msg.SetChannel(out_channel);
+                        //std::cout << "MIDIThru::TickProc out_channel != -1\n";
+                        }
+                    if (processor) {
+                        processor->Process(&msg); 
+                        //std::cout << "MIDIThru::TickProc processor\n";                   
+                        }
+                    //std::cout << "MIDIThru::TickProc BEFORE out_driver->OutputMessage(msg) \n";      
+                    out_driver->OutputMessage(msg);
+                    //std::cout << "MIDIThru::TickProc AFTER out_driver->OutputMessage(msg) \n";                  
+                }
+            } else {ESP_LOGE(TAG,"NOT A CHANNEL MESSAGE"); }
         }
-    }
     in_driver->UnlockQueue();
     proc_lock.unlock();
 }

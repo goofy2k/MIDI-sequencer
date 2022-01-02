@@ -1355,14 +1355,15 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
         std::cout << "WARNING! sys_time = " << sys_time << " sys_time_offset = " << sys_time_offset << std::endl;
         std::cout << "This causes an error when starting from the beginning" << std::endl;
     }
-
-    //static unsigned int times;
-    //if (!(times % 100)) {
-    //    std::cout << "MIDISequencer::TickProc() " << times << " times" << std::endl;
-    //    std::cout << "sys_time_offset = " << sys_time_offset << "  sys_time = " << sys_time << std::endl;
-    //}
-    //times++;
-
+    //FCKX!!
+    static unsigned int times;
+    if (!(times % 100)) {
+        std::cout << "MIDISequencer::TickProc() " << times << " times" << std::endl;
+        std::cout << "sys_time_offset = " << sys_time_offset << "  sys_time = " << sys_time << std::endl;
+    }
+    times++;
+    //FCKX!!
+    
     // check if we we are counting in
     if (state.playing_status & COUNT_IN_PENDING) {
         MIDIClockTime clocks = (MIDIClockTime)((sys_time - sys_time_offset) / state.ms_per_clock);
@@ -1425,7 +1426,7 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
         std::cout << "Auto stopping the sequencer: StaticStopProc called at time " << GetCurrentMIDIClockTime() << std::endl;
         //<< "GetNextEventTime() returned " << retval << std::endl;
         state.playing_status |= AUTO_STOP_PENDING;      // must be here, not in StaticStopProc
-        //times = 0;      // only for log, comment if you don't need
+        times = 0;      // only for log, comment if you don't need //FCKX!!
         std::thread(StaticStopProc, this).detach();
     }
 
