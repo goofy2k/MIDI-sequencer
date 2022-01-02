@@ -596,5 +596,7 @@ Re 10a and 4. :
       - time signature
       - metronome on/off
       - metronome notes / bank
+  - General
+    - IO select / security
   
   
