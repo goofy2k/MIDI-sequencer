@@ -580,4 +580,21 @@ Re 10a and 4. :
 - deviceConnected  double definition, commented out in MQTTdriver.cpp.  Reconnect for MQTT is probably already covered in MQTT part  
 
   
+  ## Potential UI / GUI items (not complete)
+  
+  - Mode select
+      - Thru
+      - Sequencer
+      - Recording
+  - Thru controls
+      - input channel (n or -1)
+      - output channel (n or -1)
+  - Sequencer
+      - tracks select
+      - channels select
+      - tempo
+      - time signature
+      - metronome on/off
+      - metronome notes / bank
+  
   
