@@ -589,6 +589,7 @@ Re 10a and 4. :
   - Thru controls
       - input channel (n or -1)
       - output channel (n or -1)
+      - select processor(s)
   - Sequencer
       - tracks select
       - channels select
