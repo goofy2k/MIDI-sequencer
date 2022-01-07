@@ -197,7 +197,13 @@ void MIDIThru::TickProc(tMsecs sys_time_)
         //get message from the queue WITHOUT deleting it. This is done by Manager at the end of the MidiTicks queue
         in_driver->ReadMessage(rmsg, i);
         msg = rmsg.msg;
-        
+        ESP_LOGE(TAG,"msg.GetLength() %d", msg.GetLength() );       
+  /* //can not access bytes per bytenr as GetByten is hard coded  //useful for longer RPN/NRPN messages
+     for (unsigned int ii = 0; ii < msg.GetLength(); ii++) {
+      
+            
+        }
+  */
         ESP_LOGE(TAG,"MIDIThru::TickProc msg.Status() %u 0x%X", msg.GetStatus(), msg.GetStatus());
         ESP_LOGE(TAG,"MIDIThru::TickProc msg.GetByte1() %u 0x%X", msg.GetByte1(), msg.GetByte1());
         ESP_LOGE(TAG,"MIDIThru::TickProc msg.GetByte2() %u 0x%X", msg.GetByte2(), msg.GetByte2());  
@@ -215,9 +221,9 @@ void MIDIThru::TickProc(tMsecs sys_time_)
    
         if (msg.IsChannelMsg()) {
                 ESP_LOGE(TAG,"in_channel %d out_channel %d msg.GetChannel() %d ",in_channel, out_channel, msg.GetChannel());     
-                if (in_channel == msg.GetChannel() || in_channel == 255) { //FCKX!!
+                if (in_channel == msg.GetChannel() || in_channel == -1) { //FCKX!!
                 //if (in_channel == msg.GetChannel() || in_channel == -1) {
-                    if (out_channel != 255) { //FCKX!!
+                    if (out_channel != -1) { //FCKX!!
                     //if (out_channel != -1) {
                         msg.SetChannel(out_channel);
                         //std::cout << "MIDIThru::TickProc out_channel != -1\n";

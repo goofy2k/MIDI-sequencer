@@ -1,0 +1,1309 @@
+1. ****************************************************************************************************************************************
+SEQUENCER "ALL DEFAULT"  (look for DEFAULT string in LOG)
+pThreads CORE affinity set to: NO
+
+RUNTIME LOG AFTER MAIN CODE BLOCK
+
+  +++++++MAIN CODE +++++++++++++
+
+
+
+#ifdef TEST_ADVANCEDSEQUENCER_NOINPUT
+
+/*
+ *   Example file for NiCMidi - A C++ Class Library for MIDI
+ *
+ *   Copyright (C) 2021  Nicola Cassetta
+ *   https://github.com/ncassetta/NiCMidi
+ *
+ *   This file is part of NiCMidi.
+ *
+ *   NiCMidi is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   NiCMidi is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with NiCMidi.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+  A nice little example demonstrating how to edit the MIDIMultitrack
+  embedded in an AdvancedSequencer, play its content and then save
+  it in a MIDI file.
+*/
+
+
+#include <string>
+
+#include "../include/advancedsequencer.h"
+#include "../include/filewritemultitrack.h"     // for WriteMIDIFile() function
+
+using namespace std;
+
+
+// A struct holding data for a note
+struct note_data {
+    unsigned char   note;
+    MIDIClockTime   length;
+    MIDIClockTime   time;
+};
+
+
+//////////////////////////////////////////////////////////////////
+//                        G L O B A L S                         //
+//////////////////////////////////////////////////////////////////
+
+
+// The default ctor creates an AdvancedSequencer with 17 empty tracks (1 master + 16 channel)
+//AdvancedSequencer sequencer; //move into the proc to prevent early initialisation of nimBLE ?
+
+
+// Data for "Twinkle twinkle", track 1
+int track1_len = 14;
+note_data track1[] = {
+    { 60, 110, 480 }, { 60, 110, 600 }, { 67, 110, 720 }, { 67, 110, 840 }, { 69, 110, 960 }, { 69, 110, 1080 },
+    { 67, 230, 1200 }, { 65, 110, 1440 }, { 65, 110, 1560 }, { 64, 110, 1680 }, { 64, 110, 1800 },
+    { 62, 110, 1920 }, { 62, 110, 2040 }, { 60, 210, 2160 }
+};
+
+// Data for "Twinkle twinkle", track 2
+int track2_len = 10;
+note_data track2[] = {
+    { 48, 210, 480 }, { 48, 210, 720 }, { 53, 110, 960 }, { 53, 110, 1080 }, { 48, 210, 1200 }, { 50, 210, 1440 },
+    { 48, 210, 1680 }, { 43, 110, 1920 }, { 43, 110, 2040 }, { 48, 210, 2160 }
+};
+
+// Data for "Twinkle twinkle", track 3
+int track3_len = 47;
+note_data track3[] = {
+    { 35, 15, 480 }, { 42, 15, 540 }, { 38, 15, 600 }, { 42, 15, 600 }, { 35, 15, 660 }, { 42, 15, 660 },
+    { 35, 15, 720 }, { 42, 15, 720}, { 42, 15, 780 }, { 38, 15, 840 }, { 42, 15, 840}, { 42, 15, 900 },
+    { 35, 15, 960 }, { 42, 15, 1020 }, { 38, 15, 1080 }, { 42, 15, 1080 }, { 35, 15, 1140 }, { 42, 15, 1140},
+    { 35, 15, 1200 }, { 42, 15, 1200}, { 42, 15, 1260 }, { 38, 15, 1320 }, { 42, 15, 1320 }, { 46, 15, 1380 },
+    { 35, 15, 1440 }, { 42, 15, 1500 }, { 38, 15, 1560 }, { 42, 15, 1560 }, { 35, 15, 1620 }, { 42, 15, 1620 },
+    { 35, 15, 1680 }, { 42, 15, 1680 }, { 42, 15, 1740 }, { 38, 15, 1800 }, { 42, 15, 1800 }, { 42, 15, 1860 },
+    { 35, 15, 1920 }, { 42, 15, 1980 }, { 38, 15, 2040 }, { 42, 15, 2040 }, { 35, 15, 2100 }, { 42, 15, 2100 },
+    { 35, 15, 2160 }, { 42, 15, 2160 }, { 42, 15, 2220 }, { 35, 15, 2280 }, { 49, 240, 2280 }
+};
+//////////////////////////////////////////////////////////////////
+//                              M A I N                         //
+//////////////////////////////////////////////////////////////////
+
+int test_main( ) {
+    ESP_LOGE(TAG,"Entering test_main of test_advancedsequencer_noinput example");
+    ESP_LOGE(TAG,"************* DEBUG -4 *************");
+    AdvancedSequencer sequencer; //was under GLOBALS, see above
+    // gets the address of the sequencer MIDIMultiTrack, so we can edit it
+   // sequencer.SetMIDIThruEnable(1);  //required for sending control messages 
+	
+    MIDIManager::OpenOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
+    
+    //create a waiting loop for availability of port(s) NOT NECESSARY
+    //it is integrated in the nimBLEdriver, that is called by Manager on instantiation of sequencer 
+    //int concount = MIDIManager::GetOutDriver(0)->getConnectedCOunt();
+    //int concount = MIDIManager::GetOutDriver(0)->IsPortOpen();
+    ESP_LOGE(TAG,"WAITING A WHILE FOR SEQUENCER INITS (INCLUDING NIMBLE) TO FINISH"); 
+    ESP_LOGE(TAG,"SHOULD BE DONE INSIDE THIS INIT, BY DETECTING PRESENCE OF CONNECTION WITH SYNTH");     
+    MIDITimer::Wait(1000); //wait a while for a stable nimBLE connection
+    ESP_LOGE(TAG,"NIMBLE CONNECTION SHOULD BE OK HERE"); 
+
+    //while(true){   //get instatiation of tracks , trk , msg outside the loop
+            ESP_LOGE(TAG,"************* DEBUG -3 *************");
+    MIDIMultiTrack* tracks = sequencer.GetMultiTrack();
+            ESP_LOGE(TAG,"************* DEBUG -2 *************");
+    MIDITrack* trk;
+    
+    ESP_LOGE(TAG,"READY TO CREATE TRACK CONTENT"); 
+    ESP_LOGE(TAG,"************* DEBUG -1 *************");
+    // the constructor creates an undefined (NoOp) message with time 0
+    MIDITimedMessage msg;
+    int masterTrack = 0;
+    int songTrack = 1;
+    //use these
+    //Reset 
+    //Clear
+    //GetNumEvents
+    ESP_LOGE(TAG,"************* DEBUG 0 *************");
+    //while(true){
+    
+    //MIDIManager::OpenOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
+
+    // now trk points to the master track (track 0 of the multitrack)
+    trk = tracks->GetTrack(masterTrack);
+    ESP_LOGE(TAG,"*************BEFORE CLEAN trk->GetNumEvents() masterTrack %d %d", masterTrack, trk->GetNumEvents());
+    trk->Clear(); //clear to prevent multiple inserts when looping
+    ESP_LOGE(TAG,"*************AFTER CLEAN trk->GetNumEvents() masterTrack %d %d", masterTrack, trk->GetNumEvents());
+
+
+    msg.SetTimeSig(4, 4);           // remember that the message time is 0
+    trk->InsertEvent(msg);          // inserts the time signature (4/4)
+    msg.SetKeySig(0, 0);
+    trk->InsertEvent(msg);          // inserts the key signature (CM)
+    msg.SetTempo(200.0);
+    trk->InsertEvent(msg);          // inserts the tempo
+    
+    
+    ESP_LOGE(TAG,"************* DEBUG 1 *************");
+    
+    
+    // now trk points to track 1, we'll use it for MIDI channel 1
+    trk = tracks->GetTrack(songTrack);
+    ESP_LOGE(TAG,"*************BEFORE CLEAN trk->GetNumEvents() songTrack %d %d", songTrack, trk->GetNumEvents());
+    trk->Clear(); //clear to prevent multiple inserts when looping
+    ESP_LOGE(TAG,"*************AFTER CLEAN trk->GetNumEvents() songTrack %d %d", songTrack, trk->GetNumEvents());
+
+    // now trk points to track 1, we'll use it for MIDI channel 1
+    trk = tracks->GetTrack(1);
+    unsigned char channel = 0;      // MIDI channel 1 //Nic
+     
+    msg.SetProgramChange(channel, 11);
+    trk->InsertEvent(msg);          // inserts the program change at time 0
+    msg.SetVolumeChange(channel, 110);
+    trk->InsertEvent(msg);          // inserts the track volume
+    // and now inserts all the notes, taking them from our track1[] array
+    ESP_LOGE(TAG,"************* DEBUG 2 *************");
+    for(int i = 0; i < track1_len; i++) {
+        msg.SetNoteOn(channel, track1[i].note, 100);
+        msg.SetTime(track1[i].time);
+        trk->InsertNote(msg, track1[i].length);
+    }
+    ESP_LOGE(TAG,"************* DEBUG 3 *************");
+    // When you edit the AdvancedSequencer multitrack you must update the
+    // sequencer parameters before playing: this does the job
+ sequencer.SetMIDIThruEnable(true); //enable to pass thru control events
+ sequencer.UpdateStatus();
+    ESP_LOGE(TAG,"************* DEBUG 4 *************");
+    
+    
+    // now we can play track 1 only
+    cout << "Playing track 1 ..." << endl;
+    sequencer.GoToZero();
+//sequencer.SetPlayMode(MIDISequencer::PLAY_BOUNDED);    
+//sequencer.SetRepeatPlay(1,3,0);  
+sequencer.Play();
+        ESP_LOGE(TAG,"************* DEBUG 5 *************");
+    while (sequencer.IsPlaying()) {
+        MIDITimer::Wait(50); };
+    ESP_LOGE(TAG,"************* DEBUG 6 *************");
+    cout << "The sequencer finished" << endl;
+
+// THE REST IS COMMENTED OUT. IF YOU SUCCEED CAN UNCOMMENT AND PLAY OTHER TWO TRACKS
+
+#define BASS
+#ifdef BASS
+    // now do the same for track 2 (bass, channel 2)
+    ESP_LOGE(TAG,"************* DEBUG 7 *************");
+    trk = tracks->GetTrack(2);
+    channel = 1;  //was 1
+    ESP_LOGE(TAG,"************* DEBUG 8 *************");
+    msg.Clear();                    // resets the message
+    msg.SetProgramChange(channel, 33);
+    trk->InsertEvent(msg);
+    msg.SetVolumeChange(channel, 90);
+    trk->InsertEvent(msg);
+        ESP_LOGE(TAG,"************* DEBUG 9 *************");
+    for(int i = 0; i < track2_len; i++) {
+        msg.SetNoteOn(channel, track2[i].note, 100);
+        msg.SetTime(track2[i].time);
+        trk->InsertNote(msg, track2[i].length);
+    }
+    ESP_LOGE(TAG,"************* DEBUG 10 *************");
+    sequencer.UpdateStatus(); //FCKX check check    
+#endif //BASS
+
+
+  //  sequencer.GoToZero();
+
+
+//#define DRUMS
+#ifdef DRUMS
+    // ... and 3 (percussion, channel 10)
+        ESP_LOGE(TAG,"************* DEBUG 11 *************");
+    trk = tracks->GetTrack(3);
+    channel = 9;
+
+   
+    msg.Clear();
+    //msg.SetProgramChange(channel, 33);    // uncomment these if your device doesn't sets
+    //trk->InsertEvent(msg);                // automatically the drums on channel 10
+    msg.SetVolumeChange(channel, 120);
+    trk->InsertEvent(msg);
+    for(int i = 0; i < track3_len; i++) {
+        msg.SetNoteOn(channel, track3[i].note, 100);
+        msg.SetTime(track3[i].time);
+        trk->InsertNote(msg, track3[i].length);
+    }
+    
+     sequencer.UpdateStatus(); //FCKX check check 
+#endif DRUMS
+    
+
+    //sequencer.GoToZero();
+    ESP_LOGE(TAG,"************* DEBUG 12 *************");
+    #define PLAYSECOND
+    #ifdef PLAYSECOND
+        ESP_LOGE(TAG,"************* DEBUG 13 *************");
+   // while (true) {   
+        cout << "Playing 3 tracks ..." << endl;
+        sequencer.GoToZero();
+//SetRepeatPlay(1,3,0);        
+sequencer.Play();
+        while (sequencer.IsPlaying())
+            MIDITimer::Wait(50);
+        cout << "    Stop Playing 3 tracks" << endl;
+ //  } //while true
+    
+    #endif //PLAYSECOND
+    //sequencer.GoToZero();
+   //    MIDIManager::CloseOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
+//
+//}//while true
+    MIDIManager::CloseOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
+    ESP_LOGE(TAG,"Exiting test_main example");
+    return EXIT_SUCCESS;
+}
+#endif // TEST_ADVANCEDSEQUENCER_NOINPUT
+
+  ++++++END OF MAIN CODE++++++++++
+
+
+
+++++++++++++++++++++++++++++++++++RUNTIME LOG 1 FINISHES OK +++++++++++++++++++++++++++++++++++++++
+
+
+rst:0x1 (POWERON_RESET),boot:0x17 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7068
+load:0x40078000,len:13652
+load:0x40080400,len:4632
+0x40080400: _init at ??:?
+
+entry 0x400806f4
+I (29) boot: ESP-IDF v4.2-dirty 2nd stage bootloader
+I (29) boot: compile time 22:39:18
+I (29) boot: chip revision: 3
+I (32) boot_comm: chip revision: 3, min. bootloader chip revision: 1
+I (40) boot.esp32: SPI Speed      : 40MHz
+I (44) boot.esp32: SPI Mode       : DIO
+I (49) boot.esp32: SPI Flash Size : 8MB
+I (53) boot: Enabling RNG early entropy source...
+I (59) boot: Partition Table:
+I (62) boot: ## Label            Usage          Type ST Offset   Length
+I (70) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (77) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (84) boot:  2 factory          factory app      00 00 00010000 00200000
+I (92) boot: End of partition table
+I (96) boot_comm: chip revision: 3, min. application chip revision: 1
+I (103) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x31360 (201568) map
+I (196) esp_image: segment 1: paddr=0x00041388 vaddr=0x3ffbdb60 size=0x04384 ( 17284) load
+I (205) esp_image: segment 2: paddr=0x00045714 vaddr=0x40080000 size=0x00404 (  1028) load
+0x40080000: _WindowOverflow4 at C:/Users/Fred/esp-idf/components/freertos/xtensa/xtensa_vectors.S:1730
+
+I (205) esp_image: segment 3: paddr=0x00045b20 vaddr=0x40080404 size=0x0a4f8 ( 42232) load
+I (232) esp_image: segment 4: paddr=0x00050020 vaddr=0x400d0020 size=0xd8998 (887192) map
+0x400d0020: _stext at ??:?
+
+I (603) esp_image: segment 5: paddr=0x001289c0 vaddr=0x4008a8fc size=0x101b0 ( 65968) load
+0x4008a8fc: r_ld_acl_ssr_set at ??:?
+
+I (649) boot: Loaded app from partition at offset 0x10000
+I (650) boot: Disabling RNG early entropy source...
+I (650) psram: This chip is ESP32-D0WD
+I (655) spiram: Found 64MBit SPI RAM device
+I (659) spiram: SPI RAM mode: flash 40m sram 40m
+I (664) spiram: PSRAM initialized, cache is in low/high (2-core) mode.
+I (672) cpu_start: Pro cpu up.
+I (675) cpu_start: Application information:
+I (680) cpu_start: Project name:     fckx_sequencer
+I (686) cpu_start: App version:      054010d-dirty
+I (691) cpu_start: Compile time:     Jan  4 2022 22:38:23
+I (697) cpu_start: ELF file SHA256:  10b714545d3b7c08...
+I (703) cpu_start: ESP-IDF:          v4.2-dirty
+I (708) cpu_start: Starting app cpu, entry point is 0x40081ba8
+0x40081ba8: call_start_cpu1 at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:287
+
+I (0) cpu_start: App cpu up.
+I (1603) spiram: SPI SRAM memory test OK
+I (1604) heap_init: Initializing. RAM available for dynamic allocation:
+I (1604) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM
+I (1610) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM
+I (1616) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM
+I (1622) heap_init: At 3FFC9D50 len 000162B0 (88 KiB): DRAM
+I (1628) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (1635) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (1641) heap_init: At 4009AAAC len 00005554 (21 KiB): IRAM
+I (1648) cpu_start: Pro cpu start user code
+I (1653) spiram: Adding pool of 4096K of external SPI memory to heap allocator
+W (1678) spi_flash: Detected size(16384k) larger than the size in the binary image header(8192k). Using the size in the binary image header.
+I (1678) spi_flash: detected chip: gd
+I (1678) spi_flash: flash io: dio
+I (1681) cpu_start: StartinI (0) cpu_start: Starting scheduler on APP CPU.
+I (1697) spiram: Reserving pool of 32K of internal memory for DMA/internal allocations
+g scheduler on PRO CPU.
+I (1707) APP_MAIN: [APP] Startup..
+I (1707) APP_MAIN: [APP] Free memory: 4384132 bytes
+I (1717) APP_MAIN: [APP] IDF version: v4.2-dirty
+W (1717) APP_MAIN: Initialize WIFI connection here
+I (1777) APP_MAIN: ESP_WIFI_MODE_STA
+I (1787) wifi:wifi driver task: 3ffd4c54, prio:23, stack:3072, core=0
+I (1787) system_api: Base MAC address is not set
+I (1787) system_api: read default base MAC address from EFUSE
+I (1807) wifi:wifi firmware version: 1865b55
+I (1807) wifi:wifi certification version: v7.0
+I (1807) wifi:config NVS flash: enabled
+I (1817) wifi:config nano formating: enabled
+I (1817) wifi:Init data frame dynamic rx buffer num: 32
+I (1817) wifi:Init management frame dynamic rx buffer num: 32
+I (1827) wifi:Init management short buffer num: 32
+I (1827) wifi:Init static tx buffer num: 16
+I (1837) wifi:Init tx cache buffer num: 32
+I (1837) wifi:Init static rx buffer size: 1600
+I (1837) wifi:Init static rx buffer num: 10
+I (1847) wifi:Init dynamic rx buffer num: 32
+I (1847) wifi_init: rx ba win: 6
+I (1847) wifi_init: tcpip mbox: 32
+I (1857) wifi_init: udp mbox: 6
+I (1857) wifi_init: tcp mbox: 6
+I (1857) wifi_init: tcp tx win: 5744
+I (1877) wifi_init: tcp rx win: 5744
+I (1877) wifi_init: tcp mss: 1440
+I (18I (1977) phy: phy_version: 4500, 0cd6843, Sep 17 2020, 15:37:07, 0, 0
+77) wifi_init: WiFi/LWIP prefer SPIRAM
+I (1977) wifi:mode : sta (84:cc:a8:0d:3b:70)
+I (1977) FCKX_SEQ: wifi_init_sta finished.
+I (2107) wifi:new:<8,0>, old:<1,0>, ap:<255,255>, sta:<8,0>, prof:1
+I (2107) wifi:state: init -> auth (b0)
+I (2127) wifi:state: auth -> assoc (0)
+I (2177) wifi:state: assoc -> run (10)
+I (2287) wifi:connected with Verhoeckx_glas, aid = 3, channel 8, BW20, bssid = 96:6a:b0:c3:3b:27
+I (2287) wifi:security: WPA2-PSK, phy: bgn, rssi: -45
+I (2287) wifi:pm start, type: 1
+I (2377) wifi:AP's beacon interval = 102400 us, DTIM period = 1
+I (3777) esp_netif_handlers: sta ip: 192.168.2.17, mask: 255.255.255.0, gw: 192.168.2.254
+I (3777) FCKX_SEQ: got ip:192.168.2.17
+I (3777) FCKX_SEQ: connected to ap SSID:Verhoeckx_glas password: XXXXXXXXXXXX
+W (3787) APP_MAIN: Initialize MQTT connection here
+I (3787) FCKX_SEQ: MQTT CLIENT STARTED
+I (3787) FCKX_SEQ: Other event id:7
+E (3807) APP_MAIN: WAITING A WHILE FOR MQTT INITS TO FINISH
+I (3857) FCKX_SEQ: MQTT_EVENT_CONNECTED
+I (3857) FCKX_SEQ: sent publish successful, msg_id=401
+I (3857) FCKX_SEQ: sent subscribe successful, msg_id=34562
+I (3857) FCKX_SEQ: sent subscribe successful, msg_id=46734
+I (3877) FCKX_SEQ: sent unsubscribe successful, msg_id=39231
+I (3877) FCKX_SEQ: sent subscribe successful, msg_id=905
+I (3887) FCKX_SEQ: sent subscribe successful, msg_id=27685
+I (3887) FCKX_SEQ: sent subscribe successful, msg_id=30127
+I (3897) FCKX_SEQ: MQTT_EVENT_PUBLISHED, msg_id=401
+I (3897) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=34562
+I (3907) FCKX_SEQ: sent publish successful, msg_id=0
+I (3907) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=46734
+I (3917) FCKX_SEQ: sent publish successful, msg_id=0
+I (3917) FCKX_SEQ: MQTT_EVENT_UNSUBSCRIBED, msg_id=39231
+I (3927) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=905
+I (3927) FCKX_SEQ: sent publish successful, msg_id=0
+I (3937) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=27685
+I (3937) FCKX_SEQ: sent publish successful, msg_id=0
+I (3947) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=24106
+I (3947) FCKX_SEQ: sent publish successful, msg_id=0
+I (3957) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=30127
+I (3957) FCKX_SEQ: sent publish successful, msg_id=0
+E (4817) APP_MAIN: CONDITIONAL----------------------------------CONDITIONAL  TEST_ADVANCEDSEQUENCER_NOINPUT
+E (4817) FCKX_SEQ: Entering test_main of test_advancedsequencer_noinput example
+E (4827) FCKX_SEQ: ************* DEBUG -4 *************
+Executing MIDIManager::Init()
+Going to create temp MidiOutNimBLE for detecting nr of ports
+W (4847) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (4847) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (4857) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (4857) NimBLEDevice.cpp: NimBLEDevice::init !initialized
+I (4867) NimBLEDevice.cpp: Controller status A: 0
+I (4867) NimBLEDevice.cpp: Controller status B: 0
+I (4877) NimBLEDevice.cpp: Controller status C: 0
+I (4877) NimBLEDevice.cpp: NimBLEDevice::init B
+I (4887) NimBLEDevice.cpp: NimBLEDevice::init C
+I (4887) NimBLEDevice.cpp: Controller status D: 0
+I (4897) BTDM_INIT: BT controller compile version [3723d5b]
+I (4897) NimBLEDevice.cpp: Controller status E: 1
+I (4907) NimBLEDevice.cpp: NimBLEDevice::init E
+I (5157) NimBLEDevice.cpp: Controller status F: 2
+I (5157) NimBLEDevice.cpp: Controller status G: 2
+I (5157) NimBLEDevice.cpp: Controller status H: 2
+I (5157) NimBLEDevice.cpp: NimBLEDevice::init I
+I (5167) NimBLEDevice.cpp: NimBLEDevice::init J
+I (5177) NimBLEDevice: BLE Host Task Started
+I (5177) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (5207) NimBLEDevice: NimBle host synced.
+I (5207) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (5207) NIMBLEDRIVER: NimBLEDevice created
+W (5207) NIMBLEDRIVER: BLE server created
+W (5207) NIMBLEDRIVER: BLE server callbacks created
+W (5217) NIMBLEDRIVER: BLE server service created
+W (5217) NIMBLEDRIVER: BLE server characteristic created
+W (5237) NIMBLEDRIVER: BLE service started
+Created temp MidiOutNimBLE for detecting nr of ports
+E (5247) NICMIDI DRIVER: start creation of MidiOutNimBLE port
+W (5247) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (5257) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (5257) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (5267) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (5267) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (5277) NIMBLEDRIVER: NimBLEDevice created
+W (5277) NIMBLEDRIVER: BLE server created
+W (5287) NIMBLEDRIVER: BLE server callbacks created
+W (5287) NimBLEServer: Warning creating a duplicate service UUID: 4fafc201-1fb5-459e-8fcc-c5c9c331914b
+W (5297) NIMBLEDRIVER: BLE server service created
+W (5317) NIMBLEDRIVER: BLE server characteristic created
+W (5317) NIMBLEDRIVER: BLE service started
+E (5327) NICMIDI DRIVER: executed creation of MidiOutNimBLE port
+Going to create temp MQTTMidiIn for detecting nr of ports
+W (5337) MQTTDRIVER: MQTTMidiIn instantiation
+W (5337) MQTTDRIVER: MQTTMidiIn :: initialize
+Created temp MQTTMidiIn for detecting nr of ports
+E (5357) NICMIDI DRIVER INPUT: start creation of MQTTMidiIn port
+W (5357) MQTTDRIVER: MQTTMidiIn instantiation
+W (5367) MQTTDRIVER: MQTTMidiIn :: initialize
+E (5367) MQTTDRIVER: MQTTMidiIn::setCallback: STORING CALLBACK IN inputData_
+E (5377) NICMIDI DRIVER INPUT: executed creation of MQTTMidiIn port
+W (5377) MQTTDRIVER: Closed MQTTMidiIn NO CLEANUP: BEWARE of MEMORY LEAKS
+Exiting MIDIManager::Init() Found 1 midi out and 1 midi in
+E (5397) SEQUENCER: track_states.size() 17
+E (5407) SEQUENCER: track_states.size() 17
+E (5407) SEQUENCER: track_states.size() 17
+E (5407) SEQUENCER: track_states.size() 17
+E (5417) SEQUENCER: track_states.size() 17
+DEBUG MIDIThru constructor
+E (5427) NICMIDI DRIVER: MIDIOutDriver::OpenPort() port_id 0
+W (5427) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
+OPENPORT2 ENTEREDW (5437) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
+W (5437) NIMBLEDRIVER: xTaskCreate(connectedTask) IS THIS REQUIRED?
+E (5447) NIMBLEDRIVER: MidiOutNimBLE::openPort: a valid connection already exists nevertheless start advertising (DIRTY!)
+I (5457) NIMBLEDRIVER: Prepare advertising
+I (5457) NIMBLEDRIVER: Start advertising
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (5477) NIMBLEDRIVER: OPENPORT Waiting for a client connection to notify...
+W (7487) NIMBLE_ONCONNECT: -----
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (7517) NimBLEServer: mtu update event; conn_handle=0 mtu=256
+I (8367) NimBLEServer: subscribe event; attr_handle=16, subscribed: true
+I (8367) NimBLECharacteristic: New subscribe value for conn: 0 val: 1
+I (10487) NIMBLEDRIVER: Number of connected peers: 1
+OUT Port fckx_seq open
+E (10487) FCKX_SEQ: WAITING A WHILE FOR SEQUENCER INITS (INCLUDING NIMBLE) TO FINISH
+E (10487) FCKX_SEQ: SHOULD BE DONE INSIDE THIS INIT, BY DETECTING PRESENCE OF CONNECTION WITH SYNTH
+E (11497) FCKX_SEQ: NIMBLE CONNECTION SHOULD BE OK HERE
+E (11497) FCKX_SEQ: ************* DEBUG -3 *************
+E (11497) FCKX_SEQ: ************* DEBUG -2 *************
+E (11507) FCKX_SEQ: READY TO CREATE TRACK CONTENT
+E (11507) FCKX_SEQ: ************* DEBUG -1 *************
+E (11517) FCKX_SEQ: ************* DEBUG 0 *************
+E (11517) FCKX_SEQ: *************BEFORE CLEAN trk->GetNumEvents() masterTrack 0 1
+E (11527) FCKX_SEQ: *************AFTER CLEAN trk->GetNumEvents() masterTrack 0 1
+E (11537) FCKX_SEQ: ************* DEBUG 1 *************
+E (11537) FCKX_SEQ: *************BEFORE CLEAN trk->GetNumEvents() songTrack 1 1
+E (11547) FCKX_SEQ: *************AFTER CLEAN trk->GetNumEvents() songTrack 1 1
+E (11557) FCKX_SEQ: ************* DEBUG 2 *************
+E (11557) FCKX_SEQ: ************* DEBUG 3 *************
+W (11567) MQTTDRIVER: open MQTTMidiIn port
+IN Port MQTT_In open
+OUT Port fckx_seq open (2 times)
+Timer open with 10 msecs resolution
+E (11587) SEQUENCER: track_states.size() 17
+E (11607) SEQUENCER: track_states.size() 17
+E (11607) SEQUENCER: track_states.size() 17
+E (11607) SEQUENCER: track_states.size() 17
+E (11617) SEQUENCER: track_states.size() 17
+E (11627) SEQUENCER: track_states.size() 17
+E (11627) SEQUENCER: track_states.size() 17
+E (11647) FCKX_SEQ: ************* DEBUG 4 *************
+Playing track 1 ...
+E (11647) SEQUENCER: track_states.size() 17
+                Entered in AdvancedSequencer::Start() ...
+E (11667) STOP_SEQUENCER: Entered MIDISequencer::Stop
+OUT Port fckx_seq open (3 times)
+                 ... Exiting from AdvancedSequencer::Start()
+E (11677) FCKX_SEQ: ************* DEBUG 5 *************
+MIDISequencer::TickProc() 0 times
+sys_time_offset = 9995  sys_time = 10004
+I (11687) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (11707) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 2
+GATT procedure initiated: notify; att_handle=16MIDISequencer::TickProc() 100 times
+sys_time_offset = 9995  sys_time = 11004
+I (12877) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (13147) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (13177) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (13447) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (13477) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 200 times
+sys_time_offset = 9995  sys_time = 12004
+I (13747) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (13777) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (14047) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (14077) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (14347) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (14377) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (14647) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 300 times
+sys_time_offset = 9995  sys_time = 13004
+I (14677) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (15247) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (15277) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (15547) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (15577) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 400 times
+sys_time_offset = 9995  sys_time = 14004
+I (15847) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (15877) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (16147) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (16177) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (16447) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (16477) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 500 times
+sys_time_offset = 9995  sys_time = 15004
+I (16747) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (16777) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (17047) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (17077) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (17597) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called at time 2372
+E (17607) SEQUENCER_TICKPROC: DEFAULTSTATICSTOPPROC call std::thread(StaticStopProc, this).detach()
+                Entered in AdvancedSequencer::Stop() ...
+E (17617) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+E (17617) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17637) FCKX_SEQ: ************* DEBUG 6 *************
+E (17637) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+The sequencer finishedE (17647) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17667) FCKX_SEQ: ************* DEBUG 7 *************
+E (17667) FCKX_SEQ: ************* DEBUG 8 *************
+E (17667) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17677) FCKX_SEQ: ************* DEBUG 9 *************
+E (17677) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17697) FCKX_SEQ: ************* DEBUG 10 *************
+E (17697) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17707) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17727) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17737) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17747) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17757) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17767) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17767) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17777) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17787) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17797) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17807) NICMIDI DRIVER: Entered MIDIOutDriver::ClosePort()
+OUT Port fckx_seq closed (open 2 times)
+E (17827) NICMIDI DRIVER: Exiting MIDIOutDriver::ClosePort()
+E (17827) SEQUENCER: track_states.size() 17
+                 ... Exiting from AdvancedSequencer::Stop()
+MIDISequencer::TickProc() 0 times
+sys_time_offset = 9995  sys_time = 15934
+I (17847) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called at time 2370
+E (17867) SEQUENCER_TICKPROC: DEFAULTSTATICSTOPPROC call std::thread(StaticStopProc, this).detach()
+E (17867) SEQUENCER: track_states.size() 17
+E (17887) SEQUENCER: track_states.size() 17
+E (17897) SEQUENCER: track_states.size() 17
+E (17917) SEQUENCER: track_states.size() 17
+E (17927) SEQUENCER: track_states.size() 17
+E (17947) FCKX_SEQ: ************* DEBUG 12 *************
+E (17947) FCKX_SEQ: ************* DEBUG 13 *************
+Playing 3 tracks ...
+E (17957) SEQUENCER: track_states.size() 17
+                Entered in AdvancedSequencer::Start() ...
+E (17977) STOP_SEQUENCER: Entered MIDISequencer::Stop
+OUT Port fckx_seq open (3 times)
+                 ... Exiting from AdvancedSequencer::Start()
+MIDISequencer::TickProc() 0 times
+sys_time_offset = 16303  sys_time = 16304
+I (17987) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (18007) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (18017) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 2
+GATT procedure initiated: notify; att_handle=16
+I (18027) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 2
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 100 times
+sys_time_offset = 16303  sys_time = 17304
+I (19177) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (19187) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (19457) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (19477) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (19707) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (19757) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (19777) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (19787) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 200 times
+sys_time_offset = 16303  sys_time = 18304
+I (20057) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20077) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (20307) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20357) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20377) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20387) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20657) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20667) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20677) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20687) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20957) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20967) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 300 times
+sys_time_offset = 16303  sys_time = 19304
+I (20987) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (20997) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (21507) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (21557) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (21577) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (21587) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (21857) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (21877) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 400 times
+sys_time_offset = 16303  sys_time = 20304
+I (22107) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (22157) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (22177) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (22187) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (22457) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (22477) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (22707) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (22757) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (22777) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (22787) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 500 times
+sys_time_offset = 16303  sys_time = 21304
+I (23057) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (23067) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (23077) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (23087) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (23357) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (23367) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (23377) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (23387) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (23907) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (23917) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called at time 2377
+E (23927) SEQUENCER_TICKPROC: DEFAULTSTATICSTOPPROC call std::thread(StaticStopProc, this).detach()
+                Entered in AdvancedSequencer::Stop() ...
+E (23937) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+E (23937) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+    Stop Playing 3 tracks
+E (23957) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (23957) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (23977) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (23987) NICMIDI DRIVER: Entered MIDIOutDriver::ClosePort()
+E (23987) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+OUT Port fckx_seq closed (open 2 times)
+E (24007) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24007) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24017) NICMIDI DRIVER: Exiting MIDIOutDriver::ClosePort()
+E (24027) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24047) FCKX_SEQ: Exiting test_main example
+E (24047) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24057) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24067) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24077) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24087) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24097) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24097) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24107) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24127) NICMIDI DRIVER: Entered MIDIOutDriver::ClosePort()
+OUT Port fckx_seq closed (open 1 times)
+E (24137) NICMIDI DRIVER: Exiting MIDIOutDriver::ClosePort()
+E (24137) SEQUENCER: track_states.size() 17
+                 ... Exiting from AdvancedSequencer::Stop()
+MIDISequencer::TickProc() 0 times
+sys_time_offset = 16303  sys_time = 22253
+I (24157) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (24177) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called at time 2370
+E (24187) SEQUENCER_TICKPROC: DEFAULTSTATICSTOPPROC call std::thread(StaticStopProc, this).detach()
+Timer stopped by MIDITimer::Stop()
+IN Port MQTT_In closed
+E (24207) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+E (24207) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24217) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24227) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24237) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24247) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24247) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24257) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24277) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24287) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24297) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24307) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24317) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24327) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24327) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24337) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24347) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (24357) NICMIDI DRIVER: Entered MIDIOutDriver::ClosePort()
+OUT Port fckx_seq closed
+E (24377) NICMIDI DRIVER: Exiting MIDIOutDriver::ClosePort()
+E (24377) STOP_SEQUENCER: Entered MIDISequencer::Stop
+E (24387) APP_MAIN: Exited test_main successfully 0
+W (24387) APP_MAIN: END OF TEST_ADVANCEDSEQUENCER
+
+
++++++++++++++++++++++++++++++++++ RUNTIME LOG 2 ERROR: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+rst:0x1 (POWERON_RESET),boot:0x17 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7068
+load:0x40078000,len:13652
+load:0x40080400,len:4632
+0x40080400: _init at ??:?
+
+entry 0x400806f4
+I (29) boot: ESP-IDF v4.2-dirty 2nd stage bootloader
+I (29) boot: compile time 22:39:18
+I (29) boot: chip revision: 3
+I (32) boot_comm: chip revision: 3, min. bootloader chip revision: 1
+I (40) boot.esp32: SPI Speed      : 40MHz
+I (44) boot.esp32: SPI Mode       : DIO
+I (49) boot.esp32: SPI Flash Size : 8MB
+I (53) boot: Enabling RNG early entropy source...
+I (59) boot: Partition Table:
+I (62) boot: ## Label            Usage          Type ST Offset   Length
+I (70) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (77) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (84) boot:  2 factory          factory app      00 00 00010000 00200000
+I (92) boot: End of partition table
+I (96) boot_comm: chip revision: 3, min. application chip revision: 1
+I (103) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x31360 (201568) map
+I (196) esp_image: segment 1: paddr=0x00041388 vaddr=0x3ffbdb60 size=0x04384 ( 17284) load
+I (205) esp_image: segment 2: paddr=0x00045714 vaddr=0x40080000 size=0x00404 (  1028) load
+0x40080000: _WindowOverflow4 at C:/Users/Fred/esp-idf/components/freertos/xtensa/xtensa_vectors.S:1730
+
+I (205) esp_image: segment 3: paddr=0x00045b20 vaddr=0x40080404 size=0x0a4f8 ( 42232) load
+I (232) esp_image: segment 4: paddr=0x00050020 vaddr=0x400d0020 size=0xd8998 (887192) map
+0x400d0020: _stext at ??:?
+
+I (603) esp_image: segment 5: paddr=0x001289c0 vaddr=0x4008a8fc size=0x101b0 ( 65968) load
+0x4008a8fc: r_ld_acl_ssr_set at ??:?
+
+I (649) boot: Loaded app from partition at offset 0x10000
+I (650) boot: Disabling RNG early entropy source...
+I (650) psram: This chip is ESP32-D0WD
+I (655) spiram: Found 64MBit SPI RAM device
+I (659) spiram: SPI RAM mode: flash 40m sram 40m
+I (664) spiram: PSRAM initialized, cache is in low/high (2-core) mode.
+I (672) cpu_start: Pro cpu up.
+I (675) cpu_start: Application information:
+I (680) cpu_start: Project name:     fckx_sequencer
+I (686) cpu_start: App version:      054010d-dirty
+I (691) cpu_start: Compile time:     Jan  4 2022 22:38:23
+I (697) cpu_start: ELF file SHA256:  10b714545d3b7c08...
+I (703) cpu_start: ESP-IDF:          v4.2-dirty
+I (708) cpu_start: Starting app cpu, entry point is 0x40081ba8
+0x40081ba8: call_start_cpu1 at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:287
+
+I (0) cpu_start: App cpu up.
+I (1603) spiram: SPI SRAM memory test OK
+I (1604) heap_init: Initializing. RAM available for dynamic allocation:
+I (1604) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM
+I (1610) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM
+I (1616) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM
+I (1622) heap_init: At 3FFC9D50 len 000162B0 (88 KiB): DRAM
+I (1628) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (1635) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (1641) heap_init: At 4009AAAC len 00005554 (21 KiB): IRAM
+I (1648) cpu_start: Pro cpu start user code
+I (1653) spiram: Adding pool of 4096K of external SPI memory to heap allocator
+W (1678) spi_flash: Detected size(16384k) larger than the size in the binary image header(8192k). Using the size in the binary image header.
+I (1678) spi_flash: detected chip: gd
+I (1678) spi_flash: flash io: dio
+I (1681) cpu_start: StartinI (0) cpu_start: Starting scheduler on APP CPU.
+I (1697) spiram: Reserving pool of 32K of internal memory for DMA/internal allocations
+g scheduler on PRO CPU.
+I (1707) APP_MAIN: [APP] Startup..
+I (1707) APP_MAIN: [APP] Free memory: 4384132 bytes
+I (1717) APP_MAIN: [APP] IDF version: v4.2-dirty
+W (1717) APP_MAIN: Initialize WIFI connection here
+I (1777) APP_MAIN: ESP_WIFI_MODE_STA
+I (1787) wifi:wifi driver task: 3ffd4c54, prio:23, stack:3072, core=0
+I (1787) system_api: Base MAC address is not set
+I (1787) system_api: read default base MAC address from EFUSE
+I (1807) wifi:wifi firmware version: 1865b55
+I (1807) wifi:wifi certification version: v7.0
+I (1807) wifi:config NVS flash: enabled
+I (1817) wifi:config nano formating: enabled
+I (1817) wifi:Init data frame dynamic rx buffer num: 32
+I (1817) wifi:Init management frame dynamic rx buffer num: 32
+I (1827) wifi:Init management short buffer num: 32
+I (1827) wifi:Init static tx buffer num: 16
+I (1837) wifi:Init tx cache buffer num: 32
+I (1837) wifi:Init static rx buffer size: 1600
+I (1837) wifi:Init static rx buffer num: 10
+I (1847) wifi:Init dynamic rx buffer num: 32
+I (1847) wifi_init: rx ba win: 6
+I (1847) wifi_init: tcpip mbox: 32
+I (1857) wifi_init: udp mbox: 6
+I (1857) wifi_init: tcp mbox: 6
+I (1857) wifi_init: tcp tx win: 5744
+I (1877) wifi_init: tcp rx win: 5744
+I (1877) wifi_init: tcp mss: 1440
+I (18I (1977) phy: phy_version: 4500, 0cd6843, Sep 17 2020, 15:37:07, 0, 0
+77) wifi_init: WiFi/LWIP prefer SPIRAM
+I (1977) wifi:mode : sta (84:cc:a8:0d:3b:70)
+I (1977) FCKX_SEQ: wifi_init_sta finished.
+I (2107) wifi:new:<8,0>, old:<1,0>, ap:<255,255>, sta:<8,0>, prof:1
+I (2107) wifi:state: init -> auth (b0)
+I (2127) wifi:state: auth -> assoc (0)
+I (2177) wifi:state: assoc -> run (10)
+I (2287) wifi:connected with Verhoeckx_glas, aid = 8, channel 8, BW20, bssid = 96:6a:b0:c3:3b:27
+I (2287) wifi:security: WPA2-PSK, phy: bgn, rssi: -45
+I (2287) wifi:pm start, type: 1
+I (2357) wifi:AP's beacon interval = 102400 us, DTIM period = 1
+I (3777) esp_netif_handlers: sta ip: 192.168.2.17, mask: 255.255.255.0, gw: 192.168.2.254
+I (3777) FCKX_SEQ: got ip:192.168.2.17
+I (3777) FCKX_SEQ: connected to ap SSID:Verhoeckx_glas password: XXXXXXXXXXXX
+W (3787) APP_MAIN: Initialize MQTT connection here
+I (3797) FCKX_SEQ: MQTT CLIENT STARTED
+I (3797) FCKX_SEQ: Other event id:7
+E (3807) APP_MAIN: WAITING A WHILE FOR MQTT INITS TO FINISH
+I (3847) FCKX_SEQ: MQTT_EVENT_CONNECTED
+I (3847) FCKX_SEQ: sent publish successful, msg_id=31118
+I (3847) FCKX_SEQ: sent subscribe successful, msg_id=56317
+I (3847) FCKX_SEQ: sent subscribe successful, msg_id=24956
+I (3857) FCKX_SEQ: sent unsubscribe successful, msg_id=43970
+I (3867) FCKX_SEQ: sent subscribe successful, msg_id=18236
+I (3877) FCKX_SEQ: sent subscribe successful, msg_id=33012
+I (3877) FCKX_SEQ: sent subscribe successful, msg_id=37846
+I (3887) FCKX_SEQ: MQTT_EVENT_PUBLISHED, msg_id=31118
+I (3887) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=56317
+I (3897) FCKX_SEQ: sent publish successful, msg_id=0
+I (3897) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=24956
+I (3907) FCKX_SEQ: sent publish successful, msg_id=0
+I (3907) FCKX_SEQ: MQTT_EVENT_UNSUBSCRIBED, msg_id=43970
+I (3917) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=18236
+I (3917) FCKX_SEQ: sent publish successful, msg_id=0
+I (3927) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=33012
+I (3927) FCKX_SEQ: sent publish successful, msg_id=0
+I (3937) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=43860
+I (3957) FCKX_SEQ: sent publish successful, msg_id=0
+I (3957) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=37846
+I (3967) FCKX_SEQ: sent publish successful, msg_id=0
+E (4807) APP_MAIN: CONDITIONAL----------------------------------CONDITIONAL  TEST_ADVANCEDSEQUENCER_NOINPUT
+E (4807) FCKX_SEQ: Entering test_main of test_advancedsequencer_noinput example
+E (4817) FCKX_SEQ: ************* DEBUG -4 *************
+Executing MIDIManager::Init()
+Going to create temp MidiOutNimBLE for detecting nr of ports
+W (4837) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (4837) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (4847) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (4847) NimBLEDevice.cpp: NimBLEDevice::init !initialized
+I (4857) NimBLEDevice.cpp: Controller status A: 0
+I (4857) NimBLEDevice.cpp: Controller status B: 0
+I (4867) NimBLEDevice.cpp: Controller status C: 0
+I (4867) NimBLEDevice.cpp: NimBLEDevice::init B
+I (4877) NimBLEDevice.cpp: NimBLEDevice::init C
+I (4877) NimBLEDevice.cpp: Controller status D: 0
+I (4887) BTDM_INIT: BT controller compile version [3723d5b]
+I (4887) NimBLEDevice.cpp: Controller status E: 1
+I (4897) NimBLEDevice.cpp: NimBLEDevice::init E
+I (5137) NimBLEDevice.cpp: Controller status F: 2
+I (5147) NimBLEDevice.cpp: Controller status G: 2
+I (5147) NimBLEDevice.cpp: Controller status H: 2
+I (5147) NimBLEDevice.cpp: NimBLEDevice::init I
+I (5157) NimBLEDevice.cpp: NimBLEDevice::init J
+I (5157) NimBLEDevice: BLE Host Task Started
+I (5167) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (5197) NimBLEDevice: NimBle host synced.
+I (5197) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (5197) NIMBLEDRIVER: NimBLEDevice created
+W (5197) NIMBLEDRIVER: BLE server created
+W (5197) NIMBLEDRIVER: BLE server callbacks created
+W (5207) NIMBLEDRIVER: BLE server service created
+W (5207) NIMBLEDRIVER: BLE server characteristic created
+W (5217) NIMBLEDRIVER: BLE service started
+Created temp MidiOutNimBLE for detecting nr of ports
+E (5227) NICMIDI DRIVER: start creation of MidiOutNimBLE port
+W (5227) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (5237) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (5237) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (5247) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (5247) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (5267) NIMBLEDRIVER: NimBLEDevice created
+W (5267) NIMBLEDRIVER: BLE server created
+W (5277) NIMBLEDRIVER: BLE server callbacks created
+W (5277) NimBLEServer: Warning creating a duplicate service UUID: 4fafc201-1fb5-459e-8fcc-c5c9c331914b
+W (5287) NIMBLEDRIVER: BLE server service created
+W (5297) NIMBLEDRIVER: BLE server characteristic created
+W (5297) NIMBLEDRIVER: BLE service started
+E (5307) NICMIDI DRIVER: executed creation of MidiOutNimBLE port
+Going to create temp MQTTMidiIn for detecting nr of ports
+W (5317) MQTTDRIVER: MQTTMidiIn instantiation
+W (5317) MQTTDRIVER: MQTTMidiIn :: initialize
+Created temp MQTTMidiIn for detecting nr of ports
+E (5337) NICMIDI DRIVER INPUT: start creation of MQTTMidiIn port
+W (5337) MQTTDRIVER: MQTTMidiIn instantiation
+W (5347) MQTTDRIVER: MQTTMidiIn :: initialize
+E (5347) MQTTDRIVER: MQTTMidiIn::setCallback: STORING CALLBACK IN inputData_
+E (5357) NICMIDI DRIVER INPUT: executed creation of MQTTMidiIn port
+W (5357) MQTTDRIVER: Closed MQTTMidiIn NO CLEANUP: BEWARE of MEMORY LEAKS
+Exiting MIDIManager::Init() Found 1 midi out and 1 midi in
+E (5377) SEQUENCER: track_states.size() 17
+E (5387) SEQUENCER: track_states.size() 17
+E (5387) SEQUENCER: track_states.size() 17
+E (5397) SEQUENCER: track_states.size() 17
+E (5397) SEQUENCER: track_states.size() 17
+DEBUG MIDIThru constructor
+E (5417) NICMIDI DRIVER: MIDIOutDriver::OpenPort() port_id 0
+W (5417) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
+OPENPORT2 ENTEREDW (5417) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
+W (5417) NIMBLEDRIVER: xTaskCreate(connectedTask) IS THIS REQUIRED?
+E (5427) NIMBLEDRIVER: MidiOutNimBLE::openPort: a valid connection already exists nevertheless start advertising (DIRTY!)
+I (5437) NIMBLEDRIVER: Prepare advertising
+I (5437) NIMBLEDRIVER: Start advertising
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (5467) NIMBLEDRIVER: OPENPORT Waiting for a client connection to notify...
+W (6587) NIMBLE_ONCONNECT: -----
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (6657) NimBLEServer: mtu update event; conn_handle=0 mtu=256
+I (7507) NimBLEServer: subscribe event; attr_handle=16, subscribed: true
+I (7507) NimBLECharacteristic: New subscribe value for conn: 0 val: 1
+I (10467) NIMBLEDRIVER: Number of connected peers: 1
+OUT Port fckx_seq open
+E (10467) FCKX_SEQ: WAITING A WHILE FOR SEQUENCER INITS (INCLUDING NIMBLE) TO FINISH
+E (10467) FCKX_SEQ: SHOULD BE DONE INSIDE THIS INIT, BY DETECTING PRESENCE OF CONNECTION WITH SYNTH
+E (11477) FCKX_SEQ: NIMBLE CONNECTION SHOULD BE OK HERE
+E (11477) FCKX_SEQ: ************* DEBUG -3 *************
+E (11477) FCKX_SEQ: ************* DEBUG -2 *************
+E (11487) FCKX_SEQ: READY TO CREATE TRACK CONTENT
+E (11487) FCKX_SEQ: ************* DEBUG -1 *************
+E (11497) FCKX_SEQ: ************* DEBUG 0 *************
+E (11497) FCKX_SEQ: *************BEFORE CLEAN trk->GetNumEvents() masterTrack 0 1
+E (11507) FCKX_SEQ: *************AFTER CLEAN trk->GetNumEvents() masterTrack 0 1
+E (11517) FCKX_SEQ: ************* DEBUG 1 *************
+E (11517) FCKX_SEQ: *************BEFORE CLEAN trk->GetNumEvents() songTrack 1 1
+E (11527) FCKX_SEQ: *************AFTER CLEAN trk->GetNumEvents() songTrack 1 1
+E (11537) FCKX_SEQ: ************* DEBUG 2 *************
+E (11537) FCKX_SEQ: ************* DEBUG 3 *************
+W (11547) MQTTDRIVER: open MQTTMidiIn port
+IN Port MQTT_In open
+OUT Port fckx_seq open (2 times)
+Timer open with 10 msecs resolution
+E (11567) SEQUENCER: track_states.size() 17
+E (11587) SEQUENCER: track_states.size() 17
+E (11587) SEQUENCER: track_states.size() 17
+E (11597) SEQUENCER: track_states.size() 17
+E (11607) SEQUENCER: track_states.size() 17
+E (11607) SEQUENCER: track_states.size() 17
+E (11687) SEQUENCER: track_states.size() 17
+E (11707) FCKX_SEQ: ************* DEBUG 4 *************
+Playing track 1 ...
+E (11707) SEQUENCER: track_states.size() 17
+                Entered in AdvancedSequencer::Start() ...
+E (11757) STOP_SEQUENCER: Entered MIDISequencer::Stop
+OUT Port fckx_seq open (3 times)
+                 ... Exiting from AdvancedSequencer::Start()
+E (11797) FCKX_SEQ: ************* DEBUG 5 *************
+MIDISequencer::TickProc() 0 times
+sys_time_offset = 10121  sys_time = 10135
+I (11817) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (11827) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 2
+GATT procedure initiated: notify; att_handle=16MIDISequencer::TickProc() 100 times
+sys_time_offset = 10121  sys_time = 11134
+I (13007) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (13287) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (13307) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (13587) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (13607) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 200 times
+sys_time_offset = 10121  sys_time = 12134
+I (13887) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (13907) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (14187) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (14207) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (14487) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (14507) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (14787) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (14807) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 300 times
+sys_time_offset = 10121  sys_time = 13134
+I (15387) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (15407) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (15687) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (15707) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 400 times
+sys_time_offset = 10121  sys_time = 14135
+I (15987) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (16007) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (16287) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (16307) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (16587) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (16607) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 500 times
+sys_time_offset = 10121  sys_time = 15134
+I (16887) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (16907) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16I (17187) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (17207) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+I (17737) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called at time 2375
+E (17737) SEQUENCER_TICKPROC: DEFAULTSTATICSTOPPROC call std::thread(StaticStopProc, this).detach()
+                Entered in AdvancedSequencer::Stop() ...
+E (17747) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+E (17747) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17767) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17777) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17787) FCKX_SEQ: ************* DEBUG 6 *************
+The sequencer finishedE (17787) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17797) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17807) FCKX_SEQ: ************* DEBUG 7 *************
+E (17807) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17827) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17837) FCKX_SEQ: ************* DEBUG 8 *************
+E (17837) FCKX_SEQ: ************* DEBUG 9 *************
+E (17837) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17857) FCKX_SEQ: ************* DEBUG 10 *************
+E (17867) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17877) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17887) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17897) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17907) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17907) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17917) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17927) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+GATT procedure initiated: notify; att_handle=16
+E (17937) NICMIDI DRIVER: Entered MIDIOutDriver::ClosePort()
+OUT Port fckx_seq closed (open 2 times)
+E (17957) NICMIDI DRIVER: Exiting MIDIOutDriver::ClosePort()
+E (17957) SEQUENCER: track_states.size() 17
+                 ... Exiting from AdvancedSequencer::Stop()
+MIDISequencer::TickProc() 0 times
+sys_time_offset = 10121  sys_time = 16064
+I (17977) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage size: 3
+GATT procedure initiated: notify; att_handle=16
+Auto stopping the sequencer: StaticStopProc called at time 2370
+E (22987) task_wdt: Task watchdog got triggered. The following tasks did not reset the watchdog in time:
+E (22987) task_wdt:  - IDLE0 (CPU 0)
+E (22987) task_wdt: Tasks currently running:
+E (22987) task_wdt: CPU 0: pthread
+E (22987) task_wdt: CPU 1: IDLE1
+E (22987) task_wdt: Print CPU 0 (current core) backtrace
+
+
+Backtrace:0x400D6084:0x3FFBE3B0 0x40084705:0x3FFBE3D0 0x4000C04D:0x3FFCD7A0 0x400D6B52:0x3FFCD7C0 0x4017D95F:0x3FFCD7E0 0x400E4E0F:0x3FFCD800 0x401A25CD:0x3FFCD820 0x4017D8A1:0x3FFCD840 0x400D3068:0x3FFCD860 0x40093AB5:0x3FFCD880
+0x400d6084: task_wdt_isr at C:/Users/Fred/esp-idf/components/esp_common/src/task_wdt.c:187
+
+0x40084705: _xt_lowint1 at C:/Users/Fred/esp-idf/components/freertos/xtensa/xtensa_vectors.S:1105
+
+0x400d6b52: usleep at C:/Users/Fred/esp-idf/components/newlib/time.c:341
+
+0x4017d95f: std::this_thread::__sleep_for(std::chrono::duration<long long, std::ratio<1ll, 1ll> >, std::chrono::duration<long long, std::ratio<1ll, 1000000000ll> >) at /builds/idf/crosstool-NG/.build/HOST-x86_64-w64-mingw32/xtensa-esp32-elf/src/gcc/libstdc++-v3/src/c++11/thread.cc:204
+
+0x400e4e0f: MIDITimer::ThreadProc() at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0/thread:382
+ (inlined by) ?? at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0/thread:395
+ (inlined by) MIDITimer::ThreadProc() at c:\users\fred\esp_projects\midi-sequencer\fckx_sequencer_v29_new_rtmidi_nimbleout\build/../components/NiCMidi/src/timer.cpp:124
+
+0x401a25cd: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0\bits/invoke.h:60
+ (inlined by) ?? at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0\bits/invoke.h:95
+ (inlined by) ?? at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0/thread:244
+ (inlined by) ?? at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0/thread:253
+ (inlined by) std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() at c:\users\fred\.espressif\tools\xtensa-esp32-elf\esp-2020r3-8.4.0\xtensa-esp32-elf\xtensa-esp32-elf\include\c++\8.4.0/thread:196
+
+0x4017d8a1: execute_native_thread_routine at /builds/idf/crosstool-NG/.build/HOST-x86_64-w64-mingw32/xtensa-esp32-elf/src/gcc/libstdc++-v3/src/c++11/thread.cc:80
+
+0x400d3068: pthread_task_func at C:/Users/Fred/esp-idf/components/pthread/pthread.c:209 (discriminator 15)
+
+0x40093ab5: vPortTaskWrapper at C:/Users/Fred/esp-idf/components/freertos/xtensa/port.c:143
+
+
+E (22987) task_wdt: Print CPU 1 backtrace
+
+
+Backtrace:0x40081EAA:0x3FFBE9B0 0x40084705:0x3FFBE9D0 0x4000BFED:0x3FFBC060 0x40093CEA:0x3FFBC070 0x400D62D4:0x3FFBC090 0x400D62DF:0x3FFBC0C0 0x400D6395:0x3FFBC0E0 0x4009444D:0x3FFBC100 0x40093AB5:0x3FFBC120
+0x40081eaa: esp_crosscore_isr at C:/Users/Fred/esp-idf/components/esp32/crosscore_int.c:80
+
+0x40084705: _xt_lowint1 at C:/Users/Fred/esp-idf/components/freertos/xtensa/xtensa_vectors.S:1105
+
+0x40093cea: vPortExitCritical at C:/Users/Fred/esp-idf/components/freertos/xtensa/port.c:419
+
+0x400d62d4: esp_task_wdt_reset at C:/Users/Fred/esp-idf/components/esp_common/src/task_wdt.c:333
+
+0x400d62df: idle_hook_cb at C:/Users/Fred/esp-idf/components/esp_common/src/task_wdt.c:88
+
+0x400d6395: esp_vApplicationIdleHook at C:/Users/Fred/esp-idf/components/esp_common/src/freertos_hooks.c:51 (discriminator 1)
+
+0x4009444d: prvIdleTask at C:/Users/Fred/esp-idf/components/freertos/tasks.c:3386 (discriminator 1)
+
+0x40093ab5: vPortTaskWrapper at C:/Users/Fred/esp-idf/components/freertos/xtensa/port.c:143
+
+
+E (27987) task_wdt: Task watchdog got triggered. The following tasks did not reset the watchdog in time:
+E (27987) task_wdt:  - IDLE0 (CPU 0)
+E (27987) task_wdt: Tasks currently running:
+E (27987) task_wdt: CPU 0: pthread
+E (27987) task_wdt: CPU 1: IDLE1
+E (27987) task_wdt: Print CPU 0 (current core) backtrace

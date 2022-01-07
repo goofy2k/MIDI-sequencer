@@ -142,7 +142,7 @@ void MIDIOutDriver::OpenPort() {
 
 void MIDIOutDriver::ClosePort() {
     static const char *TAG = "NICMIDI DRIVER";
-    ESP_LOGE(TAG,"MIDIOutDriver::ClosePort()");
+    ESP_LOGE(TAG,"Entered MIDIOutDriver::ClosePort()");
     if (num_open == 1)
         port->closePort();
     if (num_open > 0) {
@@ -155,6 +155,7 @@ void MIDIOutDriver::ClosePort() {
     else
         std::cout << "OUT Port " << port->getPortName()
         << "Attempt to close an already closed port!" << std::endl;
+    ESP_LOGE(TAG,"Exiting MIDIOutDriver::ClosePort()");
 }
 
 
@@ -194,7 +195,7 @@ void MIDIOutDriver::AllNotesOff(int chan) {
 
 void MIDIOutDriver::OutputMessage(const MIDITimedMessage& msg) {
     static const char *TAG = "NICMIDI OutputMessage";
-    ESP_LOGI(TAG,"MIDIOutDriver::OutputMessage");    
+    ESP_LOGI(TAG,"MIDIOutDriver::OutputMessage size: %d", msg.GetLength() );    
 
     // MIDITimedMessage is good also for MIDIMessage
     MIDITimedMessage msg_copy(msg);
@@ -218,7 +219,7 @@ void MIDIOutDriver::OutputMessage(const MIDITimedMessage& msg) {
 
 
 void MIDIOutDriver::HardwareMsgOut(const MIDIMessage &msg) {
-        static const char *TAG = "NICMIDI HardwareMsgOut";
+    static const char *TAG = "NICMIDI HardwareMsgOut";
     ESP_LOGI(TAG,"MIDIOutDriver::HardwareMsgOut"); 
     if (!port->isPortOpen()) {
     ESP_LOGE(TAG,"MIDIOutDriver::HardwareMsgOut **** PORT IS NOT OPEN ****");    
@@ -390,7 +391,7 @@ bool MIDIInDriver::ReadMessage(MIDIRawMessage& msg, unsigned int n) {
 void MIDIInDriver::HardwareMsgIn(double time,
                                  std::vector<unsigned char>* msg_bytes,
                                  void* p) {
-    static const char *TAG = "HardwareMsgIn";                                
+    static const char *TAG = "HardwareMsgIn (driver.cpp)";                                
     ESP_LOGW(TAG,"A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)");                             
  
     for (int i = 0; i < msg_bytes->size(); i++) {
@@ -415,58 +416,58 @@ void MIDIInDriver::HardwareMsgIn(double time,
     
     MIDIInDriver* drv = static_cast<MIDIInDriver*>(p);
 
-    std::cout <<"Midi In PortName "<< drv->GetPortName() << " callback executed   ";
+    std::cout <<"Midi In PortName "<< drv->GetPortName() << " callback executed\n";
 
     if (!drv->port->isPortOpen() || msg_bytes->size() == 0) {
-        ESP_LOGE(TAG,"Something is wrong with the Midi In Port");
+        ESP_LOGE(TAG,"Something is wrong with the Midi In Port or the message");
         ESP_LOGE(TAG,"drv->port->isPortOpen() %d", drv->port->isPortOpen() );
         ESP_LOGE(TAG,"msg_bytes->size() %d", msg_bytes->size());
     return; }
 
-//obsolete repair for failing isPortOpen()
-/*
-    if (!drv->port->isPortOpen() || msg_bytes->size() == 0) {
-        ESP_LOGE(TAG,"Midi In Port is reported to be closed but we override exiting this call");
-        ESP_LOGE(TAG,"drv->port->isPortOpen() %d", drv->port->isPortOpen() );
-        ESP_LOGE(TAG,"msg_bytes->size() %d", msg_bytes->size());
-    }
 
-*/
     drv->in_mutex.lock();
     MIDITimedMessage msg;
     msg.SetStatus(msg_bytes->operator[](0));        // in msg_bytes[0] there is the status byte
     if (msg.IsSysEx()) {
+        ESP_LOGE(TAG,"RECEIVED SYSEX MESSAGE");
         msg.AllocateSysEx(msg_bytes->size());
         for (unsigned int i = 0; i < msg_bytes->size(); i++)
             msg.GetSysEx()->PutSysByte(msg_bytes->operator[](i));   // puts the 0xf0 also in the sysex buffer
     }
     else if (msg.GetStatus() == 0xff) { // this is a reset message, NOT a meta
+    ESP_LOGE(TAG,"RECEIVED RESET MESSAGE (0xff)");
     }
     else {
-        if (msg.GetLength() > 1)
+        if (msg.GetLength() > 1) {
             msg.SetByte1(msg_bytes->operator[](1));
-        if (msg.GetLength() > 2)
+            ESP_LOGE(TAG,"msg.GetLength() > 1 HANDLED");
+        }
+        if (msg.GetLength() > 2) {
             msg.SetByte2(msg_bytes->operator[](2)); // byte3 surely 0 in non-meta messages
+            ESP_LOGE(TAG,"msg.GetLength() > 2 HANDLED");
+        }  
     }
-
 
 
     if (!msg.IsNoOp()) {                            // now we have a valid message
     
-        ESP_LOGI(TAG,"MSG BEFORE PROCESSOR %s", msg.MsgToText().c_str()); 
-        if (drv->processor)
+        ESP_LOGI(TAG,"!msg.IsNoOp BEFORE PROCESSOR %s", msg.MsgToText().c_str()); 
+        if (drv->processor) {
             drv->processor->Process(&msg);          // process it with the in processor
 
-
-        ESP_LOGI(TAG,"MSG AFTER PROCESSOR %s", msg.MsgToText().c_str());                                            
-
+        ESP_LOGI(TAG,"!msg.IsNoOp AFTER PROCESSOR %s", msg.MsgToText().c_str());                                            
+        }  else {ESP_LOGI(TAG,"!msg.IsNoOp NO action by PROCESSOR required"); }
         drv->in_queue.PutMessage(MIDIRawMessage(msg,   // adds the message to the queue
                                                 MIDITimer::GetSysTimeMs(),
                                                 drv->port_id));
+        ESP_LOGE(TAG,"added message to in_queue");                                        
         std::cout << "Got message, queue size: " << drv->in_queue.GetLength() << std::endl;
     }
-    else
-        std::cout << "No message, queue size: " << drv->in_queue.GetLength() << std::endl;
+    else {
+        ESP_LOGE(TAG,"NO message NOTHING added to in_queue");     
+    std::cout << "No message, queue size: " << drv->in_queue.GetLength() << std::endl;
+    
+    }
     drv->in_mutex.unlock();
 }
 #endif  //FCKX

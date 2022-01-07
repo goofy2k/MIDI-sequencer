@@ -110,8 +110,8 @@ class MIDIThru : public MIDITickComponent {
         /// \cond EXCLUDED
         unsigned int            in_port;        // The in port id
         unsigned int            out_port;       // The out port id
-        char                    in_channel;     // The in channel (0 .. 15, -1 for any channel)
-        char                    out_channel;    // The out channel (0 .. 15, -1 for any channel)
+        signed char   /*FCKX!!*/                 in_channel;     // The in channel (0 .. 15, -1 for any channel)
+        signed char    /*FCKX!!*/                 out_channel;    // The out channel (0 .. 15, -1 for any channel)
 
         MIDIProcessor*          processor;      // The MIDIProcessor you can plug to the thru
         /// \endcond

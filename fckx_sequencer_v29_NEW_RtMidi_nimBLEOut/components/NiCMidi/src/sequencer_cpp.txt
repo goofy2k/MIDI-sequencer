@@ -28,8 +28,8 @@
 #include "esp_log.h" //FCKX
     static const char *TAG = "SEQUENCER"; 
 
-#define DEFAULTSTATICSTOPPROC
-#define DEFAULTPROC_LOCK_UNLOCK
+
+
 ////////////////////////////////////////////////////////////////////////////
 //              class MIDISequencerTrackState                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -1245,22 +1245,14 @@ void MIDISequencer::Start() {
 
 
 void MIDISequencer::Stop() {
-    static const char *TAG = "STOP_SEQUENCER"; 
-    ESP_LOGE(TAG,"Entered MIDISequencer::Stop");
+        static const char *TAG = "SEQUENCER"; 
+                ESP_LOGE(TAG,"entered");
     if (IsPlaying()) {
         ESP_LOGE(TAG,"IsPlaying()");
         //NiCMidi 211222
         // stop_mutex is acquired when Stop() is called by TickProc autostopping (in a separate thread)
         // so no overlap of two Stop()
-
-        #ifdef DEFAULTPROC_LOCK_UNLOCK
-        ESP_LOGE(TAG,"DEFAULTPROC_LOCK_UNLOCK call proc_lock.lock()"); 
-        proc_lock.lock();
-        #else
-        ESP_LOGE(TAG,"non-DEFAULTPROC_LOCK_UNLOCK bypass proc_lock.lock()"); 
-        #endif
-        
-              
+        proc_lock.lock();      
         ESP_LOGE(TAG,"after proc_lock.lock()");  
         std::cout << "\t\tEntered in MIDISequencer::Stop() ..." << std::endl;
         // waits until the timer thread has stopped
@@ -1269,7 +1261,7 @@ void MIDISequencer::Stop() {
         // resets the autostop flag
         ESP_LOGE(TAG,"state.playing_status"); 
         state.playing_status &= ~AUTO_STOP_PENDING;
-        ESP_LOGE(TAG,"state.iterator"); 
+                ESP_LOGE(TAG,"state.iterator"); 
         state.iterator.SetTimeShiftMode(time_shift_mode);
         ESP_LOGE(TAG,"MIDIManager::AllNotesOff()"); 
         MIDIManager::AllNotesOff();
@@ -1280,13 +1272,8 @@ void MIDISequencer::Stop() {
                       MIDISequencerGUIEvent::GROUP_TRANSPORT_STOP);
                                  
         std::cout << "\t\t ... Exiting from MIDISequencer::Stop()" << std::endl;
-        
-        #ifdef DEFAULTPROC_LOCK_UNLOCK
-        ESP_LOGE(TAG,"DEFAULTPROC_LOCK_UNLOCK call proc_lock.unlock()"); 
+        ESP_LOGE(TAG,"proc_lock.unlock()"); 
         proc_lock.unlock();
-        #else
-        ESP_LOGE(TAG,"non-DEFAULTPROC_LOCK_UNLOCK bypass proc_lock.unlock()"); 
-        #endif    
  }
 }
 
@@ -1355,10 +1342,10 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
 
 // NEW VERSION
 void MIDISequencer::TickProc(tMsecs sys_time) {
-    static const char *TAG = "SEQUENCER_TICKPROC"; 
     float next_event_time = 0.0;
     int msg_track;
     MIDITimedMessage msg;
+
     proc_lock.lock();
     //std::cout << "MIDISequencer::TickProc; sys_time_offset " << sys_time_offset << " sys_time " << sys_time
     //     << " dev_time_offset " << dev_time_offset << std::endl;
@@ -1446,15 +1433,7 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
         //<< "GetNextEventTime() returned " << retval << std::endl;
         state.playing_status |= AUTO_STOP_PENDING;      // must be here, not in StaticStopProc
         times = 0;      // only for log, comment if you don't need //FCKX!!
-
-
-       #ifdef DEFAULTSTATICSTOPPROC
-       ESP_LOGE(TAG,"DEFAULTSTATICSTOPPROC call std::thread(StaticStopProc, this).detach()");
-       std::thread(StaticStopProc, this).detach();
-       #else
-       ESP_LOGE(TAG,"non-DEFAULTSTATICSTOPPROC call Stop()");
-       Stop(); //FCKX!
-       #endif
+        std::thread(StaticStopProc, this).detach();
     }
 
     proc_lock.unlock();

@@ -1,0 +1,66 @@
+GATT procedure initiated: notify; att_handle=16
+I (35049) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+Calling recorder.Stop()
+                Entered in MIDIRecorder::Stop() ...
+GUI EVENT: Transport MEAS 6 BEAT 3
+MIDISequencer::TickProc() 1600 times
+sys_time_offset = 19863  sys_time = 33853
+I (35539) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (35549) RECORDER_FCKX: Entered MIDIRecorder::Stop()
+E (35549) RECORDER_FCKX: going to call MIDITickComponent::Stop()
+I (35549) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7
+GUI EVENT: Transport MEAS 7 BEAT 0
+I (36039) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (36049) RECORDER_FCKX: going to call MIDIManager::CloseInPorts()
+I (36049) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+IN Port GUI EVENT: Transport MEAS 7 BEAT 1
+MIDISequencer::TickProc() 1700 times
+sys_time_offset = 19863  sys_time = 34853
+I (36539) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+MQTT_In closed (1 times)
+I (36549) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (36549) RECORDER_FCKX: going to call seq->MIDISequencer::Stop()
+GUI EVENT: Transport MEAS 7 BEAT 2
+I (37039) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (37049) SEQUENCER: entered
+I (37049) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7 BEAT 3
+MIDISequencer::TickProc() 1800 times
+sys_time_offset = 19863  sys_time = 35853
+I (37539) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+E (37549) SEQUENCER: IsPlaying()
+I (37549) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8
+GUI EVENT: Transport MEAS 8 BEAT 0
+I (38039) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (38049) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8 BEAT 1
+MIDISequencer::TickProc() 1900 times
+sys_time_offset = 19863  sys_time = 36853
+I (38539) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (38549) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8 BEAT 2
+I (39039) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+I (39049) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8 BEAT 3
+MIDISequencer::TickProc() 2000 times
+sys_time_offset = 19863  sys_time = 37854
+I (39539) NICMIDI OutputMessage: MIDIOutDriver::OutputMessage

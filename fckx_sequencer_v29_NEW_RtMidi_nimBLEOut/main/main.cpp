@@ -1,6 +1,6 @@
-//#define TEST_SEQUENCER //"succesfully" looping twinkle twinkle
+#define TEST_ADVANCEDSEQUENCER_NOINPUT //"succesfully" looping twinkle twinkle
 //#define TEST_RECORDING   //in development
-#define THRU     //input and output
+//#define THRU     //input and output
 
 //CONSIDER TO RENAME BLEDevice etc to NimBLEDevice etc. But test carefully when you have running code!
 //tmove references to the old jdks lib
@@ -36,6 +36,15 @@
 #include "mqtt_client.h"
 
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
+
+
+//#define DEBUGON
+#ifdef DEBUGON
+//determine hardware concurrency, for debugging only
+// https://en.cppreference.com/w/cpp/thread/thread/hardware_concurrency
+#include <iostream>
+#include <thread>
+#endif
 
 /* NiCMidi examples             MIDI     MIDI      COMMAND       FILE     FILE            WINDOWS
                                 OUTPUT   INPUT     CONSOLE       READ     WRITE    EDIT    GUI
@@ -1385,39 +1394,43 @@ int main_test_component() {
 
 void main_proposal( void ) {
     ESP_LOGE(TAG,"Entering main_proposal of TEST_RECORDING example");
-ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING");
-MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
-AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
-MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
-
-//create a waiting loop for availability of port(s)
-//port->isPortOpen())
-/*
-while (true) {
-ESP_LOGE(TAG,"TEST IF PORT IS OPEN %d",MIDIManager::GetOutDriver(0)->IsPortOpen());
-
-}
-*/
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING");
+    MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+    AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+    MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+    MIDIManager::OpenInPorts();          //FCKX!! 220103 must be closed at end
+    MIDIManager::OpenOutPorts();            //must be closed at end
+ 
+    MIDITimer::Wait(5000); 
+    
+    //could create a waiting loop for availability of port(s)
+    //port->isPortOpen())
+    /*
+    while (true) {
+    ESP_LOGE(TAG,"TEST IF PORT IS OPEN %d",MIDIManager::GetOutDriver(0)->IsPortOpen());
+    }
+    */
 
     ESP_LOGE(TAG,"PROCEEDING with TEST_RECORDING example (a connection should be available here, because tested before)");
 
     MIDIManager::AddMIDITick(&recorder);
     //text_n.SetSequencer(&sequencer);      // This is already called by AdvancedSequencer constructor
 
-    MIDIClockTime t = sequencer.MeasToMIDI(5,0); //endMeasure, endBeat record the first 6 beats
+    MIDIClockTime t = sequencer.MeasToMIDI(15,0); //endMeasure, endBeat record the first 6 beats
     recorder.SetEndRecTime(t);
     recorder.EnableTrack(1); //FCKX
+
     recorder.SetTrackRecChannel(1,0);      // Can you set this? YES Otherwise set a specific channel
     //recorder.SetTrackRecChannel(1,-1);  
     recorder.Start();
     std::cout << "Recorder started\n";
    
-    MIDITimer::Wait(15000);                 // Waits 15 secs: play something to record (remember to match
+    MIDITimer::Wait(60000);                 // Waits 15 secs: play something to record (remember to match
                                             // the input channel with the one set in SetTrackRecChannel)
     std::cout << "Calling recorder.Stop()\n";
     recorder.Stop();
-    std::cout << "Recorder stopped\n";
-    MIDITimer::Wait(5000); 
+    std::cout << "Recorder stopped\n";      //never reached after calling recorder.Stop()
+    MIDITimer::Wait(1000); 
     std::cout << "Proceeding with next steps\n";
     sequencer.GoToZero();                   // rewinds
     sequencer.Start();
@@ -1429,7 +1442,7 @@ ESP_LOGE(TAG,"TEST IF PORT IS OPEN %d",MIDIManager::GetOutDriver(0)->IsPortOpen(
 #endif
 
 
-#ifdef TEST_SEQUENCER
+#ifdef TEST_ADVANCEDSEQUENCER_NOINPUT
 
 /*
  *   Example file for NiCMidi - A C++ Class Library for MIDI
@@ -1517,10 +1530,13 @@ note_data track3[] = {
 //////////////////////////////////////////////////////////////////
 
 int test_main( ) {
-    ESP_LOGE(TAG,"Entering test_main of TEST_SEQUENCER example");
-        ESP_LOGE(TAG,"************* DEBUG -4 *************");
+    ESP_LOGE(TAG,"Entering test_main of test_advancedsequencer_noinput example");
+    ESP_LOGE(TAG,"************* DEBUG -4 *************");
     AdvancedSequencer sequencer; //was under GLOBALS, see above
     // gets the address of the sequencer MIDIMultiTrack, so we can edit it
+   // sequencer.SetMIDIThruEnable(1);  //required for sending control messages 
+	
+    MIDIManager::OpenOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
     
     //create a waiting loop for availability of port(s) NOT NECESSARY
     //it is integrated in the nimBLEdriver, that is called by Manager on instantiation of sequencer 
@@ -1528,7 +1544,7 @@ int test_main( ) {
     //int concount = MIDIManager::GetOutDriver(0)->IsPortOpen();
     ESP_LOGE(TAG,"WAITING A WHILE FOR SEQUENCER INITS (INCLUDING NIMBLE) TO FINISH"); 
     ESP_LOGE(TAG,"SHOULD BE DONE INSIDE THIS INIT, BY DETECTING PRESENCE OF CONNECTION WITH SYNTH");     
-    MIDITimer::Wait(5000); //wait a while for a stable nimBLE connection
+    MIDITimer::Wait(1000); //wait a while for a stable nimBLE connection
     ESP_LOGE(TAG,"NIMBLE CONNECTION SHOULD BE OK HERE"); 
 
     //while(true){   //get instatiation of tracks , trk , msg outside the loop
@@ -1538,7 +1554,7 @@ int test_main( ) {
     MIDITrack* trk;
     
     ESP_LOGE(TAG,"READY TO CREATE TRACK CONTENT"); 
-        ESP_LOGE(TAG,"************* DEBUG -1 *************");
+    ESP_LOGE(TAG,"************* DEBUG -1 *************");
     // the constructor creates an undefined (NoOp) message with time 0
     MIDITimedMessage msg;
     int masterTrack = 0;
@@ -1548,9 +1564,11 @@ int test_main( ) {
     //Clear
     //GetNumEvents
     ESP_LOGE(TAG,"************* DEBUG 0 *************");
-while(true){
-    // now trk points to the master track (track 0 of the multitrack)
+    //while(true){
     
+    //MIDIManager::OpenOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
+
+    // now trk points to the master track (track 0 of the multitrack)
     trk = tracks->GetTrack(masterTrack);
     ESP_LOGE(TAG,"*************BEFORE CLEAN trk->GetNumEvents() masterTrack %d %d", masterTrack, trk->GetNumEvents());
     trk->Clear(); //clear to prevent multiple inserts when looping
@@ -1563,19 +1581,20 @@ while(true){
     trk->InsertEvent(msg);          // inserts the key signature (CM)
     msg.SetTempo(200.0);
     trk->InsertEvent(msg);          // inserts the tempo
+    
+    
     ESP_LOGE(TAG,"************* DEBUG 1 *************");
+    
+    
     // now trk points to track 1, we'll use it for MIDI channel 1
     trk = tracks->GetTrack(songTrack);
     ESP_LOGE(TAG,"*************BEFORE CLEAN trk->GetNumEvents() songTrack %d %d", songTrack, trk->GetNumEvents());
     trk->Clear(); //clear to prevent multiple inserts when looping
     ESP_LOGE(TAG,"*************AFTER CLEAN trk->GetNumEvents() songTrack %d %d", songTrack, trk->GetNumEvents());
 
-       // now trk points to track 1, we'll use it for MIDI channel 1
+    // now trk points to track 1, we'll use it for MIDI channel 1
     trk = tracks->GetTrack(1);
-    /* //FCKX
-    unsigned char channel = 1;      // MIDI channel 1
-    */
-     unsigned char channel = 0;      // MIDI channel 1 //Nic
+    unsigned char channel = 0;      // MIDI channel 1 //Nic
      
     msg.SetProgramChange(channel, 11);
     trk->InsertEvent(msg);          // inserts the program change at time 0
@@ -1591,12 +1610,17 @@ while(true){
     ESP_LOGE(TAG,"************* DEBUG 3 *************");
     // When you edit the AdvancedSequencer multitrack you must update the
     // sequencer parameters before playing: this does the job
-    sequencer.UpdateStatus();
+ sequencer.SetMIDIThruEnable(true); //enable to pass thru control events
+ sequencer.UpdateStatus();
     ESP_LOGE(TAG,"************* DEBUG 4 *************");
+    
+    
     // now we can play track 1 only
     cout << "Playing track 1 ..." << endl;
     sequencer.GoToZero();
-    sequencer.Play();
+//sequencer.SetPlayMode(MIDISequencer::PLAY_BOUNDED);    
+//sequencer.SetRepeatPlay(1,3,0);  
+sequencer.Play();
         ESP_LOGE(TAG,"************* DEBUG 5 *************");
     while (sequencer.IsPlaying()) {
         MIDITimer::Wait(50); };
@@ -1605,10 +1629,10 @@ while(true){
 
 // THE REST IS COMMENTED OUT. IF YOU SUCCEED CAN UNCOMMENT AND PLAY OTHER TWO TRACKS
 
-    #define BASS
-    #ifdef BASS
+#define BASS
+#ifdef BASS
     // now do the same for track 2 (bass, channel 2)
-        ESP_LOGE(TAG,"************* DEBUG 7 *************");
+    ESP_LOGE(TAG,"************* DEBUG 7 *************");
     trk = tracks->GetTrack(2);
     channel = 1;  //was 1
     ESP_LOGE(TAG,"************* DEBUG 8 *************");
@@ -1623,15 +1647,16 @@ while(true){
         msg.SetTime(track2[i].time);
         trk->InsertNote(msg, track2[i].length);
     }
-        ESP_LOGE(TAG,"************* DEBUG 10 *************");
-    #endif //BASS
+    ESP_LOGE(TAG,"************* DEBUG 10 *************");
+    sequencer.UpdateStatus(); //FCKX check check    
+#endif //BASS
 
-  //  sequencer.UpdateStatus(); //FCKX check check
+
   //  sequencer.GoToZero();
 
 
-    //#define DRUMS
-    #ifdef DRUMS
+//#define DRUMS
+#ifdef DRUMS
     // ... and 3 (percussion, channel 10)
         ESP_LOGE(TAG,"************* DEBUG 11 *************");
     trk = tracks->GetTrack(3);
@@ -1648,9 +1673,11 @@ while(true){
         msg.SetTime(track3[i].time);
         trk->InsertNote(msg, track3[i].length);
     }
-    #endif DRUMS
     
-    sequencer.UpdateStatus(); //FCKX check check
+     sequencer.UpdateStatus(); //FCKX check check 
+#endif DRUMS
+    
+
     //sequencer.GoToZero();
     ESP_LOGE(TAG,"************* DEBUG 12 *************");
     #define PLAYSECOND
@@ -1659,7 +1686,8 @@ while(true){
    // while (true) {   
         cout << "Playing 3 tracks ..." << endl;
         sequencer.GoToZero();
-        sequencer.Play();
+//SetRepeatPlay(1,3,0);        
+sequencer.Play();
         while (sequencer.IsPlaying())
             MIDITimer::Wait(50);
         cout << "    Stop Playing 3 tracks" << endl;
@@ -1667,14 +1695,16 @@ while(true){
     
     #endif //PLAYSECOND
     //sequencer.GoToZero();
+   //    MIDIManager::CloseOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
 //
-}//while true
+//}//while true
+    MIDIManager::CloseOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
     ESP_LOGE(TAG,"Exiting test_main example");
     return EXIT_SUCCESS;
 }
 
 
-#endif // TEST_SEQUENCER
+#endif // TEST_ADVANCEDSEQUENCER_NOINPUT
 
 
 
@@ -1700,7 +1730,10 @@ void app_main(void) {
 
 //The next test is to see the server appear in a network sniffer (nRF Connect) 
 //Until we implemented operation of the nimBLEOutdriver, the calls to NicMidi are commented  
-
+#ifdef DEBUGON
+    unsigned int n = std::thread::hardware_concurrency();
+    std::cout << n << " concurrent threads are supported.\n";
+#endif
     
     static const char *TAG = "APP_MAIN";   
     
@@ -1758,7 +1791,7 @@ ESP_LOGV - verbose (highest)
     //MidiOutNimBLE nimBLEOutdriver; //init nimBLEOut connection
 
     ESP_LOGE(TAG,"WAITING A WHILE FOR MQTT INITS TO FINISH");    
-    MIDITimer::Wait(5000); 
+    MIDITimer::Wait(1000); 
 
    
     #ifdef TESTMESSAGE
@@ -1808,8 +1841,8 @@ ESP_LOGV - verbose (highest)
     *    
     ***********************************************************************************/
 
-#ifdef TEST_SEQUENCER
-    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_SEQUENCER");
+#ifdef TEST_ADVANCEDSEQUENCER_NOINPUT
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_ADVANCEDSEQUENCER_NOINPUT");
  
  /*
  uint8_t chipid[6];esp_efuse_mac_get_custom(chipid);
@@ -1843,9 +1876,10 @@ ESP_LOGV - verbose (highest)
 
 int success_int = test_main(); //NiCMidi 211222
  ESP_LOGE(TAG,"Exited test_main successfully %d", success_int);
+ ESP_LOGW(TAG,"END OF TEST_ADVANCEDSEQUENCER_NOINPUT"); 
 while (true) {
  
-ESP_LOGW(TAG,"END OF TEST_SEQUENCER"); 
+//idle loop
 vTaskDelay(500 / portTICK_PERIOD_MS);
  
 };    

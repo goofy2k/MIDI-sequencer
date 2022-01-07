@@ -24,9 +24,7 @@
 #include "../include/recorder.h"
 #include "../include/manager.h"
 #include "esp_log.h" //FCKX
-static const char *TAG = "RECORDER"; //FCKX
-
-#define DEFAULTCLOSEINPORTS
+static const char *TAG = "RECORDER_FCKX"; //FCKX
 
 ////////////////////////////////////////////////////////////////////////////
 //                         class RecNotifier                              //
@@ -301,48 +299,29 @@ void MIDIRecorder::Start() {
 
 
 void MIDIRecorder::Stop() {
-    static const char *TAG = "STOP_RECORDER"; 
     if (IsPlaying()) {
         std::cout << "\t\tEntered in MIDIRecorder::Stop() ..." << std::endl;
-        ESP_LOGE(TAG,"Entered MIDIRecorder::Stop()");
         if (rec_on.load() == true) {
-            ESP_LOGE(TAG,"rec_on.load() == true");
             MIDISequencerGUIEvent ev = MIDISequencerGUIEvent(MIDISequencerGUIEvent::GROUP_RECORDER,
                                                              0,
                                                              MIDISequencerGUIEvent::GROUP_RECORDER_STOP);
             notifier.Notify(ev);
             rec_on.store(false);
         }
-        ESP_LOGE(TAG,"going to call MIDITickComponent::Stop()");
         MIDITickComponent::Stop();
-        
-
-        #ifdef DEFAULTCLOSEINPORTS
-        ESP_LOGE(TAG,"DEFAULTCLOSEINPORTS call MIDIManager::CloseInPorts()");
         MIDIManager::CloseInPorts();
-        #else
-        ESP_LOGE(TAG,"non-DEFAULTCLOSEINPORTS MIDIManager::CloseInPorts()");    
-        #endif
-        
-        ESP_LOGE(TAG,"going to call seq->MIDISequencer::Stop()");
         seq->MIDISequencer::Stop();         //AdvancedSequencer calls GoToMeasure()
-        ESP_LOGE(TAG,"going to call seq->SetCountIn(false)");
         seq->SetCountIn(false);
-        ESP_LOGE(TAG,"going to call ResetSeqNotifier()");
         ResetSeqNotifier();
-        ESP_LOGE(TAG,"for (unsigned int i = 0; i < en_tracks.size()");
         for (unsigned int i = 0; i < en_tracks.size(); i++) {
             if (en_tracks[i]) {
                 tracks->GetTrack(i)->CloseOpenEvents(rec_start_time, rec_end_time);
                 seq_tracks->SetTrack(tracks->GetTrack(i), i);
             }
         }
-        ESP_LOGE(TAG,"seq->UpdateStatus()");
         seq->UpdateStatus();
-        ESP_LOGE(TAG,"seq->UpdateStatus()");
         seq->SetPlayMode(old_seq_mode);
         //stops the sequencer on a beat
-        ESP_LOGE(TAG,"seq->GoToMeasure(seq->GetCurrentMeasure(), seq->GetCurrentBeat()");
         seq->GoToMeasure(seq->GetCurrentMeasure(), seq->GetCurrentBeat());
         std::cout << "\t\t ... Exiting from MIDIRecorder::Stop()" << std::endl;
     }
@@ -440,7 +419,6 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
     //if (!(times % 100))
         //std::cout << "MIDIRecorder::TickProc() " << times << " times" << std::endl;
     //ESP_LOGW(TAG,"TICKPROC"); //FCKX
-    
     // the sequencer is counting in, nothing to do for the recorder
     if (seq->GetCountInPending())
         return;
@@ -466,42 +444,180 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
         //float clocks_per_ms = (tempobpm * multitrack->GetClksPerBeat()) / 60000.0;
 
         // collect messages incoming from MIDI in ports
-        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++) {                                                                 
+        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++) {
+                                                                 
             if (en_ports.count(i) == 0)
                 continue;
             MIDIInDriver* port = MIDIManager::GetInDriver(i);
-            port->LockQueue();                                                                     
-            for (unsigned int j = 0, out_count = 0; j < port->GetQueueSize() && out_count < 100; j++, out_count++) {                                                             
-                port->ReadMessage(rmsg, j);                                                         
-                MIDITimedMessage msg(rmsg.msg);                                      
+            port->LockQueue();
+                                                                     
+            for (unsigned int j = 0, out_count = 0; j < port->GetQueueSize() && out_count < 100; j++, out_count++) {
+                                                                
+                port->ReadMessage(rmsg, j);
+                                                            
+                MIDITimedMessage msg(rmsg.msg);
+                                              
                 msg.SetTime(cur_time);
-                if (msg.IsChannelMsg()) {                                                                                                                             
+                if (msg.IsChannelMsg()) {
+                                                                                                                   
+                                                         
                     // search among the tracks which can accept the message
-                    signed char ch1 = msg.GetChannel();                                                               
-                    for (i = 0; i < tracks->GetNumTracks(); i++) {                                                               
-                        if (!en_tracks[i]) continue;                                                                
-                        signed char ch2 = tracks->GetTrack(i)->GetRecChannel();                                                        
-                        if (ch1 == ch2 || ch2 == -1) {  //FCKX!! should be -1
-                            // insert the event into the track
-                            tracks->InsertEvent(i, msg);
-                            //you should see it at every note you record
-                            std::cout << "Message recorder on track " << i << std::endl; //FCKX!!
-                        }   
-                        // tell the driver to send this message                                                                      
+                    signed char ch1 = msg.GetChannel();
+                                                               
+                    for (i = 0; i < tracks->GetNumTracks(); i++) {
+                                                               
+                        if (!en_tracks[i]) continue;
+                                                                
+                        signed char ch2 = tracks->GetTrack(i)->GetRecChannel();
+                                                                                
+  // if (ch1 == ch2 || ch2 == -1)                                                                
+if (ch1 == ch2 || ch2 == 255) 
+
+{  // try to change -1 with 255
+                                // I suspect a mismatch between signed and unsigned char in MIDIRecorder::TickProc.
+            // insert the event into the track
+            tracks->InsertEvent(i, msg);
+            //you should see it at every note you record
+            std::cout << "Message recorder on track " << i << std::endl;
+       }
+                                     
+
+
+                                
+                                
+                                
+                              
+                        // tell the driver to send this message
+                                                                                               
                         MIDIManager::GetOutDriver(tracks->GetTrack(i)->GetOutPort())->OutputMessage(msg);
-                    }            
+                    }
+                                                               
+
+  
+                                                                                                                                    
+                                                       
+                                               
+                    
+             
                     //if ((*en_ports[i])[ch] != 0)
                     //    (*en_ports[i])[ch]->PushEvent(msg);
-                    // std::cout << "Added MIDI channel message to track " << std::endl;   
+                    // std::cout << "Added MIDI channel message to track " << std::endl;
+                                                                                      
+                    
+                    
                 }
                 else
                     tracks->GetTrack(0)->PushEvent(msg);
+                                          
+                                                                                     
+                                                               
+                 
+
             }
             port->UnlockQueue();
                                                                                               
         }
     }
-   
+    
+    #ifdef BLOCKAGAIN
+    if (cur_time >= rec_start_time && cur_time < rec_end_time) {    // TODO or <= rec_end_time ??
+     ESP_LOGV(TAG,"TICKPROC WITHIN TIME WINDOW"); //FCKX 
+ // if this is the first time send a message to the GUI
+        if (rec_on.load() == false) {
+            ESP_LOGW(TAG,"TICKPROC rec_on.load() == false "); //FCKX 
+            MIDISequencerGUIEvent ev(MIDISequencerGUIEvent::GROUP_RECORDER,
+                                     0,
+                                     MIDISequencerGUIEvent::GROUP_RECORDER_START);
+            notifier.Notify(ev);
+            rec_on.store(true);
+        }
+        MIDIRawMessage rmsg;
+
+        //tMsecs cur_time = sys_time - sys_time_offset + rec_time_offset;
+        //float clocks_per_ms = (tempobpm * multitrack->GetClksPerBeat()) / 60000.0;
+
+        // collect messages incoming from MIDI in ports
+        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++) {
+            ESP_LOGI(TAG,"TICKPROC Handle MidiIn %u", i); //FCKX 
+            if (en_ports.count(i) == 0)
+                continue;
+            MIDIInDriver* port = MIDIManager::GetInDriver(i);
+            port->LockQueue();
+            ESP_LOGI(TAG,"TICKPROC port->LockQueue() %u", i); //FCKX 
+            for (unsigned int j = 0, out_count = 0; j < port->GetQueueSize() && out_count < 100; j++, out_count++) {
+                ESP_LOGW(TAG,"port->ReadMessage %u", j); //FCKX 
+                port->ReadMessage(rmsg, j);
+                //convert MIDIRawMessage to MIDITimedMessage
+                MIDITimedMessage msg(rmsg.msg);
+                //set time of MIDITimedMessage
+                msg.SetTime(cur_time); //where is cur_time coming from?
+                if (msg.IsChannelMsg()) {
+                //MIDIManager::GetOutDriver(tracks->GetTrack(0)->GetOutPort())->OutputMessage(msg); //temp code    
+                 #define BLOCKIT
+                 #ifdef BLOCKIT
+                 
+               //      ESP_LOGW(TAG,"IsChannelMsg() TRUE"); //FCKX
+                    // search among the tracks which can accept the message
+                    char ch1 = msg.GetChannel();
+               //     ESP_LOGW(TAG,"msg.GetChannel ch1: %u",ch1);
+                    for (i = 0; i < tracks->GetNumTracks(); i++) {
+               //         ESP_LOGW(TAG,"LOC1 track %d",i); //FCKX
+                        if (!en_tracks[i]) continue;
+               //          ESP_LOGW(TAG,"LOC2 track %d",i); //FCKX
+                        char ch2 = tracks->GetTrack(i)->GetRecChannel();
+                //         ESP_LOGW(TAG,"GetTrack(i)->GetRecChannel ch2: %u",ch2);
+                //          ESP_LOGW(TAG,"LOC3 track %d",i); //FCKX
+                       if (ch1 == ch2 || ch2 == -1) {
+                //        //  if (true)
+                 //           ESP_LOGW(TAG,"LOC4 track %d",i); //FCKX
+                            // insert the event into the track
+                //            ESP_LOGW(TAG,"insert the event into the track %u", i); //FCKX
+        
+      tracks->InsertEvent(i, msg);
+        /*
+                if (tracks->InsertEvent(i, msg)) {
+                                
+                                ESP_LOGW(TAG,"tracks->InsertEvent(i, msg) TRUE");
+                            } else {
+                                
+                                while (1) {
+                                  ESP_LOGW(TAG,"Insert not successful"); //FCKX   
+                                    
+                                }
+                                
+                     */           
+                                
+                            }
+                            // tell the driver to send this message
+                        //    ESP_LOGW(TAG,"tell the driver to send this message %u", i); //FCKX 
+                            MIDIManager::GetOutDriver(tracks->GetTrack(i)->GetOutPort())->OutputMessage(msg);
+                        }
+                        ESP_LOGW(TAG,"LOC5 track %d",i); //FCKX
+
+/*
+../components/NiCMidi/src/recorder.cpp:457:47: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+                         if (ch1 == ch2 || ch2 == -1) {
+                         */                   }
+                    
+             
+                    //if ((*en_ports[i])[ch] != 0)
+                    //    (*en_ports[i])[ch]->PushEvent(msg);
+                    // std::cout << "Added MIDI channel message to track " << std::endl;
+                    //ESP_LOGW(TAG,"msg.IsChannelMsg() commented code %u", j); //FCKX 
+              #endif
+                    
+                }
+                else 
+                    tracks->GetTrack(0)->PushEvent(msg);
+
+
+            }
+            port->UnlockQueue();
+        //    MIDIManager::GetInDriver(tracks->GetTrack(0)->GetInPort())->FlushQueue(); //FCKX
+        }
+    }
+    #endif //BLOCKAGAIN
+    
     // we are after the rec end time
     else if (cur_time >= rec_end_time) {
         ESP_LOGI(TAG,"TICKPROC OUTSIDE TIME WINDOW"); //FCKX 
