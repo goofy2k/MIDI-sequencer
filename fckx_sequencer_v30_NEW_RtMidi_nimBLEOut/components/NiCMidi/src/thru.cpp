@@ -204,20 +204,20 @@ void MIDIThru::TickProc(tMsecs sys_time_)
             
         }
   */
-        ESP_LOGE(TAG,"MIDIThru::TickProc msg.Status() %u 0x%X", msg.GetStatus(), msg.GetStatus());
-        ESP_LOGE(TAG,"MIDIThru::TickProc msg.GetByte1() %u 0x%X", msg.GetByte1(), msg.GetByte1());
-        ESP_LOGE(TAG,"MIDIThru::TickProc msg.GetByte2() %u 0x%X", msg.GetByte2(), msg.GetByte2());  
-        ESP_LOGE(TAG,"MIDIThru::TickProc msg.GetByte3() %u 0x%X", msg.GetByte3(), msg.GetByte3()); 
+        ESP_LOGE(TAG,"msg.Status() %u 0x%X", msg.GetStatus(), msg.GetStatus());
+        ESP_LOGE(TAG,"msg.GetByte1() %u 0x%X", msg.GetByte1(), msg.GetByte1());
+        ESP_LOGE(TAG,"msg.GetByte2() %u 0x%X", msg.GetByte2(), msg.GetByte2());  
+        ESP_LOGE(TAG,"msg.GetByte3() %u 0x%X", msg.GetByte3(), msg.GetByte3()); 
         /*
-        std::cout << "MIDIThru::TickProc msg.GetLength()"<< msg.GetLength() <<"\n"; 
-        std::cout << "MIDIThru::TickProc msg.GetStatus()"<< msg.GetStatus() <<"\n"; 
-        std::cout << "MIDIThru::TickProc msg.GetByte1()"<< msg.GetByte1() <<"\n"; 
-        std::cout << "MIDIThru::TickProc msg.GetByte2()"<< msg.GetByte2() <<"\n"; 
-        std::cout << "MIDIThru::TickProc msg.GetByte3()"<< msg.GetByte3() <<"\n";          
+        std::cout << "msg.GetLength()"<< msg.GetLength() <<"\n"; 
+        std::cout << "msg.GetStatus()"<< msg.GetStatus() <<"\n"; 
+        std::cout << "msg.GetByte1()"<< msg.GetByte1() <<"\n"; 
+        std::cout << "msg.GetByte2()"<< msg.GetByte2() <<"\n"; 
+        std::cout << "msg.GetByte3()"<< msg.GetByte3() <<"\n";          
         */
-        //ESP_LOGE(TAG,"MIDIThru::TickProc msg.IsChannelMsg() %d", msg.IsChannelMsg()); 
+        //ESP_LOGE(TAG,"msg.IsChannelMsg() %d", msg.IsChannelMsg()); 
 
-        ESP_LOGE(TAG,"MIDIThru::TickProc msg.IsChannelMsg() %d", msg.IsChannelMsg()); 
+        ESP_LOGE(TAG,"msg.IsChannelMsg() %d", msg.IsChannelMsg()); 
    
         if (msg.IsChannelMsg()) {
                 ESP_LOGE(TAG,"in_channel %d out_channel %d msg.GetChannel() %d ",in_channel, out_channel, msg.GetChannel());     

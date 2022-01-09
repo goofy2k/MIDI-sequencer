@@ -504,7 +504,7 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
    
     // we are after the rec end time
     else if (cur_time >= rec_end_time) {
-        ESP_LOGI(TAG,"TICKPROC OUTSIDE TIME WINDOW"); //FCKX 
+       // ESP_LOGI(TAG,"TICKPROC OUTSIDE TIME WINDOW"); //FCKX 
         // if this is the first time send a message to the GUI
         if (rec_on.load() == true) {
             MIDISequencerGUIEvent ev(MIDISequencerGUIEvent::GROUP_RECORDER,

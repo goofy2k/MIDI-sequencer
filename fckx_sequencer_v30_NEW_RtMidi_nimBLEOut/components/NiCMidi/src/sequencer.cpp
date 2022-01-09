@@ -1247,6 +1247,7 @@ void MIDISequencer::Start() {
 void MIDISequencer::Stop() {
     static const char *TAG = "STOP_SEQUENCER"; 
     ESP_LOGE(TAG,"Entered MIDISequencer::Stop");
+    std::cout << "\t\tEntered in MIDISequencer::Stop() [moved up to the real entry]..." << std::endl;
     if (IsPlaying()) {
         ESP_LOGE(TAG,"IsPlaying()");
         //NiCMidi 211222
@@ -1256,14 +1257,13 @@ void MIDISequencer::Stop() {
         #ifdef DEFAULTPROC_LOCK_UNLOCK
         ESP_LOGE(TAG,"DEFAULTPROC_LOCK_UNLOCK call proc_lock.lock()"); 
         proc_lock.lock();
+        ESP_LOGE(TAG,"after proc_lock.lock()");  
+        
         #else
         ESP_LOGE(TAG,"non-DEFAULTPROC_LOCK_UNLOCK bypass proc_lock.lock()"); 
         #endif
-        
-              
-        ESP_LOGE(TAG,"after proc_lock.lock()");  
-        std::cout << "\t\tEntered in MIDISequencer::Stop() ..." << std::endl;
-        // waits until the timer thread has stopped
+             
+    // waits until the timer thread has stopped
         ESP_LOGE(TAG,"MIDITickComponent::Stop()");  
         MIDITickComponent::Stop();
         // resets the autostop flag

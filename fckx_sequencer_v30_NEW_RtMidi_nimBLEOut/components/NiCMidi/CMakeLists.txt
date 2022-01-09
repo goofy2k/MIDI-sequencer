@@ -58,6 +58,7 @@ idf_component_register( SRCS
 				"../esp-nimble-cpp/src"  #cross-link!
 				#"./rtmidi-4.0.0"
                       #REQUIRES rtmidi-4.0.0 #is not a requirement because RtMidi.cpp/.h are in the src folder
-                      REQUIRES esp-nimble-cpp
+                      REQUIRES  esp-nimble-cpp  #for NimBLE bluetooth Midi out  
+			        pthread         #for esp_pthread in timer.cpp/.h
 #YOU MAY HAVE TO ADD REQUIRES RtMidi etc or an equivalent
 )

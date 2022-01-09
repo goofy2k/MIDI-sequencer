@@ -34,7 +34,10 @@
 #include <thread>
 #include <atomic>
 
-
+#define ESP32
+#ifdef ESP32
+#include "esp_pthread.h"
+#endif
 
 
 /// \addtogroup GLOBALS
@@ -81,6 +84,8 @@ class MIDITimer {
 
         /// Sets the timer resolution to the given value in milliseconds. This method stops the timer
         /// if it is running.
+        
+      
         static void                 SetResolution(unsigned int res);
         /// Sets the callback function to be called at every timer tick and its parameter.
         /// The function must be of MIDITick type (i.e. void Funct(tMsecs, void*) ) and it's called
@@ -109,7 +114,17 @@ class MIDITimer {
         static void                 Wait(unsigned int msecs)
                                         { std::this_thread::sleep_for(std::chrono::milliseconds(msecs)); }
 
+
+
+
     protected:
+
+       #ifdef ESP32
+       //esp_pthread_cfg_t cfg;
+        //for esp-idf  esp_pthread
+        static esp_pthread_cfg_t create_config(const char *name, int core_id, int stack, int prio);
+       #endif
+
 
         static const unsigned int   DEFAULT_RESOLUTION = 10;
                                                         ///< The default timer resolution

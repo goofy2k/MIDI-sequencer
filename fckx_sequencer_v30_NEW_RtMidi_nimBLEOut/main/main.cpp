@@ -1,9 +1,9 @@
-#define TEST_ADVANCEDSEQUENCER_NOINPUT //"succesfully" looping twinkle twinkle
-//#define TEST_RECORDING   //in development
-//#define THRU     //input and output
+//#define TEST_ADVANCEDSEQUENCER_NOINPUT //RUNS OK "succesfully" looping twinkle twinkle
+#define TEST_RECORDING               //in development
+//#define THRU                         //input and output   RUNS OK
 
 //CONSIDER TO RENAME BLEDevice etc to NimBLEDevice etc. But test carefully when you have running code!
-//tmove references to the old jdks lib
+//remove references to the old jdks lib
 #include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -36,6 +36,7 @@
 #include "mqtt_client.h"
 
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
+
 
 
 //#define DEBUGON
@@ -1425,7 +1426,7 @@ void main_proposal( void ) {
     recorder.Start();
     std::cout << "Recorder started\n";
    
-    MIDITimer::Wait(60000);                 // Waits 15 secs: play something to record (remember to match
+    MIDITimer::Wait(35000);                 // Waits 15 secs: play something to record (remember to match
                                             // the input channel with the one set in SetTrackRecChannel)
     std::cout << "Calling recorder.Stop()\n";
     recorder.Stop();
@@ -1652,10 +1653,10 @@ sequencer.Play();
 #endif //BASS
 
 
-  //  sequencer.GoToZero();
+    //sequencer.GoToZero();
 
 
-//#define DRUMS
+    //#define DRUMS
 #ifdef DRUMS
     // ... and 3 (percussion, channel 10)
         ESP_LOGE(TAG,"************* DEBUG 11 *************");
@@ -1674,30 +1675,30 @@ sequencer.Play();
         trk->InsertNote(msg, track3[i].length);
     }
     
-     sequencer.UpdateStatus(); //FCKX check check 
+    sequencer.UpdateStatus(); //FCKX check check 
 #endif DRUMS
     
 
     //sequencer.GoToZero();
     ESP_LOGE(TAG,"************* DEBUG 12 *************");
-    #define PLAYSECOND
-    #ifdef PLAYSECOND
-        ESP_LOGE(TAG,"************* DEBUG 13 *************");
-   // while (true) {   
-        cout << "Playing 3 tracks ..." << endl;
-        sequencer.GoToZero();
-//SetRepeatPlay(1,3,0);        
-sequencer.Play();
-        while (sequencer.IsPlaying())
-            MIDITimer::Wait(50);
-        cout << "    Stop Playing 3 tracks" << endl;
- //  } //while true
+#define PLAYSECOND
+#ifdef PLAYSECOND
+    ESP_LOGE(TAG,"************* DEBUG 13 *************");
+    // while (true) {   
+    cout << "Playing 3 tracks ..." << endl;
+    sequencer.GoToZero();
+    //SetRepeatPlay(1,3,0);        
+    sequencer.Play();
+    while (sequencer.IsPlaying())
+        MIDITimer::Wait(50);
+    cout << "    Stop Playing 3 tracks" << endl;
+    //  } //while true
     
-    #endif //PLAYSECOND
+#endif //PLAYSECOND
     //sequencer.GoToZero();
-   //    MIDIManager::CloseOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
-//
-//}//while true
+    //MIDIManager::CloseOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
+    //
+    //}//while true
     MIDIManager::CloseOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
     ESP_LOGE(TAG,"Exiting test_main example");
     return EXIT_SUCCESS;
@@ -2002,7 +2003,10 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_REC
     int thru_result = thru_main();
     ESP_LOGW(TAG, "INITIALIZED THRU WITH RESULT: %d", thru_result);
     thru->Start(); // sets the MIDI thru on and off ORIG
-    //thru->Stop();
+    MIDITimer::Wait(5000); 
+
+    
+    thru->Stop();
     while (1) {      
         //empty loop forever 
         vTaskDelay(10 / portTICK_PERIOD_MS);  

@@ -194,7 +194,7 @@ void MIDIOutDriver::AllNotesOff(int chan) {
 
 
 void MIDIOutDriver::OutputMessage(const MIDITimedMessage& msg) {
-    static const char *TAG = "NICMIDI OutputMessage";
+    static const char *TAG = "MIDIOutDriver::OutputMessage";
     ESP_LOGI(TAG,"MIDIOutDriver::OutputMessage size: %d", msg.GetLength() );    
 
     // MIDITimedMessage is good also for MIDIMessage
@@ -219,8 +219,8 @@ void MIDIOutDriver::OutputMessage(const MIDITimedMessage& msg) {
 
 
 void MIDIOutDriver::HardwareMsgOut(const MIDIMessage &msg) {
-    static const char *TAG = "NICMIDI HardwareMsgOut";
-    ESP_LOGI(TAG,"MIDIOutDriver::HardwareMsgOut"); 
+    static const char *TAG = "MIDIOutDriver::HardwareMsgOut";
+    ESP_LOGI(TAG,"Entering..."); 
     if (!port->isPortOpen()) {
     ESP_LOGE(TAG,"MIDIOutDriver::HardwareMsgOut **** PORT IS NOT OPEN ****");    
     return;}

@@ -45,8 +45,9 @@ void MIDITickComponent::Start() {
         // set the flag BEFORE starting
         running.store(true);
         // this must go BEFORE Start(), otherwise the TickProc could get a sys_time
-        //lesser than sys_time_offset and BIG TROUBLE!
-        sys_time_offset = MIDITimer::GetSysTimeMs();
+        // lesser than sys_time_offset and BIG TROUBLE!
+        sys_time_offset = MIDITimer::GetSysTimeMs();       
+        MIDITimer::SetResolution(50);   //FCKX !
         MIDITimer::Start();
     }
 }

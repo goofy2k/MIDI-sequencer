@@ -1,0 +1,3279 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+RECORDER WITHOUT ENTERED NOTES
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+rst:0x1 (POWERON_RESET),boot:0x17 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7068
+load:0x40078000,len:13652
+load:0x40080400,len:4632
+0x40080400: _init at ??:?
+
+entry 0x400806f4
+I (29) boot: ESP-IDF v4.2-dirty 2nd stage bootloader
+I (29) boot: compile time 14:25:38
+I (29) boot: chip revision: 3
+I (32) boot_comm: chip revision: 3, min. bootloader chip revision: 1
+I (40) boot.esp32: SPI Speed      : 40MHz
+I (44) boot.esp32: SPI Mode       : DIO
+I (49) boot.esp32: SPI Flash Size : 8MB
+I (53) boot: Enabling RNG early entropy source...
+I (59) boot: Partition Table:
+I (62) boot: ## Label            Usage          Type ST Offset   Length
+I (70) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (77) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (84) boot:  2 factory          factory app      00 00 00010000 00200000
+I (92) boot: End of partition table
+I (96) boot_comm: chip revision: 3, min. application chip revision: 1
+I (103) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x3181c (202780) map
+I (197) esp_image: segment 1: paddr=0x00041844 vaddr=0x3ffbdb60 size=0x0425c ( 16988) load
+I (205) esp_image: segment 2: paddr=0x00045aa8 vaddr=0x40080000 size=0x00404 (  1028) load
+0x40080000: _WindowOverflow4 at C:/Users/Fred/esp-idf/components/freertos/xtensa/xtensa_vectors.S:1730
+
+I (206) esp_image: segment 3: paddr=0x00045eb4 vaddr=0x40080404 size=0x0a164 ( 41316) load
+I (232) esp_image: segment 4: paddr=0x00050020 vaddr=0x400d0020 size=0xda854 (895060) map
+0x400d0020: _stext at ??:?
+
+I (606) esp_image: segment 5: paddr=0x0012a87c vaddr=0x4008a568 size=0x10544 ( 66884) load
+0x4008a568: r_huart_isr at ??:?
+
+I (653) boot: Loaded app from partition at offset 0x10000
+I (653) boot: Disabling RNG early entropy source...
+I (654) psram: This chip is ESP32-D0WD
+I (659) spiram: Found 64MBit SPI RAM device
+I (663) spiram: SPI RAM mode: flash 40m sram 40m
+I (668) spiram: PSRAM initialized, cache is in low/high (2-core) mode.
+I (675) cpu_start: Pro cpu up.
+I (679) cpu_start: Application information:
+I (684) cpu_start: Project name:     fckx_sequencer
+I (690) cpu_start: App version:      9abc306-dirty
+I (695) cpu_start: Compile time:     Jan  7 2022 14:24:51
+I (701) cpu_start: ELF file SHA256:  8d36ad104575fd26...
+I (707) cpu_start: ESP-IDF:          v4.2-dirty
+I (712) cpu_start: Starting app cpu, entry point is 0x40081ba8
+0x40081ba8: call_start_cpu1 at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:287
+
+I (0) cpu_start: App cpu up.
+I (1607) spiram: SPI SRAM memory test OK
+I (1607) heap_init: Initializing. RAM available for dynamic allocation:
+I (1608) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM
+I (1614) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM
+I (1620) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM
+I (1626) heap_init: At 3FFC9C30 len 000163D0 (88 KiB): DRAM
+I (1632) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (1639) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (1645) heap_init: At 4009AAAC len 00005554 (21 KiB): IRAM
+I (1652) cpu_start: Pro cpu start user code
+I (1656) spiram: Adding pool of 4096K of external SPI memory to heap allocator
+W (1682) spi_flash: Detected size(16384k) larger than the size in the binary image header(8192k). Using the size in the binary image header.
+I (1682) spi_flash: detected chip: gd
+I (1682) spi_flash: flash io: dio
+I (1684) cpu_start: StartinI (0) cpu_start: Starting scheduler on APP CPU.
+I (1701) spiram: Reserving pool of 32K of internal memory for DMA/internal allocations
+g scheduler on PRO CPU.
+I (1711) APP_MAIN: [APP] Startup..
+I (1711) APP_MAIN: [APP] Free memory: 4384420 bytes
+I (1721) APP_MAIN: [APP] IDF version: v4.2-dirty
+W (1721) APP_MAIN: Initialize WIFI connection here
+I (1781) APP_MAIN: ESP_WIFI_MODE_STA
+I (1791) wifi:wifi driver task: 3ffd4b34, prio:23, stack:3072, core=0
+I (1791) system_api: Base MAC address is not set
+I (1791) system_api: read default base MAC address from EFUSE
+I (1811) wifi:wifi firmware version: 1865b55
+I (1811) wifi:wifi certification version: v7.0
+I (1811) wifi:config NVS flash: enabled
+I (1821) wifi:config nano formating: enabled
+I (1821) wifi:Init data frame dynamic rx buffer num: 32
+I (1821) wifi:Init management frame dynamic rx buffer num: 32
+I (1831) wifi:Init management short buffer num: 32
+I (1831) wifi:Init static tx buffer num: 16
+I (1841) wifi:Init tx cache buffer num: 32
+I (1841) wifi:Init static rx buffer size: 1600
+I (1841) wifi:Init static rx buffer num: 10
+I (1851) wifi:Init dynamic rx buffer num: 32
+I (1861) wifi_init: rx ba win: 6
+I (1861) wifi_init: tcpip mbox: 32
+I (1871) wifi_init: udp mbox: 6
+I (1871) wifi_init: tcp mbox: 6
+I (1871) wifi_init: tcp tx win: 5744
+I (1881) wifi_init: tcp rx win: 5744
+I (1881) wifi_init: tcp mss: 1440
+I (18I (1981) phy: phy_version: 4500, 0cd6843, Sep 17 2020, 15:37:07, 0, 0
+81) wifi_init: WiFi/LWIP prefer SPIRAM
+I (1981) wifi:mode : sta (84:cc:a8:0d:3b:70)
+I (1991) FCKX_SEQ: wifi_init_sta finished.
+I (2111) wifi:new:<8,0>, old:<1,0>, ap:<255,255>, sta:<8,0>, prof:1
+I (2111) wifi:state: init -> auth (b0)
+I (2121) wifi:state: auth -> assoc (0)
+I (2141) wifi:state: assoc -> run (10)
+I (2251) wifi:connected with Verhoeckx_glas, aid = 8, channel 8, BW20, bssid = 96:6a:b0:c3:3b:27
+I (2251) wifi:security: WPA2-PSK, phy: bgn, rssi: -52
+I (2261) wifi:pm start, type: 1
+I (2351) wifi:AP's beacon interval = 102400 us, DTIM period = 1
+I (3281) esp_netif_handlers: sta ip: 192.168.2.17, mask: 255.255.255.0, gw: 192.168.2.254
+I (3281) FCKX_SEQ: got ip:192.168.2.17
+I (3281) FCKX_SEQ: connected to ap SSID:Verhoeckx_glas password: XXXXXXXXXXXX
+W (3291) APP_MAIN: Initialize MQTT connection here
+I (3291) FCKX_SEQ: MQTT CLIENT STARTED
+I (3291) FCKX_SEQ: Other event id:7
+E (3311) APP_MAIN: WAITING A WHILE FOR MQTT INITS TO FINISH
+I (3341) FCKX_SEQ: MQTT_EVENT_CONNECTED
+I (3351) FCKX_SEQ: sent publish successful, msg_id=15935
+I (3351) FCKX_SEQ: sent subscribe successful, msg_id=21578
+I (3351) FCKX_SEQ: sent subscribe successful, msg_id=52063
+I (3371) FCKX_SEQ: sent unsubscribe successful, msg_id=31478
+I (3371) FCKX_SEQ: sent subscribe successful, msg_id=42397
+I (3371) FCKX_SEQ: sent subscribe successful, msg_id=42782
+I (3381) FCKX_SEQ: sent subscribe successful, msg_id=3036
+I (3391) FCKX_SEQ: MQTT_EVENT_PUBLISHED, msg_id=15935
+I (3391) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=21578
+I (3401) FCKX_SEQ: sent publish successful, msg_id=0
+I (3401) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=52063
+I (3411) FCKX_SEQ: sent publish successful, msg_id=0
+I (3411) FCKX_SEQ: MQTT_EVENT_UNSUBSCRIBED, msg_id=31478
+I (3421) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=42397
+I (3421) FCKX_SEQ: sent publish successful, msg_id=0
+I (3431) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=42782
+I (3431) FCKX_SEQ: sent publish successful, msg_id=0
+I (3441) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=48295
+I (3441) FCKX_SEQ: sent publish successful, msg_id=0
+I (3451) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=3036I (3471) FCKX_SEQ: sent publish successful, msg_id=0
+E (4311) APP_MAIN: CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING
+W (4311) APP_MAIN: ENTERING main_proposal()
+E (4311) FCKX_SEQ: Entering main_proposal of TEST_RECORDING example
+E (4321) FCKX_SEQ: CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING
+Executing MIDIManager::Init()
+Going to create temp MidiOutNimBLE for detecting nr of ports
+W (4341) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (4341) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (4351) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (4351) NimBLEDevice.cpp: NimBLEDevice::init !initialized
+I (4361) NimBLEDevice.cpp: Controller status A: 0
+I (4361) NimBLEDevice.cpp: Controller status B: 0
+I (4371) NimBLEDevice.cpp: Controller status C: 0
+I (4371) NimBLEDevice.cpp: NimBLEDevice::init B
+I (4381) NimBLEDevice.cpp: NimBLEDevice::init C
+I (4381) NimBLEDevice.cpp: Controller status D: 0
+I (4401) BTDM_INIT: BT controller compile version [3723d5b]
+I (4401) NimBLEDevice.cpp: Controller status E: 1
+I (4411) NimBLEDevice.cpp: NimBLEDevice::init E
+I (4651) NimBLEDevice.cpp: Controller status F: 2
+I (4651) NimBLEDevice.cpp: Controller status G: 2
+I (4651) NimBLEDevice.cpp: Controller status H: 2
+I (4651) NimBLEDevice.cpp: NimBLEDevice::init I
+I (4661) NimBLEDevice.cpp: NimBLEDevice::init J
+I (4661) NimBLEDevice: BLE Host Task Started
+I (4671) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (4701) NimBLEDevice: NimBle host synced.
+I (4701) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (4701) NIMBLEDRIVER: NimBLEDevice created
+W (4711) NIMBLEDRIVER: BLE server created
+W (4711) NIMBLEDRIVER: BLE server callbacks created
+W (4721) NIMBLEDRIVER: BLE server service created
+W (4721) NIMBLEDRIVER: BLE server characteristic created
+W (4731) NIMBLEDRIVER: BLE service started
+Created temp MidiOutNimBLE for detecting nr of ports
+E (4741) NICMIDI DRIVER: start creation of MidiOutNimBLE port
+W (4741) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (4751) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (4751) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (4761) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (4761) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (4771) NIMBLEDRIVER: NimBLEDevice created
+W (4771) NIMBLEDRIVER: BLE server created
+W (4791) NIMBLEDRIVER: BLE server callbacks created
+W (4791) NimBLEServer: Warning creating a duplicate service UUID: 4fafc201-1fb5-459e-8fcc-c5c9c331914b
+W (4801) NIMBLEDRIVER: BLE server service created
+W (4811) NIMBLEDRIVER: BLE server characteristic created
+W (4811) NIMBLEDRIVER: BLE service started
+E (4821) NICMIDI DRIVER: executed creation of MidiOutNimBLE port
+Going to create temp MQTTMidiIn for detecting nr of ports
+W (4831) MQTTDRIVER: MQTTMidiIn instantiation
+W (4831) MQTTDRIVER: MQTTMidiIn :: initialize
+Created temp MQTTMidiIn for detecting nr of ports
+E (4851) NICMIDI DRIVER INPUT: start creation of MQTTMidiIn port
+W (4851) MQTTDRIVER: MQTTMidiIn instantiation
+W (4861) MQTTDRIVER: MQTTMidiIn :: initialize
+E (4861) MQTTDRIVER: MQTTMidiIn::setCallback: STORING CALLBACK IN inputData_
+E (4871) NICMIDI DRIVER INPUT: executed creation of MQTTMidiIn port
+W (4871) MQTTDRIVER: Closed MQTTMidiIn NO CLEANUP: BEWARE of MEMORY LEAKS
+Exiting MIDIManager::Init() Found 1 midi out and 1 midi in
+E (4891) SEQUENCER: track_states.size() 17
+GUI EVENT: All       GENERAL RESET
+E (4901) SEQUENCER: track_states.size() 17
+E (4901) SEQUENCER: track_states.size() 17
+E (4911) SEQUENCER: track_states.size() 17
+GUI EVENT: All       GENERAL RESET
+E (4921) SEQUENCER: track_states.size() 17
+GUI EVENT: All       GENERAL RESET
+DEBUG MIDIThru constructor
+W (4931) MQTTDRIVER: open MQTTMidiIn port
+IN Port MQTT_In open
+E (4941) NICMIDI DRIVER: MIDIOutDriver::OpenPort() port_id 0
+W (4941) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
+OPENPORT2 ENTEREDW (4951) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
+W (4951) NIMBLEDRIVER: xTaskCreate(connectedTask) IS THIS REQUIRED?
+E (4961) NIMBLEDRIVER: MidiOutNimBLE::openPort: a valid connection already exists nevertheless start advertising (DIRTY!)
+I (4971) NIMBLEDRIVER: Prepare advertising
+I (4971) NIMBLEDRIVER: Start advertising
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (5001) NIMBLEDRIVER: OPENPORT Waiting for a client connection to notify...
+W (6191) NIMBLE_ONCONNECT: -----
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (6261) NimBLEServer: mtu update event; conn_handle=0 mtu=256
+I (7311) NimBLEServer: subscribe event; attr_handle=16, subscribed: true
+I (7311) NimBLECharacteristic: New subscribe value for conn: 0 val: 1
+I (10001) NIMBLEDRIVER: Number of connected peers: 1
+OUT Port fckx_seq open
+E (15001) FCKX_SEQ: PROCEEDING with TEST_RECORDING example (a connection should be available here, because tested before)
+                Entered in MIDIRecorder::Start() ...
+IN Port MQTT_In open (2 times)
+                Entered in AdvancedSequencer::Start() ...
+E (15001) STOP_SEQUENCER: Entered MIDISequencer::Stop
+                Entered in MIDISequencer::Stop() [moved up to the real entry]...
+OUT Port fckx_seq open (2 times)
+Setting count in
+MIDITimer::Start enter with num_open: 0
+Timer open with 10 msecs resolution
+MIDITimer::Start exit with num_open: 1
+                 ... Exiting from AdvancedSequencer::Start()
+MIDITimer::Start enter with num_open: 1
+MIDISequencer::TickProc() MIDITimer::Start exit with num_open: 2
+0 times
+sys_time_offset = 13341  sys_time = 13345
+I (15051) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+                 ... Exiting from MIDIRecorder::Start()
+I (15061) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Recorder started
+I (15071) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0
+GUI EVENT: Transport MEAS 0 BEAT 0
+I (15521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (15531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 0
+MIDISequencer::TickProc() 100 times
+sys_time_offset = 13341  sys_time = 14345
+I (16031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (16041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 0
+I (16521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (16531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 0
+MIDISequencer::TickProc() 200 times
+sys_time_offset = 13341  sys_time = 15345
+GUI EVENT: Transport SEQUENCER START
+I (17031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (17041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0
+GUI EVENT: Transport MEAS 0 BEAT 0
+GUI EVENT: Recorder  RECORDING START
+I (17531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (17531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 1
+MIDISequencer::TickProc() 300 times
+sys_time_offset = 15345  sys_time = 16345
+I (18031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (18041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 2
+I (18531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (18531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 3
+MIDISequencer::TickProc() 400 times
+sys_time_offset = 15345  sys_time = 17345
+I (19031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (19041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 1
+GUI EVENT: Transport MEAS 1 BEAT 0
+I (19521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (19541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 1 BEAT 1MIDISequencer::TickProc() 500 times
+sys_time_offset = 15345  sys_time = 18345
+I (20031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (20031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 1 BEAT 2
+I (20521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (20531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 1 BEAT 3
+MIDISequencer::TickProc() 600 times
+sys_time_offset = 15345  sys_time = 19345
+I (21031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (21041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 2
+GUI EVENT: Transport MEAS 2 BEAT 0
+I (21521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (21541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 2 BEAT 1MIDISequencer::TickProc() 700 times
+sys_time_offset = 15345  sys_time = 20345
+I (22031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (22041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 2 BEAT 2
+I (22531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (22531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 2 BEAT 3
+MIDISequencer::TickProc() 800 times
+sys_time_offset = 15345  sys_time = 21345
+I (23031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (23041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 3
+GUI EVENT: Transport MEAS 3 BEAT 0
+I (23521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (23541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 3 BEAT 1MIDISequencer::TickProc() 900 times
+sys_time_offset = 15345  sys_time = 22345
+I (24031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (24031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 3 BEAT 2
+I (24531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (24531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 3 BEAT 3
+MIDISequencer::TickProc() 1000 times
+sys_time_offset = 15345  sys_time = 23345
+I (25031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (25041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 4
+GUI EVENT: Transport MEAS 4 BEAT 0
+I (25521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (25541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 4 BEAT 1MIDISequencer::TickProc() 1100 times
+sys_time_offset = 15345  sys_time = 24345
+I (26031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (26031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 4 BEAT 2
+I (26531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (26531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 4 BEAT 3
+MIDISequencer::TickProc() 1200 times
+sys_time_offset = 15345  sys_time = 25345
+I (27031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (27041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 5
+GUI EVENT: Transport MEAS 5 BEAT 0
+I (27521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (27541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 5 BEAT 1MIDISequencer::TickProc() 1300 times
+sys_time_offset = 15345  sys_time = 26345
+I (28031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (28031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 5 BEAT 2
+I (28521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (28531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 5 BEAT 3
+MIDISequencer::TickProc() 1400 times
+sys_time_offset = 15345  sys_time = 27345
+I (29031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (29041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 6
+GUI EVENT: Transport MEAS 6 BEAT 0
+I (29521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (29541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 6 BEAT 1MIDISequencer::TickProc() 1500 times
+sys_time_offset = 15345  sys_time = 28345
+I (30031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (30041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 6 BEAT 2
+I (30521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (30531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 6 BEAT 3
+MIDISequencer::TickProc() 1600 times
+sys_time_offset = 15345  sys_time = 29345
+I (31031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (31041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7
+GUI EVENT: Transport MEAS 7 BEAT 0
+I (31531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (31541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7 BEAT 1MIDISequencer::TickProc() 1700 times
+sys_time_offset = 15345  sys_time = 30345
+I (32031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (32031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7 BEAT 2
+I (32521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (32531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7 BEAT 3
+MIDISequencer::TickProc() 1800 times
+sys_time_offset = 15345  sys_time = 31345
+I (33031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (33041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8
+GUI EVENT: Transport MEAS 8 BEAT 0
+I (33531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (33541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8 BEAT 1MIDISequencer::TickProc() 1900 times
+sys_time_offset = 15345  sys_time = 32345
+I (34031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (34031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8 BEAT 2
+I (34521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (34531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8 BEAT 3
+MIDISequencer::TickProc() 2000 times
+sys_time_offset = 15345  sys_time = 33345
+I (35031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (35041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 9
+GUI EVENT: Transport MEAS 9 BEAT 0
+I (35521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (35541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 9 BEAT 1MIDISequencer::TickProc() 2100 times
+sys_time_offset = 15345  sys_time = 34345
+I (36031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (36031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 9 BEAT 2
+I (36521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (36531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 9 BEAT 3
+MIDISequencer::TickProc() 2200 times
+sys_time_offset = 15345  sys_time = 35345
+I (37031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (37041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 10
+GUI EVENT: Transport MEAS 10 BEAT 0
+I (37521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (37541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 10 BEAT 1
+MIDISequencer::TickProc() 2300 times
+sys_time_offset = 15345  sys_time = 36345
+I (38031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (38031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 10 BEAT 2
+I (38521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (38531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 10 BEAT 3
+MIDISequencer::TickProc() 2400 times
+sys_time_offset = 15345  sys_time = 37345
+I (39031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (39041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 11
+GUI EVENT: Transport MEAS 11 BEAT 0
+I (39521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (39541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 11 BEAT 1
+MIDISequencer::TickProc() 2500 times
+sys_time_offset = 15345  sys_time = 38345
+I (40031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (40031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (40041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (40041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 11 BEAT 2
+I (40521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (40531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (40531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (40541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 11 BEAT 3
+MIDISequencer::TickProc() 2600 times
+sys_time_offset = 15345  sys_time = 39345
+I (41031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (41031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (41041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (41051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 12
+GUI EVENT: Transport MEAS 12 BEAT 0
+I (41531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (41531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (41541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (41541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 12 BEAT 1
+MIDISequencer::TickProc() 2700 times
+sys_time_offset = 15345  sys_time = 40345
+I (42031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (42031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 12 BEAT 2
+I (42531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (42531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 12 BEAT 3
+MIDISequencer::TickProc() 2800 times
+sys_time_offset = 15345  sys_time = 41345
+I (43031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (43041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 13
+GUI EVENT: Transport MEAS 13 BEAT 0
+I (43521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (43541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 13 BEAT 1
+MIDISequencer::TickProc() 2900 times
+sys_time_offset = 15345  sys_time = 42345
+I (44031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (44041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 13 BEAT 2
+I (44521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (44531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 13 BEAT 3
+MIDISequencer::TickProc() 3000 times
+sys_time_offset = 15345  sys_time = 43345
+I (45031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (45041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 14
+GUI EVENT: Transport MEAS 14 BEAT 0
+I (45521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (45541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 14 BEAT 1
+MIDISequencer::TickProc() 3100 times
+sys_time_offset = 15345  sys_time = 44345
+I (46031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (46041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 14 BEAT 2
+I (46521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (46531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 14 BEAT 3
+MIDISequencer::TickProc() 3200 times
+sys_time_offset = 15345  sys_time = 45345
+I (47031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (47031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (47041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (47051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 15
+GUI EVENT: Transport MEAS 15 BEAT 0
+I (47071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+GUI EVENT: Recorder  RECORDING STOP
+I (47071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47091) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47091) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47101) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47101) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47111) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47111) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47121) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47131) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47141) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47141) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47161) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47161) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47171) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47191) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47191) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47211) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47211) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47231) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47231) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47251) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47251) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47271) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47271) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47291) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47291) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47311) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47311) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47321) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47341) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47341) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47361) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47361) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47371) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47381) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47401) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47411) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47421) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47421) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47431) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47441) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47461) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47461) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47481) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47481) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47491) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47511) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47511) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (47531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (47531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (47541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 15 BEAT 1
+I (47551) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47561) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47561) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47591) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47601) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47601) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47611) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47631) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47641) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47651) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47651) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47671) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47671) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47691) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47691) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47711) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47711) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47731) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47731) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47751) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47751) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47771) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47771) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47781) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47801) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47801) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47821) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47821) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47841) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47841) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47861) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47861) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47881) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47881) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47901) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47901) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47921) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47931) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47931) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47951) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47961) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47971) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47971) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47991) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47991) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48011) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48021) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+MIDISequencer::TickProc() 3300 times
+sys_time_offset = 15345  sys_time = 46345
+I (48031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (48031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (48041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (48051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 15 BEAT 2
+I (48061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48091) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48101) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48111) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48111) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48131) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48131) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48151) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48151) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48171) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48181) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48181) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48201) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48201) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48221) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48231) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48241) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48241) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48261) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48261) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48281) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48281) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48301) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48301) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48311) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48331) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48331) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48351) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48351) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48371) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48371) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48391) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48391) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48411) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48411) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48431) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48431) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48451) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48451) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48471) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48471) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48481) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48501) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48501) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48521) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (48531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (48541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (48551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 15 BEAT 3
+I (48561) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48561) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48591) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48601) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48601) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48621) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48621) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48641) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48641) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48661) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48661) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48681) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48681) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48701) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48701) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48721) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48721) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48741) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48741) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48761) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48761) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48771) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48791) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48791) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48811) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48811) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48831) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48831) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48851) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48861) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48871) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48871) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48891) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48891) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48911) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48911) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48921) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48941) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48941) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48961) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48961) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48981) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48981) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49001) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49001) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49021) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+MIDISequencer::TickProc() 3400 times
+sys_time_offset = 15345  sys_time = 47345
+I (49031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (49031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (49041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (49051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 16
+GUI EVENT: Transport MEAS 16 BEAT 0
+I (49061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49101) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49101) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49111) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49121) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49131) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49131) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49151) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49161) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49171) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49171) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49191) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49191) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49211) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49211) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49231) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49231) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49241) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49261) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49261) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49281) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49281) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49301) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49301) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49321) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49321) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49341) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49341) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49361) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49361) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49381) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49381) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49391) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49411) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49411) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49431) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49431) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49451) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49451) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49471) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49471) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49491) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49491) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49511) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49511) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (49531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (49531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (49541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 16 BEAT 1
+I (49551) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49551) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49561) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49561) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49591) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49591) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49611) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49611) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49631) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49631) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49651) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49651) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49671) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49671) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49681) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49701) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49701) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49721) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49721) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49741) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49741) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49761) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49761) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49781) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49781) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49801) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49811) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49821) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49821) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49841) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49841) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49851) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49871) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49871) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49891) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49891) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49911) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49911) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49931) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49931) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49951) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49951) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49971) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49971) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49991) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49991) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50001) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50021) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+MIDISequencer::TickProc() 3500 times
+sys_time_offset = 15345  sys_time = 48345
+I (50031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (50031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (50041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (50051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+Calling recorder.Stop()
+                Entered in MIDIRecorder::Stop() ...GUI EVENT: Transport MEAS 16 BEAT 2
+I (50071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+E (50081) STOP_RECORDER: Entered MIDIRecorder::Stop()
+I (50081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+E (50081) STOP_RECORDER: going to call MIDITickComponent::Stop()
+I (50101) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+MIDITimer::Stop enter with num_open: I (50111) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+2
+I (50121) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50121) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+MIDITimer::Stop exit with num_open: I (50131) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+1
+I (50141) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+E (50141) STOP_RECORDER: DEFAULTCLOSEINPORTS call MIDIManager::CloseInPorts()
+IN Port MQTT_In closed (1 times)
+E (50161) STOP_RECORDER: going to call seq->MIDISequencer::Stop()
+E (50161) STOP_SEQUENCER: Entered MIDISequencer::Stop
+                Entered in MIDISequencer::Stop() [moved up to the real entry]...
+E (50171) STOP_SEQUENCER: IsPlaying()
+E (50181) STOP_SEQUENCER: DEFAULTPROC_LOCK_UNLOCK call proc_lock.lock()
+E (50181) STOP_SEQUENCER: after proc_lock.lock()
+E (50181) STOP_SEQUENCER: MIDITickComponent::Stop()
+MIDITimer::Stop enter with num_open: 1
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+RECORDER WITH ENTERED NOTES  (DOESN'T PLAY RECORDINGS)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+rst:0x1 (POWERON_RESET),boot:0x17 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4
+load:0x3fff0034,len:7068
+load:0x40078000,len:13652
+load:0x40080400,len:4632
+0x40080400: _init at ??:?
+
+entry 0x400806f4
+I (29) boot: ESP-IDF v4.2-dirty 2nd stage bootloader
+I (29) boot: compile time 14:25:38
+I (29) boot: chip revision: 3
+I (32) boot_comm: chip revision: 3, min. bootloader chip revision: 1
+I (40) boot.esp32: SPI Speed      : 40MHz
+I (44) boot.esp32: SPI Mode       : DIO
+I (49) boot.esp32: SPI Flash Size : 8MB
+I (53) boot: Enabling RNG early entropy source...
+I (59) boot: Partition Table:
+I (62) boot: ## Label            Usage          Type ST Offset   Length
+I (70) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (77) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (84) boot:  2 factory          factory app      00 00 00010000 00200000
+I (92) boot: End of partition table
+I (96) boot_comm: chip revision: 3, min. application chip revision: 1
+I (103) esp_image: segment 0: paddr=0x00010020 vaddr=0x3f400020 size=0x3181c (202780) map
+I (197) esp_image: segment 1: paddr=0x00041844 vaddr=0x3ffbdb60 size=0x0425c ( 16988) load
+I (205) esp_image: segment 2: paddr=0x00045aa8 vaddr=0x40080000 size=0x00404 (  1028) load
+0x40080000: _WindowOverflow4 at C:/Users/Fred/esp-idf/components/freertos/xtensa/xtensa_vectors.S:1730
+
+I (206) esp_image: segment 3: paddr=0x00045eb4 vaddr=0x40080404 size=0x0a164 ( 41316) load
+I (232) esp_image: segment 4: paddr=0x00050020 vaddr=0x400d0020 size=0xda854 (895060) map
+0x400d0020: _stext at ??:?
+
+I (606) esp_image: segment 5: paddr=0x0012a87c vaddr=0x4008a568 size=0x10544 ( 66884) load
+0x4008a568: r_huart_isr at ??:?
+
+I (653) boot: Loaded app from partition at offset 0x10000
+I (653) boot: Disabling RNG early entropy source...
+I (654) psram: This chip is ESP32-D0WD
+I (659) spiram: Found 64MBit SPI RAM device
+I (663) spiram: SPI RAM mode: flash 40m sram 40m
+I (668) spiram: PSRAM initialized, cache is in low/high (2-core) mode.
+I (675) cpu_start: Pro cpu up.
+I (679) cpu_start: Application information:
+I (684) cpu_start: Project name:     fckx_sequencer
+I (690) cpu_start: App version:      9abc306-dirty
+I (695) cpu_start: Compile time:     Jan  7 2022 14:24:51
+I (701) cpu_start: ELF file SHA256:  8d36ad104575fd26...
+I (707) cpu_start: ESP-IDF:          v4.2-dirty
+I (712) cpu_start: Starting app cpu, entry point is 0x40081ba8
+0x40081ba8: call_start_cpu1 at C:/Users/Fred/esp-idf/components/esp32/cpu_start.c:287
+
+I (0) cpu_start: App cpu up.
+I (1607) spiram: SPI SRAM memory test OK
+I (1607) heap_init: Initializing. RAM available for dynamic allocation:
+I (1608) heap_init: At 3FFAFF10 len 000000F0 (0 KiB): DRAM
+I (1614) heap_init: At 3FFB6388 len 00001C78 (7 KiB): DRAM
+I (1620) heap_init: At 3FFB9A20 len 00004108 (16 KiB): DRAM
+I (1626) heap_init: At 3FFC9C30 len 000163D0 (88 KiB): DRAM
+I (1632) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+I (1639) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+I (1645) heap_init: At 4009AAAC len 00005554 (21 KiB): IRAM
+I (1652) cpu_start: Pro cpu start user code
+I (1656) spiram: Adding pool of 4096K of external SPI memory to heap allocator
+W (1682) spi_flash: Detected size(16384k) larger than the size in the binary image header(8192k). Using the size in the binary image header.
+I (1682) spi_flash: detected chip: gd
+I (1682) spi_flash: flash io: dio
+I (1684) cpu_start: StartinI (0) cpu_start: Starting scheduler on APP CPU.
+I (1701) spiram: Reserving pool of 32K of internal memory for DMA/internal allocations
+g scheduler on PRO CPU.
+I (1711) APP_MAIN: [APP] Startup..
+I (1711) APP_MAIN: [APP] Free memory: 4384420 bytes
+I (1721) APP_MAIN: [APP] IDF version: v4.2-dirty
+W (1721) APP_MAIN: Initialize WIFI connection here
+I (1781) APP_MAIN: ESP_WIFI_MODE_STA
+I (1791) wifi:wifi driver task: 3ffd4b34, prio:23, stack:3072, core=0
+I (1791) system_api: Base MAC address is not set
+I (1791) system_api: read default base MAC address from EFUSE
+I (1811) wifi:wifi firmware version: 1865b55
+I (1811) wifi:wifi certification version: v7.0
+I (1811) wifi:config NVS flash: enabled
+I (1821) wifi:config nano formating: enabled
+I (1821) wifi:Init data frame dynamic rx buffer num: 32
+I (1821) wifi:Init management frame dynamic rx buffer num: 32
+I (1831) wifi:Init management short buffer num: 32
+I (1831) wifi:Init static tx buffer num: 16
+I (1841) wifi:Init tx cache buffer num: 32
+I (1841) wifi:Init static rx buffer size: 1600
+I (1841) wifi:Init static rx buffer num: 10
+I (1851) wifi:Init dynamic rx buffer num: 32
+I (1861) wifi_init: rx ba win: 6
+I (1861) wifi_init: tcpip mbox: 32
+I (1871) wifi_init: udp mbox: 6
+I (1871) wifi_init: tcp mbox: 6
+I (1871) wifi_init: tcp tx win: 5744
+I (1881) wifi_init: tcp rx win: 5744
+I (1881) wifi_init: tcp mss: 1440
+I (18I (1981) phy: phy_version: 4500, 0cd6843, Sep 17 2020, 15:37:07, 0, 0
+81) wifi_init: WiFi/LWIP prefer SPIRAM
+I (1981) wifi:mode : sta (84:cc:a8:0d:3b:70)
+I (1981) FCKX_SEQ: wifi_init_sta finished.
+I (2111) wifi:new:<8,0>, old:<1,0>, ap:<255,255>, sta:<8,0>, prof:1
+I (2111) wifi:state: init -> auth (b0)
+I (2131) wifi:state: auth -> assoc (0)
+I (2181) wifi:state: assoc -> run (10)
+I (2291) wifi:connected with Verhoeckx_glas, aid = 11, channel 8, BW20, bssid = 96:6a:b0:c3:3b:27
+I (2291) wifi:security: WPA2-PSK, phy: bgn, rssi: -53
+I (2301) wifi:pm start, type: 1
+I (2331) wifi:AP's beacon interval = 102400 us, DTIM period = 1
+I (3781) esp_netif_handlers: sta ip: 192.168.2.17, mask: 255.255.255.0, gw: 192.168.2.254
+I (3781) FCKX_SEQ: got ip:192.168.2.17
+I (3781) FCKX_SEQ: connected to ap SSID:Verhoeckx_glas password: XXXXXXXXXXXX
+W (3791) APP_MAIN: Initialize MQTT connection here
+I (3791) FCKX_SEQ: MQTT CLIENT STARTED
+I (3791) FCKX_SEQ: Other event id:7
+E (3811) APP_MAIN: WAITING A WHILE FOR MQTT INITS TO FINISH
+I (3841) FCKX_SEQ: MQTT_EVENT_CONNECTED
+I (3841) FCKX_SEQ: sent publish successful, msg_id=56551
+I (3851) FCKX_SEQ: sent subscribe successful, msg_id=30117
+I (3851) FCKX_SEQ: sent subscribe successful, msg_id=40380
+I (3861) FCKX_SEQ: sent unsubscribe successful, msg_id=18726
+I (3861) FCKX_SEQ: sent subscribe successful, msg_id=22878
+I (3871) FCKX_SEQ: sent subscribe successful, msg_id=38864
+I (3871) FCKX_SEQ: sent subscribe successful, msg_id=4568
+I (3881) FCKX_SEQ: MQTT_EVENT_PUBLISHED, msg_id=56551
+I (3881) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=30117
+I (3891) FCKX_SEQ: sent publish successful, msg_id=0
+I (3891) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=40380
+I (3901) FCKX_SEQ: sent publish successful, msg_id=0
+I (3901) FCKX_SEQ: MQTT_EVENT_UNSUBSCRIBED, msg_id=18726
+I (3911) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=22878
+I (3911) FCKX_SEQ: sent publish successful, msg_id=0
+I (3921) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=38864
+I (3921) FCKX_SEQ: sent publish successful, msg_id=0
+I (3931) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=56017
+I (3951) FCKX_SEQ: sent publish successful, msg_id=0
+I (3951) FCKX_SEQ: MQTT_EVENT_SUBSCRIBED, msg_id=4568I (3961) FCKX_SEQ: sent publish successful, msg_id=0
+E (4811) APP_MAIN: CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING
+W (4811) APP_MAIN: ENTERING main_proposal()
+E (4811) FCKX_SEQ: Entering main_proposal of TEST_RECORDING example
+E (4821) FCKX_SEQ: CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING
+Executing MIDIManager::Init()
+Going to create temp MidiOutNimBLE for detecting nr of ports
+W (4841) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (4841) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (4851) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (4851) NimBLEDevice.cpp: NimBLEDevice::init !initialized
+I (4861) NimBLEDevice.cpp: Controller status A: 0
+I (4861) NimBLEDevice.cpp: Controller status B: 0
+I (4871) NimBLEDevice.cpp: Controller status C: 0
+I (4871) NimBLEDevice.cpp: NimBLEDevice::init B
+I (4881) NimBLEDevice.cpp: NimBLEDevice::init C
+I (4881) NimBLEDevice.cpp: Controller status D: 0
+I (4901) BTDM_INIT: BT controller compile version [3723d5b]
+I (4901) NimBLEDevice.cpp: Controller status E: 1
+I (4911) NimBLEDevice.cpp: NimBLEDevice::init E
+I (5151) NimBLEDevice.cpp: Controller status F: 2
+I (5151) NimBLEDevice.cpp: Controller status G: 2
+I (5151) NimBLEDevice.cpp: Controller status H: 2
+I (5151) NimBLEDevice.cpp: NimBLEDevice::init I
+I (5161) NimBLEDevice.cpp: NimBLEDevice::init J
+I (5171) NimBLEDevice: BLE Host Task Started
+I (5171) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (5211) NimBLEDevice: NimBle host synced.
+I (5211) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (5211) NIMBLEDRIVER: NimBLEDevice created
+W (5211) NIMBLEDRIVER: BLE server created
+W (5211) NIMBLEDRIVER: BLE server callbacks created
+W (5221) NIMBLEDRIVER: BLE server service created
+W (5221) NIMBLEDRIVER: BLE server characteristic created
+W (5231) NIMBLEDRIVER: BLE service started
+Created temp MidiOutNimBLE for detecting nr of ports
+E (5241) NICMIDI DRIVER: start creation of MidiOutNimBLE port
+W (5241) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: initialize
+W (5261) NIMBLEDRIVER: MidiOutNimBLE :: initialize1
+I (5261) NimBLEDevice.cpp: NimBLEDevice::init entered
+I (5271) NimBLEDevice.cpp: NimBLEDevice::init Wait for host and controller to sync
+I (5271) NimBLEDevice.cpp: NimBLEDevice::init going to exit
+W (5281) NIMBLEDRIVER: NimBLEDevice created
+W (5281) NIMBLEDRIVER: BLE server created
+W (5291) NIMBLEDRIVER: BLE server callbacks created
+W (5291) NimBLEServer: Warning creating a duplicate service UUID: 4fafc201-1fb5-459e-8fcc-c5c9c331914b
+W (5301) NIMBLEDRIVER: BLE server service created
+W (5311) NIMBLEDRIVER: BLE server characteristic created
+W (5311) NIMBLEDRIVER: BLE service started
+E (5321) NICMIDI DRIVER: executed creation of MidiOutNimBLE port
+Going to create temp MQTTMidiIn for detecting nr of ports
+W (5341) MQTTDRIVER: MQTTMidiIn instantiation
+W (5341) MQTTDRIVER: MQTTMidiIn :: initialize
+Created temp MQTTMidiIn for detecting nr of ports
+E (5351) NICMIDI DRIVER INPUT: start creation of MQTTMidiIn port
+W (5351) MQTTDRIVER: MQTTMidiIn instantiation
+W (5361) MQTTDRIVER: MQTTMidiIn :: initialize
+E (5361) MQTTDRIVER: MQTTMidiIn::setCallback: STORING CALLBACK IN inputData_
+E (5371) NICMIDI DRIVER INPUT: executed creation of MQTTMidiIn port
+W (5371) MQTTDRIVER: Closed MQTTMidiIn NO CLEANUP: BEWARE of MEMORY LEAKS
+Exiting MIDIManager::Init() Found 1 midi out and 1 midi in
+E (5391) SEQUENCER: track_states.size() 17
+GUI EVENT: All       GENERAL RESET
+E (5401) SEQUENCER: track_states.size() 17
+E (5411) SEQUENCER: track_states.size() 17
+E (5411) SEQUENCER: track_states.size() 17
+GUI EVENT: All       GENERAL RESET
+E (5421) SEQUENCER: track_states.size() 17
+GUI EVENT: All       GENERAL RESET
+DEBUG MIDIThru constructor
+W (5431) MQTTDRIVER: open MQTTMidiIn port
+IN Port MQTT_In open
+E (5441) NICMIDI DRIVER: MIDIOutDriver::OpenPort() port_id 0
+W (5441) NIMBLEDRIVER: Initialize nimBLEOutdriver MidiOutNimBLE :: openPort
+OPENPORT2 ENTEREDW (5451) NIMBLEDRIVER: MidiOutNimBLE :: openPort entered
+W (5451) NIMBLEDRIVER: xTaskCreate(connectedTask) IS THIS REQUIRED?
+E (5461) NIMBLEDRIVER: MidiOutNimBLE::openPort: a valid connection already exists nevertheless start advertising (DIRTY!)
+I (5471) NIMBLEDRIVER: Prepare advertising
+I (5471) NIMBLEDRIVER: Start advertising
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (5501) NIMBLEDRIVER: OPENPORT Waiting for a client connection to notify...
+W (7641) NIMBLE_ONCONNECT: -----
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+I (7701) NimBLEServer: mtu update event; conn_handle=0 mtu=256
+I (8651) NimBLEServer: subscribe event; attr_handle=16, subscribed: true
+I (8651) NimBLECharacteristic: New subscribe value for conn: 0 val: 1
+I (10501) NIMBLEDRIVER: Number of connected peers: 1
+OUT Port fckx_seq open
+E (15501) FCKX_SEQ: PROCEEDING with TEST_RECORDING example (a connection should be available here, because tested before)
+                Entered in MIDIRecorder::Start() ...
+IN Port MQTT_In open (2 times)
+                Entered in AdvancedSequencer::Start() ...
+E (15501) STOP_SEQUENCER: Entered MIDISequencer::Stop
+                Entered in MIDISequencer::Stop() [moved up to the real entry]...
+OUT Port fckx_seq open (2 times)
+Setting count in
+MIDITimer::Start enter with num_open: 0
+Timer open with 10 msecs resolution
+MIDITimer::Start exit with num_open: 1
+                 ... Exiting from AdvancedSequencer::Start()
+MIDISequencer::TickProc() MIDITimer::Start enter with num_open: 10 times
+MIDITimer::Start exit with num_open: 2sys_time_offset =
+13841            ... Exiting from MIDIRecorder::Start()  sys_time =
+13845
+Recorder started
+I (15551) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (15571) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15571) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0
+GUI EVENT: Transport MEAS 0 BEAT 0
+I (16021) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (16041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 0
+MIDISequencer::TickProc() 100 times
+sys_time_offset = 13841  sys_time = 14845
+I (16531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (16541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 0
+I (17021) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (17031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 0
+MIDISequencer::TickProc() 200 times
+sys_time_offset = 13841  sys_time = 15845
+GUI EVENT: Transport SEQUENCER START
+I (17531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (17541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0
+GUI EVENT: Transport MEAS 0 BEAT 0
+GUI EVENT: Recorder  RECORDING START
+I (18031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (18031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 1
+I (18511) FCKX_SEQ: MQTT_EVENT_DATA
+E (18511) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (18511) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (18521) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+MIDISequencer::TickProc() I (18531) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+300 times
+I (18551) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName sys_time_offset = 15845  sys_time = MQTT_In callback executed
+E (18561) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (18561) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+16845
+I (18581) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  62  Vel  127
+I (18581) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18591) MIDIOutDriver::HardwareMsgOut: Entering...
+I (18591) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (18601) HardwareMsgIn (driver.cpp): added message to in_queue
+GATT procedure initiated: notify; att_handle=16
+Got message, queue size: 1
+I (18621) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18621) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 2
+I (18641) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18651) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (18711) FCKX_SEQ: MQTT_EVENT_DATA
+E (18711) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (18711) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (18721) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (18731) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (18731) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (18751) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (18761) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (18771) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  62  Vel    0
+I (18781) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (18781) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (18801) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18801) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (19031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (19041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 0 BEAT 3
+MIDISequencer::TickProc() 400 times
+sys_time_offset = 15845  sys_time = 17845
+I (19531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (19541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 1
+GUI EVENT: Transport MEAS 1 BEAT 0
+I (19641) FCKX_SEQ: MQTT_EVENT_DATA
+E (19641) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (19641) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (19651) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 144 (0x90)
+I (19661) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (19671) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (19681) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (19681) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (19691) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  41  Vel  127
+I (19711) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (19721) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (19731) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19731) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (19851) FCKX_SEQ: MQTT_EVENT_DATA
+E (19851) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (19851) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (19861) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 128 (0x80)
+I (19871) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (19881) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (19881) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (19891) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (19901) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  41  Vel    0
+I (19911) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (19911) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (19941) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19941) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (20031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (20041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 1 BEAT 1
+MIDISequencer::TickProc() 500 times
+sys_time_offset = 15845  sys_time = 18845
+I (20531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (20541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 1 BEAT 2
+I (20661) FCKX_SEQ: MQTT_EVENT_DATA
+E (20661) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (20661) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (20671) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (20681) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (20681) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (20701) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (20711) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (20721) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  42  Vel  127
+I (20731) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (20731) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (20751) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20751) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (20871) FCKX_SEQ: MQTT_EVENT_DATA
+E (20871) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (20871) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (20881) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (20891) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (20901) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (20901) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (20911) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (20921) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  42  Vel    0
+I (20931) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (20931) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (20951) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20951) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (21031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (21041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 1 BEAT 3
+I (21481) FCKX_SEQ: MQTT_EVENT_DATA
+E (21481) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (21491) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (21501) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+I (21501) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 43 (0x2B)
+I (21521) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+MIDISequencer::TickProc() Midi In PortName 600 timesMQTT_In callback executed
+E (21531) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (21531) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+sys_time_offset = 15845  sys_time = 19845
+I (21551) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  43  Vel  127
+I (21561) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21561) MIDIOutDriver::HardwareMsgOut: Entering...
+I (21571) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (21571) HardwareMsgIn (driver.cpp): added message to in_queue
+GATT procedure initiated: notify; att_handle=16
+Got message, queue size: 1
+I (21601) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21601) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 2
+GUI EVENT: Transport MEAS 2 BEAT 0
+I (21621) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21621) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (21701) FCKX_SEQ: MQTT_EVENT_DATA
+E (21701) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (21701) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (21711) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (21721) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 43 (0x2B)
+I (21731) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (21751) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (21751) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (21761) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  43  Vel    0
+I (21771) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (21781) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (21791) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21791) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (22031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (22041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 2 BEAT 1
+I (22401) FCKX_SEQ: MQTT_EVENT_DATA
+E (22401) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (22411) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (22431) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (22431) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (22441) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (22451) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (22461) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (22461) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  42  Vel  127
+I (22471) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (22481) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (22501) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22501) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 700 times
+sys_time_offset = 15845  sys_time = 20845
+I (22531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (22541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 2 BEAT 2
+I (22611) FCKX_SEQ: MQTT_EVENT_DATA
+E (22611) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (22611) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (22621) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (22631) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (22631) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (22641) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (22651) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (22661) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  42  Vel    0
+I (22671) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (22671) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (22691) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22691) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (23031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (23041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 2 BEAT 3
+I (23221) FCKX_SEQ: MQTT_EVENT_DATA
+E (23221) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (23231) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (23241) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+I (23241) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 43 (0x2B)
+I (23261) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (23271) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (23281) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (23281) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  43  Vel  127
+I (23291) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (23301) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (23311) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23311) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (23421) FCKX_SEQ: MQTT_EVENT_DATA
+E (23421) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (23421) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (23431) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (23441) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 43 (0x2B)
+I (23461) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (23461) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (23471) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (23481) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  43  Vel    0
+I (23491) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (23491) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (23511) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23511) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 800 times
+sys_time_offset = 15845  sys_time = 21845
+I (23531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (23541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 3
+GUI EVENT: Transport MEAS 3 BEAT 0
+I (24031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (24041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 3 BEAT 1I (24151) FCKX_SEQ: MQTT_EVENT_DATA
+E (24151) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (24151) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (24161) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+I (24161) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (24171) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (24181) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (24191) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (24191) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  62  Vel  127
+I (24201) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (24211) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (24231) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24231) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (24351) FCKX_SEQ: MQTT_EVENT_DATA
+E (24351) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (24351) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (24361) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (24371) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (24381) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (24381) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (24391) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (24411) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  62  Vel    0
+I (24421) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (24421) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (24441) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24441) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 900 times
+sys_time_offset = 15845  sys_time = 22845
+I (24531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (24541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 3 BEAT 2
+I (25031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (25031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 3 BEAT 3
+I (25171) FCKX_SEQ: MQTT_EVENT_DATA
+E (25171) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (25181) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (25191) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (25191) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (25201) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (25211) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (25211) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (25231) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  61  Vel  127
+I (25241) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (25251) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (25261) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25261) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (25371) FCKX_SEQ: MQTT_EVENT_DATA
+E (25371) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (25371) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (25381) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (25391) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (25401) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (25401) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (25421) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (25431) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  61  Vel    0
+I (25441) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (25441) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (25461) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25461) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 1000 times
+sys_time_offset = 15845  sys_time = 23845
+I (25531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (25541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 4
+GUI EVENT: Transport MEAS 4 BEAT 0
+I (26031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (26041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 4 BEAT 1
+I (26091) FCKX_SEQ: MQTT_EVENT_DATA
+E (26091) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (26091) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (26101) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+I (26101) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (26111) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (26121) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (26131) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (26131) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  62  Vel  127
+I (26151) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (26161) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (26171) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26171) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (26321) FCKX_SEQ: MQTT_EVENT_DATA
+E (26321) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (26321) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (26341) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (26351) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (26361) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (26361) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (26371) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (26381) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  62  Vel    0
+I (26391) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (26391) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (26411) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26411) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 1100 times
+sys_time_offset = 15845  sys_time = 24845
+I (26531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (26541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 4 BEAT 2
+I (27031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (27031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 4 BEAT 3
+I (27221) FCKX_SEQ: MQTT_EVENT_DATA
+E (27221) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (27231) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (27241) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 144 (0x90)
+I (27241) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (27251) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (27261) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (27261) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (27271) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  41  Vel  127
+I (27281) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (27291) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (27311) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27311) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (27421) FCKX_SEQ: MQTT_EVENT_DATA
+E (27421) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (27421) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (27431) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 128 (0x80)
+I (27441) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (27451) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (27461) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (27471) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (27481) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  41  Vel    0
+I (27491) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (27491) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (27511) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27511) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 1200 times
+sys_time_offset = 15845  sys_time = 25845
+I (27531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (27551) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (27561) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 5
+GUI EVENT: Transport MEAS 5 BEAT 0
+I (28031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (28041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 5 BEAT 1I (28241) FCKX_SEQ: MQTT_EVENT_DATA
+E (28241) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (28241) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (28251) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (28251) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (28261) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (28271) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (28291) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (28291) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  61  Vel  127
+I (28301) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (28311) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (28321) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28321) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (28441) FCKX_SEQ: MQTT_EVENT_DATA
+E (28441) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (28441) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (28451) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (28461) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (28471) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (28471) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (28491) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (28501) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  61  Vel    0
+I (28511) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (28511) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (28531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (28541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (28561) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (28561) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 5 BEAT 2
+MIDISequencer::TickProc() 1300 times
+sys_time_offset = 15845  sys_time = 26894
+I (29031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (29031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 5 BEAT 3
+I (29261) FCKX_SEQ: MQTT_EVENT_DATA
+E (29261) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (29261) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (29281) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (29291) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (29291) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (29301) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (29311) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (29321) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  42  Vel  127
+I (29331) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (29331) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (29351) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29351) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (29371) FCKX_SEQ: MQTT_EVENT_DATA
+E (29371) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (29371) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (29381) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (29391) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (29411) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (29411) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (29421) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (29431) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  42  Vel    0
+I (29441) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (29441) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (29461) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29461) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 1400 times
+sys_time_offset = 15845  sys_time = 27845
+I (29531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (29541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (29551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 6
+GUI EVENT: Transport MEAS 6 BEAT 0
+I (30031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (30041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 6 BEAT 1I (30491) FCKX_SEQ: MQTT_EVENT_DATA
+E (30501) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (30501) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (30511) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+I (30511) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 43 (0x2B)
+I (30521) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+MIDISequencer::TickProc() 1500Midi In PortName  timesMQTT_In
+ callback executed
+E (30531) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (30541) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+sys_time_offset = 15845  sys_time = 28845
+I (30551) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  43  Vel  127
+I (30561) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30571) MIDIOutDriver::HardwareMsgOut: Entering...
+I (30571) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (30581) HardwareMsgIn (driver.cpp): added message to in_queue
+GATT procedure initiated: notify; att_handle=16
+Got message, queue size: 1
+I (30601) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30601) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 6 BEAT 2
+I (30611) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30621) MIDIOutDriver::HardwareMsgOut: Entering...
+I (30631) FCKX_SEQ: MQTT_EVENT_DATA
+E (30631) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+GATT procedure initiated: notify; att_handle=16
+W (30651) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (30661) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (30671) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 43 (0x2B)
+I (30671) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (30681) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (30691) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (30701) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  43  Vel    0
+I (30711) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (30711) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (30731) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (30731) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (31031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (31041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 6 BEAT 3
+I (31411) FCKX_SEQ: MQTT_EVENT_DATA
+E (31411) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (31431) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (31441) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+I (31441) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (31451) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (31461) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (31471) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (31471) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  62  Vel  127
+I (31481) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (31491) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (31511) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31511) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 1600 times
+sys_time_offset = 15845  sys_time = 29845
+I (31531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (31541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7
+GUI EVENT: Transport MEAS 7 BEAT 0
+I (31621) FCKX_SEQ: MQTT_EVENT_DATA
+E (31621) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (31621) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (31631) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (31641) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (31651) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (31661) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (31661) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (31671) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  62  Vel    0
+I (31681) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (31701) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (31701) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (31711) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (32031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (32041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7 BEAT 1
+I (32231) FCKX_SEQ: MQTT_EVENT_DATA
+E (32231) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (32241) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (32261) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 144 (0x90)
+I (32261) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (32271) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (32281) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (32291) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (32291) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  41  Vel  127
+I (32301) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (32311) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (32331) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32331) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (32431) FCKX_SEQ: MQTT_EVENT_DATA
+E (32431) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (32431) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (32441) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 128 (0x80)
+I (32461) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (32471) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (32471) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (32481) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (32491) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  41  Vel    0
+I (32501) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (32501) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (32521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32521) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (32541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (32561) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (32561) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7 BEAT 2
+MIDISequencer::TickProc() 1700 times
+sys_time_offset = 15845  sys_time = 30890
+I (33031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (33031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 7 BEAT 3
+I (33051) FCKX_SEQ: MQTT_EVENT_DATA
+E (33061) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (33061) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (33071) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (33081) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (33081) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (33091) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (33101) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (33111) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  61  Vel  127
+I (33131) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (33131) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (33141) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33141) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (33261) FCKX_SEQ: MQTT_EVENT_DATA
+E (33261) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (33261) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (33271) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (33281) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (33291) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (33291) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (33301) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (33311) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  61  Vel    0
+I (33321) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (33321) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (33351) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33351) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 1800 times
+sys_time_offset = 15845  sys_time = 31845
+I (33531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (33541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (33551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8
+GUI EVENT: Transport MEAS 8 BEAT 0
+I (34031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (34041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8 BEAT 1
+I (34081) FCKX_SEQ: MQTT_EVENT_DATA
+E (34081) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (34081) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (34091) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 144 (0x90)
+I (34091) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 56 (0x38)
+I (34101) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (34111) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (34121) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (34121) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  56  Vel  127
+I (34131) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (34141) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (34161) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34161) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (34381) FCKX_SEQ: MQTT_EVENT_DATA
+E (34381) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (34381) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (34391) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 128 (0x80)
+I (34411) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 56 (0x38)
+I (34421) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (34421) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (34431) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (34441) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  56  Vel    0
+I (34451) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (34451) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (34471) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34471) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 1900 times
+sys_time_offset = 15845  sys_time = 32845
+I (34531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (34541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8 BEAT 2
+I (34791) FCKX_SEQ: MQTT_EVENT_DATA
+E (34791) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (34801) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (34811) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (34821) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (34821) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (34831) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (34841) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (34851) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  61  Vel  127
+I (34861) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (34861) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (34881) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (34881) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (35031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (35041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 8 BEAT 3
+I (35101) FCKX_SEQ: MQTT_EVENT_DATA
+E (35101) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (35111) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (35121) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (35121) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (35141) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (35151) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (35151) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (35161) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  61  Vel    0
+I (35171) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (35181) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (35191) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35191) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 2000 times
+sys_time_offset = 15845  sys_time = 33845
+I (35531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (35541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 9
+GUI EVENT: Transport MEAS 9 BEAT 0
+I (35821) FCKX_SEQ: MQTT_EVENT_DATA
+E (35821) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (35821) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (35831) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+I (35841) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (35861) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (35871) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (35871) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (35881) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  62  Vel  127
+I (35891) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (35901) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (35911) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (35911) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (36031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; I (36031) FCKX_SEQ: MQTT_EVENT_DATA
+E (36041) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+att_handle=16
+W (36051) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (36061) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (36061) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36071) MIDIOutDriver::HardwareMsgOut: Entering...
+I (36071) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (36081) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+GATT procedure initiated: notify; att_handle=16
+Midi In PortName MQTT_In callback executed
+GUI EVENT: Transport MEAS 9 BEAT 1
+E (36101) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (36101) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (36111) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  62  Vel    0
+I (36131) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (36141) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (36151) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36151) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 2100 times
+sys_time_offset = 15845  sys_time = 34845
+I (36531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (36541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 9 BEAT 2
+I (36641) FCKX_SEQ: MQTT_EVENT_DATA
+E (36641) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (36641) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (36651) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 144 (0x90)
+I (36661) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (36661) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (36671) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (36681) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (36691) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  41  Vel  127
+I (36701) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (36701) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (36721) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36721) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (36841) FCKX_SEQ: MQTT_EVENT_DATA
+E (36841) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (36841) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (36851) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 128 (0x80)
+I (36861) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (36871) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (36871) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (36891) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (36901) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  41  Vel    0
+I (36911) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (36911) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (36931) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (36931) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (37031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (37041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 9 BEAT 3
+MIDISequencer::TickProc() 2200 times
+sys_time_offset = 15845  sys_time = 35845
+I (37531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (37541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; I (37561) FCKX_SEQ: MQTT_EVENT_DATA
+E (37561) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+att_handle=16
+W (37581) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (37591) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+GUI EVENT: Transport MEAS 10
+GUI EVENT: Transport MEAS 10 BEAT 0
+I (37601) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (37611) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (37621) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (37621) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (37631) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  42  Vel  127
+I (37641) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (37651) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (37661) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37661) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (37681) FCKX_SEQ: MQTT_EVENT_DATA
+E (37681) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (37691) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (37701) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (37711) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (37721) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (37721) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (37731) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (37741) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  42  Vel    0
+I (37751) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (37751) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (37771) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (37771) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (38031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (38041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 10 BEAT 1
+I (38481) FCKX_SEQ: MQTT_EVENT_DATA
+E (38481) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (38491) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (38501) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 144 (0x90)
+I (38501) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (38511) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (38521) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+MIDISequencer::TickProc() E (38541) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+2300 times
+I (38541) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  41  Vel  127
+sys_time_offset = 15845  sys_time = 36845
+I (38561) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (38561) HardwareMsgIn (driver.cpp): added message to in_queue
+I (38571) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38571) MIDIOutDriver::HardwareMsgOut: Entering...
+Got message, queue size: 1
+GATT procedure initiated: notify; att_handle=16
+I (38591) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38601) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 10 BEAT 2
+Message recorder on track 1
+I (38621) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38621) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (38691) FCKX_SEQ: MQTT_EVENT_DATA
+E (38691) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (38691) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (38711) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 128 (0x80)
+I (38721) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (38731) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (38731) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (38741) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (38751) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  41  Vel    0
+I (38761) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (38761) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (38781) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (38781) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (39031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (39041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 10 BEAT 3
+I (39401) FCKX_SEQ: MQTT_EVENT_DATA
+E (39401) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (39411) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (39421) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+I (39431) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (39441) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (39451) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (39461) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (39461) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  62  Vel  127
+I (39471) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (39481) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (39491) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39491) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 2400 times
+sys_time_offset = 15845  sys_time = 37845
+I (39531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (39541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 11
+GUI EVENT: Transport MEAS 11 BEAT 0
+I (39621) FCKX_SEQ: MQTT_EVENT_DATA
+E (39621) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (39631) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (39631) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (39641) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (39651) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (39661) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (39661) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (39681) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  62  Vel    0
+I (39691) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (39701) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (39711) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (39711) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (40031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (40031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (40041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (40041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 11 BEAT 1
+MIDISequencer::TickProc() 2500 times
+sys_time_offset = 15845  sys_time = 38845
+I (40531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (40531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (40541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (40551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 11 BEAT 2
+I (40741) FCKX_SEQ: MQTT_EVENT_DATA
+E (40741) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (40741) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (40751) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (40761) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (40761) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (40771) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (40781) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (40791) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  61  Vel  127
+I (40801) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (40801) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (40821) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (40821) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (40941) FCKX_SEQ: MQTT_EVENT_DATA
+E (40941) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (40941) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (40951) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (40961) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 61 (0x3D)
+I (40971) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (40971) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (40981) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (40991) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  61  Vel    0
+I (41011) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (41011) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (41021) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (41031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (41041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (41051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (41061) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (41061) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 11 BEAT 3
+MIDISequencer::TickProc() 2600 times
+sys_time_offset = 15845  sys_time = 39845
+I (41531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (41531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (41541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (41551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 12
+GUI EVENT: Transport MEAS 12 BEAT 0
+I (42031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (42041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 12 BEAT 1
+I (42071) FCKX_SEQ: MQTT_EVENT_DATA
+E (42071) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (42071) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (42081) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 144 (0x90)
+I (42081) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (42091) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (42101) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (42111) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (42111) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  41  Vel  127
+I (42131) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (42141) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (42151) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42151) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (42271) FCKX_SEQ: MQTT_EVENT_DATA
+E (42271) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (42271) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (42281) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 128 (0x80)
+I (42291) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (42301) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (42301) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (42311) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (42321) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  41  Vel    0
+I (42341) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (42341) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (42361) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42361) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 2700 times
+sys_time_offset = 15845  sys_time = 40845
+I (42531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (42541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (42551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 12 BEAT 2
+I (43021) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43021) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (43031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 12 BEAT 3
+I (43191) FCKX_SEQ: MQTT_EVENT_DATA
+E (43191) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (43201) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (43211) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (43211) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (43221) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (43231) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (43241) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (43251) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  42  Vel  127
+I (43261) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (43271) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (43281) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43281) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (43391) FCKX_SEQ: MQTT_EVENT_DATA
+E (43391) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (43391) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (43401) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (43411) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (43421) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (43421) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (43441) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (43451) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  42  Vel    0
+I (43461) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (43461) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (43481) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43481) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 2800 times
+sys_time_offset = 15845  sys_time = 41845
+I (43531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (43541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (43551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 13
+GUI EVENT: Transport MEAS 13 BEAT 0
+I (44031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (44041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 13 BEAT 1
+I (44221) FCKX_SEQ: MQTT_EVENT_DATA
+E (44221) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (44221) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (44231) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 144 (0x90)
+I (44231) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (44241) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (44251) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (44261) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (44261) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  41  Vel  127
+I (44271) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (44281) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (44301) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44301) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (44411) FCKX_SEQ: MQTT_EVENT_DATA
+E (44411) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (44411) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (44421) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 128 (0x80)
+I (44431) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (44441) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (44451) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (44461) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (44471) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  41  Vel    0
+I (44481) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (44481) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (44501) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44501) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 2900 times
+sys_time_offset = 15845  sys_time = 42845
+I (44531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (44541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (44551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 13 BEAT 2
+I (45031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (45031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 13 BEAT 3
+I (45241) FCKX_SEQ: MQTT_EVENT_DATA
+E (45241) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (45251) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (45261) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 146 (0x92)
+I (45261) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (45271) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (45281) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (45281) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (45301) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE ON         Note  62  Vel  127
+I (45311) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (45321) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (45331) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45331) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (45441) FCKX_SEQ: MQTT_EVENT_DATA
+E (45441) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (45441) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (45451) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 130 (0x82)
+I (45461) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 62 (0x3E)
+I (45471) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (45471) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (45481) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (45491) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  2     NOTE OFF        Note  62  Vel    0
+I (45501) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (45511) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (45521) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45521) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (45541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (45561) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (45561) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 14
+GUI EVENT: Transport MEAS 14 BEAT 0
+MIDISequencer::TickProc() 3000 times
+sys_time_offset = 15845  sys_time = 43900
+I (46031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (46031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 14 BEAT 1
+I (46361) FCKX_SEQ: MQTT_EVENT_DATA
+E (46361) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (46361) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (46381) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 144 (0x90)
+I (46391) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (46391) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (46401) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (46411) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (46421) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE ON         Note  41  Vel  127
+I (46431) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (46431) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (46451) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46451) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+MIDISequencer::TickProc() 3100 times
+sys_time_offset = 15845  sys_time = 44845
+I (46531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (46541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 14 BEAT 2
+I (46581) FCKX_SEQ: MQTT_EVENT_DATA
+E (46581) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (46581) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (46591) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 128 (0x80)
+I (46601) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 41 (0x29)
+I (46601) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (46611) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (46621) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (46631) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  0     NOTE OFF        Note  41  Vel    0
+I (46641) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (46641) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+Message recorder on track 1
+I (46661) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (46661) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (47031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (47031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (47041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (47041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 14 BEAT 3
+I (47291) FCKX_SEQ: MQTT_EVENT_DATA
+E (47291) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (47301) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (47311) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 145 (0x91)
+I (47311) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (47321) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 127 (0x7F)
+Midi In PortName MQTT_In callback executed
+E (47331) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+E (47341) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (47341) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE ON         Note  42  Vel  127
+I (47351) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (47361) HardwareMsgIn (driver.cpp): added message to in_queue
+Got message, queue size: 1
+I (47381) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (47381) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (47481) FCKX_SEQ: MQTT_EVENT_DATA
+E (47481) FCKX_SEQ_API: SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)
+W (47491) HardwareMsgIn (driver.cpp): A sign of life from HardwareMsgIn (make it protected again in driver.h!!!)
+I (47501) HardwareMsgIn (driver.cpp): msg_bytes.at(0) 129 (0x81)
+I (47511) HardwareMsgIn (driver.cpp): msg_bytes.at(1) 42 (0x2A)
+I (47521) HardwareMsgIn (driver.cpp): msg_bytes.at(2) 0 (0x0)
+Midi In PortName MQTT_In callback executed
+E (47521) HardwareMsgIn (driver.cpp): msg.GetLength() > 1 HANDLED
+MIDISequencer::TickProc() 3200 times
+E (47531) HardwareMsgIn (driver.cpp): msg.GetLength() > 2 HANDLED
+I (47541) HardwareMsgIn (driver.cpp): !msg.IsNoOp BEFORE PROCESSOR        0 : Ch  1     NOTE OFF        Note  42  Vel    0
+sys_time_offset = 15845  sys_time = 45845
+I (47551) HardwareMsgIn (driver.cpp): !msg.IsNoOp NO action by PROCESSOR required
+E (47561) HardwareMsgIn (driver.cpp): added message to in_queue
+I (47571) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (47571) MIDIOutDriver::HardwareMsgOut: Entering...
+Got message, queue size: 1
+GATT procedure initiated: notify; att_handle=16
+I (47601) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (47601) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 15
+GUI EVENT: Transport MEAS 15 BEAT 0
+I (47621) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+GUI EVENT: Recorder  RECORDING STOP
+I (47631) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47631) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47641) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47641) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47651) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47651) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47661) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47661) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47661) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47671) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47671) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47681) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47681) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47691) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47691) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47701) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47701) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47721) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47721) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47731) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47741) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47751) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47761) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47771) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47781) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47781) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47801) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47811) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47821) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47831) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47841) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47851) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47861) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47871) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47881) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47891) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47901) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47911) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47921) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47931) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47941) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47951) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47961) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47971) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47981) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (47991) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48001) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48011) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48021) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (48031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (48031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (48041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 15 BEAT 1
+I (48051) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48091) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48101) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48111) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48121) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48131) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48141) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48141) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48161) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48171) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48181) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48191) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48201) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48211) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48221) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48231) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48241) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48251) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48261) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48271) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48281) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48291) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48301) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48311) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48321) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48331) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48341) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48351) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48361) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48371) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48381) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48391) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48401) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48411) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48421) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48431) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48441) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48451) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48461) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48471) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48471) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48491) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48501) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48511) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48521) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+MIDISequencer::TickProc() 3300 times
+sys_time_offset = 15845  sys_time = 46845
+I (48531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (48531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (48541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (48541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 15 BEAT 2
+I (48561) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48561) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48591) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48601) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48611) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48621) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48631) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48641) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48651) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48661) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48671) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48681) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48691) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48701) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48711) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48721) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48731) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48741) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48751) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48761) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48771) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48781) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48791) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48801) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48811) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48821) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48831) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48841) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48851) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48861) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48871) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48881) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48891) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48901) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48911) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48921) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48931) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48941) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48951) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48961) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48971) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48981) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (48991) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49001) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49011) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49021) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (49031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (49041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (49051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 15 BEAT 3
+I (49061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49091) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49101) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49111) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49121) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49131) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49141) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49151) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49161) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49171) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49181) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49191) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49201) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49211) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49221) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49231) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49241) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49251) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49261) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49271) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49281) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49291) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49301) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49311) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49321) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49331) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49341) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49351) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49361) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49371) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49381) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49391) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49401) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49411) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49421) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49431) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49441) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49441) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49461) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49471) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49481) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49491) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49501) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49511) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49521) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+MIDISequencer::TickProc() 3400 times
+sys_time_offset = 15845  sys_time = 47845
+I (49531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (49531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (49541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (49551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 16
+GUI EVENT: Transport MEAS 16 BEAT 0
+I (49561) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49601) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49601) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49611) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49621) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49631) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49641) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49651) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49661) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49671) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49681) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49691) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49701) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49711) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49721) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49731) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49741) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49751) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49761) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49771) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49781) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49791) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49801) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49811) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49821) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49831) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49841) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49851) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49861) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49871) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49881) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49891) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49901) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49911) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49921) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49931) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49941) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49951) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49961) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49971) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49981) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (49991) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50001) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50011) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50021) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (50031) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (50031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (50041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 16 BEAT 1
+I (50051) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50051) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50061) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50071) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50081) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50091) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50101) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50111) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50121) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50131) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50141) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50151) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50161) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50171) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50181) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50191) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50201) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50211) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50221) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50231) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50241) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50251) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50261) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50271) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50281) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50291) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50301) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50311) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50321) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50331) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50341) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50351) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50361) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50371) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50381) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50391) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50401) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50411) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50421) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50431) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50441) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50451) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50461) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50471) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50481) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50491) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50501) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50511) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50521) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+MIDISequencer::TickProc() 3500 times
+sys_time_offset = 15845  sys_time = 48845
+I (50531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (50531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+I (50541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Calling recorder.Stop()
+I (50551) MIDIOutDriver::HardwareMsgOut: Entering...
+                Entered in MIDIRecorder::Stop() ...GATT procedure initiated: notify; att_handle=16
+GUI EVENT: Transport MEAS 16 BEAT 2
+E (50571) STOP_RECORDER: Entered MIDIRecorder::Stop()
+I (50571) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+E (50571) STOP_RECORDER: going to call MIDITickComponent::Stop()
+MIDITimer::Stop enter with num_open: I (50581) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50591) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+2I (50601) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50601) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+MIDITimer::Stop exit with num_open: 1I (50611) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+I (50621) RECORDER: TICKPROC OUTSIDE TIME WINDOW
+E (50621) STOP_RECORDER: DEFAULTCLOSEINPORTS call MIDIManager::CloseInPorts()
+IN Port MQTT_In closed (1 times)
+E (50641) STOP_RECORDER: going to call seq->MIDISequencer::Stop()
+E (50641) STOP_SEQUENCER: Entered MIDISequencer::Stop
+                Entered in MIDISequencer::Stop() [moved up to the real entry]...
+E (50661) STOP_SEQUENCER: IsPlaying()
+E (50661) STOP_SEQUENCER: DEFAULTPROC_LOCK_UNLOCK call proc_lock.lock()
+E (50671) STOP_SEQUENCER: after proc_lock.lock()
+E (50671) STOP_SEQUENCER: MIDITickComponent::Stop()
+MIDITimer::Stop enter with num_open: 1

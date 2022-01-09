@@ -1,0 +1,34 @@
+E (15436) task_wdt: Task watchdog got triggered. The follfter wtask blocknoIDITimt the weadProg in ti_open0m0
+E (15436) task_wdt:  - IDLE1 (CPU 1)
+E (15436) task_wdt: Tasks currently running:
+E (15436) task_wdt: CPU 0: btController
+E (15436) task_wdt: CPU 1: IDLE1
+E (15436) task_wdt: Print CPU 0 (current core) backtrace
+
+
+Backtrace:0x400D60D4:0x3FFBE3B0 0x40084705:0x3FFBE3D0 0x4000BFED:0x3FFB6000 0x40093CEA:0x3FFB6010 0x40084C77:0x3FFB6030 0x400902B6:0x3FFB6050 0x40019C71:0x3FFB6070 0x4001A9F2:0x3FFB6090 0x40019D11:0x3FFB60B0 0x40055B4D:0x3FFB60D0 0x4017CC4F:0x3FFB60F0 0x4017D23D:0x3FFB6110 0x40093AB5:0x3FFB6140
+0x400d60d4: task_wdt_isr at C:/Users/Fred/esp-idf/components/esp_common/src/task_wdt.c:187
+
+0x40084705: _xt_lowint1 at C:/Users/Fred/esp-idf/components/freertos/xtensa/xtensa_vectors.S:1105
+
+0x40093cea: vPortExitCritical at C:/Users/Fred/esp-idf/components/freertos/xtensa/port.c:419
+
+0x40084c77: interrupt_restore at C:/Users/Fred/esp-idf/components/bt/controller/bt.c:474
+
+0x400902b6: r_global_int_restore at ??:?
+
+0x4017cc4f: r_rw_schedule at ??:?
+
+0x4017d23d: btdm_controller_task at ??:?
+
+0x40093ab5: vPortTaskWrapper at C:/Users/Fred/esp-idf/components/freertos/xtensa/port.c:143
+
+
+E (15436) task_wdt: Print CPU 1 backtrace
+
+
+Backtrace:0x40081EAA:0x3FFBE9B0 0x4008470mer stFpEeD  0xMI0IBiED:er::FtCp(0 0xM0D93imA:0x3FFBC0e0 :x4opDe3i4:witF BCm9op0n:00
+0x40081eaa: esp_crosscore_isr at C:/Users/Fred/esp-idf/components/esp32/crosscore_int.c:80
+
+632N 0x3tFMQ0T0 n 4l0De3
+5:0x3FB0030m0x(05904) NICMFFICDR0 0ER:0M3AB5:0x3FFBC120

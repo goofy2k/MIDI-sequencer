@@ -1,0 +1,45 @@
+void MIDITimer::Stop() {
+    //static const char *TAG = "MIDITimer::Stop";
+    //ESP_LOGE(TAG,"Enter with num_open %d", num_open);
+    std::cout << "MIDITimer::Stop enter with num_open: " << num_open << std::endl;
+    if (num_open > 0) {
+        num_open--;
+        if (num_open == 0) {
+            std:: cout << "MIDITimer::Stop numopen == 0 : GOING TO CALL bg_thread.join();" << std::endl;
+            #ifdef ESP32
+            //pthread_t res = pthread_join(bg_thread, NULL); //not valid
+            bg_thread.join();
+            #else
+            bg_thread.join();
+            #endif
+            
+            std:: cout << "Timer stopped by MIDITimer::Stop()" << std::endl;
+        }
+    }
+    //ESP_LOGE(TAG,"Exit with num_open %d", num_open);
+    std::cout << "MIDITimer::Stop exit with num_open: " << num_open << std::endl;
+}
+
+
+void MIDITimer::HardStop() {
+    if (num_open > 0) {
+        num_open = 0;
+        bg_thread.join();
+        std:: cout << "Timer stopped by MIDITimer::HardStop()" << std::endl;
+    }
+}
+
+    // This is the background thread procedure
+void MIDITimer::ThreadProc() {
+    duration tick(resolution);
+    std::cout << "outside if block MIDITimer::ThreadProc() num_open: " << num_open << std::endl; //FCKX!
+    while(MIDITimer::num_open) {
+        // execute the supplied function
+        std::cout << "inside if block MIDITimer::ThreadProc() num_open: " << num_open << std::endl; //FCKX!
+        MIDITimer::tick_proc(MIDITimer::GetSysTimeMs(), MIDITimer::tick_param);
+        // find the next timepoint and sleep until it
+        current += tick;
+        std::this_thread::sleep_until(current);
+    }
+}
+

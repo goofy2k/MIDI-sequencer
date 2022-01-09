@@ -1,0 +1,13 @@
+    // This is the background thread procedure
+void MIDITimer::ThreadProc() {
+    duration tick(resolution);
+    std::cout << "outside if block MIDITimer::ThreadProc() num_open: " << num_open << std::endl; //FCKX!
+    while(MIDITimer::num_open) {
+        // execute the supplied function
+        std::cout << "inside if block MIDITimer::ThreadProc() num_open: " << num_open << std::endl; //FCKX!
+        MIDITimer::tick_proc(MIDITimer::GetSysTimeMs(), MIDITimer::tick_param);
+        // find the next timepoint and sleep until it
+        current += tick;
+        std::this_thread::sleep_until(current);
+    }
+}
