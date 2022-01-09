@@ -514,7 +514,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   TODO
   - move the setting of timer tick resolution to outside tick.cpp, preferably to app_main
   - find ways to increase the resolution again, e.g. by analyzing/ balancing CPU load
-  
+  - it looks like the NiCMidi notifier output is delayed irregularly, this may hamper future GUI smoothness 
   
   - implement other channels than 0 in synth app
   - make channels > 1 recognizable in synth (e.g. by changing some FaustDSP settings) NEW REPO CREATED FOR SYNTH APP:  Faust-Synth-MIDIBLE
