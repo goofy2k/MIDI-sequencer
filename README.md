@@ -505,59 +505,21 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - analyze hick-ups in sequencing loop 
   - SOLVED ISSUE with crashes in sequencer example.  Linked PThreads to CORE 1 in ESP-IDF menuconfig
 
-**v29:**
+**v30:**
   - test recording  
+  - SOLVED non-fatal errors in thru and non-exiting from recording mode by INCREASING Midi timer tick resolution from 10 to 50 ms (tick.cpp:50)
   
+**v31:**  
   
+  TODO
+  - move the setting of timer tick resolution to outside tick.cpp, preferably to app_main
+  - find ways to increase the resolution again, e.g. by analyzing/ balancing CPU load
   
   
   - implement other channels than 0 in synth app
   - make channels > 1 recognizable in synth (e.g. by changing some FaustDSP settings) NEW REPO CREATED FOR SYNTH APP:  Faust-Synth-MIDIBLE
   - try to uncomment playing other channel numbers (uncomment line ~1514 and further, "THE REST IS COMMENTED OUT")
   - try to revert back to Heltec LORA32 hardware
-  - try recording again
-  
-Nic:    
-For testing recording and playing you can try the code in the 4th message in this thread (labeled TEST_RECORDING in the app. Remember that I assumed incorrectly the char to be signed, while in your compiler they should be unsigned, so perhaps you must change something in recorder::SetTrackRecChannel() (I am working on these bugs on types, which are scattered throughout all the files of the library).
-Trace the MIDIRecorder::TickProc(), the line
-452 // insert the event into the track
-453 tracks->InsertEvent(i, msg);
-records the incoming event into the MIDIRecorder temporary multitrack, and should be executed every time a message arrives on the MIDI in port. If you set the recording channel to -1 every channel should be accepted, otherwise try to set a specific channel in SetTrackRecChannel() 2nd parameter and to send messages with that channel.
-
-**4th message in this thread**    
-  
-MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
-AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
-MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
-
-int main( int argc, char **argv ) {
-
-    MIDIManager::AddMIDITick(&recorder);
-    //text_n.SetSequencer(&sequencer);      // This is already called by AdvancedSequencer constructor
-
-    MIDIClockTime t = sequencer.MeasToMIDI(5,0); //endMeasure, endBeat record the first 6 beats
-    recorder.SetEndRecTime(t);
-    recorder.EnableTrack(1); //FCKX
-    recorder.SetTrackRecChannel(1,-1);      // Can you set this? Otherwise set a specific channel
-
-    recorder.Start();
-    std::cout << "Recorder started\n";
-
-    MIDITimer::Wait(15000);                 // Waits 15 secs: play something to record (remember to match
-                                            // the input channel with the one set in SetTrackRecChannel)
-
-    recorder.Stop();
-    std::cout << "Recorder stopped\n";
-
-    sequencer.GoToZero();                   // rewinds
-    sequencer.Start();
-    std::cout << "Now the sequencer plays what you have recorded\n";
-
-    while (sequencer.IsPlaying())         // waits until the sequencer finishes
-        MIDITimer::Wait(50);
-}  
-  
-  ## TODO
   
   1. clean up fckx_sequencer code **STARTED v17**: needs continuous attention.  
   2. NimBLE output driver causes duplicate PRIMARY BLE service  **SOLVED** by moving all code from initialisation to openPort  
