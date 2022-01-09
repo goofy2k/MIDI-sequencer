@@ -1,0 +1,40 @@
+/*******************
+*nimBLEdriver.h
+********************/
+class NimBLEGluer {
+    
+    public:
+    //constructor
+    //NimBLEGluer(); //causes a: ../main/main.cpp:564: undefined reference to `NimBLEGluer::setPointer(int)'
+                   //in that line there is NO reference to this class at all!
+    //destructor
+    //virtual ~NimBLEGluer();  
+
+    int testPointer = 123;  //initial value for testing
+    /*
+    void setPointer( int inp);
+    int getPointer( void ){
+        return testPointer;
+        };
+    */        
+    }; 
+
+//NimBLEGluer::NimBLEGluer() {}  //causes a: error: definition of implicitly-declared 'constexpr NimBLEGluer::NimBLEGluer()'
+
+//NimBLEGluer::~NimBLEGluer() {}
+
+extern NimBLEGluer NimBLEDAta;  //to make it globally accessible without intantiating it again ?? 
+/************************************************************************************************************/
+
+
+  /***** in main.cpp, which has a #include "nimBLEdriver.h" *****/
+  NimBLEGluer NimBLEData;
+  printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 123
+  NimBLEData.testPointer = 7;
+  printf("MAIN testPointer: %d\n", NimBLEData.testPointer); //result: 7
+  
+
+
+ /***** in driverUser.cpp, which has a #include "nimBLEdriver.h" *****/ 
+  NimBLEGluer NimBLEData; //needs to be here, but resets the value of testPointer
+  printf("RtMidiOut testPointer: %d\n", NimBLEData.testPointer);  //result: 123
