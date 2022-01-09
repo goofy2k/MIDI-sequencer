@@ -502,7 +502,13 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
 **v29:**
   - test recording
-  - analyze hick-ups in sequencing loop
+  - analyze hick-ups in sequencing loop 
+  - SOLVED ISSUE with crashes in sequencer example.  Linked PThreads to CORE 1 in ESP-IDF menuconfig
+
+**v29:**
+  - test recording  
+  
+  
   
   
   - implement other channels than 0 in synth app
