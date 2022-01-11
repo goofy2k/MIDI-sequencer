@@ -1263,7 +1263,7 @@ void MIDISequencer::Stop() {
         ESP_LOGE(TAG,"non-DEFAULTPROC_LOCK_UNLOCK bypass proc_lock.lock()"); 
         #endif
              
-    // waits until the timer thread has stopped
+    // waits until the timer thread has stopped   //what about this with the freeRTOS Timer?
         ESP_LOGE(TAG,"MIDITickComponent::Stop()");  
         MIDITickComponent::Stop();
         // resets the autostop flag
@@ -1273,7 +1273,7 @@ void MIDISequencer::Stop() {
         state.iterator.SetTimeShiftMode(time_shift_mode);
         ESP_LOGE(TAG,"MIDIManager::AllNotesOff()"); 
         MIDIManager::AllNotesOff();
-         ESP_LOGE(TAG,"MIDIManager::CloseOutPorts()"); 
+        ESP_LOGE(TAG,"MIDIManager::CloseOutPorts()"); 
         MIDIManager::CloseOutPorts();
         ESP_LOGE(TAG,"state.Notify "); 
         state.Notify (MIDISequencerGUIEvent::GROUP_TRANSPORT,
@@ -1374,14 +1374,18 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
         std::cout << "WARNING! sys_time = " << sys_time << " sys_time_offset = " << sys_time_offset << std::endl;
         std::cout << "This causes an error when starting from the beginning" << std::endl;
     }
-    //FCKX!!
-    static unsigned int times;
+    
+        static unsigned int times;
+/*   
+   //FCKX!!
+
     if (!(times % 100)) {
         std::cout << "MIDISequencer::TickProc() " << times << " times" << std::endl;
         std::cout << "sys_time_offset = " << sys_time_offset << "  sys_time = " << sys_time << std::endl;
     }
+        //FCKX!!
     times++;
-    //FCKX!!
+*/
     
     // check if we we are counting in
     if (state.playing_status & COUNT_IN_PENDING) {

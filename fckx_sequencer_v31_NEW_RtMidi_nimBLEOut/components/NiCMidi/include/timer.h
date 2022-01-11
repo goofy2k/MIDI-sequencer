@@ -34,11 +34,13 @@
 #include <thread>
 #include <atomic>
 
-#define ESP32
-#ifdef ESP32
-#include "esp_pthread.h"
-#endif
 
+#define ESP32_TIMER
+#ifdef ESP32_TIMER
+//Enable for using ESP-IDF / freeRTOS based timer
+#include "freertos/FreeRTOS.h"
+#include "freertos/timers.h" 
+#endif
 
 /// \addtogroup GLOBALS
 ///@{
@@ -69,6 +71,7 @@ class MIDITimer {
         /// Type for a variable which can hold a time duration (in milliseconds).
 		typedef std::chrono::milliseconds duration;
 
+        
         /// \cond EXCLUDED
         // We must construct a dummy object (see source file)
                                     MIDITimer();
@@ -83,9 +86,7 @@ class MIDITimer {
         static bool                 IsOpen()                        { return (num_open > 0);  }
 
         /// Sets the timer resolution to the given value in milliseconds. This method stops the timer
-        /// if it is running.
-        
-      
+        /// if it is running.   
         static void                 SetResolution(unsigned int res);
         /// Sets the callback function to be called at every timer tick and its parameter.
         /// The function must be of MIDITick type (i.e. void Funct(tMsecs, void*) ) and it's called
@@ -118,29 +119,38 @@ class MIDITimer {
 
 
     protected:
+    
+        static const unsigned int   DEFAULT_RESOLUTION = 10;    ///< The default timer resolution
+        /// \cond EXCLUDED
+        static unsigned int         resolution;         // The actual timer resolution
+        static MIDITick*            tick_proc;          // The callback function set by the user
+        static void*                tick_param;         // The callback second parameter set by the user        
+        static std::atomic<int>     num_open;           // The number of times Start() was called without a corresponding Stop()
+ 
 
-       #ifdef ESP32
-       //esp_pthread_cfg_t cfg;
-        //for esp-idf  esp_pthread
-        static esp_pthread_cfg_t create_config(const char *name, int core_id, int stack, int prio);
-       #endif
+        static const timepoint      sys_clock_base;     // The base timepoint for calculating system time
+        static timepoint            current;            // Internal use 
+        
+ /// \endcond
 
+#ifndef ESP32_TIMER
 
-        static const unsigned int   DEFAULT_RESOLUTION = 10;
-                                                        ///< The default timer resolution
+                                                  
         /// The background thread procedure. This calls the tick_proc callback supplied by the user and sleeps
         /// until next tick.
         static void                 ThreadProc();
 
-        /// \cond EXCLUDED
-        static unsigned int         resolution;         // The actual timer resolution
-        static MIDITick*            tick_proc;          // The callback function set by the user
-        static void*                tick_param;         // The callback second parameter set by the user
+        /// \cond EXCLUDED 
         static std::thread          bg_thread;          // The background thread
-        static std::atomic<int>     num_open;           // The number of times Start() was called without a corresponding Stop()
-        static const timepoint      sys_clock_base;     // The base timepoint for calculating system time
-        static timepoint            current;            // Internal use
         /// \endcond
+
+#else
+        static TimerHandle_t        freeRTOSTimer;
+        static void                 freeRTOSTimerCallback(TimerHandle_t pxTimer);
+        //static TimerHandle_t        create_freeRTOSTimer();
+
+#endif        
+        
 };
 
 //extern MIDITimer main_timer;

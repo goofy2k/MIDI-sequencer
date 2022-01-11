@@ -1,5 +1,5 @@
-//#define TEST_ADVANCEDSEQUENCER_NOINPUT //RUNS OK "succesfully" looping twinkle twinkle
-#define TEST_RECORDING               //in development
+#define TEST_ADVANCEDSEQUENCER_NOINPUT //RUNS OK "succesfully" looping twinkle twinkle
+//#define TEST_RECORDING               //in development
 //#define THRU                         //input and output   RUNS OK
 
 //CONSIDER TO RENAME BLEDevice etc to NimBLEDevice etc. But test carefully when you have running code!
@@ -1402,8 +1402,10 @@ void main_proposal( void ) {
     MIDIManager::OpenInPorts();          //FCKX!! 220103 must be closed at end
     MIDIManager::OpenOutPorts();            //must be closed at end
  
-    MIDITimer::Wait(5000); 
-    
+    //MIDITimer::Wait(5000); 
+    MIDITimer::SetResolution(1*portTICK_PERIOD_MS); //for ESP32 resolution must be a multiple of the system tick
+    //keep this for a while to detect if resolution is properly implemented in ESP32_TIMER case
+                                  //setting it to 50 leads to timing errors in recordings?
     //could create a waiting loop for availability of port(s)
     //port->isPortOpen())
     /*
@@ -1620,7 +1622,8 @@ int test_main( ) {
     cout << "Playing track 1 ..." << endl;
     sequencer.GoToZero();
 //sequencer.SetPlayMode(MIDISequencer::PLAY_BOUNDED);    
-//sequencer.SetRepeatPlay(1,3,0);  
+//sequencer.SetRepeatPlay(1,3,0);   
+MIDITimer::SetResolution(1*portTICK_PERIOD_MS); //for ESP32 resolution must be a multiple of the system tick
 sequencer.Play();
         ESP_LOGE(TAG,"************* DEBUG 5 *************");
     while (sequencer.IsPlaying()) {
@@ -2003,10 +2006,11 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_REC
     int thru_result = thru_main();
     ESP_LOGW(TAG, "INITIALIZED THRU WITH RESULT: %d", thru_result);
     thru->Start(); // sets the MIDI thru on and off ORIG
-    MIDITimer::Wait(5000); 
-
     
-    thru->Stop();
+    
+//    MIDITimer::Wait(5000); 
+//    thru->Stop();
+
     while (1) {      
         //empty loop forever 
         vTaskDelay(10 / portTICK_PERIOD_MS);  
