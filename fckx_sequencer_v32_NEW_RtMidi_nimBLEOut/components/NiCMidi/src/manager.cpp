@@ -310,6 +310,7 @@ void MIDIManager::Init() {
     }
     
     MIDITimer::SetMIDITick(TickProc);
+    MIDITimer::Start(); //Nic220111
     atexit(Exit);
     init = true;
     std::cout << "Exiting MIDIManager::Init() Found " << MIDI_outs->size() << " midi out and "
@@ -319,7 +320,7 @@ void MIDIManager::Init() {
 
 void MIDIManager::Exit() {
     std::cout << "MIDIManager Exit()" << std::endl;
-    //MIDITimer::HardStop();
+    MIDITimer::HardStop(); //Nic220111
 
 
 #ifdef WIN32

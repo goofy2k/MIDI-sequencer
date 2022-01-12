@@ -51,7 +51,7 @@ esp_pthread_cfg_t MIDITimer::create_config(const char *name, int core_id, int st
 
 
 
-#define ESP32_TIMER
+//#define ESP32_TIMER
 //Enable for using ESP-IDF / freeRTOS based timer
 //In the end this is intended to replace the original thread_based timer, but only for ESP32 (if needed) 
 //The timer must achieve that the "core" function (MIDITimer::tick_proc(MIDITimer::GetSysTimeMs(), MIDITimer::tick_param) ) is called periodically
@@ -177,14 +177,20 @@ int periodTicks = MIDITimer::resolution / portTICK_PERIOD_MS;
      std::cout << "Timer open with " << periodTicks*portTICK_PERIOD_MS << " msecs resolution" << std::endl;        
     //start timer
     xTimerStart( freeRTOSTimer, 0 );
+    }
 #else
     bg_thread = std::thread(ThreadProc);
     std::cout << "Timer open with " << resolution << " msecs resolution" << std::endl; 
-    //where is the resolution variable used?    
+    //where is the resolution variable used? 
+}
+    else   //Nic 220112
+        std::cout << "Dummy Timer::Start()" << std::endl;    //Nic 220112
+
+    
 #endif
         
 
-    }
+    
 
     //std::cout << "MIDITimer::Start exit with num_open: " << num_open << std::endl;
     return true;
@@ -203,13 +209,20 @@ void MIDITimer::Stop() {
             std:: cout << "MIDITimer::Stop num_open == 0 : GOING TO CALL xTimerStop(freeRTOSTimer,0)" << std::endl;
             //xTimerStop(freeRTOSTimer,0);
               //this will be done in the callback, based on num_open == 0
-            #else
+            std:: cout << "Timer stopped by MIDITimer::Stop()" << std::endl;
+        }  
+
+  #else
             std:: cout << "MIDITimer::Stop num_open == 0 : GOING TO CALL bg_thread.join()" << std::endl;
             bg_thread.join();
+                 std:: cout << "Timer stopped by MIDITimer::Stop()" << std::endl;
+        }       
+        else   //Nic 220112
+            std::cout << "Dummy MIDITimer::Stop()" << std::endl;  //Nic 220112         
+         
             #endif
             
-            std:: cout << "Timer stopped by MIDITimer::Stop()" << std::endl;
-        }
+
     }
     //ESP_LOGE(TAG,"Exit with num_open %d", num_open);
     std::cout << "MIDITimer::Stop exit with num_open: " << num_open << std::endl;

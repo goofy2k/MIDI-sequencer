@@ -35,7 +35,7 @@
 #include <atomic>
 
 
-#define ESP32_TIMER
+//#define ESP32_TIMER
 #ifdef ESP32_TIMER
 //Enable for using ESP-IDF / freeRTOS based timer
 #include "freertos/FreeRTOS.h"

@@ -1446,15 +1446,28 @@ void MIDISequencer::TickProc(tMsecs sys_time) {
     if (!(repeat_play_mode && state.cur_measure >= repeat_end_meas) &&
         !GetNextEventTime(&tmp) && (play_mode == PLAY_BOUNDED)) {
         // no events left
-        std::cout << "Auto stopping the sequencer: StaticStopProc called at time " << GetCurrentMIDIClockTime() << std::endl;
-        //<< "GetNextEventTime() returned " << retval << std::endl;
+        //std::cout << "Auto stopping the sequencer: StaticStopProc called at time " << GetCurrentMIDIClockTime() << std::endl; //Nic220111
+std::cout << "Auto stopping the sequencer at time " << GetCurrentMIDIClockTime() << std::endl; //Nic220111  
+  //<< "GetNextEventTime() returned " << retval << std::endl;
         state.playing_status |= AUTO_STOP_PENDING;      // must be here, not in StaticStopProc
         times = 0;      // only for log, comment if you don't need //FCKX!!
 
 
        #ifdef DEFAULTSTATICSTOPPROC
        ESP_LOGE(TAG,"DEFAULTSTATICSTOPPROC call std::thread(StaticStopProc, this).detach()");
-       std::thread(StaticStopProc, this).detach();
+    //   std::thread(StaticStopProc, this).detach(); //Nic220111
+    
+            MIDITickComponent::Stop();   //Nic220111 
+        state.iterator.SetTimeShiftMode(time_shift_mode); //Nic220111 
+        MIDIManager::AllNotesOff(); //Nic220111 
+        MIDIManager::CloseOutPorts(); //Nic220111 
+        state.Notify (MIDISequencerGUIEvent::GROUP_TRANSPORT,
+                      MIDISequencerGUIEvent::GROUP_TRANSPORT_STOP); //Nic220111 
+        // resets the autostop flag                 //Nic220111 
+        state.playing_status &= ~AUTO_STOP_PENDING; //Nic220111 
+    
+    
+    
        #else
        ESP_LOGE(TAG,"non-DEFAULTSTATICSTOPPROC call Stop()");
        Stop(); //FCKX!
