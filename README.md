@@ -521,8 +521,9 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   
   TODO
+  - analyze / improve reliability of MIDI In (MQTT).  Lost messages and timing accuracy.
   - move the setting of timer tick resolution to outside tick.cpp, preferably to app_main
-  - try to remove the option #define DEFAULTSTATICSTOPPROC  sequencer.cpp:31
+  - DONE v31 try to remove the option #define DEFAULTSTATICSTOPPROC  sequencer.cpp:31
   - find ways to increase the resolution again, e.g. by analyzing/ balancing CPU load
   - it looks like the NiCMidi notifier output is delayed irregularly, this may hamper future GUI smoothness 
   
