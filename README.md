@@ -509,7 +509,16 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - test recording  
   - SOLVED non-fatal errors in thru and non-exiting from recording mode by INCREASING Midi timer tick resolution from 10 to 50 ms (tick.cpp:50)
   
-**v31:**  
+**v31:** 
+  - The "solutions" in versions 29 and 30 were no real solutions. They only reduced the occurence of the instability.
+  - In v31 the issue was solved by introduction of a timer based on a freeRTOS timer rather than on a thread. See timer.cpp/.h
+  - The solution is specific for ESP32 (ESP-IDF) systems and can be selected by a conditional complilation flag ESP32_TIMER
+  - The timer resolution must be a multiple of the freeRTOS tick resolution (available as portTICK_PERIOD_MS) in the code
+  - portTICK_PERIOD_MS can be changed in the freeRTOS component section in ESP-IDF menuconfig.
+  
+  **v32**
+  
+  
   
   TODO
   - move the setting of timer tick resolution to outside tick.cpp, preferably to app_main
