@@ -34,8 +34,8 @@ class NimBLECharacteristic;
 class NimBLEService {
 public:
 
-    NimBLEService(const char* uuid, uint16_t numHandles, NimBLEServer* pServer);
-    NimBLEService(const NimBLEUUID &uuid, uint16_t numHandles, NimBLEServer* pServer);
+    NimBLEService(const char* uuid);
+    NimBLEService(const NimBLEUUID &uuid);
     ~NimBLEService();
 
     NimBLEServer*         getServer();
@@ -50,12 +50,14 @@ public:
     NimBLECharacteristic* createCharacteristic(const char* uuid,
                                               uint32_t properties =
                                               NIMBLE_PROPERTY::READ |
-                                              NIMBLE_PROPERTY::WRITE);
+                                              NIMBLE_PROPERTY::WRITE,
+                                              uint16_t max_len = BLE_ATT_ATTR_MAX_LEN);
 
     NimBLECharacteristic* createCharacteristic(const NimBLEUUID &uuid,
                                                uint32_t properties =
                                                NIMBLE_PROPERTY::READ |
-                                               NIMBLE_PROPERTY::WRITE);
+                                               NIMBLE_PROPERTY::WRITE,
+                                               uint16_t max_len = BLE_ATT_ATTR_MAX_LEN);
 
     void                  addCharacteristic(NimBLECharacteristic* pCharacteristic);
     void                  removeCharacteristic(NimBLECharacteristic* pCharacteristic, bool deleteChr = false);
@@ -74,9 +76,7 @@ private:
     friend class          NimBLEDevice;
 
     uint16_t              m_handle;
-    NimBLEServer*         m_pServer;
     NimBLEUUID            m_uuid;
-    uint16_t              m_numHandles;
     ble_gatt_svc_def*     m_pSvcDef;
     uint8_t               m_removed;
     std::vector<NimBLECharacteristic*> m_chrVec;

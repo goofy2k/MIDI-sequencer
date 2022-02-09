@@ -288,7 +288,9 @@ void MIDIRecorder::Start() {
         }
         undo_stack.push(undo_multi);
         rec_on.store(false);            // will be set to true by the static StaticProc()
+#ifdef METRONOME
         SetSeqNotifier();
+#endif
         old_seq_mode = seq->GetPlayMode();
         seq->SetPlayMode(MIDISequencer::PLAY_UNBOUNDED);
         seq->SetCountIn(true);
@@ -329,7 +331,9 @@ void MIDIRecorder::Stop() {
         ESP_LOGE(TAG,"going to call seq->SetCountIn(false)");
         seq->SetCountIn(false);
         ESP_LOGE(TAG,"going to call ResetSeqNotifier()");
+#ifdef METRONOME
         ResetSeqNotifier();
+#endif
         ESP_LOGE(TAG,"for (unsigned int i = 0; i < en_tracks.size()");
         for (unsigned int i = 0; i < en_tracks.size(); i++) {
             if (en_tracks[i]) {

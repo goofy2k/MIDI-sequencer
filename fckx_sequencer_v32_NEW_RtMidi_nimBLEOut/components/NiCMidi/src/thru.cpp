@@ -176,7 +176,11 @@ void MIDIThru::StaticTickProc(tMsecs sys_time, void* pt) {
 void MIDIThru::TickProc(tMsecs sys_time_)
 {
    static const char *TAG = "MIDIThru::TickProc";
+   //ESP_LOGE(TAG,"THRU TICK POS1" );
    proc_lock.lock();
+   //proc_lock.try_lock(); //FCKX
+   MIDIInDriver* in_driver = MIDIManager::GetInDriver(in_port);
+   in_driver->LockQueue();
     /*
     static unsigned int times = 0;
     times++;
@@ -187,27 +191,27 @@ void MIDIThru::TickProc(tMsecs sys_time_)
     MIDIRawMessage rmsg;
     MIDITimedMessage msg;
     //std::cout << "in_port" << in_port << "\n";
-    MIDIInDriver* in_driver = MIDIManager::GetInDriver(in_port);
-    MIDIOutDriver* out_driver = MIDIManager::GetOutDriver(out_port);
-    in_driver->LockQueue();
-    //std::cout << "FCKX MIDIThru::TickProc() inspects input queue: size ="<<in_driver->GetQueueSize()<<"\n";
 
+    MIDIOutDriver* out_driver = MIDIManager::GetOutDriver(out_port);
+
+    //std::cout << "FCKX MIDIThru::TickProc() inspects input queue: size ="<<in_driver->GetQueueSize()<<"\n";
+if (in_driver->GetQueueSize() > 0)
     for (unsigned int i = 0; i < in_driver->GetQueueSize(); i++) {
         std::cout << "Message found\n";
         //get message from the queue WITHOUT deleting it. This is done by Manager at the end of the MidiTicks queue
         in_driver->ReadMessage(rmsg, i);
         msg = rmsg.msg;
-        ESP_LOGE(TAG,"msg.GetLength() %d", msg.GetLength() );       
+     //   ESP_LOGE(TAG,"msg.GetLength() %d", msg.GetLength() );       
   /* //can not access bytes per bytenr as GetByten is hard coded  //useful for longer RPN/NRPN messages
      for (unsigned int ii = 0; ii < msg.GetLength(); ii++) {
       
             
         }
   */
-        ESP_LOGE(TAG,"msg.Status() %u 0x%X", msg.GetStatus(), msg.GetStatus());
-        ESP_LOGE(TAG,"msg.GetByte1() %u 0x%X", msg.GetByte1(), msg.GetByte1());
-        ESP_LOGE(TAG,"msg.GetByte2() %u 0x%X", msg.GetByte2(), msg.GetByte2());  
-        ESP_LOGE(TAG,"msg.GetByte3() %u 0x%X", msg.GetByte3(), msg.GetByte3()); 
+        ESP_LOGD(TAG,"length %d msg.Status() %u (0x%X) B1 %u (0x%X) B2 %u (0x%X) B3 %u (0x%X)", msg.GetLength(), msg.GetStatus(), msg.GetStatus(), msg.GetByte1(), msg.GetByte1(), msg.GetByte2(), msg.GetByte2(), msg.GetByte3(), msg.GetByte3());
+        //ESP_LOGD(TAG,"msg.GetByte1() %u 0x%X", msg.GetByte1(), msg.GetByte1());
+        //ESP_LOGD(TAG,"msg.GetByte2() %u 0x%X", msg.GetByte2(), msg.GetByte2());  
+        //ESP_LOGD(TAG,"msg.GetByte3() %u 0x%X", msg.GetByte3(), msg.GetByte3()); 
         /*
         std::cout << "msg.GetLength()"<< msg.GetLength() <<"\n"; 
         std::cout << "msg.GetStatus()"<< msg.GetStatus() <<"\n"; 
@@ -217,10 +221,10 @@ void MIDIThru::TickProc(tMsecs sys_time_)
         */
         //ESP_LOGE(TAG,"msg.IsChannelMsg() %d", msg.IsChannelMsg()); 
 
-        ESP_LOGE(TAG,"msg.IsChannelMsg() %d", msg.IsChannelMsg()); 
+        ESP_LOGD(TAG,"msg.IsChannelMsg() %d", msg.IsChannelMsg()); 
    
         if (msg.IsChannelMsg()) {
-                ESP_LOGE(TAG,"in_channel %d out_channel %d msg.GetChannel() %d ",in_channel, out_channel, msg.GetChannel());     
+                ESP_LOGD(TAG,"in_channel %d out_channel %d msg.GetChannel() %d ",in_channel, out_channel, msg.GetChannel());     
                 if (in_channel == msg.GetChannel() || in_channel == -1) { //FCKX!!
                 //if (in_channel == msg.GetChannel() || in_channel == -1) {
                     if (out_channel != -1) { //FCKX!!

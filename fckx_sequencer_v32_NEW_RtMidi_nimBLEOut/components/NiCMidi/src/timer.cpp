@@ -51,7 +51,7 @@ esp_pthread_cfg_t MIDITimer::create_config(const char *name, int core_id, int st
 
 
 
-//#define ESP32_TIMER
+#define ESP32_TIMER
 //Enable for using ESP-IDF / freeRTOS based timer
 //In the end this is intended to replace the original thread_based timer, but only for ESP32 (if needed) 
 //The timer must achieve that the "core" function (MIDITimer::tick_proc(MIDITimer::GetSysTimeMs(), MIDITimer::tick_param) ) is called periodically

@@ -21,6 +21,8 @@
 #define NIMBLE_ATT_REMOVE_HIDE 1
 #define NIMBLE_ATT_REMOVE_DELETE 2
 
+#define onMtuChanged onMTUChange
+
 #include "NimBLEUtils.h"
 #include "NimBLEAddress.h"
 #include "NimBLEAdvertising.h"
@@ -41,8 +43,7 @@ class NimBLEServer {
 public:
     size_t                 getConnectedCount();
     NimBLEService*         createService(const char* uuid);
-    NimBLEService*         createService(const NimBLEUUID &uuid, uint32_t numHandles=15,
-                                         uint8_t inst_id=0);
+    NimBLEService*         createService(const NimBLEUUID &uuid);
     void                   removeService(NimBLEService* service, bool deleteSvc = false);
     void                   addService(NimBLEService* service);
     NimBLEAdvertising*     getAdvertising();

@@ -75,11 +75,16 @@
 // the MIDI in port from which the message comes.
 struct MIDIRawMessage {
                                         MIDIRawMessage() : timestamp(0), port(0) {}
-                                        MIDIRawMessage(const MIDIMessage& m, tMsecs t, int p) :
+                                        MIDIRawMessage(const MIDIMessage& m, tMsecs t, int p 
+                                     //  , bool f,std::vector<bool> th //FCKX 
+                                     ) :
                                                         msg(m), timestamp(t), port(p) {}
         MIDIMessage                     msg;        // The MIDI Message received from the port
         tMsecs                          timestamp;  // The absolute time in msecs
         int                             port;       // The id of the MIDI in port which received the message
+        bool fresh;  // true if just received, false if handled by at least one TickProc  //FCKX
+        std::vector<bool>                   tickHandled; //flag telling which TickProc already handled the message //FCKX
+        
 };
 
 
@@ -274,7 +279,7 @@ class MIDIInDriver {
         /// Locks the queue so it cannot be written by other threads (such as the RtMidi callback). You
         /// can then safely inspect and get its data, unlocking it when you have finished and want to get
         /// new messages.
-        void                    LockQueue()                     { in_mutex.lock(); }
+        void                    LockQueue()                     { in_mutex.lock(); } //FCKX  //try_lock
         /// Unlocks the queue (see LockQueue()).
         void                    UnlockQueue()                   { in_mutex.unlock(); }
         /// Empties the queue in a thread-safe way.
@@ -299,6 +304,7 @@ class MIDIInDriver {
         static void             HardwareMsgIn(double time,
                                               std::vector<unsigned char>* msg_bytes,
                                               void* p);
+                                              
 protected:   //FCKX  temporary make HardwareMsgIn public
 
         /// \cond EXCLUDED

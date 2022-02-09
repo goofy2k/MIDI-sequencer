@@ -1,6 +1,9 @@
-#define TEST_ADVANCEDSEQUENCER_NOINPUT //RUNS OK "succesfully" looping twinkle twinkle
-//#define TEST_RECORDING               //in development
-//#define THRU                         //input and output   RUNS OK
+//#define TEST_ADVANCEDSEQUENCER_NOINPUT //RUNS OK "succesfully" looping twinkle twinkle
+//#define TEST_RECORDING               //in development/
+#define THRU                         //input and output   RUNS OK
+
+
+#define DRUMPRESET 0x40 //64
 
 //CONSIDER TO RENAME BLEDevice etc to NimBLEDevice etc. But test carefully when you have running code!
 //remove references to the old jdks lib
@@ -585,9 +588,9 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
        //store in input buffer
    //storeMIDI_Input(event, inQ );
    //printf("going to store input\n");
-   printMIDI_Input(event);    
+  // printMIDI_Input(event);    
       
-    ESP_LOGE(TAG,"SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
+     //ESP_LOGI(TAG,"SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
  
     double time = 111; 
     
@@ -622,8 +625,20 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     //switch of thru
     //pCharacteristic->setValue(midiPacket, 5);
    // pCharacteristic->notify();
-          } 
-        
+          }
+          
+    else
+    //TESTER        
+    if (strncmp(event->topic, "/fckx_seq/midi/test",strlen("/fckx_seq/midi/test")) == 0) {
+        std::cout << "TEST (event->data): " << event->data << std::endl;
+                std::cout << "TEST (event->data_len): " << event->data_len << std::endl;
+              // std::cout << e << std::endl;
+        //ESP_LOGD(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
+        //ESP_LOGD(TAG,"DATA:%.*s ", event->data_len, event->data);
+        //ESP_LOGD(TAG,"data_len %d",event->data_len);  
+        ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
+        ESP_LOGI(TAG,"...command to be implemented...");      
+        }       
     else
     //NONE MIDI COMMANDS (e.g. for NiCMidi MIDIManager        
     if (strncmp(event->topic, "/fckx_seq/command",strlen("/fckx_seq/command")) == 0) {
@@ -644,7 +659,8 @@ int msg_id;
 /*
 * MQTT callback based on the code in ESP-IDF example xxxxxxxxxx
 */
-static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){  
+static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){ 
+    static const char *TAG = "mqtt_event_handler_cb"; 
     //ESP_LOGI(TAG, "FCKX: HANDLER_CB CALLED");  //FCKX
     esp_mqtt_client_handle_t client = event->client;
     //int msg_id;
@@ -678,9 +694,10 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){
             //ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
             //msg_id = esp_mqtt_client_publish(client, "/fckx_seq", "MQTT OK", 0, 1, 0);
             //ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
-            msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq/midi/single",0);
+            msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq/midi/single",1);
             ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
-            
+            msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq/midi/test",0);
+            ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);            
             
             break;
         case MQTT_EVENT_DISCONNECTED:
@@ -761,7 +778,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 * repair by FCKX of the original code, see above
 */
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, esp_mqtt_event_handle_t event_data) {
-    
+    static const char *TAG = "mqtt_event_handler"; 
     ESP_LOGD(TAG, "Event dispatched from event loop base=%s, event_id=%d", base, event_id);
     mqtt_event_handler_cb(event_data);
 }
@@ -1423,7 +1440,7 @@ void main_proposal( void ) {
     recorder.SetEndRecTime(t);
     recorder.EnableTrack(1); //FCKX
 
-    recorder.SetTrackRecChannel(1,0);      // Can you set this? YES Otherwise set a specific channel
+    recorder.SetTrackRecChannel(1,-1);      // Can you set this? YES Otherwise set a specific channel
     //recorder.SetTrackRecChannel(1,-1);  
     recorder.Start();
     std::cout << "Recorder started\n";
@@ -1433,6 +1450,7 @@ void main_proposal( void ) {
     std::cout << "Calling recorder.Stop()\n";
     recorder.Stop();
     std::cout << "Recorder stopped\n";      //never reached after calling recorder.Stop()
+  
     MIDITimer::Wait(1000); 
     std::cout << "Proceeding with next steps\n";
     sequencer.GoToZero();                   // rewinds
@@ -1509,14 +1527,14 @@ note_data track1[] = {
     { 62, 110, 1920 }, { 62, 110, 2040 }, { 60, 210, 2160 }
 };
 
-// Data for "Twinkle twinkle", track 2
+// Data for "Twinkle twinkle", track 2  (BASS TRACK)
 int track2_len = 10;
 note_data track2[] = {
     { 48, 210, 480 }, { 48, 210, 720 }, { 53, 110, 960 }, { 53, 110, 1080 }, { 48, 210, 1200 }, { 50, 210, 1440 },
     { 48, 210, 1680 }, { 43, 110, 1920 }, { 43, 110, 2040 }, { 48, 210, 2160 }
 };
 
-// Data for "Twinkle twinkle", track 3
+// Data for "Twinkle twinkle", track 3  (DRUMS TRACK)
 int track3_len = 47;
 note_data track3[] = {
     { 35, 15, 480 }, { 42, 15, 540 }, { 38, 15, 600 }, { 42, 15, 600 }, { 35, 15, 660 }, { 42, 15, 660 },
@@ -1613,19 +1631,19 @@ int test_main( ) {
     ESP_LOGE(TAG,"************* DEBUG 3 *************");
     // When you edit the AdvancedSequencer multitrack you must update the
     // sequencer parameters before playing: this does the job
- sequencer.SetMIDIThruEnable(true); //enable to pass thru control events
- sequencer.UpdateStatus();
+    sequencer.SetMIDIThruEnable(true); //enable to pass thru control events
+    sequencer.UpdateStatus();
     ESP_LOGE(TAG,"************* DEBUG 4 *************");
     
     
     // now we can play track 1 only
     cout << "Playing track 1 ..." << endl;
     sequencer.GoToZero();
-//sequencer.SetPlayMode(MIDISequencer::PLAY_BOUNDED);    
-//sequencer.SetRepeatPlay(1,3,0);   
-MIDITimer::SetResolution(1*portTICK_PERIOD_MS); //for ESP32 resolution must be a multiple of the system tick
-sequencer.Play();
-        ESP_LOGE(TAG,"************* DEBUG 5 *************");
+    //sequencer.SetPlayMode(MIDISequencer::PLAY_BOUNDED);    
+    //sequencer.SetRepeatPlay(1,3,0);   
+    MIDITimer::SetResolution(1*portTICK_PERIOD_MS); //for ESP32 resolution must be a multiple of the system tick
+    sequencer.Play();
+    ESP_LOGE(TAG,"************* DEBUG 5 *************");
     while (sequencer.IsPlaying()) {
         MIDITimer::Wait(50); };
     ESP_LOGE(TAG,"************* DEBUG 6 *************");
@@ -1641,7 +1659,7 @@ sequencer.Play();
     channel = 1;  //was 1
     ESP_LOGE(TAG,"************* DEBUG 8 *************");
     msg.Clear();                    // resets the message
-    msg.SetProgramChange(channel, 33);
+    msg.SetProgramChange(channel, 15);
     trk->InsertEvent(msg);
     msg.SetVolumeChange(channel, 90);
     trk->InsertEvent(msg);
@@ -1659,17 +1677,17 @@ sequencer.Play();
     //sequencer.GoToZero();
 
 
-    //#define DRUMS
+ #define DRUMS
 #ifdef DRUMS
     // ... and 3 (percussion, channel 10)
         ESP_LOGE(TAG,"************* DEBUG 11 *************");
     trk = tracks->GetTrack(3);
     channel = 9;
-
    
     msg.Clear();
-    //msg.SetProgramChange(channel, 33);    // uncomment these if your device doesn't sets
-    //trk->InsertEvent(msg);                // automatically the drums on channel 10
+            ESP_LOGE(TAG,"************* msg.SetProgramChange(channel, DRUMPRESET)  *************");
+    msg.SetProgramChange(channel, DRUMPRESET); //was 33   // uncomment these if your device doesn't sets
+    trk->InsertEvent(msg);                // automatically the drums on channel 10
     msg.SetVolumeChange(channel, 120);
     trk->InsertEvent(msg);
     for(int i = 0; i < track3_len; i++) {
@@ -1741,26 +1759,37 @@ void app_main(void) {
     
     static const char *TAG = "APP_MAIN";   
     
-/*    
-ESP_LOGE - error (lowest)
-ESP_LOGW - warn
-ESP_LOGI - info
-ESP_LOGD - debug
-ESP_LOGV - verbose (highest)
-*/    
+    /*    
+    ESP_LOGE - error (lowest)
+    ESP_LOGW - warn
+    ESP_LOGI - info
+    ESP_LOGD - debug
+    ESP_LOGV - verbose (highest)
+    */    
     
     esp_log_level_set("*", ESP_LOG_VERBOSE);
+    esp_log_level_set("FCKX_SEQ", ESP_LOG_ERROR);
+    esp_log_level_set("FCKX_SEQ_API", ESP_LOG_ERROR);
+    esp_log_level_set("HARDWAREMSGIN", ESP_LOG_DEBUG);
+    esp_log_level_set("MIDIOutDriver", ESP_LOG_ERROR);
+    esp_log_level_set("MIDIOutDriver::HardwareMsgOut", ESP_LOG_ERROR);
+    esp_log_level_set("MIDIOutDriver::OutputMessage", ESP_LOG_ERROR);
+    
+    
     esp_log_level_set("MidiOutNimBLE :: sendMessage", ESP_LOG_ERROR);
-    esp_log_level_set("RECORDER_FCKX", ESP_LOG_WARN);
-    esp_log_level_set("FCKX_SEQ_API", ESP_LOG_DEBUG);
-    esp_log_level_set("FCKX_SEQ", ESP_LOG_DEBUG);
-    esp_log_level_set("NimBLE", ESP_LOG_VERBOSE);
-    esp_log_level_set("printMIDI_Input", ESP_LOG_VERBOSE);
-    esp_log_level_set("SEQUENCER", ESP_LOG_ERROR);  
+    esp_log_level_set("MIDIThru::TickProc", ESP_LOG_DEBUG);
+    esp_log_level_set("MQTT_CLIENT", ESP_LOG_ERROR);
+    esp_log_level_set("mqtt_event_handler", ESP_LOG_ERROR);
+    esp_log_level_set("Mmqtt_event_handler_cb", ESP_LOG_ERROR);
+
     esp_log_level_set("NICMIDI HardwareMsgOut", ESP_LOG_ERROR);
-    esp_log_level_set("NICMIDI OutputMessage", ESP_LOG_VERBOSE);
+    //esp_log_level_set("NICMIDI OutputMessage", ESP_LOG_VERBOSE);
+    esp_log_level_set("NimBLE", ESP_LOG_VERBOSE);
     esp_log_level_set("NimBLEDevice.cpp", ESP_LOG_VERBOSE);
-    //NimBLEDevice.cpp
+    esp_log_level_set("printMIDI_Input", ESP_LOG_VERBOSE);
+    esp_log_level_set("RECORDER_FCKX", ESP_LOG_WARN);
+    esp_log_level_set("SEQUENCER", ESP_LOG_ERROR);  
+
     
     ESP_LOGI(TAG, "[APP] Startup..");
     ESP_LOGI(TAG, "[APP] Free memory: %d bytes", esp_get_free_heap_size());

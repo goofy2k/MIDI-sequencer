@@ -2,9 +2,6 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.5)
 
-#set(CONFIG_NIMBLE_CPP_IDF 0)  #FCKX
-
-
 idf_build_get_property(__hack_component_targets __COMPONENT_TARGETS)
 
 if("esp-nimble-component" IN_LIST BUILD_COMPONENTS OR "__esp-nimble-component" IN_LIST __hack_component_targets)
