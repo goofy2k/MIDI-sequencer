@@ -1,0 +1,1868 @@
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+ble_hs_hci_cmd_send: ogf=0x08 ocf=0x0006 len=15
+0x06 0x20 0x0f 0x30 0x00 0x60 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x07 0x00
+Command complete: cmd_pkts=5 ogf=0x8 ocf=0x6 status=0
+ble_hs_hci_cmd_send: ogf=0x08 ocf=0x000a len=1
+0x0a 0x20 0x01 0x01
+Command complete: cmd_pkts=5 ogf=0x8 ocf=0xa status=0
+I (7051) NIMBLEDRIVER: OPENPORT Waiting for a client connection to notify...
+LE connection complete. handle=0 role=1 paddrtype=0 addr=84.cc.a8.d.3b.ba local_rpa=0.0.0.0.0.0 peer_rpa=0.0.0.0.0.0 itvl=40 latency=0 spvn_tmo=256 mca=1
+W (8591) NIMBLE_ONCONNECT: -----
+GAP procedure initiated: advertise; disc_mode=2 adv_channel_map=0 own_addr_type=0 adv_filter_policy=0 adv_itvl_min=0 adv_itvl_max=0
+ble_hs_hci_cmd_send: ogf=0x08 ocf=0x0006 len=15
+0x06 0x20 0x0f 0x30 0x00 0x60 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x07 0x00
+Command complete: cmd_pkts=5 ogf=0x8 ocf=0x6 status=0
+ble_hs_hci_cmd_send: ogf=0x08 ocf=0x000a len=1
+0x0a 0x20 0x01 0x01
+Command complete: cmd_pkts=5 ogf=0x8 ocf=0xa status=0
+ble_hs_hci_cmd_send: ogf=0x08 ocf=0x0016 len=2
+0x16 0x20 0x02 0x00 0x00
+Command Status: status=0 cmd_pkts=5 ocf=0x16 ogf=0x8
+ble_hs_hci_evt_acl_process(): conn_handle=0 pb=2 len=7 data=0x03 0x00 0x04 0x00 0x02 0x00 0x01
+rxed att command: mtu req; conn=0 mtu=256
+txed att command: mtu rsp; conn=0 mtu=256
+host tx hci data; handle=0 length=7
+ble_hs_hci_acl_tx(): 0x00 0x00 0x07 0x00 0x03 0x00 0x04 0x00 0x03 0x00 0x01
+LE Remote Used Features. handle=0 feat=ff 00 00 00 00 00 00 00
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_evt_acl_process(): conn_handle=0 pb=2 len=27 data=0x17 0x00 0x04 0x00 0x06 0x01 0x00 0xff 0xff 0x00 0x28 0x4b 0x91 0x31 0xc3 0xc9 0xc5 0xcc 0x8f 0x9e 0x45 0xb5 0x1f 0x01 0xc2 0xaf 0x4f
+rxed att command: find type value req; conn=0 start_handle=0x0001 end_handle=0xffff attr_type=10240
+txed att command: find type value rsp; conn=0
+host tx hci data; handle=0 length=13
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0d 0x00 0x09 0x00 0x04 0x00 0x07 0x0a 0x00 0x0d 0x00 0x0e 0x00 0x11 0x00
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_evt_acl_process(): conn_handle=0 pb=2 len=27 data=0x17 0x00 0x04 0x00 0x06 0x12 0x00 0xff 0xff 0x00 0x28 0x4b 0x91 0x31 0xc3 0xc9 0xc5 0xcc 0x8f 0x9e 0x45 0xb5 0x1f 0x01 0xc2 0xaf 0x4f
+rxed att command: find type value req; conn=0 start_handle=0x0012 end_handle=0xffff attr_type=10240
+txed att command: error rsp; conn=0 req_op=6 handle=0x0012 error_code=10
+host tx hci data; handle=0 length=9
+ble_hs_hci_acl_tx(): 0x00 0x00 0x09 0x00 0x05 0x00 0x04 0x00 0x01 0x06 0x12 0x00 0x0a
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_evt_acl_process(): conn_handle=0 pb=2 len=11 data=0x07 0x00 0x04 0x00 0x08 0x0e 0x00 0x11 0x00 0x03 0x28
+rxed att command: read type req; conn=0 start_handle=0x000e end_handle=0x0011
+txed att command: read type rsp; conn=0 length=21
+host tx hci data; handle=0 length=27
+ble_hs_hci_acl_tx(): 0x00 0x00 0x1b 0x00 0x17 0x00 0x04 0x00 0x09 0x15 0x0f 0x00 0x1a 0x10 0x00 0xa8 0x26 0x1b 0x36 0x07 0xea 0xf5 0xb7 0x88 0x46 0xe1 0x36 0x3e 0x48 0xb5 0xbe
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_evt_acl_process(): conn_handle=0 pb=2 len=11 data=0x07 0x00 0x04 0x00 0x08 0x10 0x00 0x11 0x00 0x03 0x28
+rxed att command: read type req; conn=0 start_handle=0x0010 end_handle=0x0011
+txed att command: error rsp; conn=0 req_op=8 handle=0x0010 error_code=10
+host tx hci data; handle=0 length=9
+ble_hs_hci_acl_tx(): 0x00 0x00 0x09 0x00 0x05 0x00 0x04 0x00 0x01 0x08 0x10 0x00 0x0a
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_evt_acl_process(): conn_handle=0 pb=2 len=7 data=0x03 0x00 0x04 0x00 0x0a 0x10 0x00
+rxed att command: read req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=5
+ble_hs_hci_acl_tx(): 0x00 0x00 0x05 0x00 0x01 0x00 0x04 0x00 0x0b
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_evt_acl_process(): conn_handle=0 pb=2 len=11 data=0x07 0x00 0x04 0x00 0x08 0x10 0x00 0x11 0x00 0x03 0x28
+rxed att command: read type req; conn=0 start_handle=0x0010 end_handle=0x0011
+txed att command: error rsp; conn=0 req_op=8 handle=0x0010 error_code=10
+host tx hci data; handle=0 length=9
+ble_hs_hci_acl_tx(): 0x00 0x00 0x09 0x00 0x05 0x00 0x04 0x00 0x01 0x08 0x10 0x00 0x0a
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_evt_acl_process(): conn_handle=0 pb=2 len=9 data=0x05 0x00 0x04 0x00 0x04 0x11 0x00 0x11 0x00
+rxed att command: find info req; conn=0 start_handle=0x0011 end_handle=0x0011
+txed att command: find info rsp; conn=0 format=1
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x05 0x01 0x11 0x00 0x02 0x29
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_evt_acl_process(): conn_handle=0 pb=2 len=9 data=0x05 0x00 0x04 0x00 0x52 0x11 0x00 0x01 0x00
+rxed att command: write cmd; conn=0 handle=0x0011
+I (12051) NIMBLEDRIVER: Number of connected peers: 1
+OUT Port fckx_seq open
+E (12051) FCKX_SEQ: WAITING A WHILE FOR SEQUENCER INITS (INCLUDING NIMBLE) TO FINISH
+E (12051) FCKX_SEQ: SHOULD BE DONE INSIDE THIS INIT, BY DETECTING PRESENCE OF CONNECTION WITH SYNTH
+E (13061) FCKX_SEQ: NIMBLE CONNECTION SHOULD BE OK HERE
+E (13061) FCKX_SEQ: ************* DEBUG -3 *************
+E (13061) FCKX_SEQ: ************* DEBUG -2 *************
+E (13071) FCKX_SEQ: READY TO CREATE TRACK CONTENT
+E (13071) FCKX_SEQ: ************* DEBUG -1 *************
+E (13081) FCKX_SEQ: ************* DEBUG 0 *************
+E (13081) FCKX_SEQ: *************BEFORE CLEAN trk->GetNumEvents() masterTrack 0 1
+E (13091) FCKX_SEQ: *************AFTER CLEAN trk->GetNumEvents() masterTrack 0 1
+E (13101) FCKX_SEQ: ************* DEBUG 1 *************
+E (13101) FCKX_SEQ: *************BEFORE CLEAN trk->GetNumEvents() songTrack 1 1
+E (13111) FCKX_SEQ: *************AFTER CLEAN trk->GetNumEvents() songTrack 1 1
+E (13121) FCKX_SEQ: ************* DEBUG 2 *************
+E (13121) FCKX_SEQ: ************* DEBUG 3 *************
+W (13131) MQTTDRIVER: open MQTTMidiIn port
+IN Port MQTT_In open
+OUT Port fckx_seq open (2 times)
+E (13141) SEQUENCER: track_states.size() 17
+E (13161) SEQUENCER: track_states.size() 17
+E (13171) SEQUENCER: track_states.size() 17
+E (13171) SEQUENCER: track_states.size() 17
+E (13181) SEQUENCER: track_states.size() 17
+E (13181) SEQUENCER: track_states.size() 17
+E (13191) SEQUENCER: track_states.size() 17
+E (13211) FCKX_SEQ: ************* DEBUG 4 *************
+Playing track 1 ...
+E (13211) SEQUENCER: track_states.size() 17
+Timer stopped by MIDITimer::HardStop()
+Timer resolution 10
+portTICK_PERIOD_MS 10
+Calculated periodTicks 1
+Timer started with 1 system ticks resolution
+Timer open with 10 msecs resolution
+                Entered in AdvancedSequencer::Start() ...
+E (13231) STOP_SEQUENCER: Entered MIDISequencer::Stop
+                Entered in MIDISequencer::Stop() [moved up to the real entry]...
+OUT Port fckx_seq open (3 times)
+                 ... Exiting from AdvancedSequencer::Start()
+I (13261) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (13261) MIDIOutDriver::HardwareMsgOut: Entering...
+E (13261) FCKX_SEQ: ************* DEBUG 5 *************
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb0 0x07 0x6e
+I (13291) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 2
+I (13301) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=9
+ble_hs_hci_acl_tx(): 0x00 0x00 0x09 0x00 0x05 0x00 0x04 0x00 0x1b 0x10 0x00 0xc0 0x0b
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (14461) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (14461) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3c 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (14741) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (14741) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x3c 0x64
+I (14761) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (14771) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3c 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (15041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x3c 0x64
+I (15061) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15071) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x43 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (15341) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15341) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x43 0x64
+I (15361) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15371) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x43 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (15641) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15641) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x43 0x64
+I (15661) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15661) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x45 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (15941) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15941) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x45 0x64
+I (15961) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (15961) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x45 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (16241) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16241) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x45 0x64
+I (16261) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16261) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x43 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (16841) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16841) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x43 0x64
+I (16861) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (16871) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x41 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (17141) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17141) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x41 0x64
+I (17161) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17171) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x41 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (17441) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17441) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x41 0x64
+I (17461) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17471) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x40 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (17741) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17741) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x40 0x64
+I (17761) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (17771) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x40 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (18041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x40 0x64
+I (18061) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18071) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3e 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (18341) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18341) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x3e 0x64
+I (18361) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18361) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3e 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (18641) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18641) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x3e 0x64
+I (18661) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (18661) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3c 0x64 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (19191) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (19191) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x3c 0x64
+Auto stopping the sequencer at time 2386
+E (19221) SEQUENCER_TICKPROC: DEFAULTSTATICSTOPPROC call std::thread(StaticStopProc, this).detach()
+MIDITimer::Stop enter with num_open: 3
+MIDITimer::Stop exit with num_open: 2
+E (19241) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+E (19241) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19241) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 E (19271) FCKX_SEQ: ************* DEBUG 6 *************
+The sequencer finished
+0x1b 0x10 0x00 0xb0 0x7b 0x00
+E (19281) FCKX_SEQ: ************* DEBUG 7 *************
+E (19281) FCKX_SEQ: ************* DEBUG 8 *************
+E (19291) FCKX_SEQ: ************* DEBUG 9 *************
+E (19291) FCKX_SEQ: ************* DEBUG 10 *************
+E (19301) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19301) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb1 0x7b 0x00
+E (19341) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19351) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x04 0x00 0x1b 0x10 0x00 0xb2 0x7b 0x00
+E (19371) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19381) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb3 0x7b 0x00
+E (19401) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (19411) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb4 0x7b 0x00
+E (19441) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19451) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb5 0x7b 0x00
+E (19471) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19481) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb6 0x7b 0x00
+E (19511) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19511) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb7 0x7b 0x00
+E (19551) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb8 0x7b 0x00
+E (19581) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19581) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0xb9 0x7b 0x00
+E (19621) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19621) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xba 0x7b 0x00
+E (19651) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19651) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbb 0x7b 0x00
+E (19681) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19681) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbc 0x7b 0x00
+E (19711) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (19711) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbd 0x7b 0x00
+E (19751) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19761) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbe 0x7b 0x00
+E (19781) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (19791) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbf 0x7b 0x00
+E (19831) NICMIDI DRIVER: Entered MIDIOutDriver::ClosePort()
+OUT Port fckx_seq closed (open 2 times)
+E (19831) NICMIDI DRIVER: Exiting MIDIOutDriver::ClosePort()
+E (19841) SEQUENCER: track_states.size() 17
+E (19851) SEQUENCER: track_states.size() 17
+E (19871) SEQUENCER: track_states.size() 17
+E (19881) SEQUENCER: track_states.size() 17
+E (19901) SEQUENCER: track_states.size() 17
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+E (19921) FCKX_SEQ: ************* DEBUG 11 *************
+E (19921) FCKX_SEQ: ************* msg.SetProgramChange(channel, DRUMPRESET)  *************
+E (19921) SEQUENCER: track_states.size() 17
+E (19941) SEQUENCER: track_states.size() 17
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+E (19961) SEQUENCER: track_states.size() 17
+E (19981) SEQUENCER: track_states.size() 17
+E (19981) SEQUENCER: track_states.size() 17
+E (20011) SEQUENCER: track_states.size() 17
+E (20021) FCKX_SEQ: ************* DEBUG 12 *************
+E (20021) FCKX_SEQ: ************* DEBUG 13 *************
+Playing 3 tracks ...
+E (20031) SEQUENCER: track_states.size() 17
+                Entered in AdvancedSequencer::Start() ...
+E (20051) STOP_SEQUENCER: Entered MIDISequencer::Stop
+                Entered in MIDISequencer::Stop() [moved up to the real entry]...
+OUT Port fckx_seq open (3 times)
+                 ... Exiting from AdvancedSequencer::Start()
+I (20081) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20081) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb0 0x07 0x6e
+I (20101) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20101) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb1 0x07 0x5a
+I (20131) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (20141) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb9 0x07 0x78
+I (20171) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 2
+I (20181) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=9
+ble_hs_hci_acl_tx(): 0x00 0x00 0x09 0x00 0x05 0x00 0x04 0x00 0x1b 0x10 0x00 0xc0 0x0b
+I (20201) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 2
+I (20211) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=9
+ble_hs_hci_acl_tx(): 0x00 0x00 0x09 0x00 0x05 0x00 0x04 0x00 0x1b 0x10 0x00 0xc1 0x0f
+I (20241) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 2
+I (20251) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=9
+ble_hs_hci_acl_tx(): 0x00 0x00 0x09 0x00 0x05 0x00 0x04 0x00 0x1b 0x10 0x00 0xc9 0x40
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (21281) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21281) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3c 0x64
+I (21301) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21311) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x91 0x30 0x64
+I (21341) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21341) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (21381) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21391) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (21431) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21431) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (21461) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (21461) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (21551) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x80 0x3c 0x64
+I (21571) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21581) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (21611) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (21611) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3c 0x64
+I (21641) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21651) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x26 0x64
+I (21681) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21691) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (21721) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21721) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x26 0x64
+I (21751) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21761) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (21781) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21791) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (21831) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21841) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (21871) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21871) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (21901) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21901) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x81 0x30 0x64
+I (21941) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21951) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x3c 0x64
+I (21971) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (21981) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x91 0x30 0x64
+I (22011) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (22021) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (22051) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22061) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x43 0x64
+I (22081) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22091) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (22131) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22131) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (22161) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+I (22161) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+handle:0 pkts:1
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (22191) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22201) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (22241) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22241) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+Number of Completed Packets: num_handles=1
+I (22271) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+handle:0 pkts:1
+I (22281) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x43 0x64
+I (22311) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (22311) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (22341) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22351) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x43 0x64
+I (22381) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22381) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x26 0x64
+I (22421) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22421) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (22451) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22451) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x26 0x64
+I (22491) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22491) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (22531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x64
+I (22561) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22571) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x81 0x30 0x64
+I (22591) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22601) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x43 0x64
+I (22641) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22651) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x91 0x35 0x64
+I (22671) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22681) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (22711) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22711) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x45 0x64
+I (22751) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22751) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (22781) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22781) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (22811) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22811) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (22851) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22851) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x45 0x64
+I (22881) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22881) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x81 0x35 0x64 Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (22921) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22941) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (22961) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (22971) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x45 0x64
+I (23001) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23001) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x91 0x35 0x64
+I (23031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x26 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (23071) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23081) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (23101) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (23111) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x26 0x64
+I (23151) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23151) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (23181) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23191) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (23221) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23221) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (23251) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23261) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (23291) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23301) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x45 0x64
+I (23331) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23331) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x81 0x35 0x64
+I (23361) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (23371) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (23401) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23401) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x43 0x64
+I (23441) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23451) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x91 0x30 0x64
+I (23471) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23481) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (23511) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (23511) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (23551) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23561) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (23591) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23591) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (23631) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23631) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (23661) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23661) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (23691) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23691) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x26 0x64
+I (23741) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23741) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x64
+I (23771) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23781) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x26 0x64
+I (23811) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (23811) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2e 0x64
+I (23841) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23851) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2e 0x64
+I (23881) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23891) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x04 0x00 0x1b 0x10 0x00 0x81 0x30 0x64
+I (23921) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23921) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x43 0x64
+I (23951) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23961) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x91 0x32 0x64
+I (23991) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (23991) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (24031) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24041) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x41 0x64
+I (24061) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24071) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (24101) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24101) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 handle:0 pkts:1
+0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (24141) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24151) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (24171) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24181) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x41 0x64
+I (24211) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (24211) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (24251) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24251) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x41 0x64
+I (24281) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24291) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x26 0x64
+I (24331) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24331) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (24361) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24361) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x26 0x64
+I (24391) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24401) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (24431) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24441) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (24461) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24471) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (24501) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24501) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (24541) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x81 0x32 0x64
+I (24581) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24581) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x80 0x41 0x64
+I (24621) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24621) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x91 0x30 0x64
+I (24651) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24661) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (24691) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24691) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x40 0x64
+I (24731) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24741) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (24761) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (24771) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (24791) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24801) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (24831) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24841) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (24861) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+I (24881) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; handle:0 pkts:2
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (24911) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24911) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x40 0x64
+I (24941) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24951) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (24981) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (24981) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x40 0x64
+I (25021) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25021) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x26 0x64
+I (25051) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (25081) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25091) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x26 0x64
+I (25131) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25141) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (25161) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (25171) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (25191) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25201) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x81 0x30 0x64
+I (25241) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25241) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x80 0x40 0x64
+I (25271) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25281) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x91 0x2b 0x64
+I (25301) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25311) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (25341) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25351) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3e 0x64
+Number of Completed Packets: num_handles=1
+I (25381) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+handle:0 pkts:1
+I (25391) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (25421) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25431) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (25451) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25461) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (25491) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25491) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x3e 0x64
+I (25531) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25531) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x81 0x2b 0x64
+I (25561) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25561) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (25601) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25611) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3e 0x64
+I (25641) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25651) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x91 0x2b 0x64
+I (25671) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25681) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x26 0x64
+I (25701) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (25721) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (25751) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25761) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x26 0x64
+I (25781) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25791) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (25831) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25831) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (25861) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25861) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (25891) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25901) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (25941) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25941) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x3e 0x64 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (25971) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (25981) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x81 0x2b 0x64
+I (26011) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (26011) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+I (26041) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x90 0x3c 0x64
+I (26081) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26091) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x1b 0x10 0x00 0x91 0x30 0x64
+I (26121) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26121) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (26151) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26161) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (26191) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26191) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (26231) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26241) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x2a 0x64
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (26261) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26271) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x2a 0x64
+I (26291) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26301) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x31 0x64
+I (26341) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26351) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x99 0x23 0x64
+I (26371) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26381) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x23 0x64
+I (26411) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+I (26411) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x80 0x3c 0x64
+I (26451) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26451) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x81 0x30 0x64
+I (26481) MIDIOutDriver::OutputMessage: MIDIOutDriver::OutputMessage size: 3
+I (26491) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0x89 0x31 0x64
+Auto stopping the sequencer at time 2584
+E (26531) SEQUENCER_TICKPROC: DEFAULTSTATICSTOPPROC call std::thread(StaticStopProc, this).detach()
+MIDITimer::Stop enter with num_open: 3
+MIDITimer::Stop exit with num_open: 2
+E (26551) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+E (26551) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26551) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb0 0x7b 0x00
+    Stop Playing 3 tracks
+E (26581) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26591) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb1 0x7b 0x00
+E (26621) NICMIDI DRIVER: Entered MIDIOutDriver::ClosePort()
+OUT Port fckx_seq closed (open E (26631) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26631) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb2 0x7b 0x00
+E (26661) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (26671) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb3 0x7b 0x00
+E (26701) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26701) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb4 0x7b 0x00
+2 times)
+E (26741) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26741) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb5 0x7b 0x00
+E (26771) NICMIDI DRIVER: Exiting MIDIOutDriver::ClosePort()
+E (26771) FCKX_SEQ: Exiting test_main example
+E (26771) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26781) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb6 0x7b 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+E (26821) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26821) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb7 0x7b 0x00
+MIDITimer::Stop enter with num_open: 2E (26851) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (26861) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb8 0x7b 0x00
+E (26881) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26891) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb9 0x7b 0x00
+MIDITimer::Stop exit with num_open: 1
+E (26931) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26931) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xba 0x7b 0x00
+E (26961) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26961) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbb 0x7b 0x00
+IN Port MQTT_In closed
+E (26991) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (26991) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbc 0x7b 0x00
+E (27031) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+E (27031) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+Number of Completed Packets: num_handles=1
+E (27031) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+handle:0 pkts:1
+I (27051) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbd 0x7b 0x00
+E (27071) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27081) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbe 0x7b 0x00
+E (27111) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27111) MIDIOutDriver::HardwareMsgOut: Entering...
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbf 0x7b 0x00
+E (27141) NICMIDI DRIVER: Entered MIDIOutDriver::ClosePort()
+OUT Port fckx_seq closed (open 1 times)
+E (27161) NICMIDI DRIVER: Exiting MIDIOutDriver::ClosePort()
+I (27171) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb0 0x7b 0x00
+E (27201) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27201) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb1 0x7b 0x00
+E (27231) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27231) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb2 0x7b 0x00
+E (27251) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+I (27261) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb3 0x7b 0x00
+E (27301) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27301) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb4 0x7b 0x00
+E (27331) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27331) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0xb5 0x7b 0x00
+E (27371) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27371) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb6 0x7b 0x00
+E (27401) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27401) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb7 0x7b 0x00
+E (27431) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27441) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x04 0x00 0x1b 0x10 0x00 0xb8 0x7b 0x00
+E (27461) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27471) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xb9 0x7b 0x00
+E (27501) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27511) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xba 0x7b 0x00
+E (27531) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27541) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbb 0x7b 0x00
+E (27581) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27581) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbc 0x7b 0x00
+E (27601) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27611) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbd 0x7b 0x00
+E (27641) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27641) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbe 0x7b 0x00
+E (27671) NICMIDI DRIVER: MIDIOutDriver::AllNotesOff
+I (27671) MIDIOutDriver::HardwareMsgOut: Entering...
+GATT procedure initiated: notify; att_handle=16
+txed att command: notify req; conn=0 handle=0x0010
+host tx hci data; handle=0 length=10
+ble_hs_hci_acl_tx(): 0x00 0x00 0x0a 0x00 0x06 0x00 0x04 0x00 0x1b 0x10 0x00 0xbf 0x7b 0x00
+E (27701) NICMIDI DRIVER: Entered MIDIOutDriver::ClosePort()
+OUT Port fckx_seq closed
+Number of Completed Packets: num_handles=1
+handle:0 pkts:2
+Number of Completed Packets: num_handles=1
+handle:0 pkts:1
+E (27711) NICMIDI DRIVER: Exiting MIDIOutDriver::ClosePort()
+E (27721) STOP_SEQUENCER: Entered MIDISequencer::Stop
+                Entered in MIDISequencer::Stop() [moved up to the real entry]...
+E (27741) APP_MAIN: Exited test_main successfully 0
+W (27741) APP_MAIN: END OF TEST_ADVANCEDSEQUENCER_NOINPUT
