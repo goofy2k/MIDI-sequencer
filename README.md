@@ -147,13 +147,14 @@ Based on the above, we start with defining the spec for the sound board and deri
 - Offers a Bluetooth service (NimBLE implementation)
 - output MIDI data are encoded following the MIDI-BLE standard
 - MIDI data are sent in order of playing time
-
-- supply control settings such as ADSR and other DSP parameters for the synthesizer this can (preferably) be done as MIDI commands
-- supply control settings for the audio codec   
+- supply control settings for DSP parameters for the synthesizer this can (preferably) be done as MIDI commands
+- supply control settings for the audio codec to sound board
+- (As of V33) send controller settings to GUI   
 
 
 **Input**
 - can receive "real time" input over MQTT 
+- (As of V33) can receive input from soundboard about actual values of DSP and codec controls. Required for syncing GUI elements with these settings
 - later a connection to a musical instrument is envisioned
 
 ## Sequencer mode(s) of operation
@@ -518,9 +519,15 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   **v32**
   
+  - solved issue with lost messages in thru mode
+  - implemented midi commands for preset selection (0xCn 0xpp)
+  - implemented midi commands for controller settings (0xB0 0x67 - 0x71)
+  
+  **v33**
   
   
   TODO
+  - synchronize controller settings between GUI server and synth board (requires additinol NimBLE communication with synth board)
   - check recorded notes (pitch, channel). This becomes easier after switching of metronome in recorder OR switching of metronome logs in synth
   - analyze / improve reliability of MIDI In (MQTT).  Lost messages and timing accuracy.
   - move the setting of timer tick resolution to outside tick.cpp, preferably to app_main
