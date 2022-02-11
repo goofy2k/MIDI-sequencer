@@ -33,9 +33,9 @@ As the sequencer already contains the NimBLE server role, the starting point is 
 
 ### 3. Sequencer app: Send parameter values to Nodered
 
-[2] For testing purposes, the sequencer will temporarily send values to the controls when an edit command incoming from the GUI is passed (via Midi Thru) to the synth board.
-    NO: the sequencer forwards incoming Midi messages to the synth WITHOUT interpreting them.  
-    You have to do that in the MQTT handling routine for the topic "/fckx_seq/midi/single".  
+[2] For testing purposes, the sequencer will temporarily send values to the controls when an edit command incoming from the GUI is detected.   
+    Catched the incoming command in the MQTT handling routine for the topic "/fckx_seq/midi/single".
+    Sent an MQTT command for the controller over "fckx_seq/controller/A"  for the A control (attack). 
 
 ### 4. Nodered flow: Set controller layout to match with received value
 
