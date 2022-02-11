@@ -1,4 +1,4 @@
-# MIDI-sequencer
+# MIDI-sequencer / synth
 
 ## Synchronize controller settings between GUI server and synth board
 
