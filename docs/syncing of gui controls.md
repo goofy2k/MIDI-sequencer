@@ -14,9 +14,14 @@ This all requires implementation of an output NimBLE channel in the synth app sy
 
 ### Steps for implementation
 
-The implementation steps are listed here. The complete implementation depends on a chain of events / handlers. The steps are not necessarilly implemented in the order of the list. It is prbably wise to start with the tail (4.), then implement the head (1.) and then "glue" those parts together in the sequencer app (2. and 3.)
+The implementation steps are listed here. The complete implementation depends on a chain of events / handlers. 
 
 1. Synth app: Write messages with parameter values to NimBLE characteristics in the synth app
 2. Sequencer app: Receive parameter characteristics from synth in the sequencer app
 3. Sequencer app: Send parameter values to Nodered
 4. Nodered flow: Set controller layout to match with received value
+
+The steps are not necessarilly implemented in the order of the list. It is probably wise to start with the tail (4.), then implement the head (1.) and then "glue" those parts together in the sequencer app (2. and 3.).   
+
+As the sequencer already contains the NimBLE server role, the starting point is to re-use that. Currently the initiation of the server is done in a part that was added to the NicMidi lib. Because of the need for re-use of the server, it is probably wise to make NimBLE server initialization in the sequencer independent of NiCMidi. 
+
