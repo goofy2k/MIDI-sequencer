@@ -29,6 +29,8 @@ As the sequencer already contains the NimBLE server role, the starting point is 
 
 ### 1. Synth app: Write messages with parameter values to NimBLE characteristics in the synth app
 
+[3] Try to send a test message over to the existing NimBLE server. 
+
 ### 2. Sequencer app: Receive parameter characteristics from synth in the sequencer app
 
 ### 3. Sequencer app: Send parameter values to Nodered
