@@ -33,4 +33,8 @@ As the sequencer already contains the NimBLE server role, the starting point is 
 
 #### 3. Sequencer app: Send parameter values to Nodered
 
+For testing purposes, the sequencer will send values to the controls when an edit command incoming from the GUI is passed (via Midi Thru) to the synth board.
+
 #### 4. Nodered flow: Set controller layout to match with received value
+
+Received values (0-127) are received on DSP CONTROL CHANGE INPUT HUB and dispatched to the respective slide controls
