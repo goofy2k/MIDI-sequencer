@@ -12,7 +12,7 @@ This all requires implementation of an output NimBLE channel in the synth app sy
 ![Architecture](https://github.com/goofy2k/MIDI-sequencer/blob/main/resources/architecture%20graphics%202.png)  
 
 
-### Steps for implementation
+## Steps for implementation
 
 The implementation steps are listed here. The complete implementation depends on a chain of events / handlers. 
 
@@ -27,14 +27,14 @@ As the sequencer already contains the NimBLE server role, the starting point is 
 
 
 
-#### 1. Synth app: Write messages with parameter values to NimBLE characteristics in the synth app
+### 1. Synth app: Write messages with parameter values to NimBLE characteristics in the synth app
 
-#### 2. Sequencer app: Receive parameter characteristics from synth in the sequencer app
+### 2. Sequencer app: Receive parameter characteristics from synth in the sequencer app
 
-#### 3. Sequencer app: Send parameter values to Nodered
+### 3. Sequencer app: Send parameter values to Nodered
 
 For testing purposes, the sequencer will send values to the controls when an edit command incoming from the GUI is passed (via Midi Thru) to the synth board.
 
-#### 4. Nodered flow: Set controller layout to match with received value
+### 4. Nodered flow: Set controller layout to match with received value
 
 Received values (0-127) are received on DSP CONTROL CHANGE INPUT HUB and dispatched to the respective slide controls
