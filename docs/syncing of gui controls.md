@@ -25,3 +25,12 @@ The steps are not necessarilly implemented in the order of the list. It is proba
 
 As the sequencer already contains the NimBLE server role, the starting point is to re-use that. Currently the initiation of the server is done in a part that was added to the NicMidi lib. Because of the need for re-use of the server, it is probably wise to make NimBLE server initialization in the sequencer independent of NiCMidi. 
 
+
+
+#### 1. Synth app: Write messages with parameter values to NimBLE characteristics in the synth app
+
+#### 2. Sequencer app: Receive parameter characteristics from synth in the sequencer app
+
+#### 3. Sequencer app: Send parameter values to Nodered
+
+#### 4. Nodered flow: Set controller layout to match with received value
