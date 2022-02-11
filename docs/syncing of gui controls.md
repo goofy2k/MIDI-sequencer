@@ -21,7 +21,7 @@ The implementation steps are listed here. The complete implementation depends on
 3. Sequencer app: Send parameter values to Nodered
 4. Nodered flow: Set controller layout to match with received value
 
-The steps are not necessarilly implemented in the order of the list. It is probably wise to start with the tail (4.), then implement the head (1.) and then "glue" those parts together in the sequencer app (2. and 3.).   
+The steps are not necessarilly implemented in the order of the list. Details of implementation steps are in the sections below. It is probably wise to start with the tail (4.), then implement the head (1.) and then "glue" those parts together in the sequencer app (2. and 3.).  The actually followed order is indicated between [  ]
 
 As the sequencer already contains the NimBLE server role, the starting point is to re-use that. Currently the initiation of the server is done in a part that was added to the NicMidi lib. Because of the need for re-use of the server, it is probably wise to make NimBLE server initialization in the sequencer independent of NiCMidi. 
 
