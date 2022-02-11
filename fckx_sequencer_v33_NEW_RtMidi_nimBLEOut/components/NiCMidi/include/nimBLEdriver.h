@@ -51,10 +51,10 @@ that are expected by the equivalent class(es) in RtMidi and NicMidi
 
 
 struct NimBLEMidiOutData {
-    NimBLEServer* pServer;
-    NimBLEService* pService; 
-    NimBLECharacteristic* pCharacteristic;
-    NimBLEAdvertising* pAdvertising;
+    NimBLEServer*               pServer;
+    NimBLEService*              pService; 
+    NimBLECharacteristic*       pCharacteristic;
+    NimBLEAdvertising*          pAdvertising;
  //NimBLEServer* client;//this "client" is actually a nimBLE server
                        //note that devices can have both roles concurrently
                        //after making a connection

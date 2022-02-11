@@ -463,18 +463,20 @@ void NimBLEClient::updateConnParams(uint16_t minInterval, uint16_t maxInterval,
  * The server needs to support the Bluetooth 4.2 specifications, to be capable of DLE.
  * @param [in] tx_octets The preferred number of payload octets to use (Range 0x001B-0x00FB).
  */
-void NimBLEClient::setDataLen(uint16_t tx_octets) {
-#if defined(CONFIG_NIMBLE_CPP_IDF) && !defined(ESP_IDF_VERSION) || \
-  (ESP_IDF_VERSION_MAJOR * 100 + ESP_IDF_VERSION_MINOR * 10 + ESP_IDF_VERSION_PATCH) < 432
-    return;
-#else
+void NimBLEClient::setDataLen(uint16_t tx_octets) {  //FCKX!
+/*    
+#if defined(CONFIG_NIMBLE_CPP_IDF) && defined(ESP_IDF_VERSION) && \
+           ESP_IDF_VERSION_MAJOR >= 4 && ESP_IDF_VERSION_MINOR >= 3 && ESP_IDF_VERSION_PATCH >= 2
+*/    return;
+/*#else
     uint16_t tx_time = (tx_octets + 14) * 8;
 
     int rc = ble_gap_set_data_len(m_conn_id, tx_octets, tx_time);
     if(rc != 0) {
         NIMBLE_LOGE(LOG_TAG, "Set data length error: %d, %s", rc, NimBLEUtils::returnCodeToString(rc));
     }
-#endif
+#endif 
+*/
 } // setDataLen
 
 

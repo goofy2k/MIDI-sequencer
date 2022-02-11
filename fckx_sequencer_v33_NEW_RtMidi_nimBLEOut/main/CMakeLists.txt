@@ -5,6 +5,6 @@ set(COMPONENT_SRCS
           
 )
         
-set(COMPONENT_ADD_INCLUDEDIRS "." )
+# set(COMPONENT_ADD_INCLUDEDIRS "C:/Users/Fred/esp_projects/esp-nimble-cpp")
 
 register_component()

@@ -2,9 +2,6 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.5)
 
-
-# set(EXTRA_COMPONENT_DIRS "components/esp-nimble-ccp") #FCKX
-# set(EXTRA_COMPONENT_DIRS "C:/Users/Fred/esp_projects/esp-nimble-cpp") #FCKX
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 set(SUPPORTED_TARGETS esp32)
-project(fckx_sequencer)
+project(BLE_server)
