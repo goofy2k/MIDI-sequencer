@@ -6,5 +6,5 @@
 Archtitecture
 
 ![Architecture](https://myoctocat.com/assets/images/base-octocat.svg)  
-  
+ ![Architecture](resources/architecture graphics 2.png)  
 [Contribution guidelines for this project](docs/CONTRIBUTING.md)
