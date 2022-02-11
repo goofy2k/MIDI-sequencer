@@ -14,7 +14,7 @@ This all requires implementation of an output NimBLE channel in the synth app sy
 
 ### Steps for implementation
 
-The implementation steps are listed here. The complete implementation depends on a chain of events / handlers. The steps are not necessarilly implemented in the order of the list.
+The implementation steps are listed here. The complete implementation depends on a chain of events / handlers. The steps are not necessarilly implemented in the order of the list. It is prbably wise to start with the tail (4.), then implement the head (1.) and then "glue" those parts together in the sequencer app (2. qnd 3.)
 
 1. Synth app: Write messages with parameter values to NimBLE characteristics in the synth app
 2. Sequencer app: Receive parameter characteristics from synth in the sequencer app
