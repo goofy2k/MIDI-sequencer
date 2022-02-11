@@ -35,7 +35,7 @@ As the sequencer already contains the NimBLE server role, the starting point is 
 
 [2] For testing purposes, the sequencer will temporarily send values to the controls when an edit command incoming from the GUI is passed (via Midi Thru) to the synth board.
     NO: the sequencer forwards incoming Midi messages to the synth WITHOUT interpreting them.  
-    You probably have to catch an edit command in the HardwareMsgIn or another MQTT handling routine.  
+    You have to do that in the MQTT handling routine for the topic "/fckx_seq/midi/single".  
 
 ### 4. Nodered flow: Set controller layout to match with received value
 
