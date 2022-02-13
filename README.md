@@ -527,7 +527,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   [syncing GUI between sequencer and synth](https://github.com/goofy2k/MIDI-sequencer/blob/main/docs/syncing%20of%20gui%20controls.md)  
   - test messages arrive over onWrite CharacteristicCallBack in main. 
   
-    **v34**  
+  **v34**  
   [syncing GUI between sequencer and synth](https://github.com/goofy2k/MIDI-sequencer/blob/main/docs/syncing%20of%20gui%20controls.md)
   - implement exchange of controller settings
   
