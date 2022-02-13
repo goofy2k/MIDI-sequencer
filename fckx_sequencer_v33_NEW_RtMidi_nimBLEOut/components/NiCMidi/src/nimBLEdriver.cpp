@@ -5,6 +5,7 @@
 #include "esp_log.h"
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
 #include <NimBLEDevice.h>
+#include <iostream>  // for std::cout 
 
 static const char *TAG = "NIMBLEDRIVER";
 
@@ -162,6 +163,31 @@ class MyServerCallbacks: public BLEServerCallbacks {
   }
 /*******************************************************************/
 };
+
+
+//FCKX 
+// https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf 
+
+/*
+
+class MyCharacteristicCallbacks: public BLECharacteristicCallbacks {
+ void onRead(BLECharacteristic* pCharacteristic) {
+ // Do something before the read completes.
+std::cout << "Characteristic onRead FCKX" << std::endl;
+ //pCharacteristic->setValue(os.str());
+ }
+ void onWrite(BLECharacteristic* pCharacteristic) {
+ // Do something because a new value was written.
+ std::cout << "pCharacteristic onWrite handler" << std::endl;
+ std::string value = pCharacteristic->getValue();
+ std::cout << "Characteristic value: "<< value << std::endl;
+ }
+};
+
+*/
+
+
+
 /*
  //MOVE STRUCT definition to header file
 struct NimBLEMidiOutData {
@@ -223,15 +249,15 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
   
   ESP_LOGW(TAG, "NimBLEDevice created"); 
 #define TEMP_BLOCK1 1  
- #ifdef TEMP_BLOCK1 
+#ifdef TEMP_BLOCK1 
   pServer = NimBLEDevice::createServer();
-     ESP_LOGW(TAG, "BLE server created"); 
+  ESP_LOGW(TAG, "BLE server created"); 
   pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
    ESP_LOGW(TAG, "BLE server callbacks created"); 
    
   // Create the BLE Service
   NimBLEService *pService = pServer->createService(SERVICE_UUID);
-ESP_LOGW(TAG, "BLE server service created");
+  ESP_LOGW(TAG, "BLE server service created");
   // Create a BLE Characteristic
   pCharacteristic = pService->createCharacteristic(
                       CHARACTERISTIC_UUID,
@@ -247,7 +273,14 @@ ESP_LOGW(TAG, "BLE server service created");
                       NIMBLE_PROPERTY::NOTIFY //|
                     //  NIMBLE_PROPERTY::INDICATE
                     );
-ESP_LOGW(TAG, "BLE server characteristic created");
+  ESP_LOGW(TAG, "BLE server characteristic created");
+  //FCKX
+  //set CharacteristicCallback  
+// see: https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf
+
+  //pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());
+  
+  
   // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
   // Create a BLE Descriptor
   /***************************************************   
@@ -458,6 +491,8 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   */ 
     
 #endif //INITIALIZE2
+
+
 
 #define OPEN2
 #ifdef OPEN2

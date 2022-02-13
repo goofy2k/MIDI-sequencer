@@ -50,6 +50,20 @@ that are expected by the equivalent class(es) in RtMidi and NicMidi
 */
 
 
+
+class RTMIDI_DLL_PUBLIC MidiOutNimBLE   //:public MidiOutApi //(what does this parent class add?) 
+{
+    
+
+    
+    
+    
+    
+    
+    
+    public:   
+
+ 
 struct NimBLEMidiOutData {
     NimBLEServer*               pServer;
     NimBLEService*              pService; 
@@ -74,17 +88,20 @@ struct NimBLEMidiOutData {
   //MidiInApi :: RtMidiInData *rtMidiIn; //???
   };
 
+   
+    
 
-
-class RTMIDI_DLL_PUBLIC MidiOutNimBLE   //:public MidiOutApi //(what does this parent class add?) 
-{
-    public:                          MidiOutNimBLE();
+                                    MidiOutNimBLE();
                                     //MidiOutNimBLE(const std::string &clientName);
                                     ~MidiOutNimBLE();
                                 
         void                         openPort(unsigned int portNumber=0);
         void                         closePort();
         //virtual bool                 isPortOpen();
+        //expose connectionData for comms of controller settings FCKX
+         inline  NimBLEMidiOutData   get_connectionData() {return connectionData; }
+     //  inline  NimBLEMidiOutData   get_connectionData() {return void * connectionData; }
+      //void*   get_connectionData() {return *connectionData; }
         inline bool isPortOpen() const { return connected_; }
         unsigned int                 getPortCount();// { return 1; }
         std::string                  getPortName(unsigned int portNumber=0);
@@ -95,6 +112,7 @@ class RTMIDI_DLL_PUBLIC MidiOutNimBLE   //:public MidiOutApi //(what does this p
         
     protected:
         NimBLEMidiOutData connectionData;
+        //static NimBLEMidiOutData connectionData;
         void initialize( const std::string& clientName  ); 
         void *apiData_;   //in the RtMidi case this is in class .... MidiApi
         bool connected_;  //in the RtMidi case this is in class .... MidiApi      

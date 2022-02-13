@@ -161,6 +161,11 @@ class MIDIOutDriver {
         std::string             GetPortName()                   { return port->getPortName(port_id); }
         /// Returns **true** is the hardware port is open.
         bool                    IsPortOpen() const              { return port->isPortOpen(); }
+        //EXPOSE connection data FCKX
+            MidiOutNimBLE::NimBLEMidiOutData Get_connectionData()
+                 {return port->get_connectionData(); } 
+        
+        
         /// Returns a pointer to the out processor.
         MIDIProcessor*          GetOutProcessor()               { return processor; }
         /// Returns a pointer to the out processor.

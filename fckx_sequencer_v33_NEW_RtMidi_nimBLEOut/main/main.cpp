@@ -548,32 +548,35 @@ void printMIDI_Input(esp_mqtt_event_handle_t event){
     ESP_LOGD(TAG,"DATA4 %d", event->data[4]);
 };
 
-
-//#ifdef NIMBLE_IN_MAIN   this is only because of midi thru!!!!!  so switch off thru
-
-static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
-
-    //receive a 5 byte array 
- 
-    static const char *TAG = "FCKX_SEQ_API";
-  
-
-
-  
-    //MIDI COMMANDS               
-    if (strncmp(event->topic, "/fckx_seq/midi/single",strlen("/fckx_seq/midi/single")) == 0) {
+void handle_midi_single_in(esp_mqtt_event_handle_t event){
+    static const char *TAG = "HANDLE_MIDI_SINGLE_IN"; 
+       
     //receive a 5 byte MIDI message 
 
     //display incoming MIDI data
     ESP_LOGD(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
-    ESP_LOGD(TAG,"DATA:%.*s ", event->data_len, event->data);
+    //ESP_LOGD(TAG,"DATA:%.*s ", event->data_len, event->data);
     ESP_LOGD(TAG,"data_len %d",event->data_len);  
 
-    ESP_LOGD(TAG,"DATA0 %d", event->data[0]);
-    ESP_LOGD(TAG,"DATA1 %d", event->data[1]); 
-    ESP_LOGD(TAG,"DATA2 %d", event->data[2]); 
-    ESP_LOGD(TAG,"DATA3 %d", event->data[3]); 
-    ESP_LOGD(TAG,"DATA4 %d", event->data[4]);
+    ESP_LOGD(TAG,"DATA0 %d (0x%X)", event->data[0], event->data[0]);
+    ESP_LOGD(TAG,"DATA1 %d (0x%X)", event->data[1], event->data[1]);
+    ESP_LOGD(TAG,"DATA2 %d (0x%X)", event->data[2], event->data[2]); 
+    ESP_LOGD(TAG,"DATA3 %d (0x%X)", event->data[3], event->data[3]);
+    ESP_LOGD(TAG,"DATA4 %d (0x%X)", event->data[4], event->data[4]);
+
+#define TRAPEDIT    
+#ifdef TRAPEDIT
+    
+    if ((event->data[2] == 0xB0) && (event->data[3] == 0x70)) {
+      ESP_LOGD(TAG,"Trapped START EDITING COMMAND"); 
+      //for testing send syncing command to GUI controls 
+      const char * controllerVal = "32";
+            esp_mqtt_client_publish(event->client, "/fckx_seq/controller/A", controllerVal, 0, 1, 0);      
+       
+       
+        };
+
+#endif
     
     //prepare for immediate sending to sound board (MIDI THRU)
     //create midiPacket for BLE notify
@@ -584,15 +587,19 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     event->data[3], //== 60 == middle c
     event->data[4] //velocity
         };//
-        
-       //store in input buffer
+   
+
+
+
+   
+   //store in input buffer
    //storeMIDI_Input(event, inQ );
    //printf("going to store input\n");
-  // printMIDI_Input(event);    
+   // printMIDI_Input(event);    
       
      //ESP_LOGI(TAG,"SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
  
-    double time = 111; 
+    double time = 111; //dummy timestamp for MIDIBLE packet
     
     void* p = MIDIManager::GetInDriver(0);  //when called in the driver this should be "this"
 
@@ -624,7 +631,28 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     
     //switch of thru
     //pCharacteristic->setValue(midiPacket, 5);
-   // pCharacteristic->notify();
+   // pCharacteristic->notify();       
+       
+};
+
+
+
+
+
+//#ifdef NIMBLE_IN_MAIN   this is only because of midi thru!!!!!  so switch off thru
+
+static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
+
+    //receive a 5 byte array 
+ 
+    static const char *TAG = "FCKX_SEQ_API";
+  
+    //MIDI COMMANDS               
+    if (strncmp(event->topic, "/fckx_seq/midi/single",strlen("/fckx_seq/midi/single")) == 0) {
+        
+    handle_midi_single_in(event);
+    
+
           }
           
     else
@@ -1172,6 +1200,26 @@ MIDIThru* thru;                  // a MIDIThru ORIG
 MIDIProcessorPrinter printer;    // a MIDIProcessor which prints passing MIDI events                 
 
 
+
+class MyCharacteristicCallbacks: public BLECharacteristicCallbacks {
+ void onRead(BLECharacteristic* pCharacteristic) {
+ // Do something before the read completes.
+std::cout << "Characteristic onRead FCKX" << std::endl;
+ //pCharacteristic->setValue(os.str());
+ }
+ void onWrite(BLECharacteristic* pCharacteristic) {
+ // Do something because a new value was written.
+ std::cout << "pCharacteristic onWrite handler" << std::endl;
+ std::string value = pCharacteristic->getValue();
+ std::cout << "Characteristic value: "<< value << std::endl;
+ }
+};
+
+
+
+
+
+
 int thru_main(  ) {
 
 //init port here. this is not in the original code
@@ -1213,9 +1261,37 @@ catch( ... ) {
     printer.SetPrint(true); 
     //printer.SetPrint(false);
     //thru->Start(); //not here
+    
+  //             
+ //  MidiOutNimBLE::getPortCount();    //test exposure of MidiOutNimBLE members (need object)
+     //MIDIManager::getOutDriver(0);
+     // MIDIManager::GetOutDriver(0)->OpenPort();
+  // MIDIManager::GetOutDriver(0)->get_connectionData();
+   //try to access the connection data via GetOutDriver port 
+ //   MIDIManager::GetOutDriver(0)->OutputMessage(msg);
+   //MIDIManager::GetOutDriver(0)->GetPortId();
+   //MIDIManager::GetOutDriver(0)->IsPortOpen();
+
+    //MOVE TO NIMMBLE ON_CONNECT????
+    // now define CharacteristicCallBacks
+    bool myresult = false;
+    MidiOutNimBLE::NimBLEMidiOutData myconnectiondata;
+    while ( myresult == false){
+        std::cout << "WAIT FOR PEER1" << std::endl;
+        //expose NimBLE connectionData 
+         myconnectiondata = MIDIManager::GetOutDriver(0)->Get_connectionData();  
+         myresult = (myconnectiondata.pCharacteristic != NULL);
+         std::cout << "WAIT FOR PEER2" << std::endl;
+        
+    }
+    std::cout << "WAIT FOR PEER3" << std::endl;
+     myconnectiondata.pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());  
+    
+    
+    
+    
   return 1;
-              
-              
+ 
 } //thru_main(  )
 #endif // #ifdef THRU
 
@@ -1771,6 +1847,7 @@ void app_main(void) {
     esp_log_level_set("FCKX_SEQ", ESP_LOG_ERROR);
     esp_log_level_set("FCKX_SEQ_API", ESP_LOG_ERROR);
     esp_log_level_set("HARDWAREMSGIN", ESP_LOG_DEBUG);
+    esp_log_level_set("HANDLE_MIDI_SINGLE_IN",ESP_LOG_VERBOSE);
     esp_log_level_set("MIDIOutDriver", ESP_LOG_ERROR);
     esp_log_level_set("MIDIOutDriver::HardwareMsgOut", ESP_LOG_ERROR);
     esp_log_level_set("MIDIOutDriver::OutputMessage", ESP_LOG_ERROR);
@@ -1894,7 +1971,7 @@ void app_main(void) {
   ESP_LOGW(TAG,"port-isPortOpen() %d", port->isPortOpen());
   port->openPort(0);
   ESP_LOGW(TAG,"port->getPortName(0)) %s",port->getPortName(0).c_str());
-    ESP_LOGW(TAG,"port-isPortOpen() %d", port->isPortOpen());
+  ESP_LOGW(TAG,"port-isPortOpen() %d", port->isPortOpen());
 
  //Now see if you can remove init from MQTTDriver or nimBLEdriver....
    //use isPortOpen is there a kind of doesPortExist?
