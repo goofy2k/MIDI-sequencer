@@ -529,10 +529,14 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   **v34**  
   [syncing GUI between sequencer and synth](https://github.com/goofy2k/MIDI-sequencer/blob/main/docs/syncing%20of%20gui%20controls.md)
-  - implement exchange of controller settings
+  - implemented exchange of controller settings
+  
+   **v35**  
+  
   
   TODO
-  - synchronize controller settings between GUI server and synth board (requires additinol NimBLE communication with synth board)
+  - DONE V34 for DSP presetUnderEdit  : synchronize DSP controller settings between GUI server and synth board (requires additional NimBLE communication with synth board)
+  - synchronize WM8978 controller settings between GUI server and synth board 
   - check recorded notes (pitch, channel). This becomes easier after switching of metronome in recorder OR switching of metronome logs in synth
   - analyze / improve reliability of MIDI In (MQTT).  Lost messages and timing accuracy.
   - move the setting of timer tick resolution to outside tick.cpp, preferably to app_main
