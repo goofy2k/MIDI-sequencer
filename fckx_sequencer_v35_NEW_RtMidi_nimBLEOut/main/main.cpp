@@ -1,6 +1,6 @@
-//#define TEST_ADVANCEDSEQUENCER_NOINPUT //RUNS OK "succesfully" looping twinkle twinkle
+#define TEST_ADVANCEDSEQUENCER_NOINPUT //RUNS OK "succesfully" looping twinkle twinkle
 //#define TEST_RECORDING               //in development/
-#define THRU                         //input and output   RUNS OK
+//#define TEST_THRU                         //input and output   RUNS OK
 
 
 #define DRUMPRESET 0x40 //64
@@ -38,6 +38,8 @@
 #include "esp_log.h"
 #include "mqtt_client.h"
 
+//#include <map>  //seq_command dispatcher
+
 esp_mqtt_client_handle_t  mqtt_client;
 
 
@@ -69,24 +71,8 @@ test_win32_player.cpp                                              X            
 */
 
 
-//#define NIMBLE_IN_MAIN            //when is it considered as defined? what value is needed?
-
-//switches for NiCMidi examples in order of priority for implementation
-//https://ncassetta.github.io/NiCMidi/docs/html/examples.html
-//#define MIDIMESSAGE                //not an example but inspired by web page <ref> OK in main
-//#define MIDITRACK_DUMPMIDITRACK    //OK in main
-//#define TEST_COMPONENT           //test_component example OK (in main eternal loop)
-//#define METRONOME //output only
-//#define THRU     //input and output
-//#define TEST_RECORDER            //test_recorder  OK
-
 //the following (adapted) examples depend on nimBLEdriver bluetooth output by FCKX
 //use only one at a time as instantiation of output ports may interfere (solve this in the future for flxibility)
-
- 
-
-//#define TEST_ADVANCEDSEQUENCER     //test_advancedsequencer
-
 
 
 /*
@@ -103,21 +89,6 @@ I suspect the error might be coming from `ble_buf_alloc` as well. Can you please
 #define EXAMPLE_ESP_WIFI_PASS      SECRET_ESP_WIFI_PASSWORD
 #define EXAMPLE_ESP_MAXIMUM_RETRY  SECRET_ESP_MAXIMUM_RETRY
 
-#ifdef NIMBLE_IN_MAIN   //phase out
-ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  NIMBLE_IN_MAIN");
-    #include <NimBLEDevice.h>
-#endif
-//#include "fckxMsg.h"
-//#include "queue.h"   //MUST BE ON
-
-//NiCMidi includes
-//REMOVED AS YOU NOW USE IT AS A COMPONENT
-//#include "../include/msg.h" 
-//#include "../include/sysex.h"
-//#include "../include/midi.h"
-//#include "../include/track_dirty.h"
-
-
 
 #include "msg.h"
 #include <iostream>
@@ -126,17 +97,6 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  NIMBLE_I
 #include "sysex.h"
 #include "../include/tick.h"       //check if you can harmonize these paths FCKX
 #include "../include/manager.h"
-
-//define queue sizes
-//max total queue size is at least 2048 (fckx_sequencer_v4)
-//#define INQ_SIZE    128
-//#define OUTQ_SIZE   128
-//#define SEQ_SIZE    1024
-
-//#include "jdksmidi/track.h" //FCKX
-//#include <jdksmidi/track.h> //FCKX
-//#include "track.h" //FCKX
-//#include <track.h> //FCKX
 
 extern "C" {void app_main(void);}
 
@@ -510,34 +470,7 @@ static const char *TAG = "execute_single_midi_command";
 
 #endif
 
-
-
-#ifdef USEJDKSMIDIQUEUE
-
- //may extend to class
-
-jdksmidi::MIDIQueue inQ(INQ_SIZE); 
-int bufCount = 0;  
-
  
- #ifdef USEJDKSMIDIQUEUE 
-namespace jdksmidi {
-    
- 
-
-bool insertMIDI_Sorted(MIDIQueue inQ, MIDIQueue sortedQueue){
-    bool result = false;
-    //insert the items that are in the (unsorted) inQ into a position in the sortedBuffer
-    
-    
-   return result; 
-};
-
-}
-#endif
-
-
-#endif 
 
 void printMIDI_Input(esp_mqtt_event_handle_t event){  
     //display incoming data 
@@ -549,6 +482,87 @@ void printMIDI_Input(esp_mqtt_event_handle_t event){
     ESP_LOGD(TAG,"DATA2 %d", event->data[2]); 
     ESP_LOGD(TAG,"DATA3 %d", event->data[3]); 
     ESP_LOGD(TAG,"DATA4 %d", event->data[4]);
+};
+
+
+//https://stackoverflow.com/questions/26455952/error-c-map-does-not-name-a-type
+
+enum class Seq_command {
+    A, QUIT, B, INVALID    
+};
+
+std::map< std::string, Seq_command > known_seq_commands = 
+{
+    
+    { "A", Seq_command::A },
+    { "quit", Seq_command::QUIT },
+    { "B", Seq_command::B },
+};
+
+//auto parseCommand( std::string const& command ) -> seq_command
+int parseCommand( std::string const& command )
+    //-> seq_command
+{
+     static const char *TAG = "PARSE_COMMAND";
+     ESP_LOGD(TAG,"command: %s", command.c_str());
+     auto n = known_seq_commands.find(command);
+     
+     if ( n == known_seq_commands.end() ) {
+         return (int) Seq_command::INVALID;
+     }
+     return (int) n->second;
+ //   return (int) Seq_command::INVALID;
+}
+
+
+
+//map <const char *, unsigned char  > seq_command_map = {{'quit', 1}};
+
+
+void handle_seq_command(esp_mqtt_event_handle_t event){
+    static const char *TAG = "HANDLE_SEQ_COMMAND_IN"; 
+    ESP_LOGD(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
+    ESP_LOGD(TAG,"DATA:%.*s ", event->data_len, event->data);
+    ESP_LOGD(TAG,"data_len %d",event->data_len); 
+//    std::string commandStr = event->data;
+//    std::cout << "COMMAND HANDLER" << commandStr << "** **" << (int)parseCommand(commandStr) << std::endl;
+    
+//    ESP_LOGD(TAG,"COMMAND FCKX1 HANDLER %d",(int) event->data);
+   // ESP_LOGD(TAG,"COMMAND FCKX2 HANDLER %s",(event->data).c_str());
+    
+    
+/*
+    switch (seq_command_map[event->data]){  //error: switch quantity not an integer
+        case 1:
+        ESP_LOGD(TAG,"TO BE IMPLEMENTED COMMAND:%.*s ", event->data_len, event->data);
+        break;
+        default:
+           ESP_LOGD(TAG,"UNKNOWN COMMAND:%.*s ", event->data_len, event->data);
+        break;
+        
+        //
+    };
+    */
+    
+        if (strncmp(event->data, "quit",strlen("quit")) == 0) {
+            ESP_LOGD(TAG,"COMMAND:%.*s ", event->data_len, event->data);
+            ESP_LOGW(TAG,"TO BE IMPLEMENTED");
+            }
+        else
+        if (strncmp(event->data, "A",strlen("A")) == 0) {
+            ESP_LOGD(TAG,"COMMAND:%.*s ", event->data_len, event->data);
+            ESP_LOGW(TAG,"TO BE IMPLEMENTED");
+            }
+        else
+        if (strncmp(event->data, "B",strlen("B")) == 0) {
+            ESP_LOGD(TAG,"COMMAND:%.*s ", event->data_len, event->data);
+            ESP_LOGW(TAG,"TO BE IMPLEMENTED");
+            }
+        else            
+
+            {  ESP_LOGE(TAG,"UNKNOWN COMMAND:%.*s ", event->data_len, event->data);
+        }
+    
 };
 
 void handle_midi_single_in(esp_mqtt_event_handle_t event){
@@ -568,14 +582,13 @@ void handle_midi_single_in(esp_mqtt_event_handle_t event){
     ESP_LOGD(TAG,"DATA4 %d (0x%X)", event->data[4], event->data[4]);
 
 //#define TRAPEDIT    
-#ifdef TRAPEDIT
+#ifdef TRAPEDIT   //for testing
     
     if ((event->data[2] == 0xB0) && (event->data[3] == 0x70)) {
       ESP_LOGD(TAG,"Trapped START EDITING COMMAND"); 
       //for testing send syncing command to GUI controls 
       const char * controllerVal = "32";
-            esp_mqtt_client_publish(event->client, "/fckx_seq/controller/A", controllerVal, 0, 1, 0);      
-       
+            esp_mqtt_client_publish(event->client, "/fckx_seq/controller/A", controllerVal, 0, 1, 0);     
        
         };
 
@@ -591,16 +604,6 @@ void handle_midi_single_in(esp_mqtt_event_handle_t event){
     event->data[4] //velocity
         };//
    
-
-
-
-   
-   //store in input buffer
-   //storeMIDI_Input(event, inQ );
-   //printf("going to store input\n");
-   // printMIDI_Input(event);    
-      
-     //ESP_LOGI(TAG,"SEND MQTT INPUT VIA MIDIManager::GetInDriver(0)->HardwareMsgIn TEST DIRECT CALL (no callback)"); 
  
     double time = 111; //dummy timestamp for MIDIBLE packet
     
@@ -662,7 +665,7 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     //TESTER        
     if (strncmp(event->topic, "/fckx_seq/midi/test",strlen("/fckx_seq/midi/test")) == 0) {
         std::cout << "TEST (event->data): " << event->data << std::endl;
-                std::cout << "TEST (event->data_len): " << event->data_len << std::endl;
+        std::cout << "TEST (event->data_len): " << event->data_len << std::endl;
               // std::cout << e << std::endl;
         //ESP_LOGD(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
         //ESP_LOGD(TAG,"DATA:%.*s ", event->data_len, event->data);
@@ -674,6 +677,7 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
     //NONE MIDI COMMANDS (e.g. for NiCMidi MIDIManager        
     if (strncmp(event->topic, "/fckx_seq/command",strlen("/fckx_seq/command")) == 0) {
         ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
+        handle_seq_command(event);
         ESP_LOGI(TAG,"...command to be implemented...");      
         } 
     else {
@@ -726,6 +730,7 @@ static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event){
             //msg_id = esp_mqtt_client_publish(client, "/fckx_seq", "MQTT OK", 0, 1, 0);
             //ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
             msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq/midi/single",1);
+            esp_mqtt_client_subscribe(client, "/fckx_seq/command",1);
             ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
             msg_id = esp_mqtt_client_subscribe(client, "/fckx_seq/midi/test",0);
             ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);            
@@ -1195,7 +1200,7 @@ int main_test_metronome( string command) {
 // to every method for details.
 //
 
-#ifdef THRU
+#ifdef TEST_THRU
 
 //GLOBALS for test_thru example
 
@@ -1205,39 +1210,33 @@ MIDIProcessorPrinter printer;    // a MIDIProcessor which prints passing MIDI ev
 
 
 class MyCharacteristicCallbacks: public BLECharacteristicCallbacks {
- void onRead(BLECharacteristic* pCharacteristic) {
- // Do something before the read completes.
-std::cout << "Characteristic onRead FCKX" << std::endl;
- //pCharacteristic->setValue(os.str());
- }
- void onWrite(BLECharacteristic* pCharacteristic) {
- // Do something because a new value was written.
- std::cout << "pCharacteristic onWrite handler" << std::endl;
- std::string value = pCharacteristic->getValue();
- std::cout << "Characteristic value: "<< value << std::endl;
- //decode value and send to control
- //start with just forwarding it
- //need to convert  value string to const * char for use in mqtt publish
- //separate topic and value on space
- 
- int mypos = value.find(' ');
-string myaddress = value.substr(0,mypos); 
-string myvalue = value.substr(mypos,value.length());
-// std::cout << "myaddress: "<< myaddress << std::endl;
-//  std::cout << "myvalue: "<< myvalue << std::endl;
- 
- std::string myposStr = std::to_string(mypos);
-//char const *pchar = s.c_str();  //use char const* as target type
- 
- 
- 
+    void onRead(BLECharacteristic* pCharacteristic) {
+            static const char *TAG = "ONREAD [NimBLE]";
+        // Do something before the read completes.
+        std::cout << "Characteristic onRead FCKX" << std::endl;
+        //pCharacteristic->setValue(os.str());
+    }
+     
+    void onWrite(BLECharacteristic* pCharacteristic) {
+        static const char *TAG = "ONWRITE [NimBLE]";
+        // Do something because a new value was written.
+        //std::cout << "pCharacteristic onWrite handler" << std::endl;
+        std::string value = pCharacteristic->getValue();
+        ESP_LOGD(TAG,"pCharacteristic->getValue() %s", value.c_str());
+        std::cout << "Characteristic value: "<< value << std::endl;
+        //decode value and send to control
+        //start with just forwarding it
+        //need to convert  value string to const * char for use in mqtt publish
+        //separate topic and value on space
 
-// esp_mqtt_client_publish(mqtt_client, "/fckx_seq/control", value.c_str(), 0, 1, 0); 
-//  esp_mqtt_client_publish(mqtt_client, "/fckx_seq/control", myposStr.c_str(), 0, 1, 0);
-//  esp_mqtt_client_publish(mqtt_client, "/fckx_seq/control", myaddress.c_str(), 0, 1, 0);
-//  esp_mqtt_client_publish(mqtt_client, "/fckx_seq/control", myvalue.c_str(), 0, 1, 0);
-  esp_mqtt_client_publish(mqtt_client, myaddress.c_str(), myvalue.c_str(), 0, 1, 0);    
- }
+        int mypos = value.find(' ');
+        string myaddress = value.substr(0,mypos); 
+        string myvalue = value.substr(mypos,value.length());
+        //forward to NODERED over MQTT
+        esp_mqtt_client_publish(mqtt_client, myaddress.c_str(), myvalue.c_str(), 0, 1, 0);
+
+        
+    }
 };
 
 
@@ -1245,7 +1244,7 @@ string myvalue = value.substr(mypos,value.length());
 
 
 
-int thru_main(  ) {
+int test_thru(  ) {
 
 //init port here. this is not in the original code
     //MIDIManager::OpenInPorts();
@@ -1287,15 +1286,15 @@ catch( ... ) {
     //printer.SetPrint(false);
     //thru->Start(); //not here
     
-  //             
- //  MidiOutNimBLE::getPortCount();    //test exposure of MidiOutNimBLE members (need object)
-     //MIDIManager::getOutDriver(0);
+    //             
+    //  MidiOutNimBLE::getPortCount();    //test exposure of MidiOutNimBLE members (need object)
+    //MIDIManager::getOutDriver(0);
      // MIDIManager::GetOutDriver(0)->OpenPort();
-  // MIDIManager::GetOutDriver(0)->get_connectionData();
-   //try to access the connection data via GetOutDriver port 
- //   MIDIManager::GetOutDriver(0)->OutputMessage(msg);
-   //MIDIManager::GetOutDriver(0)->GetPortId();
-   //MIDIManager::GetOutDriver(0)->IsPortOpen();
+    // MIDIManager::GetOutDriver(0)->get_connectionData();
+    //try to access the connection data via GetOutDriver port 
+    //   MIDIManager::GetOutDriver(0)->OutputMessage(msg);
+    //MIDIManager::GetOutDriver(0)->GetPortId();
+    //MIDIManager::GetOutDriver(0)->IsPortOpen();
 
     //MOVE TO NIMMBLE ON_CONNECT????  too deep!
     //OR check if port open
@@ -1320,8 +1319,8 @@ catch( ... ) {
     
   return 1;
  
-} //thru_main(  )
-#endif // #ifdef THRU
+} //test_thru(  )
+#endif // #ifdef TEST_THRU
 
 
 
@@ -1506,16 +1505,13 @@ int main_test_component() {
     ***********************************************************************************/    
 #endif 
  
- 
- 
- 
- 
+
 
 #ifdef TEST_RECORDING  //see issue #6 NiCMidi repo
 
 
-void main_proposal( void ) {
-    ESP_LOGE(TAG,"Entering main_proposal of TEST_RECORDING example");
+void test_recording( void ) {
+    ESP_LOGE(TAG,"Entering test_recording of TEST_RECORDING example");
     ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING");
     MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
     AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
@@ -1563,6 +1559,8 @@ void main_proposal( void ) {
 
     while (sequencer.IsPlaying())         // waits until the sequencer finishes
         MIDITimer::Wait(50);
+        
+    ESP_LOGE(TAG,"End of TEST_RECORDING CODE");    
 }
 #endif
 
@@ -1654,8 +1652,8 @@ note_data track3[] = {
 //                              M A I N                         //
 //////////////////////////////////////////////////////////////////
 
-int test_main( ) {
-    ESP_LOGE(TAG,"Entering test_main of test_advancedsequencer_noinput example");
+int test_advancedsequencer_noinput( ) {
+    ESP_LOGE(TAG,"Entering test_advancedsequencer_noinput example");
     ESP_LOGE(TAG,"************* DEBUG -4 *************");
     AdvancedSequencer sequencer; //was under GLOBALS, see above
     // gets the address of the sequencer MIDIMultiTrack, so we can edit it
@@ -1721,9 +1719,9 @@ int test_main( ) {
     trk = tracks->GetTrack(1);
     unsigned char channel = 0;      // MIDI channel 1 //Nic
      
-    msg.SetProgramChange(channel, 11);
+    msg.SetProgramChange(channel, 128+0);
     trk->InsertEvent(msg);          // inserts the program change at time 0
-    msg.SetVolumeChange(channel, 110);
+    msg.SetVolumeChange(channel, 11);
     trk->InsertEvent(msg);          // inserts the track volume
     // and now inserts all the notes, taking them from our track1[] array
     ESP_LOGE(TAG,"************* DEBUG 2 *************");
@@ -1763,9 +1761,9 @@ int test_main( ) {
     channel = 1;  //was 1
     ESP_LOGE(TAG,"************* DEBUG 8 *************");
     msg.Clear();                    // resets the message
-    msg.SetProgramChange(channel, 15);
+    msg.SetProgramChange(channel, 128+15);
     trk->InsertEvent(msg);
-    msg.SetVolumeChange(channel, 90);
+    msg.SetVolumeChange(channel, 5);
     trk->InsertEvent(msg);
         ESP_LOGE(TAG,"************* DEBUG 9 *************");
     for(int i = 0; i < track2_len; i++) {
@@ -1781,18 +1779,20 @@ int test_main( ) {
     //sequencer.GoToZero();
 
 
- #define DRUMS
+#define DRUMS
 #ifdef DRUMS
     // ... and 3 (percussion, channel 10)
-        ESP_LOGE(TAG,"************* DEBUG 11 *************");
+    ESP_LOGE(TAG,"************* DEBUG 11 *************");
     trk = tracks->GetTrack(3);
     channel = 9;
    
     msg.Clear();
-            ESP_LOGE(TAG,"************* msg.SetProgramChange(channel, DRUMPRESET)  *************");
-    msg.SetProgramChange(channel, DRUMPRESET); //was 33   // uncomment these if your device doesn't sets
+    ESP_LOGE(TAG,"************* msg.SetProgramChange(channel, DRUMPRESET)  *************");
+  //  msg.SetProgramChange(channel, DRUMPRESET); //was 33   
+   msg.SetProgramChange(channel, 128+64+22);
+  //uncomment these if your device doesn't sets
     trk->InsertEvent(msg);                // automatically the drums on channel 10
-    msg.SetVolumeChange(channel, 120);
+    msg.SetVolumeChange(channel, 8);
     trk->InsertEvent(msg);
     for(int i = 0; i < track3_len; i++) {
         msg.SetNoteOn(channel, track3[i].note, 100);
@@ -1825,7 +1825,7 @@ int test_main( ) {
     //
     //}//while true
     MIDIManager::CloseOutPorts(); //<<<<<<<<<<<<<<<< FCKX!! 220103
-    ESP_LOGE(TAG,"Exiting test_main example");
+    ESP_LOGE(TAG,"Exiting test_advancedsequencer_noinput example");
     return EXIT_SUCCESS;
 }
 
@@ -1871,26 +1871,36 @@ void app_main(void) {
     ESP_LOGV - verbose (highest)
     */    
     
+    //look for existing "static const char *TAG" lines
+    
+    
     esp_log_level_set("*", ESP_LOG_VERBOSE);
+    esp_log_level_set("event", ESP_LOG_ERROR ); //MQTT
     esp_log_level_set("FCKX_SEQ", ESP_LOG_ERROR);
-    esp_log_level_set("FCKX_SEQ_API", ESP_LOG_ERROR);
-    esp_log_level_set("HARDWAREMSGIN", ESP_LOG_DEBUG);
-    esp_log_level_set("HANDLE_MIDI_SINGLE_IN",ESP_LOG_VERBOSE);
+    esp_log_level_set("FCKX_SEQ_API", ESP_LOG_VERBOSE);
+    esp_log_level_set("HANDLE_MIDI_SINGLE_IN", ESP_LOG_ERROR);
+    esp_log_level_set("HANDLE_SEQ_COMMAND_IN", ESP_LOG_VERBOSE);
+    
+    
+    esp_log_level_set("HARDWAREMSGIN", ESP_LOG_ERROR);
+    esp_log_level_set("HANDLE_MIDI_SINGLE_IN",ESP_LOG_ERROR);
     esp_log_level_set("MIDIOutDriver", ESP_LOG_ERROR);
     esp_log_level_set("MIDIOutDriver::HardwareMsgOut", ESP_LOG_ERROR);
     esp_log_level_set("MIDIOutDriver::OutputMessage", ESP_LOG_ERROR);
     
-    
+
     esp_log_level_set("MidiOutNimBLE :: sendMessage", ESP_LOG_ERROR);
-    esp_log_level_set("MIDIThru::TickProc", ESP_LOG_DEBUG);
+    esp_log_level_set("MIDIThru::TickProc", ESP_LOG_ERROR);
     esp_log_level_set("MQTT_CLIENT", ESP_LOG_ERROR);
-    esp_log_level_set("mqtt_event_handler", ESP_LOG_ERROR);
-    esp_log_level_set("Mmqtt_event_handler_cb", ESP_LOG_ERROR);
+    esp_log_level_set("mqtt_event_handler", ESP_LOG_VERBOSE);
+    esp_log_level_set("mqtt_event_handler_cb", ESP_LOG_VERBOSE);
 
     esp_log_level_set("NICMIDI HardwareMsgOut", ESP_LOG_ERROR);
     //esp_log_level_set("NICMIDI OutputMessage", ESP_LOG_VERBOSE);
     esp_log_level_set("NimBLE", ESP_LOG_VERBOSE);
     esp_log_level_set("NimBLEDevice.cpp", ESP_LOG_VERBOSE);
+    esp_log_level_set("OUTBOX", ESP_LOG_ERROR ); //MQTT
+    
     esp_log_level_set("printMIDI_Input", ESP_LOG_VERBOSE);
     esp_log_level_set("RECORDER_FCKX", ESP_LOG_WARN);
     esp_log_level_set("SEQUENCER", ESP_LOG_ERROR);  
@@ -1991,37 +2001,18 @@ void app_main(void) {
    ESP_LOGI(TAG,"chipid %s",chipid);
 */  
 
-#ifdef STANDALONE 
-//test stand-alone init of nimBLE here, may depend on RTMIDI_DDL_PUBLIC
 
- MidiOutNimBLE*  port = new MidiOutNimBLE;
- //It can be opened
+test_advancedsequencer_noinput(); //NiCMidi 211222
 
-  ESP_LOGW(TAG,"port-isPortOpen() %d", port->isPortOpen());
-  port->openPort(0);
-  ESP_LOGW(TAG,"port->getPortName(0)) %s",port->getPortName(0).c_str());
-  ESP_LOGW(TAG,"port-isPortOpen() %d", port->isPortOpen());
-
- //Now see if you can remove init from MQTTDriver or nimBLEdriver....
-   //use isPortOpen is there a kind of doesPortExist?
-   //filter on MIDI capable port via nimBLE characteristic
-   //send message
-   //sendMessage(const std::vector<unsigned char> *message);
-   const unsigned char test[] = "abcde";  // This will add a terminating \0 character to the array
-   port->sendMessage(test,5);
-#endif //STANDALONE
-
-
-
-int success_int = test_main(); //NiCMidi 211222
- ESP_LOGE(TAG,"Exited test_main successfully %d", success_int);
  ESP_LOGW(TAG,"END OF TEST_ADVANCEDSEQUENCER_NOINPUT"); 
-while (true) {
+/*
+ while (true) {
  
 //idle loop
 vTaskDelay(500 / portTICK_PERIOD_MS);
  
-};    
+};
+*/    
 
 #endif
 
@@ -2128,31 +2119,29 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_COM
 
 #ifdef TEST_RECORDING 
 ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING");
-  ESP_LOGW(TAG, "ENTERING main_proposal()");
+  ESP_LOGW(TAG, "ENTERING test_recording()");
 //  while (1) {      
-    main_proposal();  
+    test_recording();  
+        ESP_LOGE(TAG,"End of TEST_RECORDING CODE 2");  
     //vTaskDelay(10 / portTICK_PERIOD_MS);  
 //  }
 #endif
 
-#ifdef THRU
-    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  THRU");
-    ESP_LOGW(TAG, "GOINT TO INITALIZE THRU");
-    int thru_result = thru_main();
-    ESP_LOGW(TAG, "INITIALIZED THRU WITH RESULT: %d", thru_result);
+#ifdef TEST_THRU
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_THRU");
+    ESP_LOGW(TAG, "GOINT TO INITALIZE TEST_THRU");
+    int thru_result = test_thru();
+    ESP_LOGW(TAG, "INITIALIZED TEST_THRU WITH RESULT: %d", thru_result);
     thru->Start(); // sets the MIDI thru on and off ORIG
     
     
 //    MIDITimer::Wait(5000); 
 //    thru->Stop();
 
-    while (1) {      
-        //empty loop forever 
-        vTaskDelay(10 / portTICK_PERIOD_MS);  
-    }
+
     //delete thru;  //this code is never reached
 
-#endif //ifdef THRU
+#endif //ifdef TEST_THRU
 
 
 /*
@@ -2165,7 +2154,13 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_REC
     }
 */    
 //#endif //#else
-    
+   
 
+ ESP_LOGE(TAG,"Entering Idle Loop");
+    while (1) {      
+        //empty loop forever 
+        vTaskDelay(10 / portTICK_PERIOD_MS);  
+    } 
+  ESP_LOGE(TAG,"End of app_main");  
 }; //app_main
 
