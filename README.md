@@ -604,4 +604,18 @@ Re 10a and 4. :
   The message payload consists of byte sequences, pretty much lik MIDI commands
   The following table shows the commands
   
-  
+  | Nr| Description                | Message (provisional) |   |   |
+|---|----------------------------|---------------------- |---|---|
+| 1.|                            |                       |   |   |
+| 2.|                            |                       |   |   |
+| 3.|                            |                       |   |   |
+| 4.|                            |                       |   |   |
+| 5.|                            |                       |   |   |
+| 6.|                            |                       |   |   |
+| 7.| List current DSP parameters| Bn x y                |   |   |
+| 8.|                            |                       |   |   |
+| 9.|                            |                       |   |   |
+|10.|                            |                       |   |   |
+|11.|                            |                       |   |   |
+|12.| Set a single DSP parameter |Bn Id val              |   |   |   
+|13.|                            |Bn with Id 60-65 and 06|   |   |
