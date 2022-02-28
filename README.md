@@ -598,3 +598,10 @@ Re 10a and 4. :
     - IO select / security
   
   
+## Sequencer commands
+  
+  Are issued over MQTT with topic /fckx_seq/command
+  The message payload consists of byte sequences, pretty much lik MIDI commands
+  The following table shows the commands
+  
+  
