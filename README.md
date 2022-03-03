@@ -609,8 +609,8 @@ Re 10a and 4. :
 | 1.|  0x01                      |   recorder.Start()                 |   |   |
 | 2.|  0x02                      |   recorder.Stop()                  |   |   |
 | 3.|  0x11                      |   sequencer.Start()                |   |   |
-| 4.|  0x12                      |   sequencer.GoToZero()             |   |   |
-| 5.|                            |                                    |   |   |
+| 4.|  0x12                      |   sequencer.Stop()                 |   |   |
+| 5.|                            |   sequencer.GoToZero()             |   |   |
 | 6.|                            |                                    |   |   |
 | 7.|                            |                                    |   |   |
 | 8.|                            |                                    |   |   |
