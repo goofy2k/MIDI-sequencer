@@ -532,7 +532,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - implemented exchange of controller settings
   
    **v35**  
-   ???
+   Inititial foundation for handle_seq_command dispatcher (seq GUI)
   
    **v36**
    First version with recorder / advanced sequencer example under control of Nodered GUI (ifdef TEST_RECORDER)
@@ -540,6 +540,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
    **v37**
   
   TODO
+  - from v37:  replace hard-coded thru in recorder by UI/GUI controllable thru in TEST_RECORDER example 
   - DONE V34 for DSP presetUnderEdit  : synchronize DSP controller settings between GUI server and synth board (requires additional NimBLE communication with synth board)
   - synchronize WM8978 controller settings between GUI server and synth board 
   - NimBLE write from synth board to sequencer board has been implemented in THRU example. Investigate if generalisation is required. 
@@ -621,8 +622,8 @@ Re 10a and 4. :
 | 6.|  0x14 |  dump sequencer    |                                    |   |   |
 | 7.|       |                    |                                    |   |   |
 | 8.|       |                    |                                    |   |   |
-| 9.| 0x21  |  start thru        |                                    |   |   |
-|10.| 0x22  |  stop thru         |                                    |   |   |
+| 9.|  0x21 |  start thru        |                                    |   |   |
+|10.|  0x22 |  stop thru         |                                    |   |   |
 |11.|       |                    |                                    |   |   |
 |12.|       |                    |                                    |   |   |   
 |13.|       |                    |                                    |   |   |
