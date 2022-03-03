@@ -604,20 +604,20 @@ Re 10a and 4. :
   The message payload consists of byte sequences, pretty much lik MIDI commands
   The following table shows the commands
   
-| Nr| Code  | Description        |   Message (provisional)            |   |   |
+| Nr| Code  | Description        |   main code line                   |   |   |
 |---|-------|--------------------|------------------------------------|---|---|
 | 1.|  0x01 |  start recording   |   recorder.Start()                 |   |   |
 | 2.|  0x02 |  stop recording    |   recorder.Stop()                  |   |   |
-|   |  0x03 |                    |
-|   |  0x04 |  dump recorder     |
+|   |  0x03 |                    |                                    |   |   |
+|   |  0x04 |  dump recorder     |                                    |   |   |
 | 3.|  0x11 |  play              |   sequencer.Start()                |   |   |
 | 4.|  0x12 |  stop              |   sequencer.Stop()                 |   |   |
 | 5.|  0x13 |  rewind            |   sequencer.GoToZero()             |   |   |
 | 6.|  0x14 |  dump sequencer    |                                    |   |   |
-| 7.|                            |                                    |   |   |
-| 8.|                            |                                    |   |   |
-| 9.|                            |                                    |   |   |
-|10.|                            |                                    |   |   |
-|11.|                            |                                    |   |   |
-|12.|                            |                                    |   |   |   
-|13.|                            |                                    |   |   |
+| 7.|       |                    |                                    |   |   |
+| 8.|       |                    |                                    |   |   |
+| 9.| 0x21  |  start thru        |                                    |   |   |
+|10.| 0x22  |  stop thru         |                                    |   |   |
+|11.|       |                    |                                    |   |   |
+|12.|       |                    |                                    |   |   |   
+|13.|       |                    |                                    |   |   |
