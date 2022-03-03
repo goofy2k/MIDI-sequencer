@@ -604,13 +604,13 @@ Re 10a and 4. :
   The message payload consists of byte sequences, pretty much lik MIDI commands
   The following table shows the commands
   
-  | Nr| Description                | Message (provisional)            |   |   |
-|---|----------------------------|------------------------------------|---|---|
-| 1.|  0x01                      |   recorder.Start()                 |   |   |
-| 2.|  0x02                      |   recorder.Stop()                  |   |   |
-| 3.|  0x11                      |   sequencer.Start()                |   |   |
-| 4.|  0x12                      |   sequencer.Stop()                 |   |   |
-| 5.|                            |   sequencer.GoToZero()             |   |   |
+| Nr| Code  | Description        |   Message (provisional)            |   |   |
+|---|-------|--------------------|------------------------------------|---|---|
+| 1.|  0x01 |  start recording   |   recorder.Start()                 |   |   |
+| 2.|  0x02 |  sttop recording   |   recorder.Stop()                  |   |   |
+| 3.|  0x11 |  play              |   sequencer.Start()                |   |   |
+| 4.|  0x12 |  stop              |   sequencer.Stop()                 |   |   |
+| 5.|  0x13 |  rewind            |   sequencer.GoToZero()             |   |   |
 | 6.|                            |                                    |   |   |
 | 7.|                            |                                    |   |   |
 | 8.|                            |                                    |   |   |
