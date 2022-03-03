@@ -112,20 +112,29 @@ AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier *n) :
     num_measures(0),
     file_loaded (false),
     owns_tracks (true)                           // remembers that the multitrack is owned
-{
+{   std::cout << "111 AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier *n)" << std::endl;
     MIDIManager::AddMIDITick(this);
 // sets warp_positions and num_measures (needed even if multitrack is empty, otherwise warp_position would be empty)
     ExtractWarpPositions(); 
     /* *///FCKX
+    std::cout << "11a AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier *n)" << std::endl;
+    
     if (MIDIManager::IsValidInPortNumber(0)) {
+            std::cout << "11b AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier *n)" << std::endl;
         thru = new MIDIThru();
         thru_transposer = new MIDIProcessorTransposer();
         thru->SetProcessor(thru_transposer);
         MIDIManager::AddMIDITick(thru);
+                   std::cout << "11c AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier *n)" << std::endl; 
     }
+   
+    
+                std::cout << "11d AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier *n)" << std::endl;
     /* */
     for (unsigned  int i = 0; i < GetNumTracks(); ++i)
         track_processors[i] = new MIDISequencerTrackProcessor;
+    
+               std::cout << "11e AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier *n)" << std::endl; 
 }
 
 
@@ -133,6 +142,7 @@ AdvancedSequencer::AdvancedSequencer(MIDIMultiTrack* mlt, MIDISequencerGUINotifi
     MIDISequencer (mlt, n),
     owns_tracks (false)                         // remembers that the multitrack is not owned
 {
+     std::cout << "222 AdvancedSequencer::AdvancedSequencer(MIDISequencerGUINotifier *n)" << std::endl;   
     MIDIManager::AddMIDITick(this);
     file_loaded = !state.multitrack->IsEmpty();
     ExtractWarpPositions();                     // sets warp_positions and num_measures

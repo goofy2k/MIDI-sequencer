@@ -1,5 +1,6 @@
-#define TEST_ADVANCEDSEQUENCER_NOINPUT //RUNS OK "succesfully" looping twinkle twinkle
-//#define TEST_RECORDING               //in development/
+//#define TEST_ADVANCEDSEQUENCER_NOINPUT //RUNS OK "succesfully" looping twinkle twinkle
+//#define TEST_RECORDING_NO_INPUT               //in development/
+#define TEST_RECORDER  //with NR GUI input
 //#define TEST_THRU                         //input and output   RUNS OK
 
 
@@ -45,7 +46,11 @@ esp_mqtt_client_handle_t  mqtt_client;
 
 #include "nimBLEdriver.h" //make driver globally accessible by including this header file
 
-
+//for test_recorder
+#include "../include/advancedsequencer.h"
+#include "../include/recorder.h"
+#include "../include/filewritemultitrack.h"
+#include "../examples/functions.h"                  // helper functions for input parsing and output and Dump
 
 //#define DEBUGON
 #ifdef DEBUGON
@@ -118,8 +123,6 @@ void nbDelay(int delayTicks) {      //NON-BLOCKING DELAY HELPER
           //…
         } 
     };
-
-
 
 
 /* WIFI functionality, taken from ESP-IDF example: xxxxxxxxxxxx
@@ -231,49 +234,6 @@ void wifi_init_sta(void)
 */
 
 
-/*
-void execute_single_midi_command(DspFaust * aDSP, int mididata){  //uses propagateMidi
-static const char *TAG = "execute_single_midi_command";
-      //unsigned long eventTimestamp = generate_Timestamp(xTaskGetTickCount());
-    unsigned long event_Timestamp =  generate_Timestamp( xTaskGetTickCount() ) ;
-    jdksmidi::MIDITimedBigMessage inMessage = generate_MIDITimedBigMessage( mididata, event_Timestamp);
-    
-    if (!(seq_mode & play_incoming_mode) == 0) {    
-        //and play
-     propagate_Midi_Event(aDSP, mididata);
-     
-
-    };
-    
-    
-    if (!(seq_mode & record_mode) == 0) {
-        //record
-        ESP_LOGI(TAG,"RECORD MIDI EVENT (start of code)");
-        
-
-            if (myQueue.CanPut()){
-            myQueue.Put(inMessage); //store inMessage in queue and move next_in index up by one position
-                                    //messages are in the queue in order of the moment that they are added. Especially for e.g. looping applications
-                                    //the messages are NOT in order of the time that the events need to be fired
-                                    
-                                    //add an option to insert a message in the right position. This is at the cost of effort at insertion, but prevents the need for sorting later
-                                    //this may be a similar effort, and use similar or the same basic handling....
-                                    
-                                    //for firing of events, timers based on the actual moment of activation can be used
-                                    //to prevent long timer / output queues the main message queue must be sorted now and then. THis is also done in the jdksmidi lib
-                                    //by the track subclass 
-            
-            } else { ESP_LOGE(TAG,"cannot Put msg to queue");} 
-            //display length of queue or get some other indication of it's contents....
-            //ESP_LOGE(TAG,"myQueue.next_in %d", myQueue.next_in);
-            
-          ESP_LOGI(TAG,"RECORD MIDI EVENT (end of code)");  
-
-        };
-        
- };
-*/
-
 #ifdef NIMBLE_IN_MAIN  //phase out
 ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  NIMBLE_IN_MAIN");
  void ble_notify_midi(BLECharacteristic* pCharacteristic, unsigned long int mididata){
@@ -286,17 +246,13 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  NIMBLE_I
     //do you want to send timestamp?
     //you probably want to send a midiPacket according to the BLE MIDI standard ! See docs 
 
-    uint8_t midiPacket[] = {                              
-                  
-
+    uint8_t midiPacket[] = {                           
         0x80, //header
         0x80, //timestamp, not implemented
         0x00, //status
         0x3c, //== 60 == middle c
         0x00  //velocity
     };//
-
-
 
     ESP_LOGW(TAG,"CREATE and notify midiPacket");    //wrap this into a routine using a MIDITimedBigMessage as input (not necessary for incoming
     midiPacket[4] =  mididata & 0x00000000ff;
@@ -485,6 +441,10 @@ void printMIDI_Input(esp_mqtt_event_handle_t event){
 };
 
 
+
+#ifdef TEST_RECORDER 
+
+
 //https://stackoverflow.com/questions/26455952/error-c-map-does-not-name-a-type
 
 enum class Seq_command {
@@ -515,8 +475,86 @@ int parseCommand( std::string const& command )
 }
 
 
+std::map <unsigned char, char *  > seq_command_map = {
+     {0x01, "start recorder"}
+    ,{0x02, "stop recorder"}
+    ,{0x04, "dump recorder"}
+    ,{0x11, "start sequencer"}
+    ,{0x12, "stop sequencer"}
+    ,{0x13, "rewind sequencer"}
+    ,{0x14, "dump recorder"}
 
-//map <const char *, unsigned char  > seq_command_map = {{'quit', 1}};
+};
+
+
+   MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+   
+ /*  
+   AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
+   MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
+*/
+
+
+AdvancedSequencer *ptrAdvancedSequencer;
+MIDIRecorder *ptrMIDIRecorder;
+
+//https://stackoverflow.com/questions/71329110/how-to-make-a-set-of-mutually-dependent-classes-globally-accessible
+
+//AdvancedSequencer ptrAdvancedSequencer(&text_n);
+   //MIDIRecorder ptrMIDIRecorder(&ptrAdvancedSequencer); 
+//void * sequencer_p
+//void * recorder_p;
+
+
+
+void init_test_recorder( void ) {
+    
+    ESP_LOGE(TAG,"Entering test_recorder of TEST_RECORDER example");
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDER");
+ 
+
+
+    ptrAdvancedSequencer = new AdvancedSequencer(&text_n);
+
+    ptrMIDIRecorder = new MIDIRecorder(ptrAdvancedSequencer);
+  
+    MIDIManager::OpenInPorts();          //FCKX!! 220103 must be closed at end
+    MIDIManager::OpenOutPorts();            //must be closed at end
+ 
+
+    MIDITimer::SetResolution(1*portTICK_PERIOD_MS); //for ESP32 resolution must be a multiple of the system tick
+    //keep this for a while to detect if resolution is properly implemented in ESP32_TIMER case
+                                  //setting it to 50 leads to timing errors in recordings?
+    //could create a waiting loop for availability of port(s)
+    //port->isPortOpen())
+    /*
+    while (true) {
+    ESP_LOGE(TAG,"TEST IF PORT IS OPEN %d",MIDIManager::GetOutDriver(0)->IsPortOpen());
+    }
+    */
+
+    ESP_LOGE(TAG,"PROCEEDING with TEST_RECORDER example (a connection should be available here, because tested before)");
+
+    //MIDIManager::AddMIDITick(&recorder);
+MIDIManager::AddMIDITick(ptrMIDIRecorder); 
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    //text_n.SetSequencer(&sequencer);      // This is already called by AdvancedSequencer constructor
+       //text_n.SetSequencer(ptrAdvancedSequencer);      // This is already called by AdvancedSequencer constructor
+       
+    //implement commands, and call them to trigger user commands:
+    //see:  handle_seq_command dispatcher 
+    
+    
+        ESP_LOGE(TAG,"Entering Idle Loop of test_recorder");
+        ESP_LOGE(TAG,"USE GUI TO ISSUE COMMANDS");
+    /*    
+        while(1) {
+            //ESP_LOGE(TAG,"Idle Loop of test_recorder");
+             vTaskDelay(10 / portTICK_PERIOD_MS);  
+        };
+        ESP_LOGE(TAG,"End of test_recorder");
+    */
+}; //init_test_recorder
 
 
 void handle_seq_command(esp_mqtt_event_handle_t event){
@@ -524,46 +562,62 @@ void handle_seq_command(esp_mqtt_event_handle_t event){
     ESP_LOGD(TAG,"COMMAND:%.*s ", event->topic_len, event->topic); 
     ESP_LOGD(TAG,"DATA:%.*s ", event->data_len, event->data);
     ESP_LOGD(TAG,"data_len %d",event->data_len); 
-//    std::string commandStr = event->data;
-//    std::cout << "COMMAND HANDLER" << commandStr << "** **" << (int)parseCommand(commandStr) << std::endl;
+    char * command =   event->data;
     
-//    ESP_LOGD(TAG,"COMMAND FCKX1 HANDLER %d",(int) event->data);
-   // ESP_LOGD(TAG,"COMMAND FCKX2 HANDLER %s",(event->data).c_str());
-    
-    
-/*
-    switch (seq_command_map[event->data]){  //error: switch quantity not an integer
-        case 1:
-        ESP_LOGD(TAG,"TO BE IMPLEMENTED COMMAND:%.*s ", event->data_len, event->data);
-        break;
-        default:
-           ESP_LOGD(TAG,"UNKNOWN COMMAND:%.*s ", event->data_len, event->data);
-        break;
-        
-        //
-    };
-    */
-    
-        if (strncmp(event->data, "quit",strlen("quit")) == 0) {
-            ESP_LOGD(TAG,"COMMAND:%.*s ", event->data_len, event->data);
-            ESP_LOGW(TAG,"TO BE IMPLEMENTED");
-            }
-        else
-        if (strncmp(event->data, "A",strlen("A")) == 0) {
-            ESP_LOGD(TAG,"COMMAND:%.*s ", event->data_len, event->data);
-            ESP_LOGW(TAG,"TO BE IMPLEMENTED");
-            }
-        else
-        if (strncmp(event->data, "B",strlen("B")) == 0) {
-            ESP_LOGD(TAG,"COMMAND:%.*s ", event->data_len, event->data);
-            ESP_LOGW(TAG,"TO BE IMPLEMENTED");
-            }
-        else            
+    switch( command[0]){
+        case 0x01: 
+        {
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+            
+            MIDIClockTime t = ptrAdvancedSequencer->MeasToMIDI(15,0); //endMeasure, endBeat record the first 6 beats FCKX            
+            ptrMIDIRecorder->SetEndRecTime(t);
+            ptrMIDIRecorder->EnableTrack(1); //FCKX
+            ptrMIDIRecorder->SetTrackRecChannel(1,-1);      // Can you set this? YES Otherwise set a specific channel
+            ptrMIDIRecorder->Start();             
+            std::cout << "Recorder started\n";
+            
+        break; }    
+        case 0x02:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+                        ptrMIDIRecorder->Stop();
+            std::cout << "Recorder stopped\n";      //never reached after calling 
+            break;
+        case 0x04:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+            DumpMIDIMultiTrackWithPauses(ptrMIDIRecorder->GetMultiTrack()); //in functions.cpp
+            std::cout << "Recorder stopped\n";      //never reached after calling 
+            break;            
+        case 0x11:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+                        ptrAdvancedSequencer->Play();
+            std::cout << "Sequencer started at measure: " << ptrAdvancedSequencer->GetCurrentMeasure() << ":"
+                 << ptrAdvancedSequencer->GetCurrentBeat() << std::endl;
 
-            {  ESP_LOGE(TAG,"UNKNOWN COMMAND:%.*s ", event->data_len, event->data);
-        }
-    
+            break;
+        case 0x12:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+                        ptrAdvancedSequencer->Stop();
+            std::cout << "Sequencer stopped at measure: " << ptrAdvancedSequencer->GetCurrentMeasure() << ":"
+                 << ptrAdvancedSequencer->GetCurrentBeat() << std::endl;
+            break; 
+        case 0x13:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE IMPLEMENTED", command[0], command[0], seq_command_map[command[0]]); 
+            ptrAdvancedSequencer->GoToZero();
+            std::cout << "Rewind to 0:0" << std::endl;
+            break;   
+        case 0x14:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+            DumpMIDIMultiTrackWithPauses(ptrAdvancedSequencer->GetMultiTrack()); //in functions.cpp
+            std::cout << "Recorder stopped\n";      //never reached after calling 
+            break;             
+        default:
+            ESP_LOGE(TAG,"UNKNOWN COMMAND: %d (0x%X)", command[0], command[0]);
+            break;
+} //switch(command[0])
+
 };
+
+#endif //TEST_RECORDER 
 
 void handle_midi_single_in(esp_mqtt_event_handle_t event){
     static const char *TAG = "HANDLE_MIDI_SINGLE_IN"; 
@@ -642,25 +696,17 @@ void handle_midi_single_in(esp_mqtt_event_handle_t event){
 };
 
 
-
-
-
 //#ifdef NIMBLE_IN_MAIN   this is only because of midi thru!!!!!  so switch off thru
 
 static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
 
     //receive a 5 byte array 
- 
-    static const char *TAG = "FCKX_SEQ_API";
-  
+    static const char *TAG = "FCKX_SEQ_API"; 
     //MIDI COMMANDS               
     if (strncmp(event->topic, "/fckx_seq/midi/single",strlen("/fckx_seq/midi/single")) == 0) {
-        
-    handle_midi_single_in(event);
-    
-
-          }
-          
+   
+        handle_midi_single_in(event);   
+          }        
     else
     //TESTER        
     if (strncmp(event->topic, "/fckx_seq/midi/test",strlen("/fckx_seq/midi/test")) == 0) {
@@ -672,14 +718,17 @@ static void call_fckx_seq_api(esp_mqtt_event_handle_t event){
         //ESP_LOGD(TAG,"data_len %d",event->data_len);  
         ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
         ESP_LOGI(TAG,"...command to be implemented...");      
-        }       
+        } 
+#ifdef TEST_RECORDER        
     else
-    //NONE MIDI COMMANDS (e.g. for NiCMidi MIDIManager        
+    //NONE MIDI COMMANDS (e.g. for NiCMidi MIDIManager 
+
     if (strncmp(event->topic, "/fckx_seq/command",strlen("/fckx_seq/command")) == 0) {
         ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
         handle_seq_command(event);
         ESP_LOGI(TAG,"...command to be implemented...");      
         } 
+#endif // TEST_RECORDER       
     else {
          ESP_LOGI(TAG,"COMMAND:%.*s\r ", event->topic_len, event->topic);
         ESP_LOGI(TAG,"unknown API command");}
@@ -890,46 +939,12 @@ static esp_mqtt_client * mqtt_app_start(void){
 */
 
 
-
 //#include "../include/tick.h"
 //#include "../include/manager.h"
 #include "../include/metronome.h"
-#include "../examples/functions.h"                  // helper functions for input parsing and output
-
-//for test_recorder
-#include "../include/advancedsequencer.h"
-#include "../include/recorder.h"
-#include "../include/filewritemultitrack.h"
 
 
 using namespace std;
-
-//////////////////////////////////////////////////////////////////
-//                 TEST_RECORDER G L O B A L S                  //
-//////////////////////////////////////////////////////////////////
-
-/*
-        RtMidiOut temp_MIDI_out;
-        for (unsigned int i = 0; i < temp_MIDI_out.getPortCount(); i++) {
-            MIDI_outs->push_back(new MIDIOutDriver(i));
-            MIDI_out_names->push_back(temp_MIDI_out.getPortName(i));
-*/            
-            
-
-//AdvancedSequencer sequencer;       // an AdvancedSequencer (without GUI notifier)
-//RtMidi temp_rtMIDI;
-
-//for (unsigned int i = 0; i < temp_MIDI_out.getPortCount(); i++) { printf("SUCCESS!\n")}
-//RtMidi temp_RtMidi;
-//RtMidi::temp_RtMidi.add_Nimble(); //HAVE TO DELETE TEMP MIDI OUT AFTER TRANSFERRING POINTER
-//temp_RtMidi.add_Nimble(); //HAVE TO DELETE TEMP MIDI OUT AFTER TRANSFERRING POINTER
-
-//RtMidi::add_NimBLE();  //helper to pass pointer at nimBLE server to RtMidi
-
-//class that holds nimBLE setup data after server has been set up
-//the MidOutNimBLE::intitialize must have access to a function that is a friend  of nimBLEDATA
-
-
 
 
 #ifdef TEST_ADVANCEDSEQUENCER
@@ -945,260 +960,6 @@ AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI no
 MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
 #endif
 
-
-//extern string command, par1, par2;          // used by GetCommand() for parsing the user input
-//char filename[200];                         // used for saving files
-/*
-const char helpstring[] =                   // shown by the help command
-"\nAvailable commands:\n\
-   load filename          : Loads the file into the sequencer; you must specify\n\
-                          : the file name with .mid extension\n\
-   save filename          : Save the current multitrack into a file; If the\n\
-                          : file name is not specified you must type it with\n\
-                          : .mid extension)\n\
-   ports                  : Enumerates MIDI In and OUT ports\n\
-   play                   : Starts playback from current time\n\
-   stop                   : Stops playback\n\
-   rec on/off             : Enable/disable recording\n\
-   addtrack [n]           : Insert a new track (if n is not given appends\n\
-                            it)\n\
-   deltrack [n]           : Deletes a track (if n is not given deletes the\n\
-                            last track)\n\
-   enable trk [chan]      : Enable track trk for recording (if you don't specify\n\
-                            the channel this will be the track channel if the\n\
-                            track is a channel track or all channels\n\
-   disable [trk]          : Disable track trk for recording (if you omit trk disables\n\
-                          : all tracks)\n\
-   recstart [meas] [beat] : Sets the recording start time from meas and beat\n\
-                          : (numbered from 0) If you don't specify anything from 0.\n\
-   recend[meas] [beat]    : Sets the recording end time to meas and beat. If you\n\
-                            don't specify anything to infinite.\n\
-   undo                   : Restore the sequence content before the recording.\n\
-                            You have multiple undo levels.\n\
-   rew                    : Goes to the beginning (stops the playback)\n\
-   goto meas [beat]       : Moves current time to given meas and beat\n\
-                            (numbered from 0)\n\
-   dumps [trk]            : Prints a dump of all midi events in the sequencer\n\
-                            (or in its track trk)\n\
-   dumpr [trk]            : Prints a dump of all midi events in the recorder\n\
-                            (or in its track trk)\n\
-   inport track port      : Sets the MIDI in port for the given track\n\
-   outport track port     : Sets the MIDI out port for the given track\n\
-   program track p        : Sets the MIDI program (patch) for the given track\n\
-   volume track v         : Sets the MIDI volume for the given track\n\
-   trackinfo [v]          : Shows info about all tracks of the file. If you\n\
-                            add the v the info are more complete.\n\
-   b                      : (backward) Moves current time to the previous measure\n\
-   f                      : (forward) Moves current time to the next measure\n\
-   help                   : Prints this help screen\n\
-   quit                   : Exits\n\
-The recording related commands can be given only when the sequencer is stopped,\n\
-other commands even during playback\n";
-*/
-
-/*
-int main_test_midiports() {
-    if (MIDIManager::GetNumMIDIIns()) {
-        cout << "MIDI IN PORTS:" << endl;
-        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++)
-            cout <<'\t' << i << ": " << MIDIManager::GetMIDIInName(i) << endl;
-    }
-    else
-        cout << "NO MIDI IN PORTS" << endl;
-    if (MIDIManager::GetNumMIDIOuts()) {
-        cout << "MIDI OUT PORTS:" << endl;
-        for (unsigned int i = 0; i < MIDIManager::GetNumMIDIOuts(); i++)
-            cout << '\t' << i << ": " << MIDIManager::GetMIDIOutName(i) << endl;
-    }
-    else
-        cout << "NO MIDI OUT PORTS" << endl;
-    cout << endl << endl << "Press ENTER" << endl;
-    cin.get();
-    return EXIT_SUCCESS;
-}
-*/
-
-/*
-Metronome metro;                                // a Metronome (without GUI notifier)
-
-//extern string command, par1, par2;              // used by GetCommand() for parsing the user input
-//for commands: send a jsonStr that can be converted into an object with string command, and array of string par
-//see Nodered
-//to prevent the use of json decoding: call the api with:  /fckx_seq/command/<command_name>/<par1_value>,<par2_value
-//or implement: JSON::Parse(json_string)
-//build a GUI similar to the one for the audio decoder in the sound board firmware.
-//where is the data, the status of the sequencer....?
-//for the data: see the test_win32_player.cpp example and refactor it to JSONUI for a browser based GUI
-//be very very hesitant to use the Windows API
-
-const char helpstring[] =                       // shown by the help command
-"\nAvailable commands:\n\
-   ports               : Enumerates MIDI In and OUT ports\n\
-   start               : Starts the metronome\n\
-   stop                : Stops the metronome\n\
-   tempo bpm           : Sets the metronome tempo (bpm is a float)\n\
-   tscale scale        : Sets global tempo scale. scale is in percent\n\
-                         (ex. 200 = twice faster, 50 = twice slower)\n\
-   subd n              : Sets the number of subdivisions (n can be\n\
-                         0, 2, 3, 4, 5, 6, 0 disables subdivisions)\n\
-   meas n              : Sets the number of beats of a measure (0 disables\n\
-                         measure clicks)\n\
-   measnote nn         : Sets the MIDI note for first beat of the measure\n\
-   beatnote nn         : Sets the MIDI note for ordinary beats\n\
-   subdnote nn         : Sets the MIDI note for subdivisions\n\
-   outport port        : Sets the MIDI out port\n\
-   outchan ch          : Sets the MIDI out channel\n\
-   status              : Prints the status of the metronome\n\
-   help                : Prints this help screen\n\
-   quit                : Exits\n\
-MIDI channels are numbered 0 .. 15\n\
-All commands can be given during playback\n";
-
-
-//////////////////////////////////////////////////////////////////
-//                              M A I N                         //
-//////////////////////////////////////////////////////////////////
-
-int main_test_metronome( string command) {
-//int main_test_metronome( int argc, char **argv ) {
-    // tests if a MIDI out port is present in the system
-    if (MIDIManager::GetNumMIDIOuts() == 0) {
-        cout << "This program has no functionality without MIDI out ports!\n" <<
-                "Press a key to quit\n";
-        cin.get();
-        return EXIT_SUCCESS;
-    }
-    // adds the metronome to the MIDIManager queue
-    MIDIManager::AddMIDITick(&metro);
-
-    cout << "TYPE help TO GET A LIST OF AVAILABLE COMMANDS\n\n";
-   std::string str(command); 
-  // while ( strcmp(command, "quit") != 0 )  // main loop
-  while (command != "quit") {                     // main loop
-        //GetCommand();                               // gets user input and splits it into command, par1, par2
-        //replace this by parsing a json object, from a jsonStr sent by Nodered
-        
-        if(command == "")                           // empty command
-            continue;
-        if (command == "ports") {                   // enumerates the midi ports
-            if (MIDIManager::GetNumMIDIIns()) {
-                cout << "MIDI IN PORTS:" << endl;
-                for (unsigned int i = 0; i < MIDIManager::GetNumMIDIIns(); i++)
-                    cout << i << ": " << MIDIManager::GetMIDIInName( i ) << endl;
-            }
-            else
-                cout << "NO MIDI IN PORTS" << endl;
-            cout << "MIDI OUT PORTS:" << endl;
-            for (unsigned int i = 0; i < MIDIManager::GetNumMIDIOuts(); i++)
-                cout << i << ": " << MIDIManager::GetMIDIOutName( i ) << endl;
-        }
-        else if (command == "start") {               // starts the metronome
-            metro.Start();
-            cout << "Metronome started" << endl;
-        }
-        else if (command == "stop") {               // stops the metronome
-            metro.Stop();
-            cout << "Metronome stopped at " << metro.GetCurrentMeasure() << ":"
-                 << metro.GetCurrentBeat() << endl;
-        }
-        else if (command == "tempo") {              // changes the metronome tempo
-            float tempo = atof(par1.c_str());
-            if (metro.SetTempo(tempo)) {
-                cout << "Tempo set to " << tempo <<
-                        "  Effective tempo: " << metro.GetTempoWithScale() << " bpm" << endl;
-            }
-            else
-                cout << "Invalid tempo" << endl;
-        }
-        else if (command == "tscale") {             // scales the metronome tempo
-            int scale = atoi(par1.c_str());
-            if (metro.SetTempoScale(scale)) {
-                cout << "Tempo scale : " << scale <<
-                        "%  Effective tempo: " << metro.GetTempoWithScale() << " bpm" << endl;
-            }
-            else
-                cout << "Invalid tempo scale" << endl;
-        }
-        else if (command == "subd") {               // sets the number of subdivision of each beat
-            unsigned int type = atoi(par1.c_str());          // 0 disables subdivision clicks
-            if (metro.SetSubdType(type)) {
-                if (type == 0)
-                    cout << "Subdivision click disabled" << endl;
-                else
-                     cout << "Number of subdivisions set to " << type << endl;
-            }
-            else
-                cout << "Invalid number of subdivisions" << endl;
-        }
-        else if (command == "meas") {               // sets the number of beats of a measure
-            unsigned int beats = atoi(par1.c_str());         // 0 disables measure clicks
-            metro.SetTimeSigNumerator(beats);
-            if (beats == 0)
-                cout << "First beat disabled" << endl;
-            else
-                cout << "Beats set to " << beats << endl;
-        }
-
-        else if (command == "measnote") {           // sets the note for 1st beat of a measure
-            unsigned int note = atoi(par1.c_str()) & 0x7f;
-            metro.SetMeasNote(note);
-            cout << "First beat note set to " << note << endl;
-        }
-        else if (command == "beatnote") {           // sets the note for ordinary beats
-            unsigned int note = atoi(par1.c_str()) & 0x7f;
-            metro.SetBeatNote(note);
-            cout << "Beat note set to " << note << endl;
-        }
-        else if (command == "subdnote") {           // sets the note for subdivisions
-            unsigned int note = atoi(par1.c_str()) & 0x7f;
-            metro.SetSubdNote(note);
-            cout << "Subdivision note set to " << note << endl;
-        }
-        else if (command == "outport") {            // changes the midi out port
-            int port = atoi(par1.c_str());
-            if (metro.SetOutPort(port))
-                cout << "Assigned out port n. " << port << endl;
-            else
-                cout << "Invalid port number" << endl;
-        }
-        else if (command == "outchan") {            // changes the midi out chan
-            int chan = atoi(par1.c_str());
-            if (metro.SetOutChannel(chan))
-                cout << "Assigned out channel n. " << (int)chan << endl;
-            else
-                cout << "Invalid channel number" << endl;
-        }
-        else if (command == "status") {
-            cout << "\nMETRONOME STATUS:\n";
-            cout << "MIDI out port:             " << MIDIManager::GetMIDIOutName(metro.GetOutPort()) << endl;
-            cout << "MIDI out channel:          " << int(metro.GetOutChannel()) << endl;
-            cout << "Tempo:                     " << metro.GetTempoWithoutScale() << " bpm" << endl;
-            cout << "Tempo scale:               " << metro.GetTempoScale() << "% (effective tempo: " <<
-                    metro.GetTempoWithScale() << " bpm)" << endl;
-            cout << "Measure beats:             " << int(metro.GetTimeSigNumerator());
-            cout << (metro.GetTimeSigNumerator() == 0 ? " (disabled)" : "") << endl;
-            cout << "Subdivision:               " << int(metro.GetSubdType());
-            cout << (metro.GetSubdType() == 0 ? " (disabled)" : "") << endl;
-            cout << "Measure beat note:         " << int(metro.GetMeasNote()) << endl;
-            cout << "Ordinary beat note:        " << int(metro.GetBeatNote()) << endl;
-            cout << "Subdivision note:          " << int(metro.GetSubdNote()) << endl;
-        }
-        else if (command == "help")                 // prints help screen
-            cout << helpstring;
-        else if (command != "quit" )                // unrecognized command
-            cout << "Unrecognized command" << endl;
-    }
-    return EXIT_SUCCESS;
-}
-
-*/
-// If you want to implement your own MIDITickComponent derived class you must at least redefine
-// the StaticTickProc() and TickProc() methods (and probably Start() and Stop() also).
-// Before using the class you must add it to the MIDIManager queue with the
-// MIDIManager::AddMIDITick().
-// This is a very simple example which play a fixed note every second; see the comments
-// to every method for details.
-//
 
 #ifdef TEST_THRU
 
@@ -1233,15 +994,9 @@ class MyCharacteristicCallbacks: public BLECharacteristicCallbacks {
         string myaddress = value.substr(0,mypos); 
         string myvalue = value.substr(mypos,value.length());
         //forward to NODERED over MQTT
-        esp_mqtt_client_publish(mqtt_client, myaddress.c_str(), myvalue.c_str(), 0, 1, 0);
-
-        
+        esp_mqtt_client_publish(mqtt_client, myaddress.c_str(), myvalue.c_str(), 0, 1, 0);   
     }
 };
-
-
-
-
 
 
 int test_thru(  ) {
@@ -1262,10 +1017,7 @@ try {
   thru->SetInChannel(-1); //FCKX select only inputs on channel 0
   thru->SetOutChannel(-1); //FCKX select only inputs on channel 0
  
- // MIDIManager::OpenOutPorts();  //you may have to do this after  MIDIManager::AddMIDITick(thru) 
-  //  MIDIThru* thru = new MIDIThru; //NOK
-     //MIDIThru thru = new MIDIThru; //NOK
-    // MIDIThru* thru; 
+
 }
 catch( ... ) {
     
@@ -1273,31 +1025,14 @@ catch( ... ) {
     return 0;
 }
 
-    //MIDIThru thru;  //was not here !!!!!
     // adds the thru to the MIDIManager queue
     MIDIManager::AddMIDITick(thru);
-   // MIDIManager::OpenOutPorts();  //you may have to do this after  MIDIManager::AddMIDITick(thru) 
 
-    // plugs the MIDIProcessorPrinter into the metronome, so all MIDI message will
-    // be printed to stdout
+    // plugs the MIDIProcessorPrinter into the metronome, so all MIDI messages will be printed to stdout
     thru->SetProcessor(&printer);
     // sets the printing of passing events on and off
     printer.SetPrint(true); 
-    //printer.SetPrint(false);
-    //thru->Start(); //not here
-    
-    //             
-    //  MidiOutNimBLE::getPortCount();    //test exposure of MidiOutNimBLE members (need object)
-    //MIDIManager::getOutDriver(0);
-     // MIDIManager::GetOutDriver(0)->OpenPort();
-    // MIDIManager::GetOutDriver(0)->get_connectionData();
-    //try to access the connection data via GetOutDriver port 
-    //   MIDIManager::GetOutDriver(0)->OutputMessage(msg);
-    //MIDIManager::GetOutDriver(0)->GetPortId();
-    //MIDIManager::GetOutDriver(0)->IsPortOpen();
 
-    //MOVE TO NIMMBLE ON_CONNECT????  too deep!
-    //OR check if port open
     // now define CharacteristicCallBacks
     bool myresult = false;
     MidiOutNimBLE::NimBLEMidiOutData myconnectiondata;
@@ -1314,23 +1049,11 @@ catch( ... ) {
     std::cout << "set Characteristic callbacks" << std::endl;
      myconnectiondata.pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());  
     
-    
-    
-    
   return 1;
  
 } //test_thru(  )
 #endif // #ifdef TEST_THRU
 
-
-
-
-    /**********************************************************************************
-    *TEST  NiCMidi functionality   test_component.cpp
-    *
-    * https://ncassetta.github.io/NiCMidi/docs/html/_m_e_s_s__t_r_a_c_k__m_u_l_t_i.html
-    *    
-    ***********************************************************************************/ 
 
 #ifdef TEST_COMPONENT  
 ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_COMPONENT");
@@ -1504,15 +1227,15 @@ int main_test_component() {
     *    
     ***********************************************************************************/    
 #endif 
- 
+
+#ifdef TEST_RECORDING_NO_INPUT  //see issue #6 NiCMidi repo
 
 
-#ifdef TEST_RECORDING  //see issue #6 NiCMidi repo
+void test_recording_no_input( void ) {
 
-
-void test_recording( void ) {
-    ESP_LOGE(TAG,"Entering test_recording of TEST_RECORDING example");
-    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING");
+    static const char *TAG = "TEST_RECORDING_NO_INPUT"; 
+    ESP_LOGE(TAG,"Entering test_recording_no_input of TEST_RECORDING_NO_INPUT example");
+    ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING_NO_INPUT");
     MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
     AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
     MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
@@ -1531,10 +1254,12 @@ void test_recording( void ) {
     }
     */
 
-    ESP_LOGE(TAG,"PROCEEDING with TEST_RECORDING example (a connection should be available here, because tested before)");
+    ESP_LOGE(TAG,"PROCEEDING with TEST_RECORDING_NO_INPUT example (a connection should be available here, because tested before)");
 
     MIDIManager::AddMIDITick(&recorder);
     //text_n.SetSequencer(&sequencer);      // This is already called by AdvancedSequencer constructor
+
+
 
     MIDIClockTime t = sequencer.MeasToMIDI(15,0); //endMeasure, endBeat record the first 6 beats
     recorder.SetEndRecTime(t);
@@ -1560,9 +1285,9 @@ void test_recording( void ) {
     while (sequencer.IsPlaying())         // waits until the sequencer finishes
         MIDITimer::Wait(50);
         
-    ESP_LOGE(TAG,"End of TEST_RECORDING CODE");    
+    ESP_LOGE(TAG,"End of TEST_RECORDING_NO_INPUT CODE");    
 }
-#endif
+#endif //TEST_RECORDING_NO_INPUT
 
 
 #ifdef TEST_ADVANCEDSEQUENCER_NOINPUT
@@ -1833,8 +1558,6 @@ int test_advancedsequencer_noinput( ) {
 #endif // TEST_ADVANCEDSEQUENCER_NOINPUT
 
 
-
-
 void app_main(void) {
 /*************************************************************************************************
 *NOTE: NimBLEData is a test object to demonstrate a globally accessible object 
@@ -1852,8 +1575,10 @@ void app_main(void) {
 ****************************************************************************************************/
 //Test
 //ESP_LOGW(TAG,"nimBLEOutdriver getPortCount(): %d", (int)nimBLEOutdriver.getPortCount());
-
-
+    static const char *TAG = "APP_MAIN"; 
+    esp_log_level_set("*", ESP_LOG_VERBOSE);
+    esp_log_level_set("APP_MAIN", ESP_LOG_VERBOSE);
+    ESP_LOGW(TAG, "APP_MAIN ENTRY"); 
 //The next test is to see the server appear in a network sniffer (nRF Connect) 
 //Until we implemented operation of the nimBLEOutdriver, the calls to NicMidi are commented  
 #ifdef DEBUGON
@@ -1861,8 +1586,8 @@ void app_main(void) {
     std::cout << n << " concurrent threads are supported.\n";
 #endif
     
-    static const char *TAG = "APP_MAIN";   
-    
+      
+    ESP_LOGW(TAG, "APP_MAIN ENTRY");   
     /*    
     ESP_LOGE - error (lowest)
     ESP_LOGW - warn
@@ -1875,6 +1600,7 @@ void app_main(void) {
     
     
     esp_log_level_set("*", ESP_LOG_VERBOSE);
+    esp_log_level_set("APP_MAIN", ESP_LOG_VERBOSE);
     esp_log_level_set("event", ESP_LOG_ERROR ); //MQTT
     esp_log_level_set("FCKX_SEQ", ESP_LOG_ERROR);
     esp_log_level_set("FCKX_SEQ_API", ESP_LOG_VERBOSE);
@@ -2016,7 +1742,7 @@ vTaskDelay(500 / portTICK_PERIOD_MS);
 
 #endif
 
-#ifdef TEST_RECORDER
+#ifdef TEST_RECORDER_OLD
     ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDER");
     ESP_LOGE(TAG,"instantiations for TEST_RECORDER EXAMPLE");
     ESP_LOGE(TAG,"Entering MIDISequencerGUINotifierText");
@@ -2106,7 +1832,7 @@ vTaskDelay(500 / portTICK_PERIOD_MS);
     }  
 
 
-#endif //ifdef TEST_RECORDER 
+#endif //ifdef TEST_RECORDER_OLD
   
 #ifdef TEST_COMPONENT 
 ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_COMPONENT");
@@ -2117,15 +1843,33 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_COM
   }
 #endif
 
-#ifdef TEST_RECORDING 
-ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING");
-  ESP_LOGW(TAG, "ENTERING test_recording()");
+#ifdef TEST_RECORDING_NO_INPUT 
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDING_NO_INPUT");
+  ESP_LOGW(TAG, "ENTERING test_recording_no_input()");
 //  while (1) {      
-    test_recording();  
-        ESP_LOGE(TAG,"End of TEST_RECORDING CODE 2");  
+    test_recording_no_input();  
+        ESP_LOGE(TAG,"End of TEST_RECORDING_NO_INPUT CODE 2");  
     //vTaskDelay(10 / portTICK_PERIOD_MS);  
 //  }
 #endif
+
+
+#ifdef TEST_RECORDER
+ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDER");
+ //  ptrAdvancedSequencer = new AdvancedSequencer(&text_n);
+
+ //  ptrMIDIRecorder = new MIDIRecorder(ptrAdvancedSequencer);
+
+  ESP_LOGW(TAG, "ENTERING init_test_recorder()");
+ // while (1) {      
+        init_test_recorder();  
+        ESP_LOGE(TAG,"End of TEST_RECORDER");  
+    //vTaskDelay(10 / portTICK_PERIOD_MS);  
+//  }
+#endif //TEST_RECORDER
+
+
+
 
 #ifdef TEST_THRU
     ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_THRU");
@@ -2159,6 +1903,7 @@ ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_REC
  ESP_LOGE(TAG,"Entering Idle Loop");
     while (1) {      
         //empty loop forever 
+        ESP_LOGV(TAG,"Idle Loop");
         vTaskDelay(10 / portTICK_PERIOD_MS);  
     } 
   ESP_LOGE(TAG,"End of app_main");  

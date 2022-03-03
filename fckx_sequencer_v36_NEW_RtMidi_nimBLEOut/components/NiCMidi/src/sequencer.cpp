@@ -382,13 +382,16 @@ MIDISequencer::MIDISequencer (MIDIMultiTrack *m, MIDISequencerGUINotifier *n) :
     //time_shifts(m->GetNumTracks(), 0),
     //track_ports(m->GetNumTracks(), 0),
     state (m, n) {
+      
     // checks if the system has almost a MIDI out
     if (!MIDIManager::IsValidOutPortNumber(0))
         throw RtMidiError("MIDISequencer needs almost a MIDI out port in the system\n", RtMidiError::INVALID_DEVICE);
+    
     if (n)
         n->SetSequencer(this);
     beat_marker_msg.SetBeatMarker();
     //state.iterator.SetTimeShiftVector(&time_shifts);
+   
 }
 
 
@@ -398,6 +401,16 @@ MIDISequencer::~MIDISequencer() {
         if (track_processors[i])
             delete track_processors[i];
 }
+
+
+/*
+void MIDISequencer::Init() {   //FCKX
+
+    // checks if the system has almost a MIDI out
+    if (!MIDIManager::IsValidOutPortNumber(0))
+        throw RtMidiError("MIDISequencer needs almost a MIDI out port in the system\n", RtMidiError::INVALID_DEVICE);
+}
+*/
 
 
 void MIDISequencer::Reset() {

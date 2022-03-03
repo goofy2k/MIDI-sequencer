@@ -202,6 +202,10 @@ class MIDISequencer : public MIDITickComponent {
                                         MIDISequencer(MIDIMultiTrack* m, MIDISequencerGUINotifier* n = 0);
         /// The destructor. The MIDIMultiTrack and the MIDISequencerGUINotifier are not owned by the MIDISequencer;
         /// the MIDIProcessor objects, instead, (if you have set them with SetProcessor()) are deleted.
+        
+     //   void Init(void);  //FCKX
+        
+        
         virtual                         ~MIDISequencer();
         /// Resets the MIDISequencer to its initial state. Moves the time to 0 updating the state (see
         /// MIDISequencerState::Reset()), deletes all the track processors (if you have set them with SetProcessor()),

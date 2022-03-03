@@ -232,17 +232,24 @@ MidiOutNimBLE :: ~MidiOutNimBLE ()
 
 void MidiOutNimBLE :: initialize ( const std::string& clientName)
 {
+      static const char *TAG = "MIDIOUTNIMBLE :: INITIALIZE"; 
   ESP_LOGW(TAG, "Initialize nimBLEOutdriver MidiOutNimBLE :: initialize"); 
 #define INITIALIZE1
 #ifdef INITIALIZE1
     ESP_LOGW(TAG, "MidiOutNimBLE :: initialize1");
 //initialize the driver/port and store the essential data in the accompanying data struct
 //essential = suffiecient for opening / closing the port
-
+ #define EARLY_OPEN
+ #ifdef EARLY_OPEN
   NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
   NimBLECharacteristic* pCharacteristic = NULL; 
   //Create the BLE Device 
   //This is also for Midi input, so should ideally be in a super class
+  
+  
+  //#define EARLY_OPEN
+ 
+  //put this in OpenPort
   NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
                                   //and include the unique device ID in it
                                   //take care of max length of this string!
@@ -294,8 +301,12 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
     // Start the service
   pService->start();
   ESP_LOGW(TAG, "BLE service started");
+   #endif TEMP_BLOCK1
+
+ 
+  
   /*
-  //MOVE THIS TO openPort
+  //MOVE THIS TO openPort   ALSO MOVE THE FORMER TO OPENPORT
 
   // Start advertising
   ESP_LOGI(TAG, "Start advertising");
@@ -303,7 +314,7 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(false); 
 */
-  #endif
+ // #endif
   
   
     // Save our connection information
@@ -311,6 +322,8 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
     connectionData.pServer = pServer;
     connectionData.pService = pService;
     connectionData.pCharacteristic = pCharacteristic;
+    
+   #endif EARLY_OPEN   
   
  /*  
   // Save our connection information
@@ -394,26 +407,28 @@ std::string MidiOutNimBLE :: getPortName(unsigned int portNumber)
 
 
 //void MidiOutNimBLE :: openPort( )
-void MidiOutNimBLE :: openPort( unsigned int portNumber)
-{
+void MidiOutNimBLE :: openPort( unsigned int portNumber){
     
-   // Set up our client and give a sign of life
-  ESP_LOGW(TAG, "Initialize nimBLEOutdriver MidiOutNimBLE :: openPort"); 
+    static const char *TAG = "MIDIOUTNIMBLE :: OPENPORT"; 
+    
+    // Set up our client and give a sign of life
+    ESP_LOGW(TAG, "Initialize nimBLEOutdriver MidiOutNimBLE :: openPort nr %d", portNumber); 
 
 //#define INITIALIZE2
 #ifdef INITIALIZE2
     ESP_LOGW(TAG, "MidiOutNimBLE :: initialize2");
-  NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
-  NimBLECharacteristic* pCharacteristic = NULL; 
-  //Create the BLE Device 
-  //This is also for Midi input, so should ideally be in a super class
-  NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
+    NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
+    NimBLECharacteristic* pCharacteristic = NULL; 
+    //Create the BLE Device 
+    //This is also for Midi input, so should ideally be in a super class
+    NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
                                   //and include the unique device ID in it
                                   //take care of max length of this string!
   
-  ESP_LOGW(TAG, "NimBLEDevice created"); 
+    ESP_LOGW(TAG, "NimBLEDevice created"); 
+
 #define TEMP_BLOCK1 1  
- #ifdef TEMP_BLOCK1 
+#ifdef TEMP_BLOCK1 
   pServer = NimBLEDevice::createServer();
      ESP_LOGW(TAG, "BLE server created"); 
   pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
@@ -519,9 +534,81 @@ ESP_LOGW(TAG, "BLE server characteristic created");
     ESP_LOGE(TAG, "MidiOutNimBLE::openPort: a valid connection already exists nevertheless start advertising (DIRTY!)"); 
     //error( RtMidiError::WARNING, errorString_ );  //how  to implement this error case
     
+    
 #define DIRTYOPEN
 #ifdef DIRTYOPEN
     //connected_ is probably not a valid flag
+    
+  //#define LATE_OPEN
+  #ifdef LATE_OPEN
+  
+    NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
+  NimBLECharacteristic* pCharacteristic = NULL; 
+  //Create the BLE Device 
+  //This is also for Midi input, so should ideally be in a super class
+  
+  
+  //put this in OpenPort
+  NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
+                                  //and include the unique device ID in it
+                                  //take care of max length of this string!
+  
+  ESP_LOGW(TAG, "NimBLEDevice created"); 
+#define TEMP_BLOCKA 1  
+#ifdef TEMP_BLOCKA 
+  pServer = NimBLEDevice::createServer();
+  ESP_LOGW(TAG, "BLE server created"); 
+  pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
+   ESP_LOGW(TAG, "BLE server callbacks created"); 
+   
+  // Create the BLE Service
+  NimBLEService *pService = pServer->createService(SERVICE_UUID);
+  ESP_LOGW(TAG, "BLE server service created");
+  // Create a BLE Characteristic
+  pCharacteristic = pService->createCharacteristic(
+                      CHARACTERISTIC_UUID,
+                /******* Enum Type NIMBLE_PROPERTY now *******     
+                      BLECharacteristic::PROPERTY_READ   |
+                      BLECharacteristic::PROPERTY_WRITE  |
+                      BLECharacteristic::PROPERTY_NOTIFY |
+                      BLECharacteristic::PROPERTY_INDICATE
+                    );
+                **********************************************/    
+                      NIMBLE_PROPERTY::READ   |
+                      NIMBLE_PROPERTY::WRITE  |
+                      NIMBLE_PROPERTY::NOTIFY //|
+                    //  NIMBLE_PROPERTY::INDICATE
+                    );
+  ESP_LOGW(TAG, "BLE server characteristic created");
+  //FCKX
+  //set CharacteristicCallback  
+// see: https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf
+
+  //pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());
+  
+  
+  // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
+  // Create a BLE Descriptor
+  /***************************************************   
+   NOTE: DO NOT create a 2902 descriptor. 
+   it will be created automatically if notifications 
+   or indications are enabled on a characteristic.
+   
+   pCharacteristic->addDescriptor(new BLE2902());
+  ****************************************************/
+  
+    // Start the service
+  pService->start();
+  ESP_LOGW(TAG, "BLE service started");
+     #endif TEMP_BLOCKA
+     // Save our connection information
+    
+    connectionData.pServer = pServer;
+    connectionData.pService = pService;
+    connectionData.pCharacteristic = pCharacteristic;    
+     
+  #endif LATE_OPEN      
+    
     // Start advertising
   ESP_LOGI(TAG, "Prepare advertising");
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
@@ -562,7 +649,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
         // Start advertising
   ESP_LOGI(TAG, "Start advertising");
 
-    NimBLEDevice::startAdvertising();
+  NimBLEDevice::startAdvertising();
 
 
 
@@ -574,9 +661,6 @@ ESP_LOGW(TAG, "BLE server characteristic created");
 
    }
 #endif //OPEN2 
-
-  
-
  
   
 #ifdef BLOCK_TEMP  

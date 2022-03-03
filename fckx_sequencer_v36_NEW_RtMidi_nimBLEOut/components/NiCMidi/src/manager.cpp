@@ -275,6 +275,8 @@ void MIDIManager::TickProc(tMsecs sys_time, void* p) {
 
 
 void MIDIManager::Init() {
+     static const char *TAG = "MIDIMANAGER::INIT"; 
+         ESP_LOGW(TAG, "Enter");
 #ifdef WIN32    //TODO: this is temporary, needed by WINDOWS10
      CoInitializeEx(NULL, COINIT_MULTITHREADED);
 #endif // WIN32
@@ -310,20 +312,21 @@ void MIDIManager::Init() {
             MIDI_in_names->push_back(temp_MIDI_in.getPortName(i));
         }
         
-        
+       ESP_LOGW(TAG, "Pos1");  
         
     }
     catch (RtMidiError &error) {
         error.printMessage();
         exit(EXIT_FAILURE);
     }
-    
+    ESP_LOGW(TAG, "Pos2");
     MIDITimer::SetMIDITick(TickProc);
     MIDITimer::Start(); //Nic220111
     atexit(Exit);
     init = true;
     std::cout << "Exiting MIDIManager::Init() Found " << MIDI_outs->size() << " midi out and "
               << MIDI_ins->size() << " midi in" << std::endl;
+    ESP_LOGW(TAG, "Pos3 (exit)"); 
 }
 
 
