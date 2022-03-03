@@ -532,7 +532,12 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   - implemented exchange of controller settings
   
    **v35**  
+   ???
   
+   **v36**
+   First version with recorder / advanced sequencer example under control of Nodered GUI (ifdef TEST_RECORDER)
+  
+   **v37**
   
   TODO
   - DONE V34 for DSP presetUnderEdit  : synchronize DSP controller settings between GUI server and synth board (requires additional NimBLE communication with synth board)
