@@ -543,6 +543,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
    **v38**
   
   TODO
+  - Check editing of presets / usage of keyBoard 2
   - Make NimBLE backtalk from synth to seq (using NimBLE characteristic onWrite independent from status of MIDI thru
   - DONE from v38: Enable feedback from synth to seq with NimBLE characteristic onWrite. Currently it is only in TEST_THRU
   - DONE from v38: create separate GUI element to control thru. It is no started by default when recorder is started
