@@ -490,9 +490,11 @@ void MIDIRecorder::TickProc(tMsecs sys_time) {
                             tracks->InsertEvent(i, msg);
                             //you should see it at every note you record
                             std::cout << "Message recorder on track " << i << std::endl; //FCKX!!
-                        }   
+                        }  
+                       ESP_LOGW(TAG, "emmbedded RECORDER THRU is OFF"); 
+                       //ESP_LOGW(TAG, "emmbedded RECORDER THRU going to send");                       
                         // tell the driver to send this message                                                                      
-                        MIDIManager::GetOutDriver(tracks->GetTrack(i)->GetOutPort())->OutputMessage(msg);
+                     //   MIDIManager::GetOutDriver(tracks->GetTrack(i)->GetOutPort())->OutputMessage(msg);
                     }            
                     //if ((*en_ports[i])[ch] != 0)
                     //    (*en_ports[i])[ch]->PushEvent(msg);

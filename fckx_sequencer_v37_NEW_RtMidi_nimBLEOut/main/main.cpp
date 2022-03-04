@@ -498,6 +498,9 @@ std::map <unsigned char, char *  > seq_command_map = {
 AdvancedSequencer *ptrAdvancedSequencer;
 MIDIRecorder *ptrMIDIRecorder;
 
+MIDIThru* thru;                  // a MIDIThru ORIG
+MIDIProcessorPrinter printer;    // a MIDIProcessor which prints passing MIDI events  
+
 //https://stackoverflow.com/questions/71329110/how-to-make-a-set-of-mutually-dependent-classes-globally-accessible
 
 //AdvancedSequencer ptrAdvancedSequencer(&text_n);
@@ -540,7 +543,32 @@ MIDIManager::AddMIDITick(ptrMIDIRecorder);
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     //text_n.SetSequencer(&sequencer);      // This is already called by AdvancedSequencer constructor
        //text_n.SetSequencer(ptrAdvancedSequencer);      // This is already called by AdvancedSequencer constructor
-       
+   try {
+    ESP_LOGE(TAG,"thru = new MIDIThru;");     
+       thru = new MIDIThru;  //ORIG    
+      thru->SetInPort(0); //FCKX  select MQTT port, it should exist
+    thru->SetOutPort(0); //FCKX  select nimBLE port, it should exist
+  
+//must select channel
+//NOTE: -1 does not work
+
+  thru->SetInChannel(-1); //FCKX select only inputs on channel 0
+  thru->SetOutChannel(-1); //FCKX select only inputs on channel 0
+   }
+ catch( ... ) {
+    
+    ESP_LOGE(TAG,"The MIDIThru constructor throws an exception if in the system are not present almost a MIDI in and a MIDI out ports!");         
+    //return 0;
+}
+
+    // adds the thru to the MIDIManager queue
+    MIDIManager::AddMIDITick(thru);
+
+    // plugs the MIDIProcessorPrinter into the metronome, so all MIDI messages will be printed to stdout
+    thru->SetProcessor(&printer);
+    // sets the printing of passing events on and off
+    printer.SetPrint(true);   
+   
     //implement commands, and call them to trigger user commands:
     //see:  handle_seq_command dispatcher 
     
@@ -575,6 +603,8 @@ void handle_seq_command(esp_mqtt_event_handle_t event){
             ptrMIDIRecorder->SetTrackRecChannel(1,-1);      // Can you set this? YES Otherwise set a specific channel
             ptrMIDIRecorder->Start();             
             std::cout << "Recorder started\n";
+            thru->Start();
+            std::cout << "Thru started\n";
             
         break; }    
         case 0x02:
@@ -1616,7 +1646,7 @@ void app_main(void) {
     
 
     esp_log_level_set("MidiOutNimBLE :: sendMessage", ESP_LOG_ERROR);
-    esp_log_level_set("MIDIThru::TickProc", ESP_LOG_ERROR);
+    esp_log_level_set("MIDIThru::TickProc", ESP_LOG_DEBUG);
     esp_log_level_set("MQTT_CLIENT", ESP_LOG_ERROR);
     esp_log_level_set("mqtt_event_handler", ESP_LOG_VERBOSE);
     esp_log_level_set("mqtt_event_handler_cb", ESP_LOG_VERBOSE);

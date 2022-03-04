@@ -197,6 +197,7 @@ void MIDIThru::TickProc(tMsecs sys_time_)
     //std::cout << "FCKX MIDIThru::TickProc() inspects input queue: size ="<<in_driver->GetQueueSize()<<"\n";
 if (in_driver->GetQueueSize() > 0)
     for (unsigned int i = 0; i < in_driver->GetQueueSize(); i++) {
+        //ESP_LOGW(TAG,"Message found" );
         std::cout << "Message found\n";
         //get message from the queue WITHOUT deleting it. This is done by Manager at the end of the MidiTicks queue
         in_driver->ReadMessage(rmsg, i);
