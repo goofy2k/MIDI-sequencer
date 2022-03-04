@@ -539,8 +539,12 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
    **v37**
    Replaced hard-coded thru in recorder by UI/GUI controllable thru in TEST_RECORDER example
+  
+   **v38**
+  
   TODO
-  - Create separate GUI element to control thru. It is no started by default when recorder is started
+  - Enable feedback from synth to seq with NimBLE characteristic onWrite. Currently it is only in TEST_THRU
+  - DONE from v38: create separate GUI element to control thru. It is no started by default when recorder is started
   - DONE from v37:  replace hard-coded thru in recorder by UI/GUI controllable thru in TEST_RECORDER example 
   - DONE V34 for DSP presetUnderEdit  : synchronize DSP controller settings between GUI server and synth board (requires additional NimBLE communication with synth board)
   - synchronize WM8978 controller settings between GUI server and synth board 
