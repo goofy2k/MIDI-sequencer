@@ -540,7 +540,10 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
    **v37**
    Replaced hard-coded thru in recorder by UI/GUI controllable thru in TEST_RECORDER example
   
-   **v38**
+   **v38**  
+  Created separate NimBLE characterisctic (pGUICharacteristic) for exchange of GUI data with synth.
+  
+   **v39**  
   
   TODO
   - Check editing of presets / usage of keyBoard 2
