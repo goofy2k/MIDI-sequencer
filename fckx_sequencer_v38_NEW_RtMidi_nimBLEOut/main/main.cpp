@@ -105,6 +105,9 @@ I suspect the error might be coming from `ble_buf_alloc` as well. Can you please
 
 extern "C" {void app_main(void);}
 
+NimBLECharacteristic* pGUICharacteristic;
+#define GUI_CHARUUID "109d98fa-9f22-11ec-b909-0242ac120002"
+
 #ifdef NIMBLE_IN_MAIN
 ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  NIMBLE_IN_MAIN");
 //test using "NIM" before "BLE"
@@ -141,7 +144,7 @@ static EventGroupHandle_t s_wifi_event_group;
 
 static int s_retry_num = 0;
 
-static void event_handler(void* arg, esp_event_base_t event_base,
+static void wifi_event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data){
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
@@ -178,12 +181,12 @@ void wifi_init_sta(void)
     esp_event_handler_instance_t instance_got_ip;
     ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
                                                         ESP_EVENT_ANY_ID,
-                                                        &event_handler,
+                                                        &wifi_event_handler,
                                                         NULL,
                                                         &instance_any_id));
     ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT,
                                                         IP_EVENT_STA_GOT_IP,
-                                                        &event_handler,
+                                                        &wifi_event_handler,
                                                         NULL,
                                                         &instance_got_ip));
 
@@ -203,7 +206,7 @@ void wifi_init_sta(void)
     ESP_LOGI(TAG, "wifi_init_sta finished.");
 
     /* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or connection failed for the maximum
-     * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
+     * number of re-tries (WIFI_FAIL_BIT). The bits are set by wifi_event_handler() (see above) */
     EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
             WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
             pdFALSE,
@@ -442,6 +445,127 @@ void printMIDI_Input(esp_mqtt_event_handle_t event){
 
 
 
+
+class MidiCharacteristicCallbacks: public BLECharacteristicCallbacks {
+    void onRead(BLECharacteristic* pCharacteristic) {
+        static const char *TAG = "ONREAD [MIDI NimBLE]";
+        // Do something before the read completes.
+        std::cout << "Characteristic onRead FCKX" << std::endl;
+        //pCharacteristic->setValue(os.str());
+    }
+     
+    void onWrite(BLECharacteristic* pCharacteristic) {
+        static const char *TAG = "ONWRITE [MIDI NimBLE]";
+        // Do something because a new value was written.
+        //std::cout << "pCharacteristic onWrite handler" << std::endl;
+        std::string value = pCharacteristic->getValue();
+        ESP_LOGD(TAG,"pCharacteristic->getValue() %s", value.c_str());
+        std::cout << "Characteristic value: "<< value << std::endl;
+        //decode value and send to control
+        //start with just forwarding it
+        //need to convert  value string to const * char for use in mqtt publish
+        //separate topic and value on space
+
+        int mypos = value.find(' ');
+        std::string myaddress = value.substr(0,mypos); 
+        std::string myvalue = value.substr(mypos,value.length());
+        //forward to NODERED over MQTT
+        esp_mqtt_client_publish(mqtt_client, myaddress.c_str(), myvalue.c_str(), 0, 1, 0);   
+    }
+};
+
+
+void setMidiCharacteristicCallBacks(void){    
+    // now define CharacteristicCallBacks
+    bool myresult = false;
+    MidiOutNimBLE::NimBLEMidiOutData connectionData;
+    while ( myresult == false){
+   // while (  ! MIDIManager::GetOutDriver(0)->IsPortOpen() ) {
+        std::cout << "WAIT FOR PEER1" << std::endl;
+        //expose NimBLE connectionData 
+         connectionData = MIDIManager::GetOutDriver(0)->Get_connectionData();  
+         myresult = (connectionData.pCharacteristic != NULL);
+         
+         std::cout << "WAIT FOR PEER on MIDI out" << std::endl;
+        
+    }
+    std::cout << "set Midi Characteristic callbacks" << std::endl;
+     connectionData.pCharacteristic->setCallbacks(new MidiCharacteristicCallbacks()); 
+
+    };  //setMidiCharacteristicCallBacks
+
+
+class GUICharacteristicCallbacks: public BLECharacteristicCallbacks { 
+
+    void onRead(BLECharacteristic* pCharacteristic) {
+        static const char *TAG = "ONREAD [GUI NimBLE]";
+        // Do something before the read completes.
+        std::cout << "Characteristic onRead FCKX" << std::endl;
+        //pCharacteristic->setValue(os.str());
+    }
+     
+    void onWrite(BLECharacteristic* pCharacteristic) {
+        static const char *TAG = "ONWRITE [GUI NimBLE]";
+        // Do something because a new value was written.
+        //std::cout << "pCharacteristic onWrite handler" << std::endl;
+        std::string value = pCharacteristic->getValue();
+        ESP_LOGD(TAG,"pCharacteristic->getValue() %s", value.c_str());
+        std::cout << "Characteristic value: "<< value << std::endl;
+        //decode value and send to control
+        //start with just forwarding it
+        //need to convert  value string to const * char for use in mqtt publish
+        //separate topic and value on space
+
+        int mypos = value.find(' ');
+        std::string myaddress = value.substr(0,mypos); 
+        std::string myvalue = value.substr(mypos,value.length());
+        //forward to NODERED over MQTT
+     //   esp_mqtt_client_publish(mqtt_client, myaddress.c_str(), myvalue.c_str(), 0, 1, 0);   
+    }
+
+   
+};
+
+void setGUICharacteristicCallBacks(void){
+    // now define CharacteristicCallBacks
+     std::cout << "set GUI Characteristic callbacks" << std::endl;
+     pGUICharacteristic->setCallbacks(new GUICharacteristicCallbacks());    
+}; // setGUICharacteristicCallBacks
+
+void createGUICharacteristic( void) {
+    static const char *TAG = "CREATEGUICHARACTERISTIC";
+    //MidiOutNimBLE::NimBLEMidiOutData connectionData;
+    MidiOutNimBLE::NimBLEMidiOutData connectionData = MIDIManager::GetOutDriver(0)->Get_connectionData(); 
+    NimBLEService *pService = connectionData.pService;
+
+    pGUICharacteristic = pService->createCharacteristic(
+                      GUI_CHARUUID,
+                /******* Enum Type NIMBLE_PROPERTY now *******     
+                      BLECharacteristic::PROPERTY_READ   |
+                      BLECharacteristic::PROPERTY_WRITE  |
+                      BLECharacteristic::PROPERTY_NOTIFY |
+                      BLECharacteristic::PROPERTY_INDICATE
+                    );
+                **********************************************/    
+                      NIMBLE_PROPERTY::READ   |
+                      NIMBLE_PROPERTY::WRITE  |
+                      NIMBLE_PROPERTY::NOTIFY //|
+                    //  NIMBLE_PROPERTY::INDICATE
+                    );
+  ESP_LOGW(TAG, "BLE server GUI characteristic created");
+
+    
+   //use:
+  //static BLEUUID gui_charUUID("109d98fa-9f22-11ec-b909-0242ac120002"); //GUI messages  
+    
+    
+    
+}; //createGUICharacteristic  
+
+
+
+
+
 #ifdef TEST_RECORDER 
 
 
@@ -483,7 +607,8 @@ std::map <unsigned char, char *  > seq_command_map = {
     ,{0x12, "stop sequencer"}
     ,{0x13, "rewind sequencer"}
     ,{0x14, "dump recorder"}
-
+    ,{0x21, "start thru"}
+    ,{0x22, "stop thru"}
 };
 
 
@@ -518,13 +643,15 @@ void init_test_recorder( void ) {
 
 
     ptrAdvancedSequencer = new AdvancedSequencer(&text_n);
-
-    ptrMIDIRecorder = new MIDIRecorder(ptrAdvancedSequencer);
-  
+    ptrMIDIRecorder = new MIDIRecorder(ptrAdvancedSequencer);  
     MIDIManager::OpenInPorts();          //FCKX!! 220103 must be closed at end
-    MIDIManager::OpenOutPorts();            //must be closed at end
- 
-
+    MIDIManager::OpenOutPorts();            //must be closed at end 
+    setMidiCharacteristicCallBacks();
+    //ESP_LOGE(TAG,"Going to create GUI Characteristic");
+    createGUICharacteristic(); //NEW NEW
+    setGUICharacteristicCallBacks();
+    //ESP_LOGE(TAG,"Finished creating GUI Characteristic");
+    
     MIDITimer::SetResolution(1*portTICK_PERIOD_MS); //for ESP32 resolution must be a multiple of the system tick
     //keep this for a while to detect if resolution is properly implemented in ESP32_TIMER case
                                   //setting it to 50 leads to timing errors in recordings?
@@ -543,23 +670,23 @@ MIDIManager::AddMIDITick(ptrMIDIRecorder);
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     //text_n.SetSequencer(&sequencer);      // This is already called by AdvancedSequencer constructor
        //text_n.SetSequencer(ptrAdvancedSequencer);      // This is already called by AdvancedSequencer constructor
-   try {
-    ESP_LOGE(TAG,"thru = new MIDIThru;");     
-       thru = new MIDIThru;  //ORIG    
-      thru->SetInPort(0); //FCKX  select MQTT port, it should exist
-    thru->SetOutPort(0); //FCKX  select nimBLE port, it should exist
-  
-//must select channel
-//NOTE: -1 does not work
+    try {
+        ESP_LOGE(TAG,"thru = new MIDIThru;");     
+        thru = new MIDIThru;  //ORIG    
+        thru->SetInPort(0); //FCKX  select MQTT port, it should exist
+        thru->SetOutPort(0); //FCKX  select nimBLE port, it should exist
 
-  thru->SetInChannel(-1); //FCKX select only inputs on channel 0
-  thru->SetOutChannel(-1); //FCKX select only inputs on channel 0
-   }
- catch( ... ) {
+        //must select channel
+        //NOTE: -1 does not work
+
+        thru->SetInChannel(-1); //FCKX select only inputs on channel 0
+        thru->SetOutChannel(-1); //FCKX select only inputs on channel 0
+    }
+    catch( ... ) {
     
-    ESP_LOGE(TAG,"The MIDIThru constructor throws an exception if in the system are not present almost a MIDI in and a MIDI out ports!");         
+        ESP_LOGE(TAG,"The MIDIThru constructor throws an exception if in the system are not present almost a MIDI in and a MIDI out ports!");         
     //return 0;
-}
+    }
 
     // adds the thru to the MIDIManager queue
     MIDIManager::AddMIDITick(thru);
@@ -639,7 +766,17 @@ void handle_seq_command(esp_mqtt_event_handle_t event){
             ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
             DumpMIDIMultiTrackWithPauses(ptrAdvancedSequencer->GetMultiTrack()); //in functions.cpp
             std::cout << "Recorder stopped\n";      //never reached after calling 
-            break;             
+            break; 
+        case 0x21:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+            thru->Start();
+            std::cout << "Thru started\n";
+            break;
+        case 0x22:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+            thru->Stop();
+            std::cout << "Thru stopped\n";
+            break;            
         default:
             ESP_LOGE(TAG,"UNKNOWN COMMAND: %d (0x%X)", command[0], command[0]);
             break;
@@ -1000,35 +1137,6 @@ MIDIProcessorPrinter printer;    // a MIDIProcessor which prints passing MIDI ev
 
 
 
-class MyCharacteristicCallbacks: public BLECharacteristicCallbacks {
-    void onRead(BLECharacteristic* pCharacteristic) {
-            static const char *TAG = "ONREAD [NimBLE]";
-        // Do something before the read completes.
-        std::cout << "Characteristic onRead FCKX" << std::endl;
-        //pCharacteristic->setValue(os.str());
-    }
-     
-    void onWrite(BLECharacteristic* pCharacteristic) {
-        static const char *TAG = "ONWRITE [NimBLE]";
-        // Do something because a new value was written.
-        //std::cout << "pCharacteristic onWrite handler" << std::endl;
-        std::string value = pCharacteristic->getValue();
-        ESP_LOGD(TAG,"pCharacteristic->getValue() %s", value.c_str());
-        std::cout << "Characteristic value: "<< value << std::endl;
-        //decode value and send to control
-        //start with just forwarding it
-        //need to convert  value string to const * char for use in mqtt publish
-        //separate topic and value on space
-
-        int mypos = value.find(' ');
-        string myaddress = value.substr(0,mypos); 
-        string myvalue = value.substr(mypos,value.length());
-        //forward to NODERED over MQTT
-        esp_mqtt_client_publish(mqtt_client, myaddress.c_str(), myvalue.c_str(), 0, 1, 0);   
-    }
-};
-
-
 int test_thru(  ) {
 
 //init port here. this is not in the original code
@@ -1062,23 +1170,8 @@ catch( ... ) {
     thru->SetProcessor(&printer);
     // sets the printing of passing events on and off
     printer.SetPrint(true); 
-
-    // now define CharacteristicCallBacks
-    bool myresult = false;
-    MidiOutNimBLE::NimBLEMidiOutData myconnectiondata;
-    while ( myresult == false){
-   // while (  ! MIDIManager::GetOutDriver(0)->IsPortOpen() ) {
-        std::cout << "WAIT FOR PEER1" << std::endl;
-        //expose NimBLE connectionData 
-         myconnectiondata = MIDIManager::GetOutDriver(0)->Get_connectionData();  
-         myresult = (myconnectiondata.pCharacteristic != NULL);
-         
-         std::cout << "WAIT FOR PEER on MIDI out" << std::endl;
-        
-    }
-    std::cout << "set Characteristic callbacks" << std::endl;
-     myconnectiondata.pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());  
-    
+    setMidiCharacteristicCallBacks();
+  
   return 1;
  
 } //test_thru(  )

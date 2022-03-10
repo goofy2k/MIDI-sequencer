@@ -483,7 +483,8 @@ std::map <unsigned char, char *  > seq_command_map = {
     ,{0x12, "stop sequencer"}
     ,{0x13, "rewind sequencer"}
     ,{0x14, "dump recorder"}
-
+    ,{0x21, "start thru"}
+    ,{0x22, "stop thru"}
 };
 
 
@@ -639,7 +640,17 @@ void handle_seq_command(esp_mqtt_event_handle_t event){
             ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
             DumpMIDIMultiTrackWithPauses(ptrAdvancedSequencer->GetMultiTrack()); //in functions.cpp
             std::cout << "Recorder stopped\n";      //never reached after calling 
-            break;             
+            break; 
+        case 0x21:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+            thru->Start();
+            std::cout << "Thru started\n";
+            break;
+        case 0x22:
+            ESP_LOGD(TAG,"COMMAND:%d (0x%X) %s TO BE TESTED", command[0], command[0], seq_command_map[command[0]]); 
+            thru->Stop();
+            std::cout << "Thru stopped\n";
+            break;            
         default:
             ESP_LOGE(TAG,"UNKNOWN COMMAND: %d (0x%X)", command[0], command[0]);
             break;

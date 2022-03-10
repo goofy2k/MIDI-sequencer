@@ -121,13 +121,14 @@ uint8_t midiPacket[] = {
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
-#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
-
+#define SEQUENCER_SERVICEUUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define MIDI_CHARUUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+#define GUI_CHARUUID "109d98fa-9f22-11ec-b909-0242ac120002"
 
 /**  None of these are required as they will be handled by the library with defaults. **
- **                       Remove as you see fit for your needs                        */  
+ ** Remove as you see fit for your needs                        */  
 class MyServerCallbacks: public BLEServerCallbacks {
+    
     void onConnect(BLEServer* pServer) {
       static const char *TAG = "NIMBLE_ONCONNECT";
       ESP_LOGW(TAG, "-----");  
@@ -140,27 +141,28 @@ class MyServerCallbacks: public BLEServerCallbacks {
       ESP_LOGW(TAG, "-----");   
       deviceConnected = false;
     }
+    
 /***************** New - Security handled here ********************
 ****** Note: these are the same return values as defaults ********/
-  uint32_t onPassKeyRequest(){
-    static const char *TAG = "NIMBLE_ONPASSKEYREQUEST";
-    ESP_LOGW(TAG, "-----");   
-    printf("Server PassKeyRequest\n");
-    return 123456; 
-  }
+    uint32_t onPassKeyRequest(){
+        static const char *TAG = "NIMBLE_ONPASSKEYREQUEST";
+        ESP_LOGW(TAG, "-----");   
+        printf("Server PassKeyRequest\n");
+        return 123456; 
+    }
 
-  bool onConfirmPIN(uint32_t pass_key){
-    static const char *TAG = "NIMBLE_ONCONFIRMPIN";
-    ESP_LOGW(TAG, "-----");  
-    printf("The passkey YES/NO number: %d\n", pass_key);
-    return true; 
-  }
+    bool onConfirmPIN(uint32_t pass_key){
+        static const char *TAG = "NIMBLE_ONCONFIRMPIN";
+        ESP_LOGW(TAG, "-----");  
+        printf("The passkey YES/NO number: %d\n", pass_key);
+        return true; 
+    }
 
-  void onAuthenticationComplete(ble_gap_conn_desc desc){
-    static const char *TAG = "NIMBLE_ONAUTHENTICATIONCOMPLETE";
-    ESP_LOGW(TAG, "-----");  
-    printf("Starting BLE work!\n");
-  }
+    void onAuthenticationComplete(ble_gap_conn_desc desc){
+        static const char *TAG = "NIMBLE_ONAUTHENTICATIONCOMPLETE";
+        ESP_LOGW(TAG, "-----");  
+        printf("Starting BLE work!\n");
+    }
 /*******************************************************************/
 };
 
@@ -263,11 +265,11 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
    ESP_LOGW(TAG, "BLE server callbacks created"); 
    
   // Create the BLE Service
-  NimBLEService *pService = pServer->createService(SERVICE_UUID);
+  NimBLEService *pService = pServer->createService(SEQUENCER_SERVICEUUID);
   ESP_LOGW(TAG, "BLE server service created");
   // Create a BLE Characteristic
   pCharacteristic = pService->createCharacteristic(
-                      CHARACTERISTIC_UUID,
+                      MIDI_CHARUUID,
                 /******* Enum Type NIMBLE_PROPERTY now *******     
                       BLECharacteristic::PROPERTY_READ   |
                       BLECharacteristic::PROPERTY_WRITE  |
@@ -280,7 +282,7 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
                       NIMBLE_PROPERTY::NOTIFY //|
                     //  NIMBLE_PROPERTY::INDICATE
                     );
-  ESP_LOGW(TAG, "BLE server characteristic created");
+  ESP_LOGW(TAG, "BLE server MIDI characteristic created");
   //FCKX
   //set CharacteristicCallback  
 // see: https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf
@@ -311,7 +313,7 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
   // Start advertising
   ESP_LOGI(TAG, "Start advertising");
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
   pAdvertising->setScanResponse(false); 
 */
  // #endif
@@ -361,7 +363,7 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
   // Start advertising
   ESP_LOGI(TAG, "Prepare advertising");
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
   pAdvertising->setScanResponse(false); 
   
   connectionData.pAdvertising = pAdvertising;
@@ -435,11 +437,11 @@ void MidiOutNimBLE :: openPort( unsigned int portNumber){
    ESP_LOGW(TAG, "BLE server callbacks created"); 
    
   // Create the BLE Service
-  NimBLEService *pService = pServer->createService(SERVICE_UUID);
+  NimBLEService *pService = pServer->createService(SEQUENCER_SERVICEUUID);
 ESP_LOGW(TAG, "BLE server service created");
   // Create a BLE Characteristic
   pCharacteristic = pService->createCharacteristic(
-                      CHARACTERISTIC_UUID,
+                      MIDI_CHARUUID,
                 /******* Enum Type NIMBLE_PROPERTY now *******     
                       BLECharacteristic::PROPERTY_READ   |
                       BLECharacteristic::PROPERTY_WRITE  |
@@ -472,7 +474,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   // Start advertising
   ESP_LOGI(TAG, "Start advertising");
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
   pAdvertising->setScanResponse(false); 
 */
 
@@ -562,11 +564,11 @@ ESP_LOGW(TAG, "BLE server characteristic created");
    ESP_LOGW(TAG, "BLE server callbacks created"); 
    
   // Create the BLE Service
-  NimBLEService *pService = pServer->createService(SERVICE_UUID);
+  NimBLEService *pService = pServer->createService(SEQUENCER_SERVICEUUID);
   ESP_LOGW(TAG, "BLE server service created");
   // Create a BLE Characteristic
   pCharacteristic = pService->createCharacteristic(
-                      CHARACTERISTIC_UUID,
+                      MIDI_CHARUUID,
                 /******* Enum Type NIMBLE_PROPERTY now *******     
                       BLECharacteristic::PROPERTY_READ   |
                       BLECharacteristic::PROPERTY_WRITE  |
@@ -612,7 +614,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
     // Start advertising
   ESP_LOGI(TAG, "Prepare advertising");
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
   pAdvertising->setScanResponse(false); 
   
   connectionData.pAdvertising = pAdvertising;
@@ -642,7 +644,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
   // Start advertising
   ESP_LOGI(TAG, "Prepare advertising");
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
   pAdvertising->setScanResponse(false); 
   
   connectionData.pAdvertising = pAdvertising;
