@@ -232,43 +232,43 @@ MidiOutNimBLE :: ~MidiOutNimBLE ()
     
 }
 
-void MidiOutNimBLE :: initialize ( const std::string& clientName)
-{
-      static const char *TAG = "MIDIOUTNIMBLE :: INITIALIZE"; 
-  ESP_LOGW(TAG, "Initialize nimBLEOutdriver MidiOutNimBLE :: initialize"); 
+void MidiOutNimBLE :: initialize ( const std::string& clientName){
+    static const char *TAG = "MIDIOUTNIMBLE :: INITIALIZE"; 
+    ESP_LOGW(TAG, "Initialize nimBLEOutdriver MidiOutNimBLE :: initialize"); 
 #define INITIALIZE1
 #ifdef INITIALIZE1
     ESP_LOGW(TAG, "MidiOutNimBLE :: initialize1");
-//initialize the driver/port and store the essential data in the accompanying data struct
-//essential = suffiecient for opening / closing the port
- #define EARLY_OPEN
- #ifdef EARLY_OPEN
-  NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
-  NimBLECharacteristic* pCharacteristic = NULL; 
-  //Create the BLE Device 
-  //This is also for Midi input, so should ideally be in a super class
+    //initialize the driver/port and store the essential data in the accompanying data struct
+    //essential = suffiecient for opening / closing the port
+#define EARLY_OPEN
+#ifdef EARLY_OPEN
+    NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
+    NimBLECharacteristic* pCharacteristic = NULL; 
+    //Create the BLE Device 
+    //This is also for Midi input, so should ideally be in a super class
   
   
-  //#define EARLY_OPEN
+    //#define EARLY_OPEN
  
-  //put this in OpenPort
-  NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
+    //put this in OpenPort
+    NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
                                   //and include the unique device ID in it
                                   //take care of max length of this string!
   
-  ESP_LOGW(TAG, "NimBLEDevice created"); 
+    ESP_LOGW(TAG, "NimBLEDevice created"); 
 #define TEMP_BLOCK1 1  
 #ifdef TEMP_BLOCK1 
-  pServer = NimBLEDevice::createServer();
-  ESP_LOGW(TAG, "BLE server created"); 
-  pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
-   ESP_LOGW(TAG, "BLE server callbacks created"); 
+    pServer = NimBLEDevice::createServer();
+    ESP_LOGW(TAG, "BLE server created"); 
+    pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
+    ESP_LOGW(TAG, "BLE server callbacks created"); 
    
-  // Create the BLE Service
-  NimBLEService *pService = pServer->createService(SEQUENCER_SERVICEUUID);
-  ESP_LOGW(TAG, "BLE server service created");
-  // Create a BLE Characteristic
-  pCharacteristic = pService->createCharacteristic(
+    // Create the BLE Service
+    NimBLEService *pService = pServer->createService(SEQUENCER_SERVICEUUID);
+    ESP_LOGW(TAG, "BLE server service created");
+    // Create a BLE Characteristic
+        std::cout << "Nr of ports in stack (pos1) : " << connectionData.all_pCharacteristics.size() << std::endl;
+    pCharacteristic = pService->createCharacteristic(
                       MIDI_CHARUUID,
                 /******* Enum Type NIMBLE_PROPERTY now *******     
                       BLECharacteristic::PROPERTY_READ   |
@@ -282,41 +282,62 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
                       NIMBLE_PROPERTY::NOTIFY //|
                     //  NIMBLE_PROPERTY::INDICATE
                     );
-  ESP_LOGW(TAG, "BLE server MIDI characteristic created");
-  //FCKX
-  //set CharacteristicCallback  
-// see: https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf
+    connectionData.all_pCharacteristics.push_back(pCharacteristic);
+    connectionData.all_portNames.push_back("midiout"); 
+    std::cout << "Nr of ports in stack (pos2) : " << connectionData.all_pCharacteristics.size() << std::endl;
+    ESP_LOGW(TAG, "BLE server MIDI characteristic created");
+    pCharacteristic = pService->createCharacteristic(
+                      GUI_CHARUUID,
+                /******* Enum Type NIMBLE_PROPERTY now *******     
+                      BLECharacteristic::PROPERTY_READ   |
+                      BLECharacteristic::PROPERTY_WRITE  |
+                      BLECharacteristic::PROPERTY_NOTIFY |
+                      BLECharacteristic::PROPERTY_INDICATE
+                    );
+                **********************************************/    
+                      NIMBLE_PROPERTY::READ   |
+                      NIMBLE_PROPERTY::WRITE  |
+                      NIMBLE_PROPERTY::NOTIFY //|
+                    //  NIMBLE_PROPERTY::INDICATE
+                    );
+    connectionData.all_pCharacteristics.push_back(pCharacteristic);connectionData.all_portNames.push_back("guiout"); 
+    std::cout << "Nr of ports in stack (pos3) : " << connectionData.all_pCharacteristics.size() << std::endl;
+    
+    ESP_LOGW(TAG, "BLE server GUI characteristic created");
+    //FCKX
+    //set CharacteristicCallback  
+    // see: https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf
 
-  //pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());
+    //pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());
   
   
-  // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
-  // Create a BLE Descriptor
-  /***************************************************   
-   NOTE: DO NOT create a 2902 descriptor. 
-   it will be created automatically if notifications 
-   or indications are enabled on a characteristic.
-   
-   pCharacteristic->addDescriptor(new BLE2902());
-  ****************************************************/
+    // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
+    // Create a BLE Descriptor
+    /***************************************************   
+    NOTE: DO NOT create a 2902 descriptor. 
+    it will be created automatically if notifications 
+    or indications are enabled on a characteristic.
+
+    pCharacteristic->addDescriptor(new BLE2902());
+    ****************************************************/
   
     // Start the service
-  pService->start();
-  ESP_LOGW(TAG, "BLE service started");
-   #endif TEMP_BLOCK1
+    pService->start();
+    ESP_LOGW(TAG, "BLE service started");
+#endif TEMP_BLOCK1
 
  
   
-  /*
-  //MOVE THIS TO openPort   ALSO MOVE THE FORMER TO OPENPORT
+      /*
+      //MOVE THIS TO openPort   ALSO MOVE THE FORMER TO OPENPORT
 
-  // Start advertising
-  ESP_LOGI(TAG, "Start advertising");
-  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
-  pAdvertising->setScanResponse(false); 
-*/
- // #endif
+      // Start advertising
+      ESP_LOGI(TAG, "Start advertising");
+      NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
+      pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
+      pAdvertising->setScanResponse(false); 
+    */
+     // #endif
   
   
     // Save our connection information
@@ -324,7 +345,8 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
     connectionData.pServer = pServer;
     connectionData.pService = pService;
     connectionData.pCharacteristic = pCharacteristic;
-    
+    //std::vector<NimBLECharacteristic*>      all_pCharacteristics;  //do not initialize, keep empty
+    //std::vector<std::string>>               all_portNames;         //do npt initialize, keep empty
    #endif EARLY_OPEN   
   
  /*  
@@ -397,6 +419,9 @@ unsigned int MidiOutNimBLE :: getPortCount()
 {
   //CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   //return MIDIGetNumberOfDestinations();
+  
+  //return connectionData.all_pCharacteristics.size();
+  
   return 1;
 }
 
@@ -404,7 +429,10 @@ unsigned int MidiOutNimBLE :: getPortCount()
 std::string MidiOutNimBLE :: getPortName(unsigned int portNumber)
 {
   //must return clientName from niBLEMidiData ?
-  return "fckx_seq";
+  //return "midiout";
+  if (connectionData.all_portNames.size() == 0) {return "";} 
+  else {
+  return connectionData.all_portNames[portNumber];  }
 }
 
 
@@ -621,7 +649,7 @@ ESP_LOGW(TAG, "BLE server characteristic created");
         // Start advertising
   ESP_LOGI(TAG, "Start advertising");
 
-    NimBLEDevice::startAdvertising();
+  NimBLEDevice::startAdvertising();
 
 
 

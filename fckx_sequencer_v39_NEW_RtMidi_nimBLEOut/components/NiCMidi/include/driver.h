@@ -162,7 +162,7 @@ class MIDIOutDriver {
         /// Returns **true** is the hardware port is open.
         bool                    IsPortOpen() const              { return port->isPortOpen(); }
         //EXPOSE connection data FCKX
-            MidiOutNimBLE::NimBLEMidiOutData Get_connectionData()
+        MidiOutNimBLE::NimBLEMidiOutData Get_connectionData()
                  {return port->get_connectionData(); } 
         
         

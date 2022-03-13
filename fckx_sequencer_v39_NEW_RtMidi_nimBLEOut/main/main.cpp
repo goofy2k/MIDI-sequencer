@@ -447,6 +447,7 @@ void printMIDI_Input(esp_mqtt_event_handle_t event){
 
 
 class MidiCharacteristicCallbacks: public BLECharacteristicCallbacks {
+    
     void onRead(BLECharacteristic* pCharacteristic) {
         static const char *TAG = "ONREAD [MIDI NimBLE]";
         // Do something before the read completes.
@@ -477,6 +478,7 @@ class MidiCharacteristicCallbacks: public BLECharacteristicCallbacks {
 
 void setMidiCharacteristicCallBacks(void){    
     // now define CharacteristicCallBacks
+    //check for presence, check for name  DO THIS IN A VERSION 2!!!!!!
     bool myresult = false;
     MidiOutNimBLE::NimBLEMidiOutData connectionData;
     while ( myresult == false){
@@ -485,14 +487,16 @@ void setMidiCharacteristicCallBacks(void){
         //expose NimBLE connectionData 
          connectionData = MIDIManager::GetOutDriver(0)->Get_connectionData();  
          myresult = (connectionData.pCharacteristic != NULL);
-         
+        // myresult = (connectionData.all_pCharacteristics[0] != NULL);
          std::cout << "WAIT FOR PEER on MIDI out" << std::endl;
         
     }
     std::cout << "set Midi Characteristic callbacks" << std::endl;
-     connectionData.pCharacteristic->setCallbacks(new MidiCharacteristicCallbacks()); 
+    connectionData.pCharacteristic->setCallbacks(new 
+     //connectionData.all_pCharacteristics[0]->setCallbacks(new
+     MidiCharacteristicCallbacks()); 
 
-    };  //setMidiCharacteristicCallBacks
+};  //setMidiCharacteristicCallBacks
 
 
 class GUICharacteristicCallbacks: public BLECharacteristicCallbacks { 
@@ -528,6 +532,9 @@ class GUICharacteristicCallbacks: public BLECharacteristicCallbacks {
 
 void setGUICharacteristicCallBacks(void){
     // now define CharacteristicCallBacks
+        // now define CharacteristicCallBacks
+    //check for presence, check for name  DO THIS IN A VERSION 2!!!!!!
+    //see setMidiCharacteristicCallBacks
      std::cout << "set GUI Characteristic callbacks" << std::endl;
      pGUICharacteristic->setCallbacks(new GUICharacteristicCallbacks());    
 }; // setGUICharacteristicCallBacks
@@ -611,8 +618,65 @@ std::map <unsigned char, char *  > seq_command_map = {
     ,{0x22, "stop thru"}
 };
 
+//see p.835-836
 
-   MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier
+
+#ifdef USE_CATCHER
+
+class GUIcatcher : public std::ostream {
+    //a stream redirection class that inherits from std::ostream
+  private:  
+  class GUIOutBuf : public std::streambuf {
+      //a streambuf class that inherits from std::streambuf, used by the GUIacatcher redirection  class  
+      protected:
+        //hidden resources
+        // write multiple characters
+        /*
+        virtual std::streamsize xsputn (const char* s,
+        std::streamsize num) {
+        std::cout <<"GUIOutBuf output: "<< s << std::endl;    
+        return num;
+        }
+        */
+        
+      public:
+        //constructor
+        GUIOutBuf();
+        //destructor      
+      
+};
+      
+    
+      private:
+      //hidden resources
+      //e.g. a member of type GUIOutBuf
+      GUIOutBuf buf;
+      std::streambuf* oldBuf = nullptr;
+
+      public:
+        //constructor
+        //    GUIcatcher : std::ostream(0), buf {
+          //  GUIcatcher :  buf;
+          GUIcatcher() {};
+     /* 
+          GUIcatcher(){
+            rdbuf(oldBuf); 
+         //    rdbuf(&buf); 
+        */ 
+          //  };    
+      
+      
+      //destructor 
+    
+
+};   // class GUIcatcher
+GUIcatcher guiCatcher;
+#endif
+
+  MIDISequencerGUINotifierText text_n;                   // the AdvancedSequencer GUI notifier, no additional parameters: forcing the defaults 0 and std:cout
+  
+  // MIDISequencerGUINotifierText text_n(0, std::cout);       // the AdvancedSequencer GUI notifier, using the defaults 0 and std:cout as parameters
+  //MIDISequencerGUINotifierText text_n(0, guiCatcher);
    
  /*  
    AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
@@ -639,17 +703,23 @@ void init_test_recorder( void ) {
     
     ESP_LOGE(TAG,"Entering test_recorder of TEST_RECORDER example");
     ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDER");
- 
+//   guiCatcher << "Some Output" << std::endl;
 
 
     ptrAdvancedSequencer = new AdvancedSequencer(&text_n);
+    
+     
+   // std::cout << "getPortCount: " << MIDIManager::GetOutDriver(0)->Get_connectionData().all_pCharacteristics.size() << std::endl;
+    
     ptrMIDIRecorder = new MIDIRecorder(ptrAdvancedSequencer);  
     MIDIManager::OpenInPorts();          //FCKX!! 220103 must be closed at end
     MIDIManager::OpenOutPorts();            //must be closed at end 
+  //  std::cout << "getPortCount: " << MIDIManager::GetOutDriver(0)->Get_connectionData().all_pCharacteristics.size() << std::endl;    
+    
     setMidiCharacteristicCallBacks();
     //ESP_LOGE(TAG,"Going to create GUI Characteristic");
-    createGUICharacteristic(); //NEW NEW
-    setGUICharacteristicCallBacks();
+    //createGUICharacteristic(); //NEW NEW
+//>>>>>>>>    setGUICharacteristicCallBacks(); //<<<<<<<NEED ALTERNATIVE<<<<<<<<<<<<<<<
     //ESP_LOGE(TAG,"Finished creating GUI Characteristic");
     
     MIDITimer::SetResolution(1*portTICK_PERIOD_MS); //for ESP32 resolution must be a multiple of the system tick
