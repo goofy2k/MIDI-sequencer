@@ -484,13 +484,13 @@ void setMidiCharacteristicCallBacks(void){
         std::cout << "WAIT FOR PEER1" << std::endl;
         //expose NimBLE connectionData 
          connectionData = MIDIManager::GetOutDriver(0)->Get_connectionData();  
-         myresult = (connectionData.pCharacteristic != NULL);
+         myresult = (connectionData.all_pCharacteristics[0] != NULL);
          
          std::cout << "WAIT FOR PEER on MIDI out" << std::endl;
         
     }
     std::cout << "set Midi Characteristic callbacks" << std::endl;
-     connectionData.pCharacteristic->setCallbacks(new MidiCharacteristicCallbacks()); 
+     connectionData.all_pCharacteristics[0]->setCallbacks(new MidiCharacteristicCallbacks()); 
 
     };  //setMidiCharacteristicCallBacks
 
@@ -647,10 +647,14 @@ void init_test_recorder( void ) {
     MIDIManager::OpenInPorts();          //FCKX!! 220103 must be closed at end
     MIDIManager::OpenOutPorts();            //must be closed at end 
     setMidiCharacteristicCallBacks();
-    //ESP_LOGE(TAG,"Going to create GUI Characteristic");
+    
+    
+    /*
+    ESP_LOGE(TAG,"Going to create GUI Characteristic");
     createGUICharacteristic(); //NEW NEW
     setGUICharacteristicCallBacks();
-    //ESP_LOGE(TAG,"Finished creating GUI Characteristic");
+    ESP_LOGE(TAG,"Finished creating GUI Characteristic");
+    */
     
     MIDITimer::SetResolution(1*portTICK_PERIOD_MS); //for ESP32 resolution must be a multiple of the system tick
     //keep this for a while to detect if resolution is properly implemented in ESP32_TIMER case
@@ -1736,9 +1740,10 @@ void app_main(void) {
     esp_log_level_set("MIDIOutDriver", ESP_LOG_ERROR);
     esp_log_level_set("MIDIOutDriver::HardwareMsgOut", ESP_LOG_ERROR);
     esp_log_level_set("MIDIOutDriver::OutputMessage", ESP_LOG_ERROR);
-    
+    esp_log_level_set("MIDIOUTNIMBLE :: INITIALIZE", ESP_LOG_DEBUG);
 
-    esp_log_level_set("MidiOutNimBLE :: sendMessage", ESP_LOG_ERROR);
+    esp_log_level_set("MidiOutNimBLE :: sendMessage A", ESP_LOG_DEBUG);
+    esp_log_level_set("MidiOutNimBLE :: sendMessage B", ESP_LOG_DEBUG);
     esp_log_level_set("MIDIThru::TickProc", ESP_LOG_DEBUG);
     esp_log_level_set("MQTT_CLIENT", ESP_LOG_ERROR);
     esp_log_level_set("mqtt_event_handler", ESP_LOG_VERBOSE);

@@ -430,7 +430,6 @@ static const char *TAG = "execute_single_midi_command";
 #endif
 
  
-
 void printMIDI_Input(esp_mqtt_event_handle_t event){  
     //display incoming data 
     static const char *TAG = "printMIDI_Input"; 
@@ -442,9 +441,6 @@ void printMIDI_Input(esp_mqtt_event_handle_t event){
     ESP_LOGD(TAG,"DATA3 %d", event->data[3]); 
     ESP_LOGD(TAG,"DATA4 %d", event->data[4]);
 };
-
-
-
 
 class MidiCharacteristicCallbacks: public BLECharacteristicCallbacks {
     
@@ -475,7 +471,6 @@ class MidiCharacteristicCallbacks: public BLECharacteristicCallbacks {
     }
 };
 
-
 void setMidiCharacteristicCallBacks(void){    
     // now define CharacteristicCallBacks
     //check for presence, check for name  DO THIS IN A VERSION 2!!!!!!
@@ -497,7 +492,6 @@ void setMidiCharacteristicCallBacks(void){
      MidiCharacteristicCallbacks()); 
 
 };  //setMidiCharacteristicCallBacks
-
 
 class GUICharacteristicCallbacks: public BLECharacteristicCallbacks { 
 

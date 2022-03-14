@@ -245,6 +245,7 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
  #ifdef EARLY_OPEN
   NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
   NimBLECharacteristic* pCharacteristic = NULL; 
+   NimBLECharacteristic* pCharacteristic2 = NULL; 
   //Create the BLE Device 
   //This is also for Midi input, so should ideally be in a super class
   
@@ -267,7 +268,12 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
   // Create the BLE Service
   NimBLEService *pService = pServer->createService(SEQUENCER_SERVICEUUID);
   ESP_LOGW(TAG, "BLE server service created");
-  // Create a BLE Characteristic
+
+  // Save our connection information    
+  connectionData.pServer = pServer;
+  connectionData.pService = pService;
+
+  // Create a MIDI BLE Characteristic 
   pCharacteristic = pService->createCharacteristic(
                       MIDI_CHARUUID,
                 /******* Enum Type NIMBLE_PROPERTY now *******     
@@ -282,7 +288,44 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
                       NIMBLE_PROPERTY::NOTIFY //|
                     //  NIMBLE_PROPERTY::INDICATE
                     );
+                
+  //connectionData.pCharacteristic = pCharacteristic; 
+  connectionData.all_pCharacteristics.push_back(pCharacteristic);
+  connectionData.all_portNames.push_back("MIDIport");                     
   ESP_LOGW(TAG, "BLE server MIDI characteristic created");
+       ESP_LOGW(TAG, "portName[0] %s",connectionData.all_portNames[0].c_str());
+  
+  //#define ENABLEGUICHAR
+  #ifdef ENABLEGUICHAR
+  // Create a GUI BLE Characteristic 
+  pCharacteristic2 = pService->createCharacteristic(
+                      GUI_CHARUUID,
+                /******* Enum Type NIMBLE_PROPERTY now *******     
+                      BLECharacteristic::PROPERTY_READ   |
+                      BLECharacteristic::PROPERTY_WRITE  |
+                      BLECharacteristic::PROPERTY_NOTIFY |
+                      BLECharacteristic::PROPERTY_INDICATE
+                    );
+                **********************************************/    
+                      NIMBLE_PROPERTY::READ   
+                    |  NIMBLE_PROPERTY::WRITE  
+                    //|  NIMBLE_PROPERTY::NOTIFY 
+                    //  | NIMBLE_PROPERTY::INDICATE
+                    );
+                
+  //connectionData.pCharacteristic = pCharacteristic; 
+  connectionData.all_pCharacteristics.push_back(pCharacteristic2);
+  connectionData.all_portNames.push_back("GUIport");                     
+  ESP_LOGW(TAG, "BLE server GUI characteristic created"); 
+     ESP_LOGW(TAG, "portName[0] %s",connectionData.all_portNames[0].c_str());
+   ESP_LOGW(TAG, "portName[1] %s",connectionData.all_portNames[1].c_str()); 
+  
+  #endif //ENABLEGUICHAR
+
+
+
+
+ 
   //FCKX
   //set CharacteristicCallback  
 // see: https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf
@@ -318,12 +361,7 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName)
 */
  // #endif
   
-  
-    // Save our connection information
-    
-    connectionData.pServer = pServer;
-    connectionData.pService = pService;
-    connectionData.pCharacteristic = pCharacteristic;
+
     
    #endif EARLY_OPEN   
   
@@ -397,14 +435,16 @@ unsigned int MidiOutNimBLE :: getPortCount()
 {
   //CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   //return MIDIGetNumberOfDestinations();
-  return 1;
+  return connectionData.all_pCharacteristics.size();
+  //return 1;
 }
 
 
 std::string MidiOutNimBLE :: getPortName(unsigned int portNumber)
 {
   //must return clientName from niBLEMidiData ?
-  return "fckx_seq";
+ return connectionData.all_portNames[portNumber];
+ // return "fckx_seq";
 }
 
 
@@ -531,10 +571,10 @@ ESP_LOGW(TAG, "BLE server characteristic created");
     // if ( data->connected_ ) {
         
      //DO THIS BEFORE PREP OF ADVERTISING?   
- 
-    //errorString_ = "MidiOutNimBLE::openPort: a valid connection already exists!";
-    ESP_LOGE(TAG, "MidiOutNimBLE::openPort: a valid connection already exists nevertheless start advertising (DIRTY!)"); 
-    //error( RtMidiError::WARNING, errorString_ );  //how  to implement this error case
+
+    ESP_LOGE(TAG, "A valid connection already exists nevertheless start advertising (DIRTYOPEN!)"); 
+    ESP_LOGE(TAG, ">>>>>take the opportunity to list all available Characteristics somewhere over here <<<<<<<");
+
     
     
 #define DIRTYOPEN
@@ -611,17 +651,15 @@ ESP_LOGW(TAG, "BLE server characteristic created");
      
   #endif LATE_OPEN      
     
-    // Start advertising
+  // Start advertising
   ESP_LOGI(TAG, "Prepare advertising");
   NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
   pAdvertising->setScanResponse(false); 
-  
   connectionData.pAdvertising = pAdvertising;
-        // Start advertising
+  // Start advertising
   ESP_LOGI(TAG, "Start advertising");
-
-    NimBLEDevice::startAdvertising();
+  NimBLEDevice::startAdvertising();
 
 
 
@@ -791,7 +829,7 @@ void MidiOutNimBLE :: openVirtualPort( const std::string &portName )
 }
 */
 void MidiOutNimBLE::sendMessage(const unsigned char *message, size_t size) {
-     static const char *TAG = "MidiOutNimBLE :: sendMessage";
+     static const char *TAG = "MidiOutNimBLE :: sendMessage A";
 
     ESP_LOGW(TAG, "message size() %d", size);  
     
@@ -812,21 +850,20 @@ void MidiOutNimBLE::sendMessage(const unsigned char *message, size_t size) {
     midiPacket[i] = message[i];
    };    
    
-       connectionData.pCharacteristic->setValue(midiPacket, size);
-// connectionData.pCharacteristic->setValue(midiPacket, 5); //works but needs conversion
-    // connectionData.pCharacteristic->setValue(const std::vector<unsigned char> *message);
-    //connectionData.pCharacteristic->setValue(const T & message);
-
-  //connectionData.pCharacteristic->setValue(std::vector<unsigned char> *message);
-    connectionData.pCharacteristic->notify(); 
-    //ble_notify_midi(pCharacteristic, mididata); this was suitable for midi thru
+    //connectionData.pCharacteristic->setValue(midiPacket, size);
+    //new method retrieves pCharacteristic from vector
+    connectionData.all_pCharacteristics[0]->setValue(midiPacket, size);
+    
+    //connectionData.pCharacteristic->notify(); 
+    //new method retrieves pCharacteristic from vector
+    connectionData.all_pCharacteristics[0]->notify();
    
    
 }
 
-void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
+void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message ) {
 //void MidiOutNimBLE :: sendMessage( const unsigned char *message, size_t size )
-{    static const char *TAG = "MidiOutNimBLE :: sendMessage";
+    static const char *TAG = "MidiOutNimBLE :: sendMessage B";
     //ESP_LOGW(TAG, "sendMessage  TO BE IMPLEMENTED"); 
     ESP_LOGW(TAG, "message->size() %d", message->size());
     /*
@@ -911,75 +948,12 @@ void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
     //send to "hardware" interface
     //<code here>
     
-    connectionData.pCharacteristic->setValue(midiPacket, message->size());
-// connectionData.pCharacteristic->setValue(midiPacket, 5); //works but needs conversion
-    // connectionData.pCharacteristic->setValue(const std::vector<unsigned char> *message);
-    //connectionData.pCharacteristic->setValue(const T & message);
+    //connectionData.pCharacteristic->setValue(midiPacket, message->size());
+    //new method retrieves pCharacteristic from vector
+    connectionData.all_pCharacteristics[0]->setValue(midiPacket, message->size());
 
-  //connectionData.pCharacteristic->setValue(std::vector<unsigned char> *message);
-    connectionData.pCharacteristic->notify(); 
-    //ble_notify_midi(pCharacteristic, mididata); this was suitable for midi thru
+    //connectionData.pCharacteristic->notify(); 
+    //new method retrieves pCharacteristic from vector
+    connectionData.all_pCharacteristics[0]->notify(); 
 
-
-//METHOD2....
-     
-  // We use the MIDISendSysex() function to asynchronously send sysex
-  // messages.  Otherwise, we use a single nimBLEMidi MIDIPacket.
-  /*
-  unsigned int nBytes = static_cast<unsigned int> (size);
-  if ( nBytes == 0 ) {
-    errorString_ = "MidiOutNimBLE::sendMessage: no data in message argument!";
-    ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::WARNING, errorString_ );
-    return;
-  }
-  
-  MIDITimeStamp timeStamp = AudioGetCurrentHostTime();
-  NimBLEMidiOutData *data = static_cast<NimBLEMidiOutData *> (apiData_);
-  OSStatus result;
-
-  if ( message[0] != 0xF0 && nBytes > 3 ) {
-    errorString_ = "MidiOutNimBLE::sendMessage: message format problem ... not sysex but > 3 bytes?";
-    ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::WARNING, errorString_ );
-    return;
-  }
- 
-  Byte buffer[nBytes+(sizeof( MIDIPacketList ))];
-  ByteCount listSize = sizeof( buffer );
-  MIDIPacketList *packetList = (MIDIPacketList*)buffer;
-  MIDIPacket *packet = MIDIPacketListInit( packetList );
-
-  ByteCount remainingBytes = nBytes;
-  while ( remainingBytes && packet ) {
-    ByteCount bytesForPacket = remainingBytes > 65535 ? 65535 : remainingBytes; // 65535 = maximum size of a MIDIPacket
-    const Byte* dataStartPtr = (const Byte *) &message[nBytes - remainingBytes];
-    packet = MIDIPacketListAdd( packetList, listSize, packet, timeStamp, bytesForPacket, dataStartPtr );
-    remainingBytes -= bytesForPacket;
-  }
-
-  if ( !packet ) {
-    errorString_ = "MidiOutNimBLE::sendMessage: could not allocate packet list";
-    ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::DRIVER_ERROR, errorString_ );
-    return;
-  }
-
-  // Send to any destinations that may have connected to us.
-  if ( data->endpoint ) {
-    result = MIDIReceived( data->endpoint, packetList );
-    if ( result != noErr ) {
-      errorString_ = "MidiOutNimBLE::sendMessage: error sending MIDI to virtual destinations.";
-      //error( RtMidiError::WARNING, errorString_ );
-    }
-  }
-*/
-/*
-  // And send to an explicit destination port if we're connected.
-  if ( connected_ ) {
-    result = MIDISend( data->port, data->destinationId, packetList );
-    if ( result != noErr ) {
-      errorString_ = "MidiOutNimBLE::sendMessage: error sending MIDI message to port.";
-      //error( RtMidiError::WARNING, errorString_ );
-    }
-  }
-  */
-  
 }

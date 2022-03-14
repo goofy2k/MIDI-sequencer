@@ -51,57 +51,35 @@ that are expected by the equivalent class(es) in RtMidi and NicMidi
 
 
 
-class RTMIDI_DLL_PUBLIC MidiOutNimBLE   //:public MidiOutApi //(what does this parent class add?) 
-{
-    
+class RTMIDI_DLL_PUBLIC MidiOutNimBLE{   //:public MidiOutApi //(what does this parent class add?) 
 
+    public:  
     
-    
-    
-    
-    
-    
-    public:   
+        struct NimBLEMidiOutData {
+            NimBLEServer*                           pServer;
+            NimBLEService*                          pService;
+            NimBLEAdvertising*                      pAdvertising;            
+      //      NimBLECharacteristic*                   pCharacteristic;
+            std::vector<NimBLECharacteristic*>      all_pCharacteristics;
+            std::vector<std::string>                all_portNames;
+        #ifdef HAVE_SEMAPHORE                  //depends on the OS
+            sem_t sem_cleanup;
+            sem_t sem_needpost;
+        #endif
+          };
 
- 
-struct NimBLEMidiOutData {
-    NimBLEServer*               pServer;
-    NimBLEService*              pService; 
-    NimBLECharacteristic*       pCharacteristic;
-    NimBLEAdvertising*          pAdvertising;
- //NimBLEServer* client;//this "client" is actually a nimBLE server
-                       //note that devices can have both roles concurrently
-                       //after making a connection
-                       //more important: the difference between Central and Peripheral
-                       //this device is .....(?)   It takes the lead in making connections
-                       //it starts "advertising"
-  //clienName ......                     
-  //nimBLE_port_t *port;
- // bool connected_; //in RtMidi, this is in the parent class
-  //nimBLE_ringbuffer_t *buffSize;     //required for MidiIn
-  //nimBLE_ringbuffer_t *buffMessage;  //required for MidiIn
-  //nimBLE_time_t lastTime;            //???
-#ifdef HAVE_SEMAPHORE                  //depends on the OS
-  sem_t sem_cleanup;
-  sem_t sem_needpost;
-#endif
-  //MidiInApi :: RtMidiInData *rtMidiIn; //???
-  };
 
-   
-    
-
-                                    MidiOutNimBLE();
-                                    //MidiOutNimBLE(const std::string &clientName);
-                                    ~MidiOutNimBLE();
+        MidiOutNimBLE();
+        //MidiOutNimBLE(const std::string &clientName);
+        ~MidiOutNimBLE();
                                 
         void                         openPort(unsigned int portNumber=0);
         void                         closePort();
         //virtual bool                 isPortOpen();
         //expose connectionData for comms of controller settings FCKX
          inline  NimBLEMidiOutData   get_connectionData() {return connectionData; }
-     //  inline  NimBLEMidiOutData   get_connectionData() {return void * connectionData; }
-      //void*   get_connectionData() {return *connectionData; }
+        //  inline  NimBLEMidiOutData   get_connectionData() {return void * connectionData; }
+        //void*   get_connectionData() {return *connectionData; }
         inline bool isPortOpen() const { return connected_; }
         unsigned int                 getPortCount();// { return 1; }
         std::string                  getPortName(unsigned int portNumber=0);
