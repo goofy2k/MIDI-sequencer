@@ -541,9 +541,16 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
    Replaced hard-coded thru in recorder by UI/GUI controllable thru in TEST_RECORDER example
   
    **v38**  
-  Created separate NimBLE characterisctic (pGUICharacteristic) for exchange of GUI data with synth.
+  Created separate NimBLE characterisctic (pGUICharacteristic) for exchange of GUI data with synth.  
+  Test messages over this channel can be sent from the main of the synth app. 
+   
   
    **v39**  
+  For usage by NiCMidi GUI notifier the pGUICharacteristic must be accessible from notifier via MidiOutNimBLE (nimBLEdriver.cpp in the NiCMidi lib).  
+  To achieve this,  pGUICharacteristic must be initialized within MidiOutNimBLE::initialize and stored in NimBLEMidiOutData connectionData of the MidiOutNimBLE object.
+  
+  
+  
   
   TODO
   - Check editing of presets / usage of keyBoard 2
