@@ -556,6 +556,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   
   
   TODO
+  - Feed back / synchoronize status of some controls (MIDI Thru / Start recording / ... ) between sequencer and Nodered dashboard
   - A next step is to use the GUI raw data notification to control a GUI (Javascript under Nodered)
   - ONGOING Check editing of presets / usage of keyBoard 2
   - DONE from v39: Make MQTT backtalk from seq to Nodered for sending GUI notifications. 
