@@ -161,6 +161,142 @@ void MIDISequencerGUINotifierText::Notify(const MIDISequencerGUIEvent &ev) {
 }
 
 
+void MIDISequencerGUINotifierRaw::Notify(const MIDISequencerGUIEvent &ev) {
+// reworked with an unique call to ost <<, so that there's no trouble with
+// cout call in other threads. (Crashed???)
+    if (sequencer == 0) return;
+    if (!en) return;                    // not enabled
+
+    char s[200];
+    int trk_num = ev.GetSubGroup();     // used only for track events
+    int wr = sprintf(s, "GUI EVENT: %s ", MIDISequencerGUIEvent::group_names[ev.GetGroup()]);
+    int data1 = 0;
+    int data2 = 0;
+   
+    switch(ev.GetGroup()) {
+        case MIDISequencerGUIEvent::GROUP_ALL:
+            sprintf(s + wr, "GENERAL RESET");
+            break;
+        case MIDISequencerGUIEvent::GROUP_CONDUCTOR:
+            switch (ev.GetItem()) {
+                case MIDISequencerGUIEvent::GROUP_CONDUCTOR_TEMPO:
+                    sprintf(s + wr, "TEMPO:    %2f bpm", sequencer->GetState()->tempobpm);
+                    break;
+                case MIDISequencerGUIEvent::GROUP_CONDUCTOR_TIMESIG:
+                                        data1 = sequencer->GetState()->timesig_numerator;
+                                        data2 =sequencer->GetState()->timesig_denominator;
+                    sprintf(s + wr, "TIMESIG:  %d/%d", sequencer->GetState()->timesig_numerator,
+                           sequencer->GetState()->timesig_denominator);
+                    break;
+                case MIDISequencerGUIEvent::GROUP_CONDUCTOR_KEYSIG:
+                    sprintf(s + wr, "KEYSIG:   %s", KeyName(sequencer->GetState()->keysig_sharpflat,
+                                                       sequencer->GetState()->keysig_mode));
+                    break;
+                case MIDISequencerGUIEvent::GROUP_CONDUCTOR_MARKER:
+                    sprintf(s + wr, "MARKER:   %s", sequencer->GetState()->marker_text.c_str());
+                    break;
+                case MIDISequencerGUIEvent::GROUP_CONDUCTOR_USER:
+                    data1 = ev.GetItem();
+                    sprintf(s + wr, "USER EV Item %d", ev.GetItem());
+                    break;
+            }
+            break;
+        case MIDISequencerGUIEvent::GROUP_TRANSPORT:
+            switch (ev.GetItem()) {
+                case MIDISequencerGUIEvent::GROUP_TRANSPORT_START:
+                    sprintf(s + wr, "SEQUENCER START");
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRANSPORT_STOP:
+                    sprintf(s + wr, "SEQUENCER STOP");
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRANSPORT_MEASURE:
+                    data1 = sequencer->GetCurrentMeasure() + start_from;
+                    sprintf(s + wr, "MEAS %d", sequencer->GetCurrentMeasure() + start_from);
+                    
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRANSPORT_BEAT:
+                    data1 = sequencer->GetCurrentMeasure() + start_from; 
+                    data2 = sequencer->GetCurrentBeat()   + start_from; 
+                    sprintf(s + wr, "MEAS %d BEAT %d", sequencer->GetCurrentMeasure() + start_from,
+                           sequencer->GetCurrentBeat() + start_from );
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRANSPORT_COUNTIN:
+                    sprintf(s + wr, "SEQUENCER COUNT IN");
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRANSPORT_USER:
+                    data1 = ev.GetItem();
+                    sprintf(s + wr, "USER EV Item %d", ev.GetItem());
+                    break;
+            }
+            break;
+        case MIDISequencerGUIEvent::GROUP_TRACK:
+            data1 = trk_num;
+            wr += sprintf (s + wr, "TRACK %3d ", trk_num);
+            switch (ev.GetItem()) {
+                case MIDISequencerGUIEvent::GROUP_TRACK_NAME:
+                    sprintf(s + wr, "NAME: %s", sequencer->GetTrackState(trk_num)->track_name.c_str());
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRACK_PROGRAM:
+                    data2 = sequencer->GetTrackState(trk_num)->program;
+                    sprintf(s + wr, "PROGRAM: %d", sequencer->GetTrackState(trk_num)->program);
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRACK_NOTE:
+                    sprintf(s + wr, "NOTE");
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRACK_VOLUME:
+                    sprintf(s + wr, "VOLUME: %d",sequencer->GetTrackState(trk_num)->control_values[C_MAIN_VOLUME]);
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRACK_PAN:
+                    sprintf(s + wr, "PAN: %d", sequencer->GetTrackState(trk_num)->control_values[C_PAN]);
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRACK_CHR:
+                    sprintf(s + wr, "CHORUS: %d", sequencer->GetTrackState(trk_num)->control_values[C_CHORUS_DEPTH]);
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRACK_REV:
+                    sprintf(s + wr, "REVERB: %d", sequencer->GetTrackState(trk_num)->control_values[C_EFFECT_DEPTH]);
+                    break;
+                case MIDISequencerGUIEvent::GROUP_TRACK_USER:
+                    sprintf(s + wr, "USER EV Item %d", ev.GetItem());
+                    break;
+            }
+            break;
+        case MIDISequencerGUIEvent::GROUP_RECORDER:
+            switch (ev.GetItem()) {
+                case MIDISequencerGUIEvent::GROUP_RECORDER_RESET:
+                    sprintf(s + wr, "RECORDER RESET");
+                    break;
+                case MIDISequencerGUIEvent::GROUP_RECORDER_START:
+                    sprintf(s + wr, "RECORDING START");
+                    break;
+                case MIDISequencerGUIEvent::GROUP_RECORDER_STOP:
+                    sprintf(s + wr, "RECORDING STOP");
+                    break;
+                case MIDISequencerGUIEvent::GROUP_RECORDER_USER:
+                    sprintf(s + wr, "USER EV Item %d", ev.GetItem());
+                    break;
+            }
+            break;
+        case MIDISequencerGUIEvent::GROUP_USER:
+            sprintf(s + wr, "Subgroup: %d Item: %d", ev.GetSubGroup(), ev.GetItem());
+            break;
+    }
+    strcat(s, "\n");
+    std::cout << "sizeof(ev) " << sizeof(ev) << std::endl;
+    std::cout << "sizeof(int) " << sizeof(int) << std::endl;
+    std::cout << s; //also do output to screen
+    std::cout << "NotifierRaw::Notify ev: " << ev << std::endl;
+
+    unsigned long myev = ev;
+    //data1 = 37;
+    //data2 = 49;
+    myev = myev | ((unsigned long)(data1 & MIDISequencerGUIEvent::data1Mask) << MIDISequencerGUIEvent::data1Shift) | ((unsigned long)(data2 & MIDISequencerGUIEvent::data2Mask) << MIDISequencerGUIEvent::data2Shift); //<<40
+    ost << myev << std::endl; //add an endl.   This will be stripped in the raw ost (Outbuf_buffered_fckx) handler....  DIRTY trick
+}
+
+
+
+
+
 
 #ifdef _WIN32
 

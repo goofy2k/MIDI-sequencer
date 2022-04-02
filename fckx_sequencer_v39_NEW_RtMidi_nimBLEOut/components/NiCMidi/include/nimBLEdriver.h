@@ -59,9 +59,14 @@ class RTMIDI_DLL_PUBLIC MidiOutNimBLE{   //:public MidiOutApi //(what does this 
             NimBLEServer*                           pServer;
             NimBLEService*                          pService;
             NimBLEAdvertising*                      pAdvertising;            
-            NimBLECharacteristic*                   pCharacteristic;
+      //      NimBLECharacteristic*                   pCharacteristic;
+      
+            NimBLECharacteristic* pMIDICharacteristic;
+            NimBLECharacteristic* pGUICharacteristic;
+      
+      
             std::vector<NimBLECharacteristic*>      all_pCharacteristics;
-            std::vector<std::string>               all_portNames;
+            std::vector<std::string>                all_portNames;
         #ifdef HAVE_SEMAPHORE                  //depends on the OS
             sem_t sem_cleanup;
             sem_t sem_needpost;

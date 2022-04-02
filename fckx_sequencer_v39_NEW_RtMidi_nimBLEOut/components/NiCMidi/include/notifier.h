@@ -61,22 +61,22 @@ class MIDISequencerGUIEvent {
                     MIDISequencerGUIEvent(unsigned long bits_) : bits(bits_) {}
         /// This constructor creates the object starting from its group, subgroup, item
                     MIDISequencerGUIEvent( int group, int subgroup, int item ) {
-                        bits = ((group&0xff)<<24) | ((subgroup&0xfff)<<12) | (item&0xfff); }
+                        bits = ((group&groupMask)<<groupShift) | ((subgroup&subgroupMask)<<subgroupShift) | ((item&itemMask)<<itemShift); }
                         // leave unchanged! overloading trouble, too many ctors
         /// Copy constructor.
                     MIDISequencerGUIEvent(const MIDISequencerGUIEvent &ev) : bits(ev.bits) {}
         /// Converts the object into an unsigned long
                     operator unsigned long () const             { return bits; }
         /// Returns the event group.
-        int         GetGroup() const                        { return (int)((bits>>24)&0xff); }
+        int         GetGroup() const                        { return (int)((bits>>groupShift)&groupMask); }
         /// Returns the event subgroup (only effective for GROUP_TRACK events, where it is
         /// the track of the event; it is 0 for other groups).
-        int         GetSubGroup() const                     { return (int)((bits>>12)&0xfff); }
+        int         GetSubGroup() const                     { return (int)((bits>>subgroupShift)&subgroupMask); }
         /// Returns the event item (i.e. the kind of the event).
-        int         GetItem() const                         { return (int)((bits>>0)&0xfff); }
+        int         GetItem() const                         { return (int)((bits>>itemShift)&itemMask); }
         /// Sets the event group, subgroup and item.
         void        SetEvent( int group, int subgroup = 0, int item = 0 ) {
-                        bits = ((group&0xff)<<24) | ((subgroup&0xfff)<<12) | (item&0xfff); }
+                        bits = ((group&groupMask)<<groupShift) | ((subgroup&subgroupMask)<<subgroupShift) | ((item&itemMask)<<itemShift); }
 
         /// Main groups
         enum {
@@ -148,6 +148,28 @@ class MIDISequencerGUIEvent {
     protected:
         /// \cond EXCLUDED
         unsigned long bits;         // Storage for group, subgroup and item
+        /*
+        const int groupShift = 24;
+        const int subgroupShift = 12;
+        const int itemShift = 0;
+        const int groupMask = 0xff;
+        const int subgroupMask = 0xfff;
+        const int itemMask = 0xfff;
+        */
+    const int itemShift = 0;
+    const int itemMask = 0xf;
+    const int subgroupShift = 4; 
+    const int subgroupMask = 0xf;
+    const int groupShift = 8;
+    const int groupMask = 0xf; 
+    
+    public:    //because it is not used by a member of the event class, these must be public
+    static const int data1Shift = 12;
+    static const int data1Mask = 0xff; 
+    static const int data2Shift = 20;
+    static const int data2Mask = 0xff;
+                
+        
         /// \endcond
 };
 
@@ -218,6 +240,37 @@ class MIDISequencerGUINotifierText : public MIDISequencerGUINotifier {
         std::ostream&   ost;
         /// \endcond
 };
+
+
+
+class MIDISequencerGUINotifierRaw : public MIDISequencerGUINotifier {
+    public:
+        /// The constructor.
+        /// \param seq the sequencer from which messages originate
+        /// \param os the std::ostream which will print the messages
+                        MIDISequencerGUINotifierRaw(const MIDISequencer* seq = 0, std::ostream& os = std::cout) :
+                                MIDISequencerGUINotifier(seq), start_from(0), ost(os)   {}
+
+        /// Gets the numbering of measures and beats. See SetStartFromone().
+        /// \return 0 or 1.
+        char            GetStartFrom() const             { return start_from; }
+        /// Sets the numbering of measures and beats (starting from 0 or from 1)
+        /// \param f 0 or 1.
+        /// \return **true** if the parameter is correct, **false** otherwise
+        bool            SetStartFrom(char f);
+
+        /// Notifies the event _ev_, printing to it a readable event description.
+        virtual void    Notify(const MIDISequencerGUIEvent &ev);
+
+    protected:
+        /// \cond EXCLUDED
+        char            start_from;
+        std::ostream&   ost;
+        /// \endcond
+};
+
+
+
 
 
 #ifdef _WIN32

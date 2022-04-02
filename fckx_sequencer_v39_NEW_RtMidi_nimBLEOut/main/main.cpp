@@ -430,6 +430,7 @@ static const char *TAG = "execute_single_midi_command";
 #endif
 
  
+
 void printMIDI_Input(esp_mqtt_event_handle_t event){  
     //display incoming data 
     static const char *TAG = "printMIDI_Input"; 
@@ -442,8 +443,10 @@ void printMIDI_Input(esp_mqtt_event_handle_t event){
     ESP_LOGD(TAG,"DATA4 %d", event->data[4]);
 };
 
+
+
+
 class MidiCharacteristicCallbacks: public BLECharacteristicCallbacks {
-    
     void onRead(BLECharacteristic* pCharacteristic) {
         static const char *TAG = "ONREAD [MIDI NimBLE]";
         // Do something before the read completes.
@@ -457,23 +460,38 @@ class MidiCharacteristicCallbacks: public BLECharacteristicCallbacks {
         //std::cout << "pCharacteristic onWrite handler" << std::endl;
         std::string value = pCharacteristic->getValue();
         ESP_LOGD(TAG,"pCharacteristic->getValue() %s", value.c_str());
-        std::cout << "Characteristic value: "<< value << std::endl;
+        //std::cout << "Characteristic value: "<< value << std::endl;
+        //std::cout << "value.find('/'): "<< value.find('/') << std::endl;
+        
+        
+        
         //decode value and send to control
         //start with just forwarding it
         //need to convert  value string to const * char for use in mqtt publish
-        //separate topic and value on space
 
-        int mypos = value.find(' ');
-        std::string myaddress = value.substr(0,mypos); 
-        std::string myvalue = value.substr(mypos,value.length());
-        //forward to NODERED over MQTT
-        esp_mqtt_client_publish(mqtt_client, myaddress.c_str(), myvalue.c_str(), 0, 1, 0);   
+
+        if (value.find('/') == 0) {
+            //if first character is /, it contains a controller path, that can serve as an MQTT topic 
+            //decode and forward over MQTT
+            //separate topic and value on space and decode it
+            int mypos = value.find(' ');           
+            std::string myaddress = value.substr(0,mypos); 
+            std::string myvalue = value.substr(mypos,value.length());            
+            //forward to NODERED over MQTT
+            esp_mqtt_client_publish(mqtt_client, myaddress.c_str(), myvalue.c_str(), 0, 1, 0); 
+        }
+        else {  //POSSIBLY OBSOLETE.....
+            //decode as GUI message and process further in Nodered
+            ESP_LOGD(TAG,"GUI event %s", value.c_str());
+            //forward to NODERED over MQTT with a suitable topic
+            esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI/", value.c_str(), 0, 1, 0); 
+        }
     }
 };
 
+
 void setMidiCharacteristicCallBacks(void){    
     // now define CharacteristicCallBacks
-    //check for presence, check for name  DO THIS IN A VERSION 2!!!!!!
     bool myresult = false;
     MidiOutNimBLE::NimBLEMidiOutData connectionData;
     while ( myresult == false){
@@ -481,17 +499,16 @@ void setMidiCharacteristicCallBacks(void){
         std::cout << "WAIT FOR PEER1" << std::endl;
         //expose NimBLE connectionData 
          connectionData = MIDIManager::GetOutDriver(0)->Get_connectionData();  
-         myresult = (connectionData.pCharacteristic != NULL);
-        // myresult = (connectionData.all_pCharacteristics[0] != NULL);
+         myresult = (connectionData.all_pCharacteristics[0] != NULL);
+         
          std::cout << "WAIT FOR PEER on MIDI out" << std::endl;
         
     }
     std::cout << "set Midi Characteristic callbacks" << std::endl;
-    connectionData.pCharacteristic->setCallbacks(new 
-     //connectionData.all_pCharacteristics[0]->setCallbacks(new
-     MidiCharacteristicCallbacks()); 
+     connectionData.all_pCharacteristics[0]->setCallbacks(new MidiCharacteristicCallbacks()); 
 
-};  //setMidiCharacteristicCallBacks
+    };  //setMidiCharacteristicCallBacks
+
 
 class GUICharacteristicCallbacks: public BLECharacteristicCallbacks { 
 
@@ -524,15 +541,38 @@ class GUICharacteristicCallbacks: public BLECharacteristicCallbacks {
    
 };
 
-void setGUICharacteristicCallBacks(void){
+
+void setGuiCharacteristicCallBacks(void){    
     // now define CharacteristicCallBacks
-        // now define CharacteristicCallBacks
-    //check for presence, check for name  DO THIS IN A VERSION 2!!!!!!
-    //see setMidiCharacteristicCallBacks
+    bool myresult = false;
+    MidiOutNimBLE::NimBLEMidiOutData connectionData;
+    while ( myresult == false){
+   // while (  ! MIDIManager::GetOutDriver(0)->IsPortOpen() ) {
+        std::cout << "WAIT FOR PEER1" << std::endl;
+        //expose NimBLE connectionData 
+         connectionData = MIDIManager::GetOutDriver(0)->Get_connectionData();  
+         myresult = (connectionData.all_pCharacteristics[1] != NULL);
+         
+         std::cout << "WAIT FOR PEER on MIDI out" << std::endl;
+        
+    }
+    std::cout << "set Gui Characteristic callbacks" << std::endl;
+    connectionData.all_pCharacteristics[1]->setCallbacks(new GUICharacteristicCallbacks()); 
+
+    };  //setMidiCharacteristicCallBacks
+
+
+
+
+
+//setting callbacks for the old local version
+void setGUICharacteristicCallBacks2(void){
+    // now define CharacteristicCallBacks
      std::cout << "set GUI Characteristic callbacks" << std::endl;
      pGUICharacteristic->setCallbacks(new GUICharacteristicCallbacks());    
 }; // setGUICharacteristicCallBacks
 
+//obsolete here, it is in nimBLEdriver
 void createGUICharacteristic( void) {
     static const char *TAG = "CREATEGUICHARACTERISTIC";
     //MidiOutNimBLE::NimBLEMidiOutData connectionData;
@@ -612,66 +652,686 @@ std::map <unsigned char, char *  > seq_command_map = {
     ,{0x22, "stop thru"}
 };
 
-//see p.835-836
-
-
-#ifdef USE_CATCHER
-
-class GUIcatcher : public std::ostream {
-    //a stream redirection class that inherits from std::ostream
-  private:  
-  class GUIOutBuf : public std::streambuf {
-      //a streambuf class that inherits from std::streambuf, used by the GUIacatcher redirection  class  
+    class Outbuf2 : public std::streambuf {
       protected:
-        //hidden resources
-        // write multiple characters
-        /*
-        virtual std::streamsize xsputn (const char* s,
-        std::streamsize num) {
-        std::cout <<"GUIOutBuf output: "<< s << std::endl;    
+	//central output function
+	// - print characters in uppercase mode
+	 
+	virtual int_type overflow (int_type c) {
+	    if (c != EOF) {
+		// convert lowercase to uppercase
+		c = std::toupper(static_cast<char>(c),getloc());
+
+		// and write the character to the standard output
+		if (putchar(c) == EOF) {
+		    return EOF;
+		}
+	    }
+	    return c;
+	}
+    }; //Outbuf2
+
+
+//p. 837 The C++ Standard Library Second Edition, Nicolai M. Josuttis
+
+class Outbuf_buffered_orig : public std::streambuf {
+    protected:
+        static const int bufferSize = 10; // size of data buffer
+        char buffer[bufferSize]; // data buffer
+    public:
+        // constructor
+        // - initialize data buffer
+        // - one character less to let the bufferSizeth character cause a call of overflow()
+        Outbuf_buffered_orig() {
+        setp (buffer, buffer+(bufferSize-1));
+        }
+        
+        // destructor
+        // - flush data buffer
+        virtual ~Outbuf_buffered_orig() {
+        sync();
+        }
+
+    protected:
+        // flush the characters in the buffer
+        int flushBuffer () {
+        int num = pptr()-pbase();
+        if (write (1, buffer, num) != num) {
+        return EOF;
+        }
+        pbump (-num); // reset put pointer accordingly
         return num;
         }
-        */
         
-      public:
-        //constructor
-        GUIOutBuf();
-        //destructor      
-      
-};
-      
-    
-      private:
-      //hidden resources
-      //e.g. a member of type GUIOutBuf
-      GUIOutBuf buf;
-      std::streambuf* oldBuf = nullptr;
+        // buffer full
+        // - write c and all previous characters
+        virtual int_type overflow (int_type c) {
+        if (c != EOF) {
+        // insert character into the buffer
+        *pptr() = c;
+        pbump(1);
+        }
+        // flush the buffer
+        if (flushBuffer() == EOF) {
+        // ERROR
+        return EOF;
+        }
+        return c;
+        }
 
-      public:
-        //constructor
-        //    GUIcatcher : std::ostream(0), buf {
-          //  GUIcatcher :  buf;
-          GUIcatcher() {};
-     /* 
-          GUIcatcher(){
-            rdbuf(oldBuf); 
-         //    rdbuf(&buf); 
-        */ 
-          //  };    
-      
-      
-      //destructor 
-    
+        // synchronize data with file/destination
+        // - flush the data in the buffer
+        virtual int sync () {
+        if (flushBuffer() == EOF) {
+        // ERROR
+        return -1;
+        }
+        return 0;
+        }
+};  //Outbuf_buffered
 
-};   // class GUIcatcher
-GUIcatcher guiCatcher;
-#endif
+//p. 837 The C++ Standard Library Second Edition, Nicolai M. Josuttis
 
-  MIDISequencerGUINotifierText text_n;                   // the AdvancedSequencer GUI notifier, no additional parameters: forcing the defaults 0 and std:cout
-  
-  // MIDISequencerGUINotifierText text_n(0, std::cout);       // the AdvancedSequencer GUI notifier, using the defaults 0 and std:cout as parameters
-  //MIDISequencerGUINotifierText text_n(0, guiCatcher);
+class Outbuf_buffered_fckx : public std::streambuf {
+    protected:
+        static const int bufferSize = 128; // size of data buffer
+        char buffer[bufferSize]; // data buffer
+    public:
+        // constructor
+        // - initialize data buffer
+        // - one character less to let the bufferSizeth character cause a call of overflow()
+        Outbuf_buffered_fckx() {
+            setp (buffer, buffer+(bufferSize-1));
+            //esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "Outbuf_buffered_fckx constructor", 0, 1, 0);
+            std::cout << "Outbuf_buffered_fckx constructor " << std::endl;
+        }
+        
+        // destructor
+        // - flush data buffer
+        virtual ~Outbuf_buffered_fckx() {
+            //esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "Outbuf_buffered_fckx destructor", 0, 1, 0);
+            //DEBUG
+            std::cout << "Outbuf_buffered_fckx destructor " << std::endl;
+            sync();
+        }
+
+    protected:
+        // flush the characters in the buffer
+        int flushBuffer () {
+            //esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "Outbuf_buffered_fckx flushBuffer", 0, 1, 0);
+            int num = pptr()-pbase();
+
+            
+           if (num != 0) {
+           esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI/flushBuffer", buffer, num-1, 1, 0);  //use num-1 to skip the added endl
+           //filter the num = 1 cases in Nodered DIRTY OF THE DIRTIEST
+           //also filter num=1 cases that only contain endl
+            //if (num < 2) esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI/flushBuffer", buffer, num-1, 1, 0);  //use num-1 to skip the added endl
+            //DEBUG
+            std::cout << "Outbuf_buffered_fckx _ flushBuffer num: " << num << std::endl;
+            std::cout << "Outbuf_buffered_fckx _ flushBuffer data: " << buffer << std::endl;
+            std::cout << "Outbuf_buffered_fckx _ this was data " <<std::endl;
+/*
+            if (num != 0) {
+                char * dest = "";
+                //strncpy(dest, buffer, num);
+                //memcpy(dest, buffer, num);
+                snprintf(dest, num, "%s", buffer);
+                std::cout << "Outbuf_buffered_fckx _ dest " << dest << std::endl;
+                std::cout << "Outbuf_buffered_fckx _ this was dest " <<std::endl;
+            };
+            
+*/            
+           }
+            
+            /*
+            //Chapter 15: Input/Output Using Stream Classes p. 806
+            std::ostringstream os (std::ios::out|std::ios::ate);
+            os << 77 << " " << std::hex << 77 << std::endl;
+            std::cout << os.str(); // writes: value: 77 4d
+            */
+            
+            //std::cout << std::hex  << buffer << std::endl;
+            //https://stackoverflow.com/questions/71660143/where-can-i-find-a-reference-to-the-function-write
+            //https://stackoverflow.com/questions/24259640/writing-a-full-buffer-using-write-system-call
+
+            
+            if (write (1, buffer, num) != num) {
+            //DEBUG
+            std::cout << "Outbuf_buffered_fckx _ flushBuffer EOF ! (return EOF) num: " << num << std::endl;    
+            return EOF;
+            }
+            pbump (-num); // reset put pointer accordingly
+            //DEBUG
+            std::cout << "Outbuf_buffered_fckx _ flushBufffer NON EOF (return num) num: " << num << std::endl;
+            return num;
+        }
+        
+        // buffer full
+        // - write c and all previous characters
+        virtual int_type overflow (int_type c) {
+            //esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "Outbuf_buffered_fckx overflow", 0, 1, 0);
+            if (c != EOF) {
+           // if (c != 0xa) {  //test on LF      FCKX! 
+            // insert character into the buffer
+            *pptr() = c;
+            pbump(1);
+            }
+            // flush the buffer
+            if (flushBuffer() == EOF) {
+            // ERROR
+            //DEBUG
+            std::cout << "Outbuf_buffered_fckx _ overflow ERROR: (return EOF)" << std::endl;
+            return EOF;
+            }
+            //DEBUG
+            std::cout << "Outbuf_buffered_fckx _ overflow OK (return c): " << c << std::endl;
+            return c;
+        }
+
+        // synchronize data with file/destination
+        // - flush the data in the buffer
+        virtual int sync () {
+            //esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "Outbuf_buffered_fckx sync", 0, 1, 0);    
+            if (flushBuffer() == EOF) {
+            // ERROR
+            //DEBUG 
+            std::cout << "Outbuf_buffered_fckx _ sync ERROR (return -1)" << std::endl;
+            return -1;
+            }
+            //DEBUG
+            std::cout << "Outbuf_buffered_fckx _ sync OK (return 0)" << std::endl;
+            return 0;
+        }
+};  //Outbuf_buffered_fckx
+
+
+
+    class OutStreamBuf : public std::streambuf { 
+      
+      protected:
+      
+        /* central output function
+         * - print characters in uppercase mode
+        */     
+     
+      
+        //override the existing overflow function with a function that converts each character to uppercase
+        virtual int_type overflow (int_type c) {
+            if (c != EOF) {
+            // convert lowercase to uppercase
+            c = std::toupper(static_cast<char>(c),getloc());
+            //output to standard output
+            putchar(c);
+            esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "OutStreamBuf overflow", 0, 1, 0);   
+
+            }
+            return c;
+        }
+       
    
+        // write multiple characters  MUST USE CONST CHAR* ?
+        virtual std::streamsize xsputn (char* s, std::streamsize num) {  
+            std::cout << "**size: " << num << std::endl;    
+            std::cout << "OutStreamBuf contents: " << s << std::endl;
+            return 1;
+        }    
+    }; //OutStreamBuf
+
+
+
+class OutStream : public std::ostream {
+ 
+    private:
+        //private local Outbuf for OutStream
+        class Outbuf : public std::streambuf { 
+      public:
+   
+      protected:
+	/* central output function
+	 * - print characters in uppercase mode
+	 */     
+     
+        //override the existing overflow function with a function that converts each character to uppercase
+        virtual int_type overflow (int_type c) {
+            if (c != EOF) {
+            // convert lowercase to uppercase
+            c = std::toupper(static_cast<char>(c),getloc());
+            //output to standard output
+            putchar(c);
+            esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "OutStream inside Outbuf overflow", 0, 1, 0);    //does not show
+
+            }
+            return c;
+        }
+   
+        // write multiple characters  MUST USE CONST CHAR* (?)
+        virtual std::streamsize xsputn (char* s, std::streamsize num) {  
+            std::cout << "**size: " << num << std::endl;    
+            std::cout << "OUTBUF contents: " << s << std::endl;
+            return 1;
+        }    
+    }; //Outbuf
+
+        Outbuf outbuf;
+        std::streambuf * buf;
+     public:
+        //constructor
+        OutStream() {
+        //buf = this->rdbuf();  //compiles OK, but what does it do ?
+         buf = rdbuf();         //compiles OK, but what does it do ?  //makes no sense to do it in the constructor. rather do it in operatot <<
+         std::cout <<"buf " << buf << " buf" << std::endl;   
+         std::cout << "SOME MESSAGE FROM OutStream constructor" <<std::endl;         //shows OK
+
+         esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "OutStream constructor", 0, 1, 0);    //shows OK
+        };
+        
+        // << operator
+        //https://www.geeksforgeeks.org/overloading-stream-insertion-operators-c/
+        //have a good look on what parameters the operator should take , see the above article       
+        friend std::ostream & operator << (std::ostream &stream, const OutStream& outStream){
+            
+         //buf = rdbuf();         //compiles OK, but what does it do ?  //makes no sense to do it in the constructor. rather do it in operatot <<
+         //std::cout <<"buf " << buf << " buf" << std::endl;   
+            esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "OutStream << operator", 0, 1, 0); //doesn't show
+            stream << "Test1 << operator inside " << std::endl;                                       //doesn't show
+            //return stream; //return the stream 
+            return (stream << "Test2 << operator inside ");            
+        };     
+}; //OutStream
+
+
+
+
+ void test_outbuf(void)
+    {
+    std::cout << "Testing Outbuf" << std::endl;    
+	// create special output buffer
+	OutStreamBuf ob;
+	// initialize output stream with that output buffer
+	std::ostream outbuf(&ob);
+
+	outbuf << "31 hexadecimal: "
+	    << std::hex << 31 << std::endl;
+        
+    std::cout << "Tested Outbuf" << std::endl;    
+	
+    }
+
+
+class MyNotifier {    
+    public:
+        //constructor
+        MyNotifier(std::ostream& os = std::cout) : ost(os) {}
+        //takes eventdata as a code for the event
+        //composes some output string based on the input and outputs it to the customizable output stream ost
+        virtual void Notify( unsigned long eventdata);
+    protected:
+        std::ostream& ost;        
+}; //class MyNotifier
+
+void MyNotifier::Notify(unsigned long eventdata) {
+    //takes eventdata as dummy for an event
+    //composes some output string based on the input and outputs it to the customizable output stream ost
+    char s[200];
+    int wr = sprintf(s, "RECEIVED EVENT %s ", "of type 1 ");
+    sprintf( s + wr , "with number %lu\n", eventdata);
+    std::cout << "MyNotifier::Notify direct: " << s << std::endl;                     //this shows up
+    //ost << "dummy custom_ostream output: " << eventdata << std::endl;
+    ost << eventdata << std::endl;  //TRICK  a bit TOO DIRTY to keep ost (Outbuf_buffered_fckx) simple 
+    //ost << eventdata;  //DO NOT include an endl !!!  NEEDS REPAIR OF ost !!!
+    //trial to send over MQTT,  in the end ost should generate MQTT output
+    esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "MyNotifier::Notify", 0, 1, 0); //works fine
+} //MyNotifier::Notify
+
+
+/*
+    class Outbuf : public std::streambuf
+    {
+      protected:
+	//central output function
+	// - print characters in uppercase mode
+	 
+	virtual int_type overflow (int_type c) {
+	    if (c != EOF) {
+		// convert lowercase to uppercase
+		c = std::toupper(static_cast<char>(c),getloc());
+
+		// and write the character to the standard output
+		if (putchar(c) == EOF) {
+		    return EOF;
+		}
+	    }
+	    return c;
+	}
+    };
+
+*/
+
+
+
+class StreamBuf : public std::streambuf {
+    
+    
+    
+    
+}; //StreamBuf
+
+
+class Custom_Out : public std::ostream {
+    
+    
+    class Outbuf : public std::streambuf {
+      protected:
+	//central output function
+	// - print characters in uppercase mode
+	 
+	virtual int_type overflow (int_type c) {
+	    if (c != EOF) {
+		// convert lowercase to uppercase
+		c = std::toupper(static_cast<char>(c),getloc());
+
+		// and write the character to the standard output
+		if (putchar(c) == EOF) {
+		    return EOF;
+		}
+	    }
+	    return c;
+	}
+    };
+ /*   
+    static Outbuf outbuf;
+    */  
+    public:
+        //constructor
+      //  Custom_Out &buf;
+/*
+        {
+        //rdbuf(&sb); 
+        }
+*/        
+
+        
+  /*      
+         friend std::ostream & operator << (std::ostream &out, const Log &L){
+            
+              out << "Log test operator ";
+              return out; //return the stream
+            
+        };
+        
+        
+        
+        
+*/
+    private:
+
+        std::streambuf *buf;
+        std::ostream out;
+
+        
+    //std::streambuf* oldBuf = nullptr;
+}; //Custom_Out
+
+
+
+class println_stream: std::ostream
+{
+    // Make this a private class.
+    // You don't need to leak implementation details.
+    // As far as anybody else is convered it is just std::streambuf
+    
+    class println_buf { /* STUFF */ };
+
+    println_buf     buf;
+    std::streambuf* oldBuf = nullptr;
+    public:
+        println_stream()
+            // You can't pass the buf to the ostream constructor
+            // here as it has not been constructed yet.
+            // There are ways but lets keep it simple for now.
+        {
+            // I did not do the work with logfunc
+            // Have not read that bit yet.
+            // But you get the idea I hope.
+            //oldBuf = rdbuf(&buf);   //<<<< throws an error
+        }
+        ~println_stream()
+        {
+            // Can't remember if it is required.
+            // But I would always set back the original buffer.
+            rdbuf(oldBuf);
+        }
+};
+
+
+//https://codereview.stackexchange.com/questions/167321/custom-output-stream-that-acts-like-stdcout
+
+/*
+namespace Utils
+{
+    static std::ostream& Log;
+}
+*/
+
+struct MyStream1 : std::ostream, std::streambuf
+{
+public:
+   MyStream1() : std::ostream(this) { }
+   std::streambuf::int_type overflow(std::streambuf::int_type c)
+   {
+      std::cout << c;
+      // My custom operations
+      return 0;
+   }
+};
+//std::ostream& Utils::Log = MyStream1();
+
+
+struct MyStream2 : std::streambuf, std::ostream 
+{
+public:
+   MyStream2() : std::ostream(this) { }
+   std::streambuf::int_type overflow(std::streambuf::int_type c) override
+   {
+      std::cout << c;
+      // My custom operations
+      return 0;
+   }
+};
+//std::ostream& Utils::Log = MyStream2();
+
+
+class MyStream3 : std::ostream, std::streambuf
+{
+public:
+   MyStream3() : std::ostream(this) { }
+   std::streambuf::int_type overflow(std::streambuf::int_type c)
+   {
+      std::cout << c;
+      // My custom operations
+      return 0;
+   }
+};
+
+class MyStream4 : std::streambuf, std::ostream 
+{
+public:
+   MyStream4() : std::ostream(this) { }
+   std::streambuf::int_type overflow(std::streambuf::int_type c) override
+   {
+      std::cout << c;
+      // My custom operations
+      return 0;
+   }
+};
+
+
+class MQTT_stream: public std::ostream
+{
+    // Make this a private class.
+    // You don't need to leak implementation details.
+    // As far as anybody else is convered it is just std::streambuf
+    class MQTT_buf : public std::streambuf { /* STUFF */ };
+
+    MQTT_buf      buf;
+    std::streambuf* oldBuf = nullptr;
+    public:
+        MQTT_stream()
+            // You can't pass the buf to the ostream constructor
+            // here as it has not been constructed yet.
+            // There are ways but lets keep it simple for now.
+        {
+            // I did not do the work with logfunc
+            // Have not read that bit yet.
+            // But you get the idea I hope.
+            oldBuf = rdbuf(&buf);   //<<<< throws an error
+            
+            //send buffer to MQTT with the right topic
+            //...code here
+            //esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "test", 0, 1, 0);
+            std::cout << "Hello Back!";
+            std::cout << oldBuf;
+        }
+        ~MQTT_stream()
+        {
+            // Can't remember if it is required.
+            // But I would always set back the original buffer.
+            rdbuf(oldBuf);
+        }
+};
+
+
+class Log : public std::ostream
+{
+    public:
+        enum Mode { STDOUT, FILE };
+
+        // Needed by default
+        Log(const char *file = NULL);
+        ~Log();
+
+        // Writing methods
+        void write(char *);
+        void write(std::string);
+        void write_mqtt(char *);
+        
+        //https://www.geeksforgeeks.org/overloading-stream-insertion-operators-c/
+        /*
+        ostream & operator << (ostream &out , const Complex &c)
+            {
+                out << c.real;
+                out << "+i" << c.imag << endl;
+                return out;
+            }
+        */        
+        friend std::ostream & operator << (std::ostream &out, const Log &L){
+            
+              out << "Log test operator ";
+              return out; //return the stream
+            
+        };        
+        
+    private:
+        Mode mode;
+        std::streambuf *buf;
+        std::ofstream of;
+        std::ostream out;
+};
+
+Log::Log(const char *file) : out(nullptr)
+{
+    if (file != NULL)
+    {
+        of.open(file);
+        buf = of.rdbuf();
+        mode = FILE;
+        
+    }
+    else
+    {
+        buf = std::cout.rdbuf();
+        mode = STDOUT;
+    }
+
+    // Attach to out
+    out.rdbuf(buf);
+  //  esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "test Log constructor", 0, 1, 0);
+     write(">>>>>>>>>>>>>>>>>>>>>>>>test Log write in constructor<<<<<<<<<<<<<<<<<<<<<<<<<<"); //works
+}
+
+Log::~Log()
+{
+    if (mode == FILE)
+        of.close();
+}
+
+void Log::write(std::string s)
+{
+    out << "Log out 1:" << s << std::endl;
+}
+void Log::write(char *s)
+{
+    out << "Log out 2:" << s << std::endl;     
+}
+
+
+void Log::write_mqtt(char *s)
+{   
+    esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "test Log::write_mqtt", 0, 1, 0);   
+}
+
+
+//Log out;
+
+/*
+//implementation of << operator
+std::ostream & operator << (std::ostream &out, Log &buf)
+    {
+        out << "Log test operator ";
+        out << "+i" << " something " << std::endl;
+        return out;
+    }
+*/
+
+
+
+
+class MyBuf1 : public std::stringbuf
+{
+//https://stackoverflow.com/questions/13703823/a-custom-ostream    
+public:
+    virtual int sync() {
+        ESP_LOGV(TAG,"MYBUF1");
+        std::cout << "TEST MyBuf" << std::endl;
+        // add this->str() to database here
+        // (optionally clear buffer afterwards)
+        return 0;
+    }
+};
+
+
+
+
+ //  MIDISequencerGUINotifierText text_n;        // the AdvancedSequencer GUI notifier, all default pars
+
+
+    Outbuf_buffered_fckx outbuf_buffered_fckx;
+    std::ostream custom_ostream(&outbuf_buffered_fckx);  //OK 
+    
+    MIDISequencerGUINotifierRaw raw_n(0,custom_ostream);
+
+
+//MIDISequencerGUINotifierText text_n;
+ //  MIDISequencerGUINotifierText text_n(0, custom_ostream);
+//   MIDISequencerGUINotifierRaw raw_n;
+   
+   //MIDISequencerGUINotifierText text_n(0, std::cout);        // the AdvancedSequencer GUI notifier, with pars, but default
+   //MQTT_stream mqtt_stream;
+   //MIDISequencerGUINotifierText text_n(0, mqtt_stream);        // the AdvancedSequencer GUI notifier
+    //MIDISequencerGUINotifierText text_n(0, new MQTT_stream);        // the AdvancedSequencer GUI notifier
+  
+  
  /*  
    AdvancedSequencer sequencer(&text_n);       // an AdvancedSequencer (with GUI notifier)
    MIDIRecorder recorder(&sequencer);          // a MIDIRecorder //FCKX
@@ -692,29 +1352,98 @@ MIDIProcessorPrinter printer;    // a MIDIProcessor which prints passing MIDI ev
 //void * recorder_p;
 
 
-
 void init_test_recorder( void ) {
     
+    
+    std::cout << "INIT_TEST_RECORDER" << std::endl;  
+ 
+     //Outbuf2 outbuf2;
+     //std::ostream custom_ostream(&outbuf2);    //OK
+ 
+     //MyBuf1 myBuf1;
+     //std::ostream custom_ostream(&myBuf1);  // NOK
+ 
+ 
+    //Outbuf_buffered_fckx outbuf_buffered_fckx; allready intitialized
+    std::ostream custom_ostream(&outbuf_buffered_fckx);  //OK 
+ 
+  //  OutStreamBuf outStreamBuf;                                     //Stackoverflow 1       
+  //  std::ostream custom_ostream(&outStreamBuf);  //OK
+     
+    //OutStream custom_ostream;   //using a composite ostream/streambuf object    generates a log from the constructor   //Stackoverflow 2
+                                //it's output is not shown
+     
+     
+    // MyNotifier notifier;                    //OK instantiate with default output stream (std::cout)
+  // MyNotifier notifier(std::cout);         //OK instantiate with default output stream explicitly
+
+     
+     
+    MyNotifier notifier(custom_ostream);  //instantiate with customized output stream , 
+                                          //NOK when custom_stream uses MyBuf1 or Outbuf,  it works with std:cout   THIS IS STUFF FOR Stackoverflow
+
+
+notifier.Notify(12345678);
+notifier.Notify(56789);
+//              
+notifier.Notify(0xffffffff); //max 4 byte value
+          //max 4294967295
+
+
+
+  //  notifier.Notify(123456789);  //notify some event  
+  //  notifier.Notify(827364536);  //notify some event 
+    //custom_ostream << "Test << operator" << std::endl; 
+  
+     /*
+    Custom_Out custom_Out; 
+    MyNotifier notifier(custom_Out); //instantiate with custom output stream, the custom_Out needs to be instantiated with a parameter pointing at streambuf, but may be nullptr. (??)
+  notifier.Notify(7272413);  //notify some event       
+  */     
+       
+
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>  test_outbuf();
+    
+    
+//   mqtt_stream << "hello world!";
+   // out << "hello Log!";
+   //Log log;
+   //std::cout << log;
+
+//std::cout << out;
+   
+   //std::cout << "TEST LOG";
+   //log.write("hello Log!");
+   //esp_mqtt_client_publish(mqtt_client, "/fckx_seq/GUI", "test outside log", 0, 1, 0);
+   //log.write_mqtt("test log.write_mqtt");
+   //std::cout << "testing feed to Log with <<" << std::endl;
+   //log << "Log log test stream"; //doesn't trigger output
+   //out << "Log out test stream"; //doesn't trigger output 
+   //std::cout << "TEST LOG";
+  //  std::ostream& Utils::Log = MyStream1();
+
     ESP_LOGE(TAG,"Entering test_recorder of TEST_RECORDER example");
     ESP_LOGE(TAG,"CONDITIONAL----------------------------------CONDITIONAL  TEST_RECORDER");
-//   guiCatcher << "Some Output" << std::endl;
+ 
 
 
-    ptrAdvancedSequencer = new AdvancedSequencer(&text_n);
-    
-     
-   // std::cout << "getPortCount: " << MIDIManager::GetOutDriver(0)->Get_connectionData().all_pCharacteristics.size() << std::endl;
-    
+    //ptrAdvancedSequencer = new AdvancedSequencer(&text_n);
+    ptrAdvancedSequencer = new AdvancedSequencer(&raw_n);
     ptrMIDIRecorder = new MIDIRecorder(ptrAdvancedSequencer);  
     MIDIManager::OpenInPorts();          //FCKX!! 220103 must be closed at end
     MIDIManager::OpenOutPorts();            //must be closed at end 
-  //  std::cout << "getPortCount: " << MIDIManager::GetOutDriver(0)->Get_connectionData().all_pCharacteristics.size() << std::endl;    
-    
     setMidiCharacteristicCallBacks();
+    
+    
+    
     //ESP_LOGE(TAG,"Going to create GUI Characteristic");
     //createGUICharacteristic(); //NEW NEW
-//>>>>>>>>    setGUICharacteristicCallBacks(); //<<<<<<<NEED ALTERNATIVE<<<<<<<<<<<<<<<
-    //ESP_LOGE(TAG,"Finished creating GUI Characteristic");
+    
+//#define ENABLEGUICHAR 
+#ifdef ENABLEGUICHAR
+    setGuiCharacteristicCallBacks();
+    ESP_LOGE(TAG,"Finished creating GUI Characteristic");
+#endif //ENABLEGUICHAR
     
     MIDITimer::SetResolution(1*portTICK_PERIOD_MS); //for ESP32 resolution must be a multiple of the system tick
     //keep this for a while to detect if resolution is properly implemented in ESP32_TIMER case
@@ -1774,7 +2503,25 @@ void app_main(void) {
 #endif
     
       
-    ESP_LOGW(TAG, "APP_MAIN ENTRY");   
+    ESP_LOGW(TAG, "APP_MAIN ENTRY");
+//std::ostream& Utils::Log = MyStream1();  
+
+//std::ostream& Log = MyStream1(); 
+//std::ostream Log = MyStream1(); 
+
+//3
+/*
+std::ostream::ostream() constructor is protected, which means it can only be invoked by its derived class, but not but its enclosing one.
+
+To fix the error initialize member out  
+https://stackoverflow.com/questions/14782809/issues-with-basic-ostream
+https://stackoverflow.com/questions/14781629/proper-way-to-create-ostream-to-file-or-cout  !!!
+https://stackoverflow.com/questions/366955/obtain-a-stdostream-either-from-stdcout-or-stdofstreamfile
+*/
+
+//std::ostream Log = MyStream2(std::cout.rdbuf()); //
+
+
     /*    
     ESP_LOGE - error (lowest)
     ESP_LOGW - warn
@@ -1800,9 +2547,10 @@ void app_main(void) {
     esp_log_level_set("MIDIOutDriver", ESP_LOG_ERROR);
     esp_log_level_set("MIDIOutDriver::HardwareMsgOut", ESP_LOG_ERROR);
     esp_log_level_set("MIDIOutDriver::OutputMessage", ESP_LOG_ERROR);
-    
+    esp_log_level_set("MIDIOUTNIMBLE :: INITIALIZE", ESP_LOG_DEBUG);
 
-    esp_log_level_set("MidiOutNimBLE :: sendMessage", ESP_LOG_ERROR);
+    esp_log_level_set("MidiOutNimBLE :: sendMessage A", ESP_LOG_DEBUG);
+    esp_log_level_set("MidiOutNimBLE :: sendMessage B", ESP_LOG_DEBUG);
     esp_log_level_set("MIDIThru::TickProc", ESP_LOG_DEBUG);
     esp_log_level_set("MQTT_CLIENT", ESP_LOG_ERROR);
     esp_log_level_set("mqtt_event_handler", ESP_LOG_VERBOSE);

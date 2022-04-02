@@ -235,82 +235,77 @@ MidiOutNimBLE :: ~MidiOutNimBLE ()
 void MidiOutNimBLE :: initialize ( const std::string& clientName){
     static const char *TAG = "MIDIOUTNIMBLE :: INITIALIZE"; 
     ESP_LOGW(TAG, "Initialize nimBLEOutdriver MidiOutNimBLE :: initialize"); 
-#define INITIALIZE1
-#ifdef INITIALIZE1
-    ESP_LOGW(TAG, "MidiOutNimBLE :: initialize1");
+
     //initialize the driver/port and store the essential data in the accompanying data struct
     //essential = suffiecient for opening / closing the port
-#define EARLY_OPEN
-#ifdef EARLY_OPEN
+
     NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
     NimBLECharacteristic* pCharacteristic = NULL; 
-    //Create the BLE Device 
+    NimBLECharacteristic* pCharacteristic2 = NULL; 
+    // Create the BLE Device 
     //This is also for Midi input, so should ideally be in a super class
-  
-  
-    //#define EARLY_OPEN
- 
-    //put this in OpenPort
+
     NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
                                   //and include the unique device ID in it
                                   //take care of max length of this string!
-  
+
     ESP_LOGW(TAG, "NimBLEDevice created"); 
-#define TEMP_BLOCK1 1  
-#ifdef TEMP_BLOCK1 
+
     pServer = NimBLEDevice::createServer();
     ESP_LOGW(TAG, "BLE server created"); 
     pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
     ESP_LOGW(TAG, "BLE server callbacks created"); 
-   
+
     // Create the BLE Service
     NimBLEService *pService = pServer->createService(SEQUENCER_SERVICEUUID);
     ESP_LOGW(TAG, "BLE server service created");
-    // Create a BLE Characteristic
-        std::cout << "Nr of ports in stack (pos1) : " << connectionData.all_pCharacteristics.size() << std::endl;
-    pCharacteristic = pService->createCharacteristic(
-                      MIDI_CHARUUID,
-                /******* Enum Type NIMBLE_PROPERTY now *******     
-                      BLECharacteristic::PROPERTY_READ   |
-                      BLECharacteristic::PROPERTY_WRITE  |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_INDICATE
-                    );
-                **********************************************/    
-                      NIMBLE_PROPERTY::READ   |
-                      NIMBLE_PROPERTY::WRITE  |
-                      NIMBLE_PROPERTY::NOTIFY //|
-                    //  NIMBLE_PROPERTY::INDICATE
-                    );
-    connectionData.all_pCharacteristics.push_back(pCharacteristic);
-    connectionData.all_portNames.push_back("midiout"); 
-    std::cout << "Nr of ports in stack (pos2) : " << connectionData.all_pCharacteristics.size() << std::endl;
-    ESP_LOGW(TAG, "BLE server MIDI characteristic created");
-    pCharacteristic = pService->createCharacteristic(
-                      GUI_CHARUUID,
-                /******* Enum Type NIMBLE_PROPERTY now *******     
-                      BLECharacteristic::PROPERTY_READ   |
-                      BLECharacteristic::PROPERTY_WRITE  |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_INDICATE
-                    );
-                **********************************************/    
-                      NIMBLE_PROPERTY::READ   |
-                      NIMBLE_PROPERTY::WRITE  |
-                      NIMBLE_PROPERTY::NOTIFY //|
-                    //  NIMBLE_PROPERTY::INDICATE
-                    );
-    connectionData.all_pCharacteristics.push_back(pCharacteristic);connectionData.all_portNames.push_back("guiout"); 
-    std::cout << "Nr of ports in stack (pos3) : " << connectionData.all_pCharacteristics.size() << std::endl;
-    
-    ESP_LOGW(TAG, "BLE server GUI characteristic created");
-    //FCKX
-    //set CharacteristicCallback  
-    // see: https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf
 
+    // Save connection information    
+    connectionData.pServer = pServer;
+    connectionData.pService = pService;
+
+    // Create a MIDI BLE Characteristic 
+    pCharacteristic = pService->createCharacteristic(
+                        MIDI_CHARUUID,  
+                        NIMBLE_PROPERTY::READ
+                      | NIMBLE_PROPERTY::WRITE
+                      | NIMBLE_PROPERTY::NOTIFY
+                    //| NIMBLE_PROPERTY::INDICATE
+                    );
+
+    // Save connection information               
+    connectionData.pMIDICharacteristic = pCharacteristic; 
+    connectionData.all_pCharacteristics.push_back(pCharacteristic);
+    connectionData.all_portNames.push_back("MIDIport");                     
+    ESP_LOGW(TAG, "BLE server MIDI characteristic created");
+    ESP_LOGW(TAG, "portName[0] %s",connectionData.all_portNames[0].c_str());
+
+    //#define ENABLEGUICHAR
+    //switching this on, causes the onWrite callback of the above characteristic to become inactive
+    #ifdef ENABLEGUICHAR
+    // Create a GUI BLE Characteristic 
+    pCharacteristic2 = pService->createCharacteristic(
+                      GUI_CHARUUID,
+                      NIMBLE_PROPERTY::READ   
+                    | NIMBLE_PROPERTY::WRITE  
+                    | NIMBLE_PROPERTY::NOTIFY 
+                  //| NIMBLE_PROPERTY::INDICATE
+                    );
+    // Save connection information                
+    connectionData.pGUICharacteristic = pCharacteristic2; 
+    connectionData.all_pCharacteristics.push_back(pCharacteristic2);
+    connectionData.all_portNames.push_back("GUIport");                     
+    ESP_LOGW(TAG, "BLE server GUI characteristic created"); 
+    ESP_LOGW(TAG, "portName[0] %s",connectionData.all_portNames[0].c_str());
+    ESP_LOGW(TAG, "portName[1] %s",connectionData.all_portNames[1].c_str()); 
+
+    #endif //ENABLEGUICHAR
+
+    //FCKX: some notes
+    //set CharacteristicCallback  
+    //see: https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf
     //pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());
-  
-  
+
     // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
     // Create a BLE Descriptor
     /***************************************************   
@@ -320,96 +315,10 @@ void MidiOutNimBLE :: initialize ( const std::string& clientName){
 
     pCharacteristic->addDescriptor(new BLE2902());
     ****************************************************/
-  
+
     // Start the service
     pService->start();
     ESP_LOGW(TAG, "BLE service started");
-#endif TEMP_BLOCK1
-
- 
-  
-      /*
-      //MOVE THIS TO openPort   ALSO MOVE THE FORMER TO OPENPORT
-
-      // Start advertising
-      ESP_LOGI(TAG, "Start advertising");
-      NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-      pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
-      pAdvertising->setScanResponse(false); 
-    */
-     // #endif
-  
-  
-    // Save our connection information
-    
-    connectionData.pServer = pServer;
-    connectionData.pService = pService;
-    connectionData.pCharacteristic = pCharacteristic;
-    //std::vector<NimBLECharacteristic*>      all_pCharacteristics;  //do not initialize, keep empty
-    //std::vector<std::string>>               all_portNames;         //do npt initialize, keep empty
-   #endif EARLY_OPEN   
-  
- /*  
-  // Save our connection information
-  //define NimBLEMidiOutData somewhere
-  NimBLEMidiOutData *data = (NimBLEMidiOutData *) new NimBLEMidiOutData;
-  //data->connected_ = false; //in RtMidi, this is in the parent class
-  connected_ = false; 
-  
-  //data->client = client;
-  //data->endpoint = 0;
-  apiData_ = (void *) data;  //??
-  //CFRelease( name );         //??
-  */ 
-  #endif //INITIALIZE1
-
-//#define OPEN1
-#ifdef OPEN1  
-
-    //catch a number of error states    
-    printf("OPENPORT1 ENTERED");
-    ESP_LOGW(TAG, "MidiOutNimBLE :: openPort entered "); 
-
-
-
-
-    //start background task HERE????
-    // depends on kind of task
-    ESP_LOGW(TAG, "xTaskCreate(connectedTask) IS THIS REQUIRED?"); 
-  //  xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
-    
-      
-  //MOVE THIS TO openPort
-  
-
-  // Start advertising
-  ESP_LOGI(TAG, "Prepare advertising");
-  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
-  pAdvertising->setScanResponse(false); 
-  
-  connectionData.pAdvertising = pAdvertising;
-  
-          // Start advertising
-  ESP_LOGI(TAG, "Start advertising");
-
-    NimBLEDevice::startAdvertising();
-    ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
-
-    //check if a connection already exists
-    //if ( apiData->connected_ ) {
-    // if ( data->connected_ ) {
-        
-     //DO THIS BEFORE PREP OF ADVERTISING?   
-     if (connected_) {
-    //errorString_ = "MidiOutNimBLE::openPort: a valid connection already exists!";
-    ESP_LOGE(TAG, "MidiOutNimBLE::openPort: a valid connection already exists!"); 
-    //error( RtMidiError::WARNING, errorString_ );  //how  to implement this error case
-     } 
-
-  
-  
-#endif //OPEN1 
 
       
 }
@@ -419,24 +328,18 @@ unsigned int MidiOutNimBLE :: getPortCount()
 {
   //CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
   //return MIDIGetNumberOfDestinations();
-  
-  //return connectionData.all_pCharacteristics.size();
-  
-  return 1;
+  return connectionData.all_pCharacteristics.size();
+  //return 1;
 }
 
 
 std::string MidiOutNimBLE :: getPortName(unsigned int portNumber)
 {
   //must return clientName from niBLEMidiData ?
-  //return "midiout";
-  if (connectionData.all_portNames.size() == 0) {return "";} 
-  else {
-  return connectionData.all_portNames[portNumber];  }
+ return connectionData.all_portNames[portNumber];
+ // return "fckx_seq";
 }
 
-
-//void MidiOutNimBLE :: openPort( )
 void MidiOutNimBLE :: openPort( unsigned int portNumber){
     
     static const char *TAG = "MIDIOUTNIMBLE :: OPENPORT"; 
@@ -444,316 +347,41 @@ void MidiOutNimBLE :: openPort( unsigned int portNumber){
     // Set up our client and give a sign of life
     ESP_LOGW(TAG, "Initialize nimBLEOutdriver MidiOutNimBLE :: openPort nr %d", portNumber); 
 
-//#define INITIALIZE2
-#ifdef INITIALIZE2
-    ESP_LOGW(TAG, "MidiOutNimBLE :: initialize2");
-    NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
-    NimBLECharacteristic* pCharacteristic = NULL; 
-    //Create the BLE Device 
-    //This is also for Midi input, so should ideally be in a super class
-    NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
-                                  //and include the unique device ID in it
-                                  //take care of max length of this string!
-  
-    ESP_LOGW(TAG, "NimBLEDevice created"); 
-
-#define TEMP_BLOCK1 1  
-#ifdef TEMP_BLOCK1 
-  pServer = NimBLEDevice::createServer();
-     ESP_LOGW(TAG, "BLE server created"); 
-  pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
-   ESP_LOGW(TAG, "BLE server callbacks created"); 
-   
-  // Create the BLE Service
-  NimBLEService *pService = pServer->createService(SEQUENCER_SERVICEUUID);
-ESP_LOGW(TAG, "BLE server service created");
-  // Create a BLE Characteristic
-  pCharacteristic = pService->createCharacteristic(
-                      MIDI_CHARUUID,
-                /******* Enum Type NIMBLE_PROPERTY now *******     
-                      BLECharacteristic::PROPERTY_READ   |
-                      BLECharacteristic::PROPERTY_WRITE  |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_INDICATE
-                    );
-                **********************************************/    
-                      NIMBLE_PROPERTY::READ   |
-                      NIMBLE_PROPERTY::WRITE  |
-                      NIMBLE_PROPERTY::NOTIFY //|
-                    //  NIMBLE_PROPERTY::INDICATE
-                    );
-ESP_LOGW(TAG, "BLE server characteristic created");
-  // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
-  // Create a BLE Descriptor
-  /***************************************************   
-   NOTE: DO NOT create a 2902 descriptor. 
-   it will be created automatically if notifications 
-   or indications are enabled on a characteristic.
-   
-   pCharacteristic->addDescriptor(new BLE2902());
-  ****************************************************/
-  
-    // Start the service
-  pService->start();
-  ESP_LOGW(TAG, "BLE service started");
-  /*
-  //MOVE THIS TO openPort
-
-  // Start advertising
-  ESP_LOGI(TAG, "Start advertising");
-  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
-  pAdvertising->setScanResponse(false); 
-*/
-
-      // Save our connection information
-    
-    connectionData.pServer = pServer;
-    connectionData.pService = pService;
-    connectionData.pCharacteristic = pCharacteristic;
-
-  #endif  
-  
-  /*
-      // Save our connection information
-    
-    connectionData.pServer = pServer;
-    connectionData.pService = pService;
-    connectionData.pCharacteristic = pCharacteristic;
-*/
-  
- /*  
-  // Save our connection information
-  //define NimBLEMidiOutData somewhere
-  NimBLEMidiOutData *data = (NimBLEMidiOutData *) new NimBLEMidiOutData;
-  //data->connected_ = false; //in RtMidi, this is in the parent class
-  connected_ = false; 
-  
-  //data->client = client;
-  //data->endpoint = 0;
-  apiData_ = (void *) data;  //??
-  //CFRelease( name );         //??
-  */ 
-    
-#endif //INITIALIZE2
-
-
-
-#define OPEN2
-#ifdef OPEN2
     //catch a number of error states    
     printf("OPENPORT2 ENTERED");
-    ESP_LOGW(TAG, "MidiOutNimBLE :: openPort entered "); 
-
-    //start background task HERE????
-    // depends on kind of task
-    ESP_LOGW(TAG, "xTaskCreate(connectedTask) IS THIS REQUIRED?"); 
-    //xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
-    
-      
-  //MOVE THIS TO openPort
   
-   if (connected_) {
-           //check if a connection already exists
-    //if ( apiData->connected_ ) {
-    // if ( data->connected_ ) {
+    if (connected_) {
+        //check if a connection already exists
         
-     //DO THIS BEFORE PREP OF ADVERTISING?   
- 
-    //errorString_ = "MidiOutNimBLE::openPort: a valid connection already exists!";
-    ESP_LOGE(TAG, "MidiOutNimBLE::openPort: a valid connection already exists nevertheless start advertising (DIRTY!)"); 
-    //error( RtMidiError::WARNING, errorString_ );  //how  to implement this error case
-    
-    
-#define DIRTYOPEN
-#ifdef DIRTYOPEN
-    //connected_ is probably not a valid flag
-    
-  //#define LATE_OPEN
-  #ifdef LATE_OPEN
-  
-    NimBLEServer* pServer = NULL;  //must be made accessible for the outside world later
-  NimBLECharacteristic* pCharacteristic = NULL; 
-  //Create the BLE Device 
-  //This is also for Midi input, so should ideally be in a super class
-  
-  
-  //put this in OpenPort
-  NimBLEDevice::init("fckx_seq"); //later use clientName to pass the name
-                                  //and include the unique device ID in it
-                                  //take care of max length of this string!
-  
-  ESP_LOGW(TAG, "NimBLEDevice created"); 
-#define TEMP_BLOCKA 1  
-#ifdef TEMP_BLOCKA 
-  pServer = NimBLEDevice::createServer();
-  ESP_LOGW(TAG, "BLE server created"); 
-  pServer->setCallbacks(new MyServerCallbacks()); //NOTE: this uses the DEFAULT callbacks in the library
-   ESP_LOGW(TAG, "BLE server callbacks created"); 
-   
-  // Create the BLE Service
-  NimBLEService *pService = pServer->createService(SEQUENCER_SERVICEUUID);
-  ESP_LOGW(TAG, "BLE server service created");
-  // Create a BLE Characteristic
-  pCharacteristic = pService->createCharacteristic(
-                      MIDI_CHARUUID,
-                /******* Enum Type NIMBLE_PROPERTY now *******     
-                      BLECharacteristic::PROPERTY_READ   |
-                      BLECharacteristic::PROPERTY_WRITE  |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_INDICATE
-                    );
-                **********************************************/    
-                      NIMBLE_PROPERTY::READ   |
-                      NIMBLE_PROPERTY::WRITE  |
-                      NIMBLE_PROPERTY::NOTIFY //|
-                    //  NIMBLE_PROPERTY::INDICATE
-                    );
-  ESP_LOGW(TAG, "BLE server characteristic created");
-  //FCKX
-  //set CharacteristicCallback  
-// see: https://github.com/nkolban/esp32-snippets/blob/master/Documentation/BLE%20C%2B%2B%20Guide.pdf
+        //DO THIS BEFORE PREP OF ADVERTISING?   
 
-  //pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());
-  
-  
-  // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
-  // Create a BLE Descriptor
-  /***************************************************   
-   NOTE: DO NOT create a 2902 descriptor. 
-   it will be created automatically if notifications 
-   or indications are enabled on a characteristic.
-   
-   pCharacteristic->addDescriptor(new BLE2902());
-  ****************************************************/
-  
-    // Start the service
-  pService->start();
-  ESP_LOGW(TAG, "BLE service started");
-     #endif TEMP_BLOCKA
-     // Save our connection information
-    
-    connectionData.pServer = pServer;
-    connectionData.pService = pService;
-    connectionData.pCharacteristic = pCharacteristic;    
-     
-  #endif LATE_OPEN      
-    
-    // Start advertising
-  ESP_LOGI(TAG, "Prepare advertising");
-  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
-  pAdvertising->setScanResponse(false); 
-  
-  connectionData.pAdvertising = pAdvertising;
+        ESP_LOGE(TAG, "A valid connection already exists nevertheless start advertising (DIRTYOPEN!)"); 
+        ESP_LOGE(TAG, ">>>>>take the opportunity to list all available Characteristics somewhere over here <<<<<<<");
+
+        //connected_ is probably not a valid flag
+ 
         // Start advertising
-  ESP_LOGI(TAG, "Start advertising");
-
-  NimBLEDevice::startAdvertising();
-
-
-
-   while (NimBLEDevice::getServer()->getConnectedCount() == 0) {
-    ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
-       vTaskDelay(5000/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
-
-
-
-   };
-
-    
-#else    
-    
-   return;   //DIRTY
-#endif   //DIRTYOPEN 
-   
-   } else {
-   
-  // Start advertising
-  ESP_LOGI(TAG, "Prepare advertising");
-  NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
-  pAdvertising->setScanResponse(false); 
-  
-  connectionData.pAdvertising = pAdvertising;
+        ESP_LOGI(TAG, "Prepare advertising");
+        NimBLEAdvertising *pAdvertising = NimBLEDevice::getAdvertising();
+        pAdvertising->addServiceUUID(SEQUENCER_SERVICEUUID);
+        pAdvertising->setScanResponse(false); 
+        connectionData.pAdvertising = pAdvertising;
         // Start advertising
-  ESP_LOGI(TAG, "Start advertising");
+        ESP_LOGI(TAG, "Start advertising");
+        NimBLEDevice::startAdvertising();
+        while (NimBLEDevice::getServer()->getConnectedCount() == 0) {
+            ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
+            vTaskDelay(5000/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
+        };
+   } 
 
-  NimBLEDevice::startAdvertising();
 
+    //a connection exist, get a list of connected devices
+    std::vector< uint16_t > 	currentPeers = NimBLEDevice::getServer()->getPeerDevices ();
 
+    ESP_LOGI(TAG, "Number of connected peers: %d",currentPeers.size());
 
-   while (NimBLEDevice::getServer()->getConnectedCount() == 0) {
-    ESP_LOGI(TAG, "OPENPORT Waiting for a client connection to notify...");
-       vTaskDelay(5000/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
-
-   };
-
-   }
-#endif //OPEN2 
- 
-  
-#ifdef BLOCK_TEMP  
-/*  
-  //check if output destination exists
-  CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
-  unsigned int nDest = MIDIGetNumberOfDestinations();
-  if (nDest < 1) {
-    errorString_ = "MidiOutNimBLE::openPort: no MIDI output destinations found!";
-    ESP_LOGE(TAG, "%s" , errorString);
-    //error( RtMidiError::NO_DEVICES_FOUND, errorString_ );
-    return;
-  }
-*/
-/*
-  //check if the 'portNumber' argument is valid
-  if ( portNumber >= nDest ) {
-    std::ostringstream ost;
-    ost << "MidiOutNimBLE::openPort: the 'portNumber' argument (" << portNumber << ") is invalid.";
-    errorString_ = ost.str();
-    ESP_LOGE(TAG, "%s" , errorString);
-    //error( RtMidiError::INVALID_PARAMETER, errorString_ );
-    return;
-  }  
-*/
-  
- MIDIPortRef port;
-  NimBLEMidiOutData *data = static_cast<NimBLEMidiOutData *> (apiData_);
-  CFStringRef portNameRef = CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingASCII );
-  OSStatus result = MIDIOutputPortCreate( data->client, portNameRef, &port );
-  CFRelease( portNameRef );
-  if ( result != noErr ) {
-    MIDIClientDispose( data->client );
-    errorString_ = "MidiOutNimBLE::openPort: error creating OS-X MIDI output port.";
-    ESP_LOGE(TAG, "%s" , errorString);
-    //error( RtMidiError::DRIVER_ERROR, errorString_ );
-    return;
-  }
-
-  // Get the desired output port identifier.
-  MIDIEndpointRef destination = MIDIGetDestination( portNumber );
-  if ( destination == 0 ) {
-    MIDIPortDispose( port );
-    MIDIClientDispose( data->client );
-    errorString_ = "MidiOutNimBLE::openPort: error getting MIDI output destination reference.";
-    ESP_LOGE(TAG, "%s" , errorString);
-    //error( RtMidiError::DRIVER_ERROR, errorString_ );
-    return;
-  }
-#endif
-
-  // Save our (api-specific) connection information.
-  
-  //data->port = port;  
-  //data->destinationId = destination;
-  
-  //a connection exist, get a list of connected devices
-  std::vector< uint16_t > 	currentPeers = NimBLEDevice::getServer()->getPeerDevices ();
-  
-  ESP_LOGI(TAG, "Number of connected peers: %d",currentPeers.size());
- 
-  
-  connected_ = true;  
+    connected_ = true;  
 }  
 
 void MidiOutNimBLE :: closePort( void )
@@ -819,7 +447,7 @@ void MidiOutNimBLE :: openVirtualPort( const std::string &portName )
 }
 */
 void MidiOutNimBLE::sendMessage(const unsigned char *message, size_t size) {
-     static const char *TAG = "MidiOutNimBLE :: sendMessage";
+     static const char *TAG = "MidiOutNimBLE :: sendMessage A";
 
     ESP_LOGW(TAG, "message size() %d", size);  
     
@@ -840,21 +468,22 @@ void MidiOutNimBLE::sendMessage(const unsigned char *message, size_t size) {
     midiPacket[i] = message[i];
    };    
    
-       connectionData.pCharacteristic->setValue(midiPacket, size);
-// connectionData.pCharacteristic->setValue(midiPacket, 5); //works but needs conversion
-    // connectionData.pCharacteristic->setValue(const std::vector<unsigned char> *message);
-    //connectionData.pCharacteristic->setValue(const T & message);
-
-  //connectionData.pCharacteristic->setValue(std::vector<unsigned char> *message);
-    connectionData.pCharacteristic->notify(); 
-    //ble_notify_midi(pCharacteristic, mididata); this was suitable for midi thru
+    //connectionData.pCharacteristic->setValue(midiPacket, size);
+    connectionData.pMIDICharacteristic->setValue(midiPacket, size);
+    //new method retrieves pCharacteristic from vector
+    //connectionData.all_pCharacteristics[0]->setValue(midiPacket, size);
+    
+    //connectionData.pCharacteristic->notify(); 
+    connectionData.pMIDICharacteristic->notify();
+    //new method retrieves pCharacteristic from vector
+    //connectionData.all_pCharacteristics[0]->notify();
    
    
 }
 
-void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
+void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message ) {
 //void MidiOutNimBLE :: sendMessage( const unsigned char *message, size_t size )
-{    static const char *TAG = "MidiOutNimBLE :: sendMessage";
+    static const char *TAG = "MidiOutNimBLE :: sendMessage B";
     //ESP_LOGW(TAG, "sendMessage  TO BE IMPLEMENTED"); 
     ESP_LOGW(TAG, "message->size() %d", message->size());
     /*
@@ -939,75 +568,14 @@ void MidiOutNimBLE :: sendMessage( const std::vector<unsigned char>  *message )
     //send to "hardware" interface
     //<code here>
     
-    connectionData.pCharacteristic->setValue(midiPacket, message->size());
-// connectionData.pCharacteristic->setValue(midiPacket, 5); //works but needs conversion
-    // connectionData.pCharacteristic->setValue(const std::vector<unsigned char> *message);
-    //connectionData.pCharacteristic->setValue(const T & message);
+    //connectionData.pCharacteristic->setValue(midiPacket, message->size());
+    connectionData.pMIDICharacteristic->setValue(midiPacket, message->size());
+    //new method retrieves pCharacteristic from vector
+    //connectionData.all_pCharacteristics[0]->setValue(midiPacket, message->size());
 
-  //connectionData.pCharacteristic->setValue(std::vector<unsigned char> *message);
-    connectionData.pCharacteristic->notify(); 
-    //ble_notify_midi(pCharacteristic, mididata); this was suitable for midi thru
+    //connectionData.pCharacteristic->notify(); 
+    connectionData.pMIDICharacteristic->notify();
+    //new method retrieves pCharacteristic from vector
+    //connectionData.all_pCharacteristics[0]->notify(); 
 
-
-//METHOD2....
-     
-  // We use the MIDISendSysex() function to asynchronously send sysex
-  // messages.  Otherwise, we use a single nimBLEMidi MIDIPacket.
-  /*
-  unsigned int nBytes = static_cast<unsigned int> (size);
-  if ( nBytes == 0 ) {
-    errorString_ = "MidiOutNimBLE::sendMessage: no data in message argument!";
-    ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::WARNING, errorString_ );
-    return;
-  }
-  
-  MIDITimeStamp timeStamp = AudioGetCurrentHostTime();
-  NimBLEMidiOutData *data = static_cast<NimBLEMidiOutData *> (apiData_);
-  OSStatus result;
-
-  if ( message[0] != 0xF0 && nBytes > 3 ) {
-    errorString_ = "MidiOutNimBLE::sendMessage: message format problem ... not sysex but > 3 bytes?";
-    ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::WARNING, errorString_ );
-    return;
-  }
- 
-  Byte buffer[nBytes+(sizeof( MIDIPacketList ))];
-  ByteCount listSize = sizeof( buffer );
-  MIDIPacketList *packetList = (MIDIPacketList*)buffer;
-  MIDIPacket *packet = MIDIPacketListInit( packetList );
-
-  ByteCount remainingBytes = nBytes;
-  while ( remainingBytes && packet ) {
-    ByteCount bytesForPacket = remainingBytes > 65535 ? 65535 : remainingBytes; // 65535 = maximum size of a MIDIPacket
-    const Byte* dataStartPtr = (const Byte *) &message[nBytes - remainingBytes];
-    packet = MIDIPacketListAdd( packetList, listSize, packet, timeStamp, bytesForPacket, dataStartPtr );
-    remainingBytes -= bytesForPacket;
-  }
-
-  if ( !packet ) {
-    errorString_ = "MidiOutNimBLE::sendMessage: could not allocate packet list";
-    ESP_LOGE(TAG, "%s" , errorString); //error( RtMidiError::DRIVER_ERROR, errorString_ );
-    return;
-  }
-
-  // Send to any destinations that may have connected to us.
-  if ( data->endpoint ) {
-    result = MIDIReceived( data->endpoint, packetList );
-    if ( result != noErr ) {
-      errorString_ = "MidiOutNimBLE::sendMessage: error sending MIDI to virtual destinations.";
-      //error( RtMidiError::WARNING, errorString_ );
-    }
-  }
-*/
-/*
-  // And send to an explicit destination port if we're connected.
-  if ( connected_ ) {
-    result = MIDISend( data->port, data->destinationId, packetList );
-    if ( result != noErr ) {
-      errorString_ = "MidiOutNimBLE::sendMessage: error sending MIDI message to port.";
-      //error( RtMidiError::WARNING, errorString_ );
-    }
-  }
-  */
-  
 }
