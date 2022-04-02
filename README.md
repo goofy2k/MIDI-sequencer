@@ -546,15 +546,19 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
    
   
    **v39**  
-  For usage by NiCMidi GUI notifier the pGUICharacteristic must be accessible from notifier via MidiOutNimBLE (nimBLEdriver.cpp in the NiCMidi lib).  
-  To achieve this,  pGUICharacteristic must be initialized within MidiOutNimBLE::initialize and stored in NimBLEMidiOutData connectionData of the MidiOutNimBLE object.
+  Implemented a customized ostream (via it's streambuf of class class Outbuf_buffered_fckx) for NicMidi notifications over MQTT. NicMidi notifier.h/.cpp was modified. Now it contains a class MIDISequencerGUINotifierRaw that outputs the raw GUI event data (unsigned long int), This can be used as a replacement for class MIDISequencerGUINotifierText that outputs notifications as text derived from the raw data.
+  
+  The notification raw data are sent to the Nodered FCKX_SEQ GUI flow. There, the raw data is converted to readable text that is displayed in a scrolling window in the Midi Sequencer dashboard. A next step is to use the GUI raw data notification to control a GUI (HTML/Javascript under Nodered). 
+  
+  **v40**
   
   
   
   
   TODO
-  - Check editing of presets / usage of keyBoard 2
-  - Make NimBLE backtalk from synth to seq (using NimBLE characteristic onWrite) independent from status of MIDI thru  IT IS INDEPENDENT   MID thru must not be used for all commands!!!
+  - A next step is to use the GUI raw data notification to control a GUI (Javascript under Nodered)
+  - ONGOING Check editing of presets / usage of keyBoard 2
+  - DONE from v39: Make MQTT backtalk from seq to Nodered for sending GUI notifications. 
   - DONE from v38: Enable feedback from synth to seq with NimBLE characteristic onWrite. Currently it is only in TEST_THRU
   - DONE from v38: create separate GUI element to control thru. It is no started by default when recorder is started
   - DONE from v37:  replace hard-coded thru in recorder by UI/GUI controllable thru in TEST_RECORDER example 
