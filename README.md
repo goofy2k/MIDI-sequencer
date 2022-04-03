@@ -551,7 +551,7 @@ V12 contains all (yet empty) API functions for NimBLE via RtMidi (dirty/hacked v
   The notification raw data are sent to the Nodered FCKX_SEQ GUI flow. There, the raw data is converted to readable text that is displayed in a scrolling window in the Midi Sequencer dashboard. A next step is to use the GUI raw data notification to control a GUI (HTML/Javascript under Nodered). 
   
   **v40**
-  
+  Added reset of thru and recording switches at startup. Uses seq_status map and MQTT topic /fckx_seq/GUI/status/# 
   
   
   
